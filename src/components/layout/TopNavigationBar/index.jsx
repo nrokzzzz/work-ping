@@ -22,9 +22,9 @@ const TopNavigationBar = () => {
             <ThemeModeToggle />
 
             {/* Apps Dropdown */}
-            <Suspense>
+            {/* <Suspense>
               <AppsDropdown />
-            </Suspense>
+            </Suspense> */}
 
             {/* Notification Dropdown */}
             <Suspense>
@@ -35,7 +35,7 @@ const TopNavigationBar = () => {
             <ThemeCustomizerToggle />
 
             {/* Toggle for Activity Stream */}
-            <ActivityStreamToggle />
+            {/* <ActivityStreamToggle /> */}
 
             {/* Admin Profile Dropdown */}
             <ProfileDropdown />

@@ -73,7 +73,7 @@ const ChangePassword = () => {
       </Card>
 
       <p className="text-white mb-0 text-center">
-        Back to page
+        Back to
         <Link to="/auth/sign-in" className="text-white fw-bold ms-1">
           Sign In
         </Link>
