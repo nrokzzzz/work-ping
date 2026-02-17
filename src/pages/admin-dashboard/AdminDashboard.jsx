@@ -1,0 +1,28 @@
+import { Col, Row } from 'react-bootstrap';
+import PageMetaData from '@/components/PageTitle';
+import Conversions from './components/Conversions';
+import SessionByBrowser from './components/SessionByBrowser';
+import SessionsByCountry from './components/SessionsByCountry';
+import Stats from './components/Stats';
+import TopPages from './components/TopPages';
+export default function Home() {
+  return <>
+      <PageMetaData title="Analytics" />
+
+      <Row>
+        <Col xxl={3}>
+          <Stats />
+        </Col>
+        <Col xxl={9}>
+          <Conversions />
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <SessionsByCountry />
+        </Col>
+      </Row>
+      <Row>
+      </Row>
+    </>;
+}
