@@ -42,7 +42,7 @@ const SignUpForm = () => {
         password: values.password
       };
       console.log(payload)
-      const res = await axios.post('http://10.16.50.73:5000/api/admin/auth/register', payload,{
+      const res = await axiosClient.post('/api/admin/auth/register', payload,{
         withCredentials: true
       });
 
