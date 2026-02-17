@@ -45,7 +45,8 @@ const schema = yup.object({
     .nullable()
     .transform(v => (v === '' ? null : v))
     .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format'),
-  organizationId:yup.string().required('organizationId is required'),
+  organizationName: yup.string().required('organizationName is required'),
+  teamName: yup.string().required('teamName is required'),
   address: yup.string().required('Address is required'),
 })
 
@@ -73,16 +74,16 @@ const AddEmployee = () => {
     console.log(step)
   })
 
-  const submitForm = async() => {
+  const submitForm = async () => {
     const data = getValues()
     data.phone = countryCode + data.phone
     data.faceEmbedding = faceEmbedding?.hash
     data.faceSource = faceEmbedding?.source
-    try{
+    try {
       console.log('Submitting Employee Data:', data)
-       const res = await axiosClient.post('/api/admin/add-employees/by-form', data)
-       console.log('Employee added:', res.data)
-    } catch(error) {
+      const res = await axiosClient.post('/api/admin/add-employees/by-form', data)
+      console.log('Employee added:', res.data)
+    } catch (error) {
       console.error('Error adding employee:', error)
     }
   }
@@ -114,30 +115,35 @@ const AddEmployee = () => {
           <Form className="row g-3">
 
             <div className="col-md-4">
-              <Form.Label>User Id*</Form.Label>
+              <Form.Label>User-Id</Form.Label>
               <Form.Control placeholder="Enter User Id" {...register('userId')} />
               <small className="text-danger">{errors.userId?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>User Name*</Form.Label>
+              <Form.Label>User-Name</Form.Label>
               <Form.Control placeholder="Enter Full Name" {...register('userName')} />
               <small className="text-danger">{errors.userName?.message}</small>
             </div>
-            <div className="col-md-4">
-              <Form.Label>organizationId*</Form.Label>
-              <Form.Control placeholder="Enter Full Name" {...register('organizationId')} />
-              <small className="text-danger">{errors.organizationId?.message}</small>
-            </div>
 
             <div className="col-md-4">
-              <Form.Label>Email*</Form.Label>
+              <Form.Label>Email</Form.Label>
               <Form.Control placeholder="Enter Email" {...register('email')} />
               <small className="text-danger">{errors.email?.message}</small>
             </div>
+            <div className="col-md-4">
+              <Form.Label>OrganizationName</Form.Label>
+              <Form.Control placeholder="Enter Full Name" {...register('organizationName')} />
+              <small className="text-danger">{errors.organizationName?.message}</small>
+            </div>
+            <div className="col-md-4">
+              <Form.Label>Team Name</Form.Label>
+              <Form.Control placeholder="Enter Team Name" {...register('teamName')} />
+              <small className="text-danger">{errors.teamName?.message}</small>
+            </div>
 
             <div className="col-md-4">
-              <Form.Label>Contact Number*</Form.Label>
+              <Form.Label>Contact-Number</Form.Label>
               <div className="d-flex gap-2">
                 <Dropdown>
                   <DropdownToggle
@@ -182,13 +188,13 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Date of Birth*</Form.Label>
+              <Form.Label>Date of Birth</Form.Label>
               <Form.Control type="date" {...register('dob')} />
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Gender*</Form.Label>
+              <Form.Label>Gender</Form.Label>
               <Form.Select {...register('gender')}>
                 <option value="">Select Gender</option>
                 <option>Male</option>
@@ -199,48 +205,58 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Date of Joining*</Form.Label>
+              <Form.Label>Date of Joining</Form.Label>
               <Form.Control type="date" {...register('doj')} />
               <small className="text-danger">{errors.doj?.message}</small>
             </div>
 
-            <div className="col-md-4">
-              <Form.Label>Role*</Form.Label>
-              <Form.Select {...register('role')}>
-                <option value="">Select Role</option>
-                <option>Admin</option>
-                <option>Developer</option>
-                <option>Tester</option>
-              </Form.Select>
-              <small className="text-danger">{errors.role?.message}</small>
-            </div>
-
-            <div className="col-md-4">
-              <Form.Label>Aadhaar*</Form.Label>
-              <Form.Control
-                placeholder="12-digit Aadhaar number"
-                {...register('aadhaar')}
-              />
-              <small className="text-danger">{errors.aadhaar?.message}</small>
-            </div>
-
+            {/* ---- ROLE + AADHAAR + ADDRESS CUSTOM GRID ---- */}
             <div className="col-12">
-              <Form.Label>Address*</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={4}
-                {...register('address')}
-              />
-              <small className="text-danger">{errors.address?.message}</small>
+              <div className="row" >
+
+                <div className="col-md-4 d-flex flex-column gap-3">
+
+                  <div>
+                    <Form.Label>Role</Form.Label>
+                    <Form.Select {...register('role')}>
+                      <option value="">Select Role</option>
+                      <option>Admin</option>
+                      <option>Developer</option>
+                      <option>Tester</option>
+                    </Form.Select>
+                    <small className="text-danger">{errors.role?.message}</small>
+                  </div>
+
+                  <div>
+                    <Form.Label>Aadhaar</Form.Label>
+                    <Form.Control
+                      placeholder="12-digit Aadhaar number"
+                      {...register('aadhaar')}
+                    />
+                    <small className="text-danger">{errors.aadhaar?.message}</small>
+                  </div>
+
+                </div>
+                <div className="col-md-8">
+                  <Form.Label>Address</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={5}  
+                    {...register('address')}
+                  />
+                  <small className="text-danger">{errors.address?.message}</small>
+                </div>
+
+              </div>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Passport</Form.Label>
-              <Form.Control placeholder="Enter passport number" />
+              <Form.Label>Passport <small className="text-muted">(Optional)</small></Form.Label>
+              <Form.Control placeholder="Enter passport number" {...register('passport')} />
             </div>
 
             <div className="col-md-4">
-              <Form.Label>PAN</Form.Label>
+              <Form.Label>PAN <small className="text-muted">(Optional)</small></Form.Label>
               <Form.Control
                 placeholder="ABCDE1234F"
                 {...register('pan')}
@@ -249,8 +265,8 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Bank Id</Form.Label>
-              <Form.Control placeholder="Enter bank account number" />
+              <Form.Label>Bank-Id <small className="text-muted">(Optional)</small></Form.Label>
+              <Form.Control placeholder="Enter bank account number" {...register('bankId')} />
             </div>
 
             <div className="col-12 d-flex justify-content-end mt-3">
