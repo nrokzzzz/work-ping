@@ -1,6 +1,6 @@
 import { Button } from 'react-bootstrap';
 import IconifyIcon from '../../../components/wrappers/IconifyIcon';
-const ThirdPartyAuthCustomized = () => {
+const ThirdPartyAuth = () => {
   return <>
       <p className="mt-3 fw-semibold no-span">OR sign with</p>
       <div className="text-center d-flex gap-1 justify-content-center">
@@ -14,4 +14,4 @@ const ThirdPartyAuthCustomized = () => {
       </div>
     </>;
 };
-export default ThirdPartyAuthCustomized;
+export default ThirdPartyAuth;
