@@ -4,8 +4,7 @@ import { Card, CardBody, Col, Row, Button } from 'react-bootstrap';
 import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
 import PageMetaData from '@/components/PageTitle';
 import TeamsForm from './TeamsForm';
-
-const API_URL = 'http://localhost:5000/api/admin/team';
+import axiosClient from '@/helpers/httpClient';
 
 const CreateTeam = () => {
   const navigate = useNavigate();
@@ -22,11 +21,9 @@ const CreateTeam = () => {
           body: JSON.stringify(payload)
         });
       } else {
-        await fetch(`${API_URL}/create-team`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        console.log('Payload to be sent 👉', payload);
+        await axiosClient.post('/api/admin/team/create-team', payload);
+        
       }
     } catch (error) {
       console.error('SAVE TEAM ERROR 👉', error);

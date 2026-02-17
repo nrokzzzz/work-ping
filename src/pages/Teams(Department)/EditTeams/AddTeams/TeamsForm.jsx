@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Button, Form, Card, CardBody, Row, Col } from 'react-bootstrap'
-
+import axiosClient from '@/helpers/httpClient'
 
 const schema = yup.object({
   teamName: yup.string().required('Team Name is required'),
@@ -36,9 +36,21 @@ const TeamsForm = ({ onSave, defaultValues }) => {
 
   const onSubmit = data => {
     onSave(data)
+    // console.log('Form Data 👉', data )
   }
 
-
+// async function handleSupbmit(event) {
+//     event.preventDefault()
+//     const payload = {
+//       teamName: event.target.teamName.value,
+//       teamManagerId: event.target.teamManagerId.value,
+//       organizationId: event.target.organizationId.value,
+//       description: event.target.description.value,
+//     }
+//     onSave(payload) 
+//     await axiosClient.post('/api/admin/team/create-team', payload)
+    
+//   }
   const handleClear = () => {
     if (defaultValues) {
 
@@ -106,7 +118,7 @@ const TeamsForm = ({ onSave, defaultValues }) => {
                   {defaultValues ? 'Reset' : 'Clear'}
                 </Button>
 
-                <Button type="submit">
+                <Button type="submit" >
                   {defaultValues ? 'Update' : 'Save'}
                 </Button>
               </div>
