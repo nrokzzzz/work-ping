@@ -2,11 +2,15 @@ import { Card, CardBody, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import LogoBox from '@/components/LogoBox';
 import PageMetaData from '@/components/PageTitle';
-// import ThirdPartyAuth from '@/components/ThirdPartyAuth';
-import ThirdPartyAuth from '@/pages/auth/signIn-Google/ThirdPartyAuth';//customized
+import ThirdPartyAuth from '@/pages/auth/signIn-Google/ThirdPartyAuth';
+import { useEffect,useState } from 'react';
 import LoginForm from './LoginForm';
 import signInImg from '@/assets/images/sign-in.svg';
+import axiosClient from '@/helpers/httpClient';
+import { use } from 'react';
+
 const SignIn = () => {
+  
   return <>
       <PageMetaData title="Sign In" />
 
