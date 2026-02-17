@@ -38,7 +38,7 @@ const SignUpForm = () => {
       const payload = {
         name: values.name,
         number: values.number,
-        userEmail: values.userEmail,
+        email: values.userEmail,
         password: values.password
       };
       console.log(payload)
