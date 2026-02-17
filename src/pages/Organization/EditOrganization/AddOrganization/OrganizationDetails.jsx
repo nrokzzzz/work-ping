@@ -8,7 +8,7 @@ import * as yup from 'yup'
 import MaskedInput from 'react-text-mask-legacy'
 import axiosClient from '@/helpers/httpClient'
 import axios from 'axios'
-import GeoFencing from '@/pages/Maps/GeoFencing'
+// import GeoFencing from '@/pages/Maps/GeoFencing'
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
   organizationType: yup.string().required('Organization Type is required'),
