@@ -128,7 +128,7 @@ const AuthSignIn = lazy(() => import('@/app/(other)/auth/sign-in/page'));
 const AuthSignIn2 = lazy(() => import('@/app/(other)/auth/sign-in-2/page'));
 const AuthSignUp = lazy(() => import('@/app/(other)/auth/sign-up/page'));
 const AuthSignUp2 = lazy(() => import('@/app/(other)/auth/sign-up-2/page'));
-const ResetPassword = lazy(() => import('@/app/(other)/auth/reset-pass/page'));
+
 const ResetPassword2 = lazy(() => import('@/app/(other)/auth/reset-pass-2/page'));
 const LockScreen = lazy(() => import('@/app/(other)/auth/lock-screen/page'));
 const LockScreen2 = lazy(() => import('@/app/(other)/auth/lock-screen-2/page'));
@@ -521,7 +521,7 @@ const iconRoutes = [{
           //auth routes
 const SignIn = lazy(()=>import('@/pages/auth/signIn/page'));
 const SignUp = lazy(()=>import('@/pages/auth/signUp/page'));
-
+const ResetPassword = lazy(() => import('@/pages/auth/reset-pass/page'));
           //teams route
 
 const AddTeams = lazy(()=>import('@/pages/Teams(Department)/EditTeams/AddTeams/AddTeams'));
