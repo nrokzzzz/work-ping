@@ -527,7 +527,8 @@ const ChangePassword = lazy(() => import('@/pages/auth/reset-pass/changePassword
 
 const AddTeams = lazy(()=>import('@/pages/Teams(Department)/EditTeams/AddTeams/AddTeams'));
 const UpdateTeams = lazy(()=>import('@/pages/Teams(Department)/EditTeams/UpdateTeams/Update/UpdateTeams'));
-const ViewTeams = lazy(()=>import('@/pages/Teams(Department)/ViewTeams/View'))
+const UpdateTeamsView = lazy(()=>import('@/pages/Teams(Department)/EditTeams/UpdateTeams/Update/UpdateTeamsView'));
+const ViewTeams = lazy(()=>import('@/pages/Teams(Department)/ViewTeams/ViewTeams'))
       //organization routes
 const OrganizationViews = lazy(()=>import('@/pages/Organization/ViewOrganization/View'))
 const OrganizationUpdateDetails= lazy(()=>import('@/pages/Organization/EditOrganization/UpdateOrganization/OrganizationDetails'));
@@ -618,8 +619,12 @@ const teamsRoutes=[
 },
 {
   name: 'UpdateTeams',
-  path:'/teams/edit-teams/update-teams',
+  path:'/teams/edit-teams/update-teams/:teamId',
   element:<UpdateTeams/>
+},{
+  name:'UpdateTeamsView',
+  path:'/teams/update-teams-view',
+  element:<UpdateTeamsView/>
 }
 ,{
   name:'TeamsView',

@@ -57,7 +57,7 @@ export const MENU_ITEMS = [
           {
             key: 'update-teams',
             label: 'Update Teams',
-            url: '/teams/edit-teams/update-teams',
+            url: '/teams/update-teams-view',
             parentKey: 'edit-teams',
           },
         ],
