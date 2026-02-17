@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import LogoBox from '@/components/LogoBox';
 import PageMetaData from '@/components/PageTitle';
 // import ThirdPartyAuth from '@/components/ThirdPartyAuth';
-import ThirdPartyAuthCustomized from '@/components/ThirdPartyAuthCustomized';
+import ThirdPartyAuth from '@/pages/auth/signIn-Google/ThirdPartyAuth';
 import SignUpForm from './components/SignUpForm';
 import signUpImg from '@/assets/images/sign-in.svg';
 const SignUp = () => {
@@ -31,7 +31,7 @@ const SignUp = () => {
                 <Row className="justify-content-center">
                   <Col xs={12} md={8}>
                     <SignUpForm />
-                    <ThirdPartyAuthCustomized />
+                    <ThirdPartyAuth/>
                   </Col>
                 </Row>
               </div>

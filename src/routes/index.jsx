@@ -550,7 +550,7 @@ const ProjectTeamMembers = lazy(()=> import('@/pages/Projects/ViewProject-Teams/
 
 //two-factor-authentication
 const TwoFactorAuthCard = lazy(()=> import('@/pages/TwoFactorAuthentication/TwoFactorAuthentication'));
-
+const QrCodeAuthentication = lazy(()=>import('@/pages/TwoFactorAuthentication/QrcodeAuthentication'));
 
 
 
@@ -711,6 +711,11 @@ const TwoFactorAuthentication=[
     path:'/two-factor-auth',
     name: 'TwoFactorAuthCard',
     element: <TwoFactorAuthCard/>
+  },
+   {
+    path:'/qrcode-authentication',
+    name: 'QrCodeAuthentication',
+    element: <QrCodeAuthentication/>
   }
 ]
 
