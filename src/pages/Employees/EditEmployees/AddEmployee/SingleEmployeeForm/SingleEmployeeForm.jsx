@@ -17,7 +17,7 @@ import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import countryCodes from 'country-calling-code'
 import FaceEmbeddings from './FaceEmbeddings'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
-import axios from 'axios'
+import axiosClient from '@/helpers/httpClient'
 
 /* ---------------- Validation Schema ---------------- */
 const schema = yup.object({
@@ -45,7 +45,7 @@ const schema = yup.object({
     .nullable()
     .transform(v => (v === '' ? null : v))
     .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format'),
-
+  organizationId:yup.string().required('organizationId is required'),
   address: yup.string().required('Address is required'),
 })
 
@@ -80,7 +80,7 @@ const AddEmployee = () => {
     data.faceSource = faceEmbedding?.source
     try{
       console.log('Submitting Employee Data:', data)
-       const res = await axios.post('http://10.16.63.254:5000/api/admin/add-employees/by-form', data)
+       const res = await axiosClient.post('/api/admin/add-employees/by-form', data)
        console.log('Employee added:', res.data)
     } catch(error) {
       console.error('Error adding employee:', error)
@@ -123,6 +123,11 @@ const AddEmployee = () => {
               <Form.Label>User Name*</Form.Label>
               <Form.Control placeholder="Enter Full Name" {...register('userName')} />
               <small className="text-danger">{errors.userName?.message}</small>
+            </div>
+            <div className="col-md-4">
+              <Form.Label>organizationId*</Form.Label>
+              <Form.Control placeholder="Enter Full Name" {...register('organizationId')} />
+              <small className="text-danger">{errors.organizationId?.message}</small>
             </div>
 
             <div className="col-md-4">

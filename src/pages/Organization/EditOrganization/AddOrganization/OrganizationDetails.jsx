@@ -55,9 +55,7 @@ const EmployeeDetailsForm = () => {
     console.log('Organization Details Submitted:', newData)
 
     try {
-      const response = await axiosClient.post('/api/admin/organization/add-organization', newData,{
-        withCredentials: true
-      })
+      const response = await axiosClient.post('/api/admin/organization/add-organization', newData)
       console.log('Response:', response.data)
     } catch (error) {
       console.error('Error submitting organization details:', error)

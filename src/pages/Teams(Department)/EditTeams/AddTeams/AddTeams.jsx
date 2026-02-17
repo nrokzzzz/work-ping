@@ -22,7 +22,8 @@ const CreateTeam = () => {
         });
       } else {
         console.log('Payload to be sent 👉', payload);
-        await axiosClient.post('/api/admin/team/create-team', payload);
+        const res= await axiosClient.post('/api/admin/team/create-team', payload);
+        console.log(res)
         
       }
     } catch (error) {

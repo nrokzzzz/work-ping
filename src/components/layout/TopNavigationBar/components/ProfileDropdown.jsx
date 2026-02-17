@@ -2,7 +2,22 @@ import { Link } from 'react-router-dom';
 import { Dropdown, DropdownDivider, DropdownHeader, DropdownItem, DropdownMenu, DropdownToggle } from 'react-bootstrap';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import avatar1 from '@/assets/images/users/avatar-1.jpg';
+import { useNavigate } from 'react-router-dom';
+import axiosClient from '@/helpers/httpClient';
 const ProfileDropdown = () => {
+  const navigate = useNavigate()
+  const handleSubmit = async()=>{
+    try{
+     const res=await axiosClient.post('/api/admin/auth/logout')
+     if(res.status==200){
+      navigate('/auth/sign-in')
+     }
+    }catch(error){
+      console.log('logout error'+error)
+    }
+  }
+
+
   return <Dropdown className="topbar-item" align={'end'}>
       <DropdownToggle as="button" type="button" className="topbar-button content-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span className="d-flex align-items-center">
@@ -32,7 +47,7 @@ const ProfileDropdown = () => {
           <span className="align-middle">Lock screen</span>
         </DropdownItem>
         <DropdownDivider className="dropdown-divider my-1" />
-        <DropdownItem as={Link} className="text-danger" to="/auth/sign-in">
+        <DropdownItem  className="text-danger" onClick={handleSubmit}>
           <IconifyIcon icon="bx:log-out" className="fs-18 align-middle me-1" />
           <span className="align-middle">Logout</span>
         </DropdownItem>

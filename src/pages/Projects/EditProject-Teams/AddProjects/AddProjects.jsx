@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Button, Form, Card, CardBody, Row, Col } from 'react-bootstrap'
 
-
+import axiosClient from '@/helpers/httpClient'
 
 const schema = yup.object({
   name: yup.string().required('Name is required'),
@@ -25,8 +25,15 @@ const TaskForm = () => {
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = data => {
+  const onSubmit = async(data) => {
     console.log('FORM DATA:', data)
+    try{
+      const res=await axiosClient.post('/api/project/create-project',data)
+      console.log(res);
+    }catch(error){
+      console.log(error)
+    }
+    
   }
 
   return (
