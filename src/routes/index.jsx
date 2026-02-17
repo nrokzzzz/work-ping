@@ -522,6 +522,7 @@ const iconRoutes = [{
 const SignIn = lazy(()=>import('@/pages/auth/signIn/page'));
 const SignUp = lazy(()=>import('@/pages/auth/signUp/page'));
 const ResetPassword = lazy(() => import('@/pages/auth/reset-pass/page'));
+const ChangePassword = lazy(() => import('@/pages/auth/reset-pass/changePassword/changePassword.jsx'));
           //teams route
 
 const AddTeams = lazy(()=>import('@/pages/Teams(Department)/EditTeams/AddTeams/AddTeams'));
@@ -576,7 +577,13 @@ export const authRoutes = [{
   name: 'Reset Password 2',
   path: '/auth/reset-pass-2',
   element: <ResetPassword2 />
-}, {
+}, 
+{
+  name: 'change password',
+  path: '/auth/change-password',
+  element: <ChangePassword />
+},
+{
   name: 'Lock Screen',
   path: '/auth/lock-screen',
   element: <LockScreen />
