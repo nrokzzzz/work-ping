@@ -24,7 +24,7 @@ const LoginForm = () => {
   const onSubmit = async values => {
     try {
       const payload = {
-        userEmail: values.email,
+        email: values.email,
         password: values.password
       };
       console.log('Login payload:', payload);
