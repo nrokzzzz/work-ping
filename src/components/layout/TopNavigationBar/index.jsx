@@ -1,14 +1,33 @@
 import { lazy } from 'react';
 import { Suspense } from 'react';
-import ActivityStreamToggle from './components/ActivityStreamToggle';
 import LeftSideBarToggle from './components/LeftSideBarToggle';
 import ProfileDropdown from './components/ProfileDropdown';
 import SearchBox from './components/SearchBox';
 import ThemeCustomizerToggle from './components/ThemeCustomizerToggle';
 import ThemeModeToggle from './components/ThemeModeToggle';
-const AppsDropdown = lazy(() => import('./components/AppsDropdown'));
+import { useState,useEffect } from 'react';
+import axiosClient from '@/helpers/httpClient';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 const Notifications = lazy(() => import('./components/Notifications'));
+
 const TopNavigationBar = () => {
+  const [isMounted, setIsMounted] = useState(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const res = await axiosClient.get('/api/admin/test');
+        if(res.status === 200){
+          setIsMounted(true);
+        }
+      } catch (error) {
+        console.error('AUTH CHECK ERROR 👉', error);
+        setIsMounted(false);
+      }   
+   };
+    checkAuthStatus();
+  }, []);
   return <header className="topbar">
       <div className="container-xxl">
         <div className="navbar-header">
@@ -38,7 +57,13 @@ const TopNavigationBar = () => {
             {/* <ActivityStreamToggle /> */}
 
             {/* Admin Profile Dropdown */}
-            <ProfileDropdown />
+            {
+              isMounted ? <ProfileDropdown /> : (
+                <Button variant="primary" size="lm" onClick={() =>navigate('/auth/sign-in')}>
+                  SignIn
+                </Button>
+              )
+            }
           </div>
         </div>
       </div>

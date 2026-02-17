@@ -30,18 +30,8 @@ const ProfileDropdown = () => {
           <IconifyIcon icon="bx:user-circle" className="text-muted fs-18 align-middle me-1" />
           <span className="align-middle">Profile</span>
         </DropdownItem>
-        <DropdownItem as={Link} to="/apps/chat">
-          <IconifyIcon icon="bx:message-dots" className="text-muted fs-18 align-middle me-1" />
-          <span className="align-middle">Messages</span>
-        </DropdownItem>
-        <DropdownItem as={Link} to="/pages/pricing">
-          <IconifyIcon icon="bx:wallet" className="text-muted fs-18 align-middle me-1" />
-          <span className="align-middle">Pricing</span>
-        </DropdownItem>
-        <DropdownItem as={Link} to="/pages/faqs">
-          <IconifyIcon icon="bx:help-circle" className="text-muted fs-18 align-middle me-1" />
-          <span className="align-middle">Help</span>
-        </DropdownItem>
+       
+        
         <DropdownItem as={Link} to="/auth/lock-screen">
           <IconifyIcon icon="bx:lock" className="text-muted fs-18 align-middle me-1" />
           <span className="align-middle">Lock screen</span>
