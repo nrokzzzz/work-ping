@@ -14,13 +14,32 @@ const ViewEmployees = () => {
   const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
 
-  const [fieldType, setFieldType] = useState('')
-  const [fieldValues, setFieldValues] = useState([])
-  const [selectedValue, setSelectedValue] = useState('')
+  
+  const [organizationList, setOrganizationList] = useState([])
+  const [departmentList, setDepartmentList] = useState([])
 
-  const [appliedField, setAppliedField] = useState('')
-  const [appliedValue, setAppliedValue] = useState('')
+  const [organization, setOrganization] = useState('')
+  const [department, setDepartment] = useState('')
 
+  const [appliedOrganization, setAppliedOrganization] = useState('')
+  const [appliedDepartment, setAppliedDepartment] = useState('')
+  useEffect(() => {
+    const fetchDropdownValues = async () => {
+      try {
+        const orgRes = await fetch('http://localhost:5000/api/employees/fields/organization')
+        const orgData = await orgRes.json()
+        setOrganizationList(orgData || [])
+
+        const deptRes = await fetch('http://localhost:5000/api/employees/fields/department')
+        const deptData = await deptRes.json()
+        setDepartmentList(deptData || [])
+      } catch (err) {
+        console.error('Dropdown fetch error:', err)
+      }
+    }
+
+    fetchDropdownValues()
+  }, [])
   const fetchEmployees = async (page) => {
     setLoading(true)
     try {
@@ -28,15 +47,17 @@ const ViewEmployees = () => {
         page,
         limit: itemsPerPage,
       })
+      if (appliedOrganization && appliedOrganization.trim() !== '') {
+  params.append('organization', appliedOrganization)
+}
 
-      if (appliedField && appliedValue) {
-        params.append('field', appliedField)
-        params.append('value', appliedValue)
-      }
+if (appliedDepartment && appliedDepartment.trim() !== '') {
+  params.append('department', appliedDepartment)
+}
 
-      const res = await fetch(
-        `http://192.168.29.97:5000/api/employees?${params.toString()}`
-      )
+      
+
+      const res = await fetch(`http://localhost:5000/api/employees?${params.toString()}`)
       const result = await res.json()
       setEmployees(result.data || [])
       setTotalPages(result.totalPages || 0)
@@ -50,42 +71,22 @@ const ViewEmployees = () => {
 
   useEffect(() => {
     fetchEmployees(currentPage)
-  }, [currentPage, appliedField, appliedValue])
+  }, [currentPage, appliedOrganization, appliedDepartment])
 
   const handleApply = () => {
-    setAppliedField(fieldType)
-    setAppliedValue(selectedValue)
+    setAppliedOrganization(organization)
+    setAppliedDepartment(department)
     setCurrentPage(1)
   }
 
-  const handleFieldSelect = async (type) => {
-    if (!type) {
-      setFieldValues([])
-      setSelectedValue('')
-      return
-    }
-
-    try {
-      const res = await fetch(
-        `http://192.168.29.97:5000/api/employees/fields/${type}`
-      )
-      const data = await res.json()
-      setFieldValues(data)
-      setSelectedValue('')
-    } catch (e) {
-      console.error('Field fetch error:', e)
-    }
-  }
+  
 
   const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
 
-    if (currentPage <= 2)
-      return [1, 2, 3, '...', totalPages]
+    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
 
-    if (currentPage >= totalPages - 1)
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
 
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
@@ -97,10 +98,8 @@ const ViewEmployees = () => {
     <Row>
       <Col>
         <Card>
-
           <CardBody>
             <Row className="g-2">
-
               <Col xs={12} md={4}>
                 <div className="position-relative">
                   <IconifyIcon
@@ -126,28 +125,27 @@ const ViewEmployees = () => {
               <Col xs={12} md={3}>
                 <select
                   className="form-select"
-                  value={fieldType}
+                  value={organization}
                   onChange={(e) => {
-                    const v = e.target.value
-                    setFieldType(v)
-                    handleFieldSelect(v)
-                  }}
-                >
-                  <option value="">Select Type</option>
-                  <option value="organization">Organization</option>
-                  <option value="department">Department</option>
+                    setOrganization(e.target.value);
+                  }}>
+                  <option value="">Select Organization</option>
+                  {
+                    organizationList.map((org) => (
+                      <option key={org} value={org} >{org}</option>
+                    ))
+                  }
+                 
                 </select>
               </Col>
 
               <Col xs={12} md={3}>
-                <select
-                  className="form-select"
-                  value={selectedValue}
-                  onChange={(e) => setSelectedValue(e.target.value)}
-                >
-                  <option value="">Select Value</option>
-                  {fieldValues.map(v => (
-                    <option key={v} value={v}>{v}</option>
+                <select className="form-select" value={department} onChange={(e) => setDepartment(e.target.value)}>
+                  <option value="">Select Department</option>
+                  {departmentList.map((dept) => (
+                    <option key={dept} value={dept} >
+                      {dept}
+                    </option>
                   ))}
                 </select>
               </Col>
@@ -157,7 +155,6 @@ const ViewEmployees = () => {
                   Apply
                 </Button>
               </Col>
-
             </Row>
           </CardBody>
 
@@ -197,7 +194,7 @@ const ViewEmployees = () => {
                     </td>
                   </tr>
                 ) : (
-                  employees.map(emp => (
+                  employees.map((emp) => (
                     <tr key={emp.USER_ID}>
                       <td>{emp.USER_ID}</td>
                       <td>{emp.name}</td>
@@ -222,7 +219,6 @@ const ViewEmployees = () => {
           </div>
 
           <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
-
             <div className="col-12 col-sm">
               <div className="text-muted mb-2 mb-sm-0">
                 Showing {start} to {end} of {totalRecords} records
@@ -231,9 +227,10 @@ const ViewEmployees = () => {
 
             <Col xs={12} sm="auto">
               <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
-
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link"
+                  <Link
+                    to="#"
+                    className="page-link"
                     onClick={(e) => {
                       e.preventDefault()
                       if (currentPage > 1) setCurrentPage(currentPage - 1)
@@ -243,9 +240,10 @@ const ViewEmployees = () => {
                 </li>
 
                 {getPages().map((p, i) => (
-                  <li key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
-                    <Link to="#" className="page-link"
+                  <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+                    <Link
+                      to="#"
+                      className="page-link"
                       onClick={(e) => {
                         e.preventDefault()
                         if (typeof p === 'number') setCurrentPage(p)
@@ -256,7 +254,9 @@ const ViewEmployees = () => {
                 ))}
 
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link"
+                  <Link
+                    to="#"
+                    className="page-link"
                     onClick={(e) => {
                       e.preventDefault()
                       if (currentPage < totalPages) setCurrentPage(currentPage + 1)
@@ -264,12 +264,9 @@ const ViewEmployees = () => {
                     <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
                 </li>
-
               </ul>
             </Col>
-
           </div>
-
         </Card>
       </Col>
     </Row>
