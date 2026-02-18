@@ -257,9 +257,6 @@ const BulkUpload = () => {
             </div>
           </ComponentContainerCard>
         </Col>
-
-        {/* Data Table After Upload */}
-        
       </Row>
     </>
   )
