@@ -14,14 +14,14 @@ const ViewEmployees = () => {
   const [loading, setLoading] = useState(false)
 
   const [search, setSearch] = useState('')
-
+  const [appliedSearch,setAppliedSearch]=useState('')
   const [orgData, setOrgData] = useState({})
   const [organization, setOrganization] = useState('')
   const [department, setDepartment] = useState('')
 
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
-
+  
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -71,7 +71,9 @@ const ViewEmployees = () => {
       if (appliedDepartment) {
         params.append('teamId', appliedDepartment)
       }
-
+       if (appliedSearch) {
+      params.append('search', appliedSearch)
+    }
 
       const result = await axiosClient.get(
         `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
@@ -89,10 +91,10 @@ const ViewEmployees = () => {
 
   useEffect(() => {
     fetchEmployees(currentPage)
-  }, [currentPage, appliedOrganization, appliedDepartment])
+  }, [currentPage, appliedOrganization, appliedDepartment,appliedSearch])
 
   const handleApply = () => {
-     
+     setAppliedSearch(search)
     setAppliedOrganization(organization)
     setAppliedDepartment(department)
     setCurrentPage(1)
@@ -227,7 +229,7 @@ const ViewEmployees = () => {
                     <tr key={emp.USER_ID}>
                       <td>{emp.USER_ID}</td>
                       <td>{emp.name}</td>
-                      <td>{emp.gmail}</td>
+                      <td>{emp.email}</td>
                       <td>{emp.phone}</td>
                       <td>{emp.role}</td>
                       <td>{emp.organization}</td>
