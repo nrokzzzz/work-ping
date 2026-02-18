@@ -1,198 +1,116 @@
-import { useEffect, useState } from 'react'
-import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
-import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { Button, Form, Card, CardBody, Row, Col } from 'react-bootstrap'
 
-const TODO = () => {
-  const navigate = useNavigate()
-  const itemsPerPage = 10
+import axiosClient from '@/helpers/httpClient'
 
-  const [tasks, setTasks] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(0)
-  const [totalRecords, setTotalRecords] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [search, setSearch] = useState('')
+const schema = yup.object({
+  name: yup.string().required('Name is required'),
+  assignedDate: yup.string().required('Assigned Date is required'),
+  dueDate: yup.string().required('Due Date is required'),
+  contractedBy: yup.string().required('Contracted By is required'),
+  organizationId: yup.string().required('Organization ID is required'),
+  description: yup.string().required('Description is required'),
+})
 
-  const fetchTasks = async (page, q) => {
-    setLoading(true)
-    try {
-      const response = await fetch(
-        `http://192.168.29.97:5000/api/companies?page=${page}&limit=${itemsPerPage}&search=${encodeURIComponent(q || '')}`
-      )
-      const result = await response.json()
+const TaskForm = () => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  })
 
-      setTasks(result.data)
-      setTotalPages(result.totalPages)
-      setTotalRecords(result.totalRecords)
-    } catch (error) {
-      console.error('Error fetching companies:', error)
-    } finally {
-      setLoading(false)
+  const onSubmit = async(data) => {
+    console.log('FORM DATA:', data)
+    try{
+      const res=await axiosClient.post('/api/project/create-project',data)
+      console.log(res);
+    }catch(error){
+      console.log(error)
     }
+    
   }
-
-  useEffect(() => {
-    fetchTasks(currentPage, search)
-  }, [currentPage, search])
-
-  const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
-
-    if (currentPage <= 2)
-      return [1, 2, 3, '...', totalPages]
-
-    if (currentPage >= totalPages - 1)
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
-
-    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
-  }
-
-  const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
-  const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
   return (
-    <Row>
-      <Col>
-        <Card>
+ 
+    <ComponentContainerCard id="basic" title="Add Projects">
+        <Form className="row g-4" onSubmit={handleSubmit(onSubmit)}>
+                <div className="col-md-6">
+                  <div className="row g-3">
 
-          
-          <CardBody>
-            <div className="d-flex justify-content-start">
-              <div style={{ width: 300 }}>
-                <div className="position-relative">
-                  <IconifyIcon
-                    icon="bx:search-alt"
-                    className="position-absolute"
-                    style={{
-                      left: 12,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      fontSize: 18,
-                    }}
-                  />
-                  <input
-                    type="search"
-                    className="form-control ps-5"
-                    placeholder="Search by name..."
-                    value={search}
-                    onChange={(e) => {
-                      setCurrentPage(1)
-                      setSearch(e.target.value)
-                    }}
-                  />
+                    <div className="col-12">
+                      <Form.Label>Name*</Form.Label>
+                      <Form.Control placeholder='Enter Project Name'{...register('name')} />
+                      <small className="text-danger">{errors.name?.message}</small>
+                    </div>
+
+                    <div className="col-12">
+                      <Form.Label>Assigned Date*</Form.Label>
+                      <Form.Control type="date" {...register('assignedDate')} />
+                      <small className="text-danger">{errors.assignedDate?.message}</small>
+                    </div>
+
+                    <div className="col-12">
+                      <Form.Label>Due Date*</Form.Label>
+                      <Form.Control type="date" {...register('dueDate')} />
+                      <small className="text-danger">{errors.dueDate?.message}</small>
+                    </div>
+
+                    <div className="col-12">
+                      <Form.Label>Contracted By*</Form.Label>
+                      <Form.Control placeholder='Enter Contracted By'{...register('contractedBy')} />
+                      <small className="text-danger">{errors.contractedBy?.message}</small>
+                    </div>
+
+                  </div>
                 </div>
-              </div>
-            </div>
-          </CardBody>
+                <div className="col-md-6">
+                  <div className="row g-3">
 
-          
-          <div className="table-responsive table-centered">
-            <table className="table text-nowrap mb-0">
-              <thead className="bg-light bg-opacity-50">
-                <tr>
-                  <th>Name</th>
-                  <th>Geo Fencing</th>
-                  <th>CL Days</th>
-                  <th>Type</th>
-                  <th>IP Address</th>
-                  <th>Founded At</th>
-                  
-                </tr>
-              </thead>
+                    <div className="col-12">
+                      <Form.Label>Organization ID*</Form.Label>
+                      <Form.Control placeholder='Enter OrganizationID'{...register('organizationId')} />
+                      <small className="text-danger">{errors.organizationId?.message}</small>
+                    </div>
 
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="7" className="text-center py-4">
-                      Loading...
-                    </td>
-                  </tr>
-                ) : tasks.length === 0 ? (
-                  <tr>
-                    <td colSpan="7" className="text-center py-4">
-                      No records found
-                    </td>
-                  </tr>
-                ) : (
-                  tasks.map((task) => (
-                    <tr key={task.id}>
-                      <td>{task.name}</td>
-                      <td>{task.geoFencing}</td>
-                      <td>{task.clDays}</td>
-                      <td>{task.type}</td>
-                      <td>{task.ipAddress}</td>
-                      <td>{new Date(task.foundedAt).toDateString()}</td>
-                      
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                    <div className="col-12">
+                      <Form.Label>Description*</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={9}
+                        {...register('description')}
+                      />
+                      <small className="text-danger">{errors.description?.message}</small>
+                    </div>
 
-          
-          <div className="align-items-center justify-content-between row g-0 text-center text-sm-start p-3 border-top">
-            <div className="col-sm">
-              <div className="text-muted">
-                Showing {start} to {end} of {totalRecords} records
-              </div>
-            </div>
-
-            <Col sm="auto">
-              <ul className="pagination pagination-rounded m-0">
-                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage > 1) setCurrentPage(currentPage - 1)
-                    }}
+                  </div>
+                </div>
+                <div className="col-12 d-flex justify-content-center gap-4">
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    onClick={() => reset()}
                   >
-                    <IconifyIcon icon="bx:left-arrow-alt" />
-                  </Link>
-                </li>
+                    Clear
+                  </Button>
 
-                {getPages().map((p, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}
-                  >
-                    <Link
-                      to="#"
-                      className="page-link"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        if (typeof p === 'number') setCurrentPage(p)
-                      }}
-                    >
-                      {p}
-                    </Link>
-                  </li>
-                ))}
+                  <Button type="submit">
+                    Submit
+                  </Button>
+                </div>
 
-                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage < totalPages) setCurrentPage(currentPage + 1)
-                    }}
-                  >
-                    <IconifyIcon icon="bx:right-arrow-alt" />
-                  </Link>
-                </li>
-              </ul>
-            </Col>
-          </div>
+              </Form>
 
-        </Card>
-      </Col>
-    </Row>
+    </ComponentContainerCard>
+
+      
+
   )
 }
 
-export default TODO
+export default TaskForm

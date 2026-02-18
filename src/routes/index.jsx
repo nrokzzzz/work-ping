@@ -544,6 +544,7 @@ const SingleEmployeeAdd= lazy(()=>import('@/pages/Employees/EditEmployees/AddEmp
 
           //project routes
 const AddProjects = lazy(()=> import('@/pages/Projects/EditProject-Teams/AddProjects/AddProjects'));
+const UpdateProjectsView = lazy(()=> import('@/pages/Projects/EditProject-Teams/UpdateProjects/UpdateProjectsView'));
 const UpdateProjects = lazy(()=> import('@/pages/Projects/EditProject-Teams/UpdateProjects/UpdateProjects'));
 const ViewProjects = lazy(()=> import('@/pages/Projects/ViewProject-Teams/ViewProjects/ViewProjects'));
 const ProjectTeamMembers = lazy(()=> import('@/pages/Projects/ViewProject-Teams/ProjectTeamMembers/ProjectTeamMembers'));
@@ -692,9 +693,15 @@ const projectsRoutes=[
   }, 
   {
     path: '/projects/update-projects',
-    name: 'UpdateProjects',
+    name: 'UpdateProjectsView',
+    element:<UpdateProjectsView/>
+  },
+  {
+    path:'/projects/update-projects-form',
+    name:'UpdateProjects',
     element:<UpdateProjects/>
-  },{
+  },
+  {
     path:'/projects/view-projects',
     name:'ViewProjects',
     element:<ViewProjects/>
