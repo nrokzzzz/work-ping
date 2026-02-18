@@ -9,9 +9,11 @@ import { useState,useEffect } from 'react';
 import axiosClient from '@/helpers/httpClient';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '@/context/useAuthContext';
 const Notifications = lazy(() => import('./components/Notifications'));
 
 const TopNavigationBar = () => {
+  const {isAuthenticated} = useAuthContext();
   const [isMounted, setIsMounted] = useState(true);
   const navigate = useNavigate();
   // useEffect(() => {
@@ -58,7 +60,7 @@ const TopNavigationBar = () => {
 
             {/* Admin Profile Dropdown */}
             {
-              isMounted ? <ProfileDropdown /> : (
+              isAuthenticated ? <ProfileDropdown /> : (
                 <Button variant="primary" size="lm" onClick={() =>navigate('/auth/sign-in')}>
                   SignIn
                 </Button>

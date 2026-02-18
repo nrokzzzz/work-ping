@@ -4,14 +4,17 @@ import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import avatar1 from '@/assets/images/users/avatar-1.jpg';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '@/helpers/httpClient';
+import {useAuthContext} from '@/context/useAuthContext';
 const ProfileDropdown = () => {
   const navigate = useNavigate()
+  const {removeSession} = useAuthContext();
   const handleSubmit = async()=>{
     try{
-     const res=await axiosClient.post('/api/admin/auth/logout')
-     if(res.status==200){
-      navigate('/auth/sign-in')
-     }
+      const res=await axiosClient.post('/api/admin/auth/logout')
+      removeSession();
+      if(res.status==200){
+        navigate('/auth/sign-in')
+      }
     }catch(error){
       console.log('logout error'+error)
     }

@@ -96,6 +96,7 @@ const ResetPassForm = () => {
       }
 
       else if (step === 2) {
+        setIsTimerActive(false);
         // await axiosClient.post(
         //   "/api/admin/auth/forgot-password/verify-and-change",
         //   { email: data.email, otp: data.otp }
@@ -105,16 +106,16 @@ const ResetPassForm = () => {
       }
 
       else if (step === 3) {
-        // await axiosClient.post(
-        //   "/api/admin/auth/forgot-password/change-password",
-        //   {
-        //     email: data.email,
-        //     otp: data.otp,
-        //     newPassword: data.newPassword,
-        //   }
-        // );
+        await axiosClient.post(
+          "/api/admin/auth/forgot-password/change-password",
+          {
+            email: data.email,
+            otp: data.otp,
+            newPassword: data.newPassword,
+          }
+        );
 
-        navigate("/auth/reset-password/change");
+        navigate("/auth/sign-in");
       }
 
     } catch (error) {
