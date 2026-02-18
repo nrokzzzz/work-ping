@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import axiosClient from '@/helpers/httpClient'
 
 const ViewEmployees = () => {
-  const navigate = useNavigate()
   const itemsPerPage = 10
 
   const [employees, setEmployees] = useState([])
@@ -12,34 +12,45 @@ const ViewEmployees = () => {
   const [totalPages, setTotalPages] = useState(0)
   const [totalRecords, setTotalRecords] = useState(0)
   const [loading, setLoading] = useState(false)
+
   const [search, setSearch] = useState('')
 
-  
-  const [organizationList, setOrganizationList] = useState([])
-  const [departmentList, setDepartmentList] = useState([])
-
+  const [orgData, setOrgData] = useState({})
   const [organization, setOrganization] = useState('')
   const [department, setDepartment] = useState('')
 
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
-  useEffect(() => {
-    const fetchDropdownValues = async () => {
-      try {
-        const orgRes = await fetch('http://localhost:5000/api/employees/fields/organization')
-        const orgData = await orgRes.json()
-        setOrganizationList(orgData || [])
 
-        const deptRes = await fetch('http://localhost:5000/api/employees/fields/department')
-        const deptData = await deptRes.json()
-        setDepartmentList(deptData || [])
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const res = await axiosClient.get(
+          '/api/admin/get-all-employees/get-organization-info'
+        )
+        setOrgData(res.data || {})
+        console.log(res.data)
       } catch (err) {
-        console.error('Dropdown fetch error:', err)
+        console.error(err)
       }
     }
 
-    fetchDropdownValues()
+    fetchOrganizations()
   }, [])
+
+  const organizationList = useMemo(
+    () => Object.keys(orgData),
+    [orgData]
+  )
+
+  const departmentList = useMemo(
+    () =>
+      organization && orgData[organization]
+        ? orgData[organization].teams || []
+        : [],
+    [organization, orgData]
+  )
+
   const fetchEmployees = async (page) => {
     setLoading(true)
     try {
@@ -47,23 +58,30 @@ const ViewEmployees = () => {
         page,
         limit: itemsPerPage,
       })
-      if (appliedOrganization && appliedOrganization.trim() !== '') {
-  params.append('organization', appliedOrganization)
-}
 
-if (appliedDepartment && appliedDepartment.trim() !== '') {
-  params.append('department', appliedDepartment)
-}
+      if (appliedOrganization) {
+        const organizationId =
+          orgData[appliedOrganization]?.organizationId
 
-      
+        if (organizationId) {
+          params.append('organizationId', organizationId)
+        }
+      }
 
-      const res = await fetch(`http://localhost:5000/api/employees?${params.toString()}`)
-      const result = await res.json()
-      setEmployees(result.data || [])
-      setTotalPages(result.totalPages || 0)
-      setTotalRecords(result.totalRecords || 0)
+      if (appliedDepartment) {
+        params.append('teamId', appliedDepartment)
+      }
+
+
+      const result = await axiosClient.get(
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
+      )
+
+      setEmployees(result.data.data || [])
+      setTotalPages(result.data.totalPages || 0)
+      setTotalRecords(result.data.totalRecords || 0)
     } catch (e) {
-      console.error('Error fetching employees:', e)
+      console.error(e)
     } finally {
       setLoading(false)
     }
@@ -74,24 +92,27 @@ if (appliedDepartment && appliedDepartment.trim() !== '') {
   }, [currentPage, appliedOrganization, appliedDepartment])
 
   const handleApply = () => {
+     
     setAppliedOrganization(organization)
     setAppliedDepartment(department)
     setCurrentPage(1)
   }
 
-  
-
   const getPages = () => {
-    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (totalPages <= 5)
+      return Array.from({ length: totalPages }, (_, i) => i + 1)
 
-    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
+    if (currentPage <= 2)
+      return [1, 2, 3, '...', totalPages]
 
-    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    if (currentPage >= totalPages - 1)
+      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
 
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
-  const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
+  const start =
+    totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
   return (
@@ -127,26 +148,34 @@ if (appliedDepartment && appliedDepartment.trim() !== '') {
                   className="form-select"
                   value={organization}
                   onChange={(e) => {
-                    setOrganization(e.target.value);
-                  }}>
+                    setOrganization(e.target.value)
+                    setDepartment('')
+                  }}
+                >
                   <option value="">Select Organization</option>
-                  {
-                    organizationList.map((org) => (
-                      <option key={org} value={org} >{org}</option>
-                    ))
-                  }
-                 
+
+                  {organizationList.map((org) => (
+                    <option key={org} value={org}>
+                      {org}
+                    </option>
+                  ))}
                 </select>
               </Col>
 
               <Col xs={12} md={3}>
-                <select className="form-select" value={department} onChange={(e) => setDepartment(e.target.value)}>
+                <select
+                  className="form-select"
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                >
                   <option value="">Select Department</option>
-                  {departmentList.map((dept) => (
-                    <option key={dept} value={dept} >
-                      {dept}
+
+                  {departmentList.map((team) => (
+                    <option key={team._id} value={team._id}>
+                      {team.teamName}
                     </option>
                   ))}
+
                 </select>
               </Col>
 
@@ -220,7 +249,7 @@ if (appliedDepartment && appliedDepartment.trim() !== '') {
 
           <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
             <div className="col-12 col-sm">
-              <div className="text-muted mb-2 mb-sm-0">
+              <div className="text-muted">
                 Showing {start} to {end} of {totalRecords} records
               </div>
             </div>
@@ -233,20 +262,24 @@ if (appliedDepartment && appliedDepartment.trim() !== '') {
                     className="page-link"
                     onClick={(e) => {
                       e.preventDefault()
-                      if (currentPage > 1) setCurrentPage(currentPage - 1)
+                      if (currentPage > 1)
+                        setCurrentPage(currentPage - 1)
                     }}>
                     <IconifyIcon icon="bx:left-arrow-alt" />
                   </Link>
                 </li>
 
                 {getPages().map((p, i) => (
-                  <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+                  <li
+                    key={i}
+                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
                     <Link
                       to="#"
                       className="page-link"
                       onClick={(e) => {
                         e.preventDefault()
-                        if (typeof p === 'number') setCurrentPage(p)
+                        if (typeof p === 'number')
+                          setCurrentPage(p)
                       }}>
                       {p}
                     </Link>
@@ -259,7 +292,8 @@ if (appliedDepartment && appliedDepartment.trim() !== '') {
                     className="page-link"
                     onClick={(e) => {
                       e.preventDefault()
-                      if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+                      if (currentPage < totalPages)
+                        setCurrentPage(currentPage + 1)
                     }}>
                     <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
