@@ -619,7 +619,7 @@ const teamsRoutes=[
 },
 {
   name: 'UpdateTeams',
-  path:'/teams/edit-teams/update-teams/:teamId',
+  path:'/teams/edit-teams/update-teams',
   element:<UpdateTeams/>
 },{
   name:'UpdateTeamsView',
