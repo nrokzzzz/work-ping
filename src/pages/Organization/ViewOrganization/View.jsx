@@ -3,28 +3,39 @@ import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
-const TODO = () => {
+const ViewOrganization= () => {
   const navigate = useNavigate()
   const itemsPerPage = 10
 
-  const [tasks, setTasks] = useState([])
+  const [organizations, setorganizations] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const [totalRecords, setTotalRecords] = useState(0)
   const [loading, setLoading] = useState(false)
+
+  const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
 
-  const fetchTasks = async (page, q) => {
+  const fetchorganizations = async (page, q) => {
     setLoading(true)
     try {
-      const response = await fetch(
-        `http://192.168.29.97:5000/api/companies?page=${page}&limit=${itemsPerPage}&search=${encodeURIComponent(q || '')}`
-      )
-      const result = await response.json()
+      const params = new URLSearchParams({
+        page,
+        limit: itemsPerPage,
+      })
 
-      setTasks(result.data)
-      setTotalPages(result.totalPages)
-      setTotalRecords(result.totalRecords)
+      if (q && q.trim() !== '') {
+        params.append('search', q.trim())
+      }
+
+      const response = await axiosClient.get(
+        `/api/admin/organization/get-organizations?${params.toString()}`
+      )
+
+      console.log(response.data.organizations)
+      setorganizations(response.data.organizations)
+      setTotalPages(response.data.totalPages)
+      setTotalRecords(response.data.totalRecords)
     } catch (error) {
       console.error('Error fetching companies:', error)
     } finally {
@@ -32,8 +43,9 @@ const TODO = () => {
     }
   }
 
+
   useEffect(() => {
-    fetchTasks(currentPage, search)
+    fetchorganizations(currentPage, search)
   }, [currentPage, search])
 
   const getPages = () => {
@@ -57,9 +69,9 @@ const TODO = () => {
       <Col>
         <Card>
 
-          
+
           <CardBody>
-            <div className="d-flex justify-content-start">
+            <div className="d-flex justify-content-start align-items-center gap-2">
               <div style={{ width: 300 }}>
                 <div className="position-relative">
                   <IconifyIcon
@@ -76,29 +88,36 @@ const TODO = () => {
                     type="search"
                     className="form-control ps-5"
                     placeholder="Search by name..."
-                    value={search}
-                    onChange={(e) => {
-                      setCurrentPage(1)
-                      setSearch(e.target.value)
-                    }}
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                   />
                 </div>
               </div>
+
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setCurrentPage(1)
+                  setSearch(searchInput)
+                }}
+              >
+                Apply
+              </Button>
             </div>
+
           </CardBody>
 
-          
+
           <div className="table-responsive table-centered">
             <table className="table text-nowrap mb-0">
               <thead className="bg-light bg-opacity-50">
                 <tr>
                   <th>Name</th>
-                  <th>Geo Fencing</th>
                   <th>CL Days</th>
                   <th>Type</th>
                   <th>IP Address</th>
                   <th>Founded At</th>
-                  
+
                 </tr>
               </thead>
 
@@ -109,22 +128,21 @@ const TODO = () => {
                       Loading...
                     </td>
                   </tr>
-                ) : tasks.length === 0 ? (
+                ) : organizations.length === 0 ? (
                   <tr>
                     <td colSpan="7" className="text-center py-4">
                       No records found
                     </td>
                   </tr>
                 ) : (
-                  tasks.map((task) => (
-                    <tr key={task.id}>
-                      <td>{task.name}</td>
-                      <td>{task.geoFencing}</td>
-                      <td>{task.clDays}</td>
-                      <td>{task.type}</td>
-                      <td>{task.ipAddress}</td>
-                      <td>{new Date(task.foundedAt).toDateString()}</td>
-                      
+                  organizations.map((organization) => (
+                    <tr key={organization.id}>
+                      <td>{organization.name}</td>
+                      <td>{organization.clDays}</td>
+                      <td>{organization.type}</td>
+                      <td>{organization.IPWhitelist[0]}</td>
+                      <td>{new Date(organization.updatedAt).toDateString()}</td>
+
                     </tr>
                   ))
                 )}
@@ -132,7 +150,7 @@ const TODO = () => {
             </table>
           </div>
 
-          
+
           <div className="align-items-center justify-content-between row g-0 text-center text-sm-start p-3 border-top">
             <div className="col-sm">
               <div className="text-muted">
@@ -195,4 +213,4 @@ const TODO = () => {
   )
 }
 
-export default TODO
+export default ViewOrganization;
