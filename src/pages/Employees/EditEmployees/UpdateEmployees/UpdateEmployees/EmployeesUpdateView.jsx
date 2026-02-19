@@ -193,6 +193,7 @@ const ViewEmployees = () => {
             <table className="table text-nowrap mb-0">
               <thead className="bg-light">
                 <tr>
+                  <th>Actions</th>
                   <th>User_id</th>
                   <th>Name</th>
                   <th>Gmail</th>
