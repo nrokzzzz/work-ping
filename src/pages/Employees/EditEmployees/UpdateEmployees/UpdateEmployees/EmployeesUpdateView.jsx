@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 
@@ -21,7 +22,7 @@ const ViewEmployees = () => {
 
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
-  
+  const navigate=useNavigate()
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -78,7 +79,7 @@ const ViewEmployees = () => {
       const result = await axiosClient.get(
         `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
       )
-
+      console.log(result.data)
       setEmployees(result.data.data || [])
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
