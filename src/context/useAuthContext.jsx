@@ -1,7 +1,7 @@
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import axiosClient from '@/helpers/httpClient';
 const AuthContext = createContext(undefined);
 
 export function useAuthContext() {
@@ -16,42 +16,45 @@ const authSessionKey = '_REBACK_AUTH_KEY_';
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const getSession = () => {
-    try {
-      const fetchedCookie = getCookie(authSessionKey)?.toString();
-      if (!fetchedCookie) return undefined;
-      return JSON.parse(fetchedCookie);
-    } catch (err) {
-      console.error('Invalid session cookie');
-      return undefined;
+  useEffect(()=>{
+    const fetch = async()=>{
+      try{
+        const res = await axiosClient.get('/verify-cookie');
+        if(res.status==200){
+          setIsAuthenticated(true)
+        }else{
+          setIsAuthenticated(false)
+        }
+      }catch(error){
+        console.log(error)
+        setIsAuthenticated(false)
+      }
+      
     }
-  };
+    fetch();
+  },[])
 
-  const [user, setUser] = useState(getSession());
+  const login = ()=>{
+    setIsAuthenticated(true)
+  }
 
-  const saveSession = (userData) => {
-    setCookie(authSessionKey, JSON.stringify(userData), {
-      maxAge: 60 * 60 * 24,
-      sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
-    });
-    setUser(userData);
-  };
+  const logout=()=>{
+    setIsAuthenticated(false)
+  }
 
-  const removeSession = () => {
-    deleteCookie(authSessionKey);
-    setUser(undefined);
-    navigate('/auth/sign-in');
-  };
+  const signUp=()=>{
+    setIsAuthenticated(true)
+  }
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        isAuthenticated: !!user,   // ✅ Correct way
-        saveSession,
-        removeSession,
+        isAuthenticated,
+        login,
+        signUp,
+        logout
       }}
     >
       {children}

@@ -10,7 +10,7 @@ import { useAuthContext } from '@/context/useAuthContext';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { saveSession } = useAuthContext();  // ✅ correct method
+  const { login } = useAuthContext();  // ✅ correct method
 
   const loginSchema = yup.object({
     email: yup.string().email('Please enter a valid email').required('Please enter your email'),
@@ -44,7 +44,7 @@ const LoginForm = () => {
       };
 
       // Save session in context + cookie
-      saveSession(userData);
+      login()
 
       navigate('/dashboard/analytics');
 

@@ -7,12 +7,13 @@ import axiosClient from '@/helpers/httpClient';
 import {useAuthContext} from '@/context/useAuthContext';
 const ProfileDropdown = () => {
   const navigate = useNavigate()
-  const {removeSession} = useAuthContext();
+  const {logout} = useAuthContext();
   const handleSubmit = async()=>{
     try{
       const res=await axiosClient.post('/api/admin/auth/logout')
-      removeSession();
+      
       if(res.status==200){
+        logout()
         navigate('/auth/sign-in')
       }
     }catch(error){
