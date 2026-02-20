@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
 import PageMetaData from '@/components/PageTitle'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
-
+import axiosClient from '@/helpers/httpClient'
 const ViewTeams = () => {
 
   const itemsPerPage = 10
@@ -27,7 +27,7 @@ const ViewTeams = () => {
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/employees/fields/organization')
+        const res = await axiosClient.get('http://localhost:5000/api/employees/fields/organization')
         const data = await res.json()
         setOrganizationList(data || [])
       } catch (err) {
@@ -51,12 +51,11 @@ const ViewTeams = () => {
       if (appliedSearch.trim() !== '')
         params.append('search', appliedSearch)
 
-      const res = await fetch(`http://localhost:5000/api/employees?${params.toString()}`)
-      const result = await res.json()
-
-      setEmployees(result.data || [])
-      setTotalPages(result.totalPages || 0)
-      setTotalRecords(result.totalRecords || 0)
+      const result = await axiosClient.get(`/api/admin/team/get-teams-filter?${params.toString()}`)
+     
+      setEmployees(result.data.teamList || [])
+      setTotalPages(result.data.totalPages || 0)
+      setTotalRecords(result.data.totalRecords || 0)
 
     } catch (e) {
       console.error('Error fetching employees:', e)
