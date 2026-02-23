@@ -18,30 +18,30 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [is2FAAuthnticator,setIs2FAAuthnticator] = useState(false);
-  useEffect(()=>{
-    const fetch = async()=>{
-      try{
-        const res = await axiosClient.get('/verify-cookie');
-        
-        if(res.status==200){
-          if(res.data.twoFactorEnable){
-            setIs2FAAuthnticator(true)
-          }
-          setIsAuthenticated(true)
-        }else{
-          setIsAuthenticated(false)
+  const fetch = async()=>{
+    try{
+      const res = await axiosClient.get('/verify-cookie');
+      
+      if(res.status==200){
+        if(res.data.twoFactorEnable){
+          setIs2FAAuthnticator(true)
         }
-      }catch(error){
-        console.log(error)
+        setIsAuthenticated(true)
+      }else{
         setIsAuthenticated(false)
       }
-      
+    }catch(error){
+      console.log(error)
+      setIsAuthenticated(false)
     }
+    
+  }
+  useEffect(()=>{
     fetch();
-  },[isAuthenticated])
+  },[])
 
   const login = ()=>{
-    
+    fetch()
     setIsAuthenticated(true)
   }
 
@@ -50,6 +50,7 @@ export function AuthProvider({ children }) {
   }
 
   const signUp=()=>{
+    fetch()
     setIsAuthenticated(true)
   }
 
