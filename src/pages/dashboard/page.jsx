@@ -6,8 +6,21 @@ import SessionByBrowser from './components/SessionByBrowser';
 import SessionsByCountry from './components/SessionsByCountry';
 import Stats from './components/Stats';
 import TopPages from './components/TopPages';
-
+import { useAuthContext } from '@/context/useAuthContext';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 export default function Home() {
+  const {isAuthenticated,is2FAAuthnticator} = useAuthContext();
+  const navigate = useNavigate()
+  useEffect(()=>{
+    if(!isAuthenticated){
+      navigate('/auth/sign-in')
+    }else{
+      if(!is2FAAuthnticator){
+        navigate('/2fa-authnticator')
+      }
+    }
+  },[])
   return <>
       <PageBreadcrumb title="Analytics" subName="Dashboards" />
       <PageMetaData title="Analytics" />

@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { Button, Form, Card } from 'react-bootstrap'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
-
+import {useAuthContext} from '@/context/useAuthContext'
 const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
+  const {setIsLoginVerification}=useAuthContext()
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -18,7 +19,9 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
       const res = await axiosClient.post('/api/auth/verify-2fa', { code })
 
       if (res.data?.success) {
+        setIsLoginVerification(true)
         onSuccess() 
+
       } else {
         setError('Invalid code')
       }

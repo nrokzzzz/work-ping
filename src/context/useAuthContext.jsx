@@ -18,6 +18,7 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [is2FAAuthnticator,setIs2FAAuthnticator] = useState(false);
+  const [isLoginVerification,setIsLoginVerification]=useState(false);
   const fetch = async()=>{
     try{
       const res = await axiosClient.get('/verify-cookie');
@@ -61,7 +62,9 @@ export function AuthProvider({ children }) {
         login,
         signUp,
         logout,
-        is2FAAuthnticator
+        is2FAAuthnticator,
+        isLoginVerification,
+        setIsLoginVerification
       }}
     >
       {children}
