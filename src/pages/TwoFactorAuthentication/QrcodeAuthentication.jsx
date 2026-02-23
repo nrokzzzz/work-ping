@@ -18,7 +18,6 @@ const QRAuthModal = () => {
     }
   }, [])
 
-
   const CREATE_QR_URL = 'http://localhost:3000/api/auth/qr-session'
   const CHECK_STATUS_URL = 'http://localhost:3000/api/auth/qr-status'
 
@@ -34,7 +33,6 @@ const QRAuthModal = () => {
       const data = await res.json()
       console.log('Response from backend:', data)
       setToken(data.token)
-
 
       setStatus('Waiting for scan...')
       setLoading(false)
@@ -71,60 +69,44 @@ const QRAuthModal = () => {
   return (
     <>
       <div
-        className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75"
+        className="position-fixed top-0 start-0 w-100 h-100 bg-body-secondary bg-opacity-75"
         style={{ backdropFilter: 'blur(4px)', zIndex: 99999 }}
       />
       <div
         className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
         style={{ zIndex: 100000 }}
       >
-        <Card
-          className="text-center shadow-lg border-0"
-          style={{
-            width: 420,
-            backgroundColor: '#0f172a',
-            color: '#ffffff',
-          }}
-        >
+        <Card className="text-center shadow-lg border-0 bg-body text-body" style={{ width: 420 }}>
           <Card.Body className="p-4">
             <div className="mb-3">
               <div
-                className="mx-auto d-flex align-items-center justify-content-center rounded-circle border border-light"
+                className="mx-auto d-flex align-items-center justify-content-center rounded-circle border border-secondary"
                 style={{ width: 64, height: 64 }}
               >
-                <span style={{ fontSize: 32, color: '#ffffff' }}>🔐</span>
+                <span style={{ fontSize: 32 }}>🔐</span>
               </div>
             </div>
 
-            <h4 className="mb-2" style={{ color: '#ffffff' }}>
-              Scan QR to Login
-            </h4>
+            <h4 className="mb-2">Scan QR to Login</h4>
 
-            <p className="small mb-3" style={{ color: '#ffffff' }}>
+            <p className="small mb-3 text-body-secondary">
               Open your mobile app and scan this QR code to continue.
             </p>
 
             <div
-              className="d-flex align-items-center justify-content-center mb-3"
-              style={{
-                minHeight: 220,
-                backgroundColor: '#020617',
-                borderRadius: 8,
-                border: '1px solid #334155',
-              }}
+              className="d-flex align-items-center justify-content-center mb-3 bg-body-secondary rounded border"
+              style={{ minHeight: 220 }}
             >
               {loading ? (
                 <Spinner animation="border" />
               ) : qrImage ? (
                 <img src={qrImage} alt="QR Code" />
               ) : (
-                <span style={{ color: '#ffffff' }}>Failed to load QR</span>
+                <span className="text-body">Failed to load QR</span>
               )}
             </div>
 
-            <p className="small mb-4" style={{ color: '#ffffff' }}>
-              {status}
-            </p>
+            <p className="small mb-4 text-body-secondary">{status}</p>
 
             <div className="d-flex justify-content-center gap-3">
               <Button
