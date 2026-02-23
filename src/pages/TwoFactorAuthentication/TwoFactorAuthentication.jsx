@@ -80,7 +80,7 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
               <div className="d-flex justify-content-center gap-3">
                 <Button
                   variant="secondary"
-                  onClick={onCancel}   // ✅ FIXED
+                  onClick={()=>window.history.back()}  
                   className="px-4"
                   disabled={loading}
                 >
