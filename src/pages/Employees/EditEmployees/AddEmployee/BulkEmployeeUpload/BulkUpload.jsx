@@ -47,13 +47,15 @@ const BulkUpload = () => {
       fileInputRef.current.value = ''
     }
   }
+  const handleAuthentication = () => {
+  if (!file) {
+    alert('Please select a file')
+    return
+  }
+  setShow2FA(true) 
+}
 
   const handleUpload = async () => {
-    if (!file) {
-      alert('Please select a file')
-      return
-    }
-    setShow2FA(true);
     const formData = new FormData()
     formData.append('file', file)
 
@@ -164,7 +166,7 @@ const BulkUpload = () => {
             <div className="text-end mt-4">
               <Button
                 variant="primary"
-                onClick={handleUpload}
+                onClick={handleAuthentication}
                 disabled={!file || loading}
               >
                 {loading ? 'Uploading...' : 'Upload'}
@@ -173,6 +175,7 @@ const BulkUpload = () => {
                     <TwoFactorAuthentication
                       onSuccess={() => {
                         setShow2FA(false);
+                        handleUpload()
                       }}
                       onCancel={() => {
                         setShow2FA(false);
