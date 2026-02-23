@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 // Dashboard Routes
-const Analytics = lazy(() => import('@/app/(admin)/dashboard/analytics/page'));
+const Analytics = lazy(() => import('@/pages/dashboard/page'));
 const Finance = lazy(() => import('@/app/(admin)/dashboard/finance/page'));
 const Sales = lazy(() => import('@/app/(admin)/dashboard/sales/page'));
 
@@ -714,7 +714,7 @@ const TwoFactorAuthentication=[
     element: <TwoFactorAuthCard/>
   },
    {
-    path:'/qrcode-authentication',
+    path:'/2fa-authnticator',
     name: 'QrCodeAuthentication',
     element: <QrCodeAuthentication/>
   }
