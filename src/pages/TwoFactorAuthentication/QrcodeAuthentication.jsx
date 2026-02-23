@@ -1,17 +1,23 @@
 import { useEffect, useState, useRef } from 'react'
 import { Button, Card, Spinner } from 'react-bootstrap'
-
-const DEFAULT_QR_BASE64 =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAFUlEQVR4nO3BMQEAAADCoPVPbQ0PoAAAAAAAAAAAAAAA8JcGkQAAAZm5J6sAAAAASUVORK5CYII='
+import axiosClient from '@/helpers/httpClient'
 
 const QRAuthModal = () => {
   const [status, setStatus] = useState('Creating QR session...')
   const [token, setToken] = useState(null)
-  const [qrImage, setQrImage] = useState(DEFAULT_QR_BASE64)
   const [loading, setLoading] = useState(true)
   const pollRef = useRef(null)
-
+  const [qrCode,setQrCode]=useState(null)
   useEffect(() => {
+    const qrPage = async()=>{
+      try{
+        const res=await axiosClient.post('/api/auth/2fa/setup');
+        setQrCode(res.data.qrCode)
+      }catch(error){
+        console.log(error)
+      }
+    }
+    qrPage()
     createQRSession()
     return () => {
       if (pollRef.current) clearTimeout(pollRef.current)
@@ -25,7 +31,7 @@ const QRAuthModal = () => {
     try {
       setLoading(true)
       setStatus('Creating QR session...')
-      setQrImage(DEFAULT_QR_BASE64)
+      setqrCode(qrCode)
 
       const res = await fetch(CREATE_QR_URL)
       if (!res.ok) throw new Error('HTTP error ' + res.status)
@@ -99,8 +105,8 @@ const QRAuthModal = () => {
             >
               {loading ? (
                 <Spinner animation="border" />
-              ) : qrImage ? (
-                <img src={qrImage} alt="QR Code" />
+              ) : qrCode ? (
+                <img src={qrCode} alt="QR Code" />
               ) : (
                 <span className="text-body">Failed to load QR</span>
               )}
