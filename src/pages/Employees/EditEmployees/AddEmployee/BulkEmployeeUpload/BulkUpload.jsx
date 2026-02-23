@@ -12,19 +12,15 @@ import PageMetaData from '@/components/PageTitle'
 import { useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
-import TwoFactorAuthentication from "@/pages/TwoFactorAuthentication/TwoFactorAuthentication";
 
 const BulkUpload = () => {
   const navigate = useNavigate()
 
-  const [file, setFile] = useState(null) 
+  const [file, setFile] = useState(null) // ✅ single file
   const [loading, setLoading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [allTasks, setAllTasks] = useState([])
   const [showTable, setShowTable] = useState(false)
-   const [show2FA, setShow2FA] = useState(false);
-
-  
 
   const fileInputRef = useRef(null)
 
@@ -35,7 +31,7 @@ const BulkUpload = () => {
   }
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0] 
+    const selectedFile = e.target.files[0] // ✅ only first file
     if (selectedFile) {
       setFile(selectedFile)
     }
@@ -53,7 +49,7 @@ const BulkUpload = () => {
       alert('Please select a file')
       return
     }
-    setShow2FA(true);
+
     const formData = new FormData()
     formData.append('file', file)
 
@@ -169,16 +165,6 @@ const BulkUpload = () => {
               >
                 {loading ? 'Uploading...' : 'Upload'}
               </Button>
-               {show2FA && (
-                    <TwoFactorAuthentication
-                      onSuccess={() => {
-                        setShow2FA(false);
-                      }}
-                      onCancel={() => {
-                        setShow2FA(false);
-                      }}
-                    />
-                  )}
             </div>
 
             {/* Progress Bar */}
