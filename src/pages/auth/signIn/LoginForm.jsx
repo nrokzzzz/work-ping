@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import axiosClient from '@/helpers/httpClient';
 import { useAuthContext } from '@/context/useAuthContext';
-
+import { toast } from 'react-toastify';
 const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuthContext();  // ✅ correct method
@@ -38,15 +38,19 @@ const LoginForm = () => {
       // Assuming backend returns:
       // { user: {...}, accessToken: "..." }
 
-      const userData = {
-        ...response.data.user,
-        accessToken: response.data.accessToken
-      };
 
-      // Save session in context + cookie
-      login()
+      toast.success('Login Successfully', {
+        position: 'top-right',
+        autoClose: 2000
+      });
 
-      navigate('/dashboard/analytics');
+      login();
+
+      setTimeout(() => {
+        navigate('/dashboard/analytics');
+      }, 1000);
+
+
 
     } catch (error) {
       console.error('Login error:', error);
@@ -55,7 +59,7 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="authentication-form">
-      
+
       <TextFormInput
         control={control}
         name="email"

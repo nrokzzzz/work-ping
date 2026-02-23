@@ -1,7 +1,7 @@
 export const currency = '$';
 export const currentYear = new Date().getFullYear();
 export const developedByLink = 'https://techzaa.getappui.com/';
-export const developedBy = 'Techzaa';
+export const developedBy = 'Work-pinG';
 export const contactUs = 'techzaastudio@gmail.com';
 export const buyLink = '';
 export const basePath = '';

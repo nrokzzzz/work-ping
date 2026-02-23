@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { DEFAULT_PAGE_TITLE } from '@/context/constants';
 import { AuthProvider } from '@/context/useAuthContext';
 import { LayoutProvider } from '@/context/useLayoutContext';
 import { NotificationProvider } from '@/context/useNotificationContext';
 import { HelmetProvider } from 'react-helmet-async';
+
 const handleChangeTitle = () => {
-  if (document.visibilityState == 'hidden') document.title = 'Please come back 🥺';else document.title = DEFAULT_PAGE_TITLE;
+  if (document.visibilityState == 'hidden') document.title = 'Please come back 🥺'; else document.title = DEFAULT_PAGE_TITLE;
 };
 const AppProvidersWrapper = ({
   children
@@ -18,14 +20,24 @@ const AppProvidersWrapper = ({
     };
   }, []);
   return <HelmetProvider>
-      <AuthProvider>
-        <LayoutProvider>
-          <NotificationProvider>
-            {children}
-            <ToastContainer theme="colored" />
-          </NotificationProvider>
-        </LayoutProvider>
-      </AuthProvider>
-    </HelmetProvider>;
+    <AuthProvider>
+      <LayoutProvider>
+        <NotificationProvider>
+          {children}
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+            draggable
+            theme="light"
+          />
+
+        </NotificationProvider>
+      </LayoutProvider>
+    </AuthProvider>
+  </HelmetProvider>;
 };
 export default AppProvidersWrapper;

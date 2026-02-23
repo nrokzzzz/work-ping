@@ -4,6 +4,7 @@ import * as yup from 'yup'
 import { Button, Form } from 'react-bootstrap'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
+import { toast } from 'react-toastify'
 
 const schema = yup.object({
   teamName: yup.string().required('Team Name is required'),
@@ -40,11 +41,13 @@ const CreateTeam = () => {
 
       console.log('Response ', res.data)
 
-      //  Reset form after success
+      // Reset form after success
       reset()
+      toast.success('Team created successfully!')
 
     } catch (error) {
       console.error('SAVE TEAM ERROR ', error)
+      toast.error('Failed to create team. Please try again.')
     }
   }
 

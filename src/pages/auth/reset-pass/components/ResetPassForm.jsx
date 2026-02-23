@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import axiosClient from "@/helpers/httpClient";
 import * as yup from "yup";
 import "bootstrap-icons/font/bootstrap-icons.css";
-
+import { toast } from "react-toastify";
 const ResetPassForm = () => {
   const [step, setStep] = useState(1); // 1=email, 2=otp, 3=password
   const [showPassword, setShowPassword] = useState(false);
@@ -85,10 +85,10 @@ const ResetPassForm = () => {
   const onSubmit = async (data) => {
     try {
       if (step === 1) {
-        // await axiosClient.post(
-        //   "/api/admin/auth/forgot-password/send-otp",
-        //   { email: data.email }
-        // );
+        await axiosClient.post(
+          "/api/admin/forgot-password/send-otp",
+          { email: data.email }
+        );
 
         setStep(2);
         setOtpTimer(60);
@@ -97,25 +97,32 @@ const ResetPassForm = () => {
 
       else if (step === 2) {
         setIsTimerActive(false);
-        // await axiosClient.post(
-        //   "/api/admin/auth/forgot-password/verify-and-change",
-        //   { email: data.email, otp: data.otp }
-        // );
+        console.log(data)
+        await axiosClient.post(
+          "/api/admin/forgot-password/verify-otp",
+          { email: data.email, otp: data.otp }
+        );
 
         setStep(3);
       }
 
       else if (step === 3) {
         await axiosClient.post(
-          "/api/admin/auth/forgot-password/change-password",
+          "/api/admin/forgot-password/verify-and-change",
           {
             email: data.email,
             otp: data.otp,
             newPassword: data.newPassword,
           }
         );
+        
+         toast.success('Copy To Clipboard', {
+                  position: 'top-right',
+                  autoClose: 2000
+          });
 
         navigate("/auth/sign-in");
+
       }
 
     } catch (error) {
