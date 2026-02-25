@@ -218,10 +218,10 @@ const Viewprojects = () => {
                 ) : (
                   projects.map((project) => (
                     <tr key={project._id}>
-                      <td>{project._id}</td>
+                      
                       <td>{project.name}</td>
                       <td>{project.assignedDate}</td>
-                      <td>{project.dueDate}</td>
+                      <td>{project.contractedBy}</td>
                       <td>{project.organizationId}</td>
                       
                     </tr>
