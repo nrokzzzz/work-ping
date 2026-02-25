@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 
-const ViewEmployees = () => {
+const Viewprojects = () => {
   const itemsPerPage = 10
 
-  const [employees, setEmployees] = useState([])
+  const [projects, setProjects] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const [totalRecords, setTotalRecords] = useState(0)
@@ -26,7 +26,7 @@ const ViewEmployees = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-projects/get-organization-info'
         )
         setOrgData(res.data || {})
         console.log(res.data)
@@ -51,7 +51,7 @@ const ViewEmployees = () => {
     [organization, orgData]
   )
 
-  const fetchEmployees = async (page) => {
+  const fetchprojects = async (page) => {
     setLoading(true)
     try {
       const params = new URLSearchParams({
@@ -76,10 +76,10 @@ const ViewEmployees = () => {
     }
 
       const result = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
+        `/api/admin/project/list?${params.toString()}`
       )
 
-      setEmployees(result.data.data || [])
+      setProjects(result.data.projects || [])
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
     } catch (e) {
@@ -90,7 +90,7 @@ const ViewEmployees = () => {
   }
 
   useEffect(() => {
-    fetchEmployees(currentPage)
+    fetchprojects(currentPage)
   }, [currentPage, appliedOrganization, appliedDepartment,appliedSearch])
 
   const handleApply = () => {
@@ -138,7 +138,7 @@ const ViewEmployees = () => {
                   <input
                     type="search"
                     className="form-control ps-5"
-                    placeholder="Search employees..."
+                    placeholder="Search projects..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
@@ -163,6 +163,24 @@ const ViewEmployees = () => {
                   ))}
                 </select>
               </Col>
+
+              <Col xs={12} md={3}>
+                <select
+                  className="form-select"
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                >
+                  <option value="">Select Department</option>
+
+                  {departmentList.map((team) => (
+                    <option key={team._id} value={team._id}>
+                      {team.teamName}
+                    </option>
+                  ))}
+
+                </select>
+              </Col>
+
               <Col xs={12} md={2}>
                 <Button className="w-100" onClick={handleApply}>
                   Apply
@@ -175,12 +193,12 @@ const ViewEmployees = () => {
             <table className="table text-nowrap mb-0">
               <thead className="bg-light">
                 <tr>
-                  
                   <th>Name</th>
                   <th>Assigned Date</th>
                   <th>Due Date</th>
                   <th>Contracted By</th>
                   <th>Organization ID</th>
+                  
                 </tr>
               </thead>
 
@@ -191,30 +209,21 @@ const ViewEmployees = () => {
                       Loading...
                     </td>
                   </tr>
-                ) : employees.length === 0 ? (
+                ) : projects.length === 0 ? (
                   <tr>
                     <td colSpan="15" className="text-center py-4">
                       No records found
                     </td>
                   </tr>
                 ) : (
-                  employees.map((emp) => (
+                  projects.map((emp) => (
                     <tr key={emp.USER_ID}>
                       <td>{emp.USER_ID}</td>
                       <td>{emp.name}</td>
                       <td>{emp.email}</td>
                       <td>{emp.phone}</td>
                       <td>{emp.role}</td>
-                      <td>{emp.organization}</td>
-                      <td>{emp.department}</td>
-                      <td>{emp.dob}</td>
-                      <td>{emp.gender}</td>
-                      <td>{emp.dof}</td>
-                      <td>{emp.salary}</td>
-                      <td>{emp.aadhar}</td>
-                      <td>{emp.pan}</td>
-                      <td>{emp.passport}</td>
-                      <td>{emp.bank}</td>
+                      
                     </tr>
                   ))
                 )}
@@ -282,4 +291,4 @@ const ViewEmployees = () => {
   )
 }
 
-export default ViewEmployees
+export default Viewprojects
