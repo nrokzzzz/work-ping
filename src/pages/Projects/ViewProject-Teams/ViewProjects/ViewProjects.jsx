@@ -170,7 +170,7 @@ const Viewprojects = () => {
                   <th>Assigned Date</th>
                   <th>Due Date</th>
                   <th>Contracted By</th>
-                  <th>Organization ID</th>
+                  <th>Organization Name</th>
                   
                 </tr>
               </thead>
