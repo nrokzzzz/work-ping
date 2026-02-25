@@ -78,7 +78,7 @@ const Viewprojects = () => {
       const result = await axiosClient.get(
         `/api/admin/project/list?${params.toString()}`
       )
-      console.log(result.data.data.projects)
+      
       setProjects(result.data.projects || [])
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
