@@ -78,7 +78,7 @@ const Viewprojects = () => {
       const result = await axiosClient.get(
         `/api/admin/project/list?${params.toString()}`
       )
-
+      console.log(result.data.data.projects)
       setProjects(result.data.projects || [])
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
@@ -216,13 +216,13 @@ const Viewprojects = () => {
                     </td>
                   </tr>
                 ) : (
-                  projects.map((emp) => (
-                    <tr key={emp.USER_ID}>
-                      <td>{emp.USER_ID}</td>
-                      <td>{emp.name}</td>
-                      <td>{emp.email}</td>
-                      <td>{emp.phone}</td>
-                      <td>{emp.role}</td>
+                  projects.map((project) => (
+                    <tr key={project._id}>
+                      <td>{project._id}</td>
+                      <td>{project.name}</td>
+                      <td>{project.assignedDate}</td>
+                      <td>{project.dueDate}</td>
+                      <td>{project.organizationId}</td>
                       
                     </tr>
                   ))
