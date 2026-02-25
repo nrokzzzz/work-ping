@@ -62,10 +62,6 @@ const Viewprojects = () => {
           params.append('organizationId', organizationId)
         }
       }
-
-      if (appliedDepartment) {
-        params.append('teamId', appliedDepartment)
-      }
        if (appliedSearch) {
       params.append('search', appliedSearch)
     }
