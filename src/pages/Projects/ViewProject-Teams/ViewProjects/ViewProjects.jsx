@@ -6,27 +6,22 @@ import axiosClient from '@/helpers/httpClient'
 
 const Viewprojects = () => {
   const itemsPerPage = 10
-
   const [projects, setProjects] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const [totalRecords, setTotalRecords] = useState(0)
   const [loading, setLoading] = useState(false)
-
   const [search, setSearch] = useState('')
   const [appliedSearch,setAppliedSearch]=useState('')
   const [orgData, setOrgData] = useState({})
   const [organization, setOrganization] = useState('')
-  const [department, setDepartment] = useState('')
-
   const [appliedOrganization, setAppliedOrganization] = useState('')
-  const [appliedDepartment, setAppliedDepartment] = useState('')
   
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-projects/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info'
         )
         setOrgData(res.data || {})
         console.log(res.data)
@@ -91,7 +86,7 @@ const Viewprojects = () => {
 
   useEffect(() => {
     fetchprojects(currentPage)
-  }, [currentPage, appliedOrganization, appliedDepartment,appliedSearch])
+  }, [currentPage, appliedOrganizatio,appliedSearch])
 
   const handleApply = () => {
      setAppliedSearch(search)
@@ -151,7 +146,6 @@ const Viewprojects = () => {
                   value={organization}
                   onChange={(e) => {
                     setOrganization(e.target.value)
-                    setDepartment('')
                   }}
                 >
                   <option value="">Select Organization</option>
@@ -164,23 +158,7 @@ const Viewprojects = () => {
                 </select>
               </Col>
 
-              <Col xs={12} md={3}>
-                <select
-                  className="form-select"
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                >
-                  <option value="">Select Department</option>
-
-                  {departmentList.map((team) => (
-                    <option key={team._id} value={team._id}>
-                      {team.teamName}
-                    </option>
-                  ))}
-
-                </select>
-              </Col>
-
+              
               <Col xs={12} md={2}>
                 <Button className="w-100" onClick={handleApply}>
                   Apply
