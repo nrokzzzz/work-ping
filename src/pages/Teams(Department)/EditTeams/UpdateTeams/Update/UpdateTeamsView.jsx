@@ -26,7 +26,7 @@ const ViewTeams = () => {
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/employees/fields/organization')
+        const res = await fetch('api/a')
         const data = await res.json()
         setOrganizationList(data || [])
       } catch (err) {
@@ -50,7 +50,7 @@ const ViewTeams = () => {
       if (appliedSearch.trim() !== '')
         params.append('search', appliedSearch)
 
-      const res = await fetch(`http://localhost:5000/api/employees?${params.toString()}`)
+      const res = await fetch(`api/employees?${params.toString()}`)
       const result = await res.json()
 
       setEmployees(result.data || [])

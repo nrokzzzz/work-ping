@@ -25,11 +25,11 @@ const ViewEmployees = () => {
   useEffect(() => {
     const fetchDropdownValues = async () => {
       try {
-        const orgRes = await fetch('http://localhost:5000/api/employees/fields/organization')
+        const orgRes = await fetch('api/employees/fields/organization')
         const orgData = await orgRes.json()
         setOrganizationList(orgData || [])
 
-        const deptRes = await fetch('http://localhost:5000/api/employees/fields/department')
+        const deptRes = await fetch('api/employees/fields/department')
         const deptData = await deptRes.json()
         setDepartmentList(deptData || [])
       } catch (err) {
@@ -54,7 +54,7 @@ const ViewEmployees = () => {
         params.append('department', appliedDepartment)
       }
 
-      const res = await fetch(`http://localhost:5000/api/employees?${params.toString()}`)
+      const res = await fetch(`api/employees?${params.toString()}`)
       const result = await res.json()
       setEmployees(result.data || [])
       setTotalPages(result.totalPages || 0)

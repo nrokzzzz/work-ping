@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { basePath } from './context/constants';
-createRoot(document.getElementById('root')).render(<StrictMode>
+createRoot(document.getElementById('root')).render(
     <BrowserRouter basename={basePath}>
       <App />
     </BrowserRouter>
-  </StrictMode>);
+);

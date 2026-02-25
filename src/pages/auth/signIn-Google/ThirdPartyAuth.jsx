@@ -3,7 +3,7 @@ import IconifyIcon from "../../../components/wrappers/IconifyIcon";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = 'http://localhost:3000';
 
 const ThirdPartyAuth = () => {
   const navigate = useNavigate();
