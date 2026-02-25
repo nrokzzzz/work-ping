@@ -221,6 +221,7 @@ const Viewprojects = () => {
                       
                       <td>{project.name}</td>
                       <td>{project.assignedDate}</td>
+                      <td>{project.dueDate}</td>
                       <td>{project.contractedBy}</td>
                       <td>{project.organizationId}</td>
                       
