@@ -86,7 +86,7 @@ const Viewprojects = () => {
 
   useEffect(() => {
     fetchprojects(currentPage)
-  }, [currentPage, appliedOrganizatio,appliedSearch])
+  }, [currentPage, appliedOrganization,appliedSearch])
 
   const handleApply = () => {
      setAppliedSearch(search)
