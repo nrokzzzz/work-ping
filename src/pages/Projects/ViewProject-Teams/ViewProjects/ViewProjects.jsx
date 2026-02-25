@@ -89,9 +89,8 @@ const Viewprojects = () => {
   }, [currentPage, appliedOrganization,appliedSearch])
 
   const handleApply = () => {
-     setAppliedSearch(search)
+    setAppliedSearch(search)
     setAppliedOrganization(organization)
-    setAppliedDepartment(department)
     setCurrentPage(1)
   }
 
