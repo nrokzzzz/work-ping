@@ -18,19 +18,14 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [is2FAAuthnticator,setIs2FAAuthnticator] = useState(false);
-  const [isLoginVerification,setIsLoginVerification]=useState(false);
   const fetch = async()=>{
     try{
       const res = await axiosClient.get('/verify-cookie');
-      
-      if(res.status==200){
-        if(res.data.twoFactorEnable){
-          setIs2FAAuthnticator(true)
-        }
-        setIsAuthenticated(true)
-      }else{
-        setIsAuthenticated(false)
-      }
+      // if(res.2faenable){
+      //   setIs2FAAuthnticator(false);
+      // }
+      setIsAuthenticated(true)
+     
     }catch(error){
       console.log(error)
       setIsAuthenticated(false)
@@ -62,9 +57,7 @@ export function AuthProvider({ children }) {
         login,
         signUp,
         logout,
-        is2FAAuthnticator,
-        isLoginVerification,
-        setIsLoginVerification
+        is2FAAuthnticator
       }}
     >
       {children}

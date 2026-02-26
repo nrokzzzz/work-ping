@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import MaskedInput from 'react-text-mask-legacy'
 import axiosClient from '@/helpers/httpClient'
 import axios from 'axios'
+import { use2FA } from '@/context/useVerification2FA'
 // import GeoFencing from '@/pages/Maps/GeoFencing'
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
@@ -29,6 +30,7 @@ const schema = yup.object({
 })
 
 const EmployeeDetailsForm = () => {
+  const { require2FA } = use2FA();
   const [geoCoords, setGeoCoords] = useState([])
 
   const {
@@ -57,6 +59,8 @@ const EmployeeDetailsForm = () => {
     console.log('Organization Details Submitted:', newData)
 
     try {
+      const verified = await require2FA();
+      if (!verified) return;
       const response = await axiosClient.post('/api/admin/organization/add-organization', newData)
       reset()
       console.log('Response:', response.data)
