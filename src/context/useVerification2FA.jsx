@@ -38,7 +38,7 @@ export const TwoFAProvider = ({ children }) => {
             {showModal && (
                 <TwoFactorAuthentication
                     onSuccess={handleSuccess}
-                    onClose={handleCancel}
+                    onCancel={handleCancel}
                 />
             )}
         </TwoFAContext.Provider>

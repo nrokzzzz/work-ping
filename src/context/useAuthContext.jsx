@@ -17,7 +17,7 @@ const authSessionKey = '_REBACK_AUTH_KEY_';
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [is2FAAuthnticator,setIs2FAAuthnticator] = useState(false);
+  const [is2FAAuthnticator,setIs2FAAuthnticator] = useState(true);
   const fetch = async()=>{
     try{
       const res = await axiosClient.get('/verify-cookie');

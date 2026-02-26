@@ -44,7 +44,7 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
 
   const handleCancel = () => {
     if (loading) return
-    setShowModal(false)
+    onCancel(false)
     
   }
 
