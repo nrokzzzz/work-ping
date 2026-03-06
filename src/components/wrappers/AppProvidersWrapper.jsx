@@ -6,7 +6,7 @@ import { AuthProvider } from '@/context/useAuthContext';
 import { LayoutProvider } from '@/context/useLayoutContext';
 import { NotificationProvider } from '@/context/useNotificationContext';
 import { HelmetProvider } from 'react-helmet-async';
-
+import { TwoFAProvider } from '@/context/useVerification2FA';
 const handleChangeTitle = () => {
   if (document.visibilityState == 'hidden') document.title = 'Please come back 🥺'; else document.title = DEFAULT_PAGE_TITLE;
 };
@@ -21,22 +21,24 @@ const AppProvidersWrapper = ({
   }, []);
   return <HelmetProvider>
     <AuthProvider>
-      <LayoutProvider>
-        <NotificationProvider>
-          {children}
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            pauseOnHover
-            draggable
-            theme="light"
-          />
+      <TwoFAProvider>
+        <LayoutProvider>
+          <NotificationProvider>
+            {children}
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              pauseOnHover
+              draggable
+              theme="light"
+            />
 
-        </NotificationProvider>
-      </LayoutProvider>
+          </NotificationProvider>
+        </LayoutProvider>
+      </TwoFAProvider>  
     </AuthProvider>
   </HelmetProvider>;
 };
