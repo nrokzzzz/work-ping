@@ -165,24 +165,10 @@ const ViewEmployees = () => {
                   </tr>
                 ) : employees.length === 0 ? (
                   <tr>
-                     {/* <td colSpan="15" className="text-center py-4">
+                     <td colSpan="15" className="text-center py-4">
                       No records found
-                    </td> */}
-                    <td colSpan="15" className="text-center py-4">
-                      <td>
-                        <Button
-                          variant="soft-secondary"
-                          size="sm"
-                          className="me-2"
-                          >
-                          <IconifyIcon icon="bx:edit" />
-                        </Button>
-
-                        <Button variant="soft-danger" size="sm">
-                          <IconifyIcon icon="bx:trash" />
-                        </Button>
-                      </td>
                     </td>
+                    
                   </tr>
                 ) : (
                   employees.map((emp) => (

@@ -3,7 +3,8 @@ import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
-const ViewOrganization= () => {
+
+const ViewOrganization = () => {
   const navigate = useNavigate()
   const itemsPerPage = 10
 
@@ -15,6 +16,9 @@ const ViewOrganization= () => {
 
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
+
+  const [selectMode, setSelectMode] = useState(false)
+  const [selectedIds, setSelectedIds] = useState(new Set())
 
   const fetchorganizations = async (page, q) => {
     setLoading(true)
@@ -32,7 +36,6 @@ const ViewOrganization= () => {
         `/api/admin/organization/get-organizations?${params.toString()}`
       )
 
-      console.log(response.data.organizations)
       setorganizations(response.data.organizations)
       setTotalPages(response.data.totalPages)
       setTotalRecords(response.data.totalRecords)
@@ -43,10 +46,33 @@ const ViewOrganization= () => {
     }
   }
 
-
   useEffect(() => {
     fetchorganizations(currentPage, search)
   }, [currentPage, search])
+
+  const handleSelect = (id, checked) => {
+    setSelectedIds(prev => {
+      const newSet = new Set(prev)
+
+      if (checked) newSet.add(id)
+      else newSet.delete(id)
+
+      return newSet
+    })
+  }
+
+  const deleteOrganizations = async () => {
+    try {
+      await axiosClient.post('/api/admin/organization/delete-organizations', {
+        data: [...selectedIds],
+      })
+
+      setSelectedIds(new Set())
+      fetchorganizations(currentPage, search)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const getPages = () => {
     if (totalPages <= 5)
@@ -68,7 +94,6 @@ const ViewOrganization= () => {
     <Row>
       <Col>
         <Card>
-
 
           <CardBody>
             <div className="d-flex justify-content-start align-items-center gap-2">
@@ -103,22 +128,38 @@ const ViewOrganization= () => {
               >
                 Apply
               </Button>
+
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  if (selectMode) setSelectedIds(new Set())
+                  setSelectMode(!selectMode)
+                }}
+              >
+                Select
+              </Button>
+
+              <Button
+                variant="danger"
+                disabled={selectedIds.size === 0}
+                onClick={deleteOrganizations}
+              >
+                Delete
+              </Button>
             </div>
-
           </CardBody>
-
 
           <div className="table-responsive table-centered">
             <table className="table text-nowrap mb-0">
               <thead className="bg-light bg-opacity-50">
                 <tr>
+                  {selectMode && <th>Select</th>}
                   <th>Actions</th>
                   <th>Name</th>
                   <th>CL Days</th>
                   <th>Type</th>
                   <th>IP Address</th>
                   <th>Founded At</th>
-
                 </tr>
               </thead>
 
@@ -137,7 +178,20 @@ const ViewOrganization= () => {
                   </tr>
                 ) : (
                   organizations.map((organization) => (
-                    <tr key={organization.id}>
+                    <tr key={organization._id}>
+
+                      {selectMode && (
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.has(organization._id)}
+                            onChange={(e) =>
+                              handleSelect(organization._id, e.target.checked)
+                            }
+                          />
+                        </td>
+                      )}
+
                       <td>
                         <Button
                           variant="soft-secondary"
@@ -150,10 +204,9 @@ const ViewOrganization= () => {
                           <IconifyIcon icon="bx:edit" />
                         </Button>
 
-                        <Button variant="soft-danger" size="sm">
-                          <IconifyIcon icon="bx:trash" />
-                        </Button>
+                       
                       </td>
+
                       <td>{organization.name}</td>
                       <td>{organization.clDays}</td>
                       <td>{organization.type}</td>
@@ -166,7 +219,6 @@ const ViewOrganization= () => {
               </tbody>
             </table>
           </div>
-
 
           <div className="align-items-center justify-content-between row g-0 text-center text-sm-start p-3 border-top">
             <div className="col-sm">
@@ -230,4 +282,4 @@ const ViewOrganization= () => {
   )
 }
 
-export default ViewOrganization;
+export default ViewOrganization

@@ -227,11 +227,11 @@ const ViewEmployees = () => {
                 ) : (
                   employees.map((emp) => (
                     <tr key={emp.USER_ID}>
-                      <td>{emp.USER_ID}</td>
+                      <td>{emp._id}</td>
                       <td>{emp.name}</td>
                       <td>{emp.email}</td>
                       <td>{emp.phone}</td>
-                      <td>{emp.role}</td>
+                      <td>{emp.roleInTeam}</td>
                       <td>{emp.organization}</td>
                       <td>{emp.department}</td>
                       <td>{emp.dob}</td>

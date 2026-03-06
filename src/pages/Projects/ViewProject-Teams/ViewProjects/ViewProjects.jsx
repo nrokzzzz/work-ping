@@ -196,7 +196,7 @@ const Viewprojects = () => {
                       <td>{project.assignedDate}</td>
                       <td>{project.dueDate}</td>
                       <td>{project.contractedBy}</td>
-                      <td>{project.organizationId}</td>
+                      <td>{project.organization}</td>
                       
                     </tr>
                   ))
