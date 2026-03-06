@@ -158,7 +158,7 @@ const ViewTeams = () => {
             </Row>
           </CardBody>
 
-          {/* Table */ console.log("teams: "+teams) }
+          {/* Table */ console.log("teams: " + teams)}
           <div className="table-responsive">
             <table className="table text-nowrap mb-0">
               <thead className="bg-light">
@@ -200,33 +200,66 @@ const ViewTeams = () => {
           </div>
 
           {/* Pagination */}
-          <div className="p-3 border-top d-flex justify-content-between align-items-center">
-            <div>
-              Showing {start} to {end} of {totalRecords} records
+          <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
+            <div className="col-12 col-sm">
+              <div className="text-muted">
+                Showing {start} to {end} of {totalRecords} records
+              </div>
             </div>
 
-            <ul className="pagination m-0">
-              {getPages().map((p, i) => (
-                <li
-                  key={i}
-                  className={`page-item ${
-                    currentPage === p ? 'active' : ''
-                  } ${p === '...' ? 'disabled' : ''}`}
-                >
+            <Col xs={12} sm="auto">
+              <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
+
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                   <Link
                     to="#"
                     className="page-link"
                     onClick={(e) => {
                       e.preventDefault()
-                      if (typeof p === 'number')
-                        setCurrentPage(p)
+                      if (currentPage > 1)
+                        setCurrentPage(currentPage - 1)
                     }}
                   >
-                    {p}
+                    ‹
                   </Link>
                 </li>
-              ))}
-            </ul>
+
+                {getPages().map((p, i) => (
+                  <li
+                    key={i}
+                    className={`page-item ${currentPage === p ? 'active' : ''
+                      } ${p === '...' ? 'disabled' : ''}`}
+                  >
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (typeof p === 'number')
+                          setCurrentPage(p)
+                      }}
+                    >
+                      {p}
+                    </Link>
+                  </li>
+                ))}
+
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage < totalPages)
+                        setCurrentPage(currentPage + 1)
+                    }}
+                  >
+                    ›
+                  </Link>
+                </li>
+
+              </ul>
+            </Col>
           </div>
         </Card>
       </Col>

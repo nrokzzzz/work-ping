@@ -614,14 +614,14 @@ const teamsRoutes=[
 },
 {
   name: 'UpdateTeams',
-  path:'/teams/edit-teams/update-teams',
+  path:'/teams/edit-teams/update-teams/:id',
   element:<UpdateTeams/>
 },{
   name:'UpdateTeamsView',
   path:'/teams/update-teams-view',
   element:<UpdateTeamsView/>
 }
-,{
+,{},{
   name:'TeamsView',
   path:'/teams/view-teams/',
   element:<ViewTeams/>
@@ -691,7 +691,7 @@ const projectsRoutes=[
     element:<UpdateProjectsView/>
   },
   {
-    path:'/projects/update-projects-form',
+    path:'/projects/update-projects-form/:projectId',
     name:'UpdateProjects',
     element:<UpdateProjects/>
   },
