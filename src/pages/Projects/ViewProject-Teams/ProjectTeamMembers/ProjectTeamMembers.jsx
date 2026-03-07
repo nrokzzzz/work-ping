@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import axiosClient from '@/helpers/httpClient'
 
 const ViewTeams = () => {
@@ -19,7 +20,7 @@ const ViewTeams = () => {
   const [appliedOrganization, setAppliedOrganization] = useState('')
 
   const [loading, setLoading] = useState(false)
-
+  const {projectId} = useParams()
   // ✅ Fetch Organizations (YOUR ROUTE)
   useEffect(() => {
     const fetchOrganizations = async () => {

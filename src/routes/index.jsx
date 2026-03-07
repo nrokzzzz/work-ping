@@ -701,7 +701,7 @@ const projectsRoutes=[
     element:<ViewProjects/>
   },
   {
-    path:'/projects/view-project-teams/project-team-members',
+    path:'/projects/view-project-teams/project-team-members/:projectId',
     name:'ViewProjectTeams',
     element:<ProjectTeamMembers/>
   }

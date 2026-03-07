@@ -62,12 +62,13 @@ const Viewprojects = () => {
           params.append('organizationId', organizationId)
         }
       }
-       if (appliedSearch) {
-      params.append('search', appliedSearch)
-    }
+
+      if (appliedSearch) {
+        params.append('search', appliedSearch)
+      }
 
       const result = await axiosClient.get(
-        `/api/admin/project/list?${params.toString()}`
+        `/api/admin/project/get-projects?${params.toString()}`
       )
       
       setProjects(result.data.projects || [])
@@ -153,7 +154,6 @@ const Viewprojects = () => {
                 </select>
               </Col>
 
-              
               <Col xs={12} md={2}>
                 <Button className="w-100" onClick={handleApply}>
                   Apply
@@ -171,7 +171,7 @@ const Viewprojects = () => {
                   <th>Due Date</th>
                   <th>Contracted By</th>
                   <th>Organization Name</th>
-                  
+                  <th>View Members</th>
                 </tr>
               </thead>
 
@@ -191,13 +191,22 @@ const Viewprojects = () => {
                 ) : (
                   projects.map((project) => (
                     <tr key={project._id}>
-                      
                       <td>{project.name}</td>
                       <td>{project.assignedDate}</td>
                       <td>{project.dueDate}</td>
                       <td>{project.contractedBy}</td>
                       <td>{project.organization}</td>
-                      
+
+                      <td>
+                        <Link
+                          to={`/projects/view-project-teams/project-team-members/${project._id}`}
+                        >
+                          <Button size="sm" variant="info">
+                            View
+                          </Button>
+                        </Link>
+                      </td>
+
                     </tr>
                   ))
                 )}
