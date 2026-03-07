@@ -21,7 +21,6 @@ const ViewTeams = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const [selectMode, setSelectMode] = useState(false)
   const [selectedIds, setSelectedIds] = useState(new Set())
 
   const navigate = useNavigate()
@@ -174,17 +173,6 @@ const ViewTeams = () => {
                   </Button>
 
                   <Button
-                    variant="secondary"
-                    className="flex-fill"
-                    onClick={() => {
-                      if (selectMode) setSelectedIds(new Set())
-                      setSelectMode(!selectMode)
-                    }}
-                  >
-                    Select
-                  </Button>
-
-                  <Button
                     variant="danger"
                     className="flex-fill"
                     disabled={selectedIds.size === 0}
@@ -201,7 +189,7 @@ const ViewTeams = () => {
             <table className="table text-nowrap mb-0">
               <thead className="bg-light">
                 <tr>
-                  {selectMode && <th>Select</th>}
+                  <th>Select</th>
                   <th>Actions</th>
                   <th>Team Name</th>
                   <th>Team Manager ID</th>
@@ -226,17 +214,15 @@ const ViewTeams = () => {
                 ) : (
                   teams.map((team) => (
                     <tr key={team._id}>
-                      {selectMode && (
-                        <td>
-                          <input
-                            type="checkbox"
-                            checked={selectedIds.has(team._id)}
-                            onChange={(e) =>
-                              handleSelect(team._id, e.target.checked)
-                            }
-                          />
-                        </td>
-                      )}
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(team._id)}
+                          onChange={(e) =>
+                            handleSelect(team._id, e.target.checked)
+                          }
+                        />
+                      </td>
 
                       <td>
                         <Button
@@ -290,8 +276,7 @@ const ViewTeams = () => {
                 {getPages().map((p, i) => (
                   <li
                     key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''
-                      } ${p === '...' ? 'disabled' : ''}`}
+                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}
                   >
                     <Link
                       to="#"

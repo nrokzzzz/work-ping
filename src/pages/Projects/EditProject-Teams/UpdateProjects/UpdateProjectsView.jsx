@@ -17,7 +17,6 @@ const Viewprojects = () => {
   const [organization, setOrganization] = useState('')
   const [appliedOrganization, setAppliedOrganization] = useState('')
 
-  const [selectMode, setSelectMode] = useState(false)
   const [selectedIds, setSelectedIds] = useState(new Set())
 
   const navigate = useNavigate()
@@ -29,7 +28,6 @@ const Viewprojects = () => {
           '/api/admin/get-all-employees/get-organization-info'
         )
         setOrgData(res.data || {})
-        console.log(res.data)
       } catch (err) {
         console.error(err)
       }
@@ -39,14 +37,6 @@ const Viewprojects = () => {
   }, [])
 
   const organizationList = useMemo(() => Object.keys(orgData), [orgData])
-
-  const departmentList = useMemo(
-    () =>
-      organization && orgData[organization]
-        ? orgData[organization].teams || []
-        : [],
-    [organization, orgData]
-  )
 
   const fetchprojects = async (page) => {
     setLoading(true)
@@ -70,7 +60,7 @@ const Viewprojects = () => {
       }
 
       const result = await axiosClient.get(
-        `/api/admin/project/list?${params.toString()}`
+        `/api/admin/project/get-projects?${params.toString()}`
       )
 
       setProjects(result.data.projects || [])
@@ -194,17 +184,6 @@ const Viewprojects = () => {
                   </Button>
 
                   <Button
-                    variant="secondary"
-                    className="flex-fill"
-                    onClick={() => {
-                      if (selectMode) setSelectedIds(new Set())
-                      setSelectMode(!selectMode)
-                    }}
-                  >
-                    Select
-                  </Button>
-
-                  <Button
                     variant="danger"
                     className="flex-fill"
                     disabled={selectedIds.size === 0}
@@ -221,7 +200,7 @@ const Viewprojects = () => {
             <table className="table text-nowrap mb-0">
               <thead className="bg-light">
                 <tr>
-                  {selectMode && <th>Select</th>}
+                  <th>Select</th>
                   <th>Actions</th>
                   <th>Name</th>
                   <th>Assigned Date</th>
@@ -247,20 +226,18 @@ const Viewprojects = () => {
                 ) : (
                   projects.map((project) => (
                     <tr key={project._id}>
-                      {selectMode && (
-                        <td>
-                          <input
-                            type="checkbox"
-                            checked={selectedIds.has(project._id)}
-                            onChange={(e) =>
-                              handleSelect(
-                                project._id,
-                                e.target.checked
-                              )
-                            }
-                          />
-                        </td>
-                      )}
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(project._id)}
+                          onChange={(e) =>
+                            handleSelect(
+                              project._id,
+                              e.target.checked
+                            )
+                          }
+                        />
+                      </td>
 
                       <td>
                         <Button

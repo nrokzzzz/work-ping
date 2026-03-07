@@ -5,10 +5,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 
-
 const ViewEmployees = () => {
   const itemsPerPage = 10
-  const [selectMode, setSelectMode] = useState(false)
   const [selectedIds, setSelectedIds] = useState(new Set())
   const [employees, setEmployees] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -25,6 +23,7 @@ const ViewEmployees = () => {
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
   const navigate = useNavigate()
+
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -74,6 +73,7 @@ const ViewEmployees = () => {
       if (appliedDepartment) {
         params.append('teamId', appliedDepartment)
       }
+
       if (appliedSearch) {
         params.append('search', appliedSearch)
       }
@@ -81,7 +81,7 @@ const ViewEmployees = () => {
       const result = await axiosClient.get(
         `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
       )
-      console.log(result.data)
+
       setEmployees(result.data.data || [])
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
@@ -91,8 +91,9 @@ const ViewEmployees = () => {
       setLoading(false)
     }
   }
+
   const handleSelect = (id, checked) => {
-    setSelectedIds(prev => {
+    setSelectedIds((prev) => {
       const newSet = new Set(prev)
 
       if (checked) newSet.add(id)
@@ -101,20 +102,23 @@ const ViewEmployees = () => {
       return newSet
     })
   }
+
   useEffect(() => {
     fetchEmployees(currentPage)
   }, [currentPage, appliedOrganization, appliedDepartment, appliedSearch])
+
   const deleteEmployees = async () => {
     try {
       await axiosClient.post('/api/admin/employees/delete-employees', {
         data: [...selectedIds],
-      })  
+      })
       setSelectedIds(new Set())
-        fetchEmployees(currentPage)   
+      fetchEmployees(currentPage)
     } catch (e) {
       console.error(e)
     }
   }
+
   const handleApply = () => {
     setAppliedSearch(search)
     setAppliedOrganization(organization)
@@ -146,97 +150,86 @@ const ViewEmployees = () => {
           <CardBody>
             <Row className="g-2 align-items-center">
 
-  <Col xs={12} md={4}>
-    <div className="position-relative">
-      <IconifyIcon
-        icon="bx:search-alt"
-        className="position-absolute"
-        style={{
-          left: 12,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          fontSize: 18,
-        }}
-      />
-      <input
-        type="search"
-        className="form-control ps-5"
-        placeholder="Search employees..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-    </div>
-  </Col>
+              <Col xs={12} md={4}>
+                <div className="position-relative">
+                  <IconifyIcon
+                    icon="bx:search-alt"
+                    className="position-absolute"
+                    style={{
+                      left: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      fontSize: 18,
+                    }}
+                  />
+                  <input
+                    type="search"
+                    className="form-control ps-5"
+                    placeholder="Search employees..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </Col>
 
-  <Col xs={12} md={2}>
-    <select
-      className="form-select"
-      value={organization}
-      onChange={(e) => {
-        setOrganization(e.target.value)
-        setDepartment('')
-      }}
-    >
-      <option value="">Select Organization</option>
-      {organizationList.map((org) => (
-        <option key={org} value={org}>
-          {org}
-        </option>
-      ))}
-    </select>
-  </Col>
+              <Col xs={12} md={2}>
+                <select
+                  className="form-select"
+                  value={organization}
+                  onChange={(e) => {
+                    setOrganization(e.target.value)
+                    setDepartment('')
+                  }}
+                >
+                  <option value="">Select Organization</option>
+                  {organizationList.map((org) => (
+                    <option key={org} value={org}>
+                      {org}
+                    </option>
+                  ))}
+                </select>
+              </Col>
 
-  <Col xs={12} md={2}>
-    <select
-      className="form-select"
-      value={department}
-      onChange={(e) => setDepartment(e.target.value)}
-    >
-      <option value="">Select Department</option>
-      {departmentList.map((team) => (
-        <option key={team._id} value={team._id}>
-          {team.teamName}
-        </option>
-      ))}
-    </select>
-  </Col>
+              <Col xs={12} md={2}>
+                <select
+                  className="form-select"
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                >
+                  <option value="">Select Department</option>
+                  {departmentList.map((team) => (
+                    <option key={team._id} value={team._id}>
+                      {team.teamName}
+                    </option>
+                  ))}
+                </select>
+              </Col>
 
-  <Col xs={12} md={3}>
-  <div className="d-flex gap-2">
-    <Button className="flex-fill" onClick={handleApply}>
-      Apply
-    </Button>
+              <Col xs={12} md={3}>
+                <div className="d-flex gap-2">
+                  <Button className="flex-fill" onClick={handleApply}>
+                    Apply
+                  </Button>
 
-    <Button
-      variant="secondary"
-      className="flex-fill"
-      onClick={() => {
-        if (selectMode) setSelectedIds(new Set())
-        setSelectMode(!selectMode)
-      }}
-    >
-      Select
-    </Button>
+                  <Button
+                    variant="danger"
+                    className="flex-fill"
+                    disabled={selectedIds.size === 0}
+                    onClick={deleteEmployees}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Col>
 
-    <Button
-      variant="danger"
-      className="flex-fill"
-      disabled={selectedIds.size === 0}
-      onClick={() => deleteEmployees(selectedIds) }
-    >
-      Delete
-    </Button>
-  </div>
-</Col>
-
-</Row>
+            </Row>
           </CardBody>
 
           <div className="table-responsive">
             <table className="table text-nowrap mb-0">
               <thead className="bg-light">
                 <tr>
-                  {selectMode && <th>Select</th>}
+                  <th>Select</th>
                   <th>Actions</th>
                   <th>User_id</th>
                   <th>Name</th>
@@ -272,29 +265,31 @@ const ViewEmployees = () => {
                 ) : (
                   employees.map((emp) => (
                     <tr key={emp._id}>
-                      {selectMode && (
-                        <td>
-                          <input
-                            type="checkbox"
-                            checked={selectedIds.has(emp._id)}
-                            onChange={(e) =>
-                              handleSelect(emp._id, e.target.checked)
-                            }
-                          />
-                        </td>
-                      )}
+
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(emp._id)}
+                          onChange={(e) =>
+                            handleSelect(emp._id, e.target.checked)
+                          }
+                        />
+                      </td>
+
                       <td>
                         <Button
                           variant="soft-secondary"
                           size="sm"
                           className="me-2"
-                          onClick={() => navigate(`/employees/update-employees/${emp.USER_ID}`)}>
+                          onClick={() =>
+                            navigate(`/employees/update-employees/${emp.USER_ID}`)
+                          }
+                        >
                           <IconifyIcon icon="bx:edit" />
                         </Button>
-
-
                       </td>
-                      <td>{emp._id}</td>
+
+                      <td>{emp.employeeId}</td>
                       <td>{emp.name}</td>
                       <td>{emp.email}</td>
                       <td>{emp.phone}</td>
@@ -325,6 +320,7 @@ const ViewEmployees = () => {
 
             <Col xs={12} sm="auto">
               <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
+
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                   <Link
                     to="#"
@@ -333,7 +329,8 @@ const ViewEmployees = () => {
                       e.preventDefault()
                       if (currentPage > 1)
                         setCurrentPage(currentPage - 1)
-                    }}>
+                    }}
+                  >
                     <IconifyIcon icon="bx:left-arrow-alt" />
                   </Link>
                 </li>
@@ -341,7 +338,8 @@ const ViewEmployees = () => {
                 {getPages().map((p, i) => (
                   <li
                     key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}
+                  >
                     <Link
                       to="#"
                       className="page-link"
@@ -349,7 +347,8 @@ const ViewEmployees = () => {
                         e.preventDefault()
                         if (typeof p === 'number')
                           setCurrentPage(p)
-                      }}>
+                      }}
+                    >
                       {p}
                     </Link>
                   </li>
@@ -363,13 +362,16 @@ const ViewEmployees = () => {
                       e.preventDefault()
                       if (currentPage < totalPages)
                         setCurrentPage(currentPage + 1)
-                    }}>
+                    }}
+                  >
                     <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
                 </li>
+
               </ul>
             </Col>
           </div>
+
         </Card>
       </Col>
     </Row>
