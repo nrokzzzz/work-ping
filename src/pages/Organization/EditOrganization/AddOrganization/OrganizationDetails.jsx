@@ -59,8 +59,8 @@ const EmployeeDetailsForm = () => {
     console.log('Organization Details Submitted:', newData)
 
     try {
-      const verified = await require2FA();
-      if (!verified) return;
+      // const verified = await require2FA();
+      // if (!verified) return;
       const response = await axiosClient.post('/api/admin/organization/add-organization', newData)
       reset()
       console.log('Response:', response.data)
