@@ -9,7 +9,7 @@ import MaskedInput from 'react-text-mask-legacy'
 import axiosClient from '@/helpers/httpClient'
 import axios from 'axios'
 import { use2FA } from '@/context/useVerification2FA'
-// import GeoFencing from '@/pages/Maps/GeoFencing'
+
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
   organizationType: yup.string().required('Organization Type is required'),
@@ -26,11 +26,10 @@ const schema = yup.object({
       'Invalid IP Address'
     )
     .required('IP Address is required'),
-
 })
 
 const EmployeeDetailsForm = () => {
-  const { require2FA } = use2FA();
+  const { require2FA } = use2FA()
   const [geoCoords, setGeoCoords] = useState([])
 
   const {
@@ -39,7 +38,6 @@ const EmployeeDetailsForm = () => {
     handleSubmit,
     reset,
     formState: { errors },
-    
   } = useForm({
     resolver: yupResolver(schema),
     shouldFocusError: false,
@@ -52,16 +50,16 @@ const EmployeeDetailsForm = () => {
       clDays: data.casualLeaves,
       description: data.description,
       IPWhitelist: data.ipAddress,
-      coordinates: geoCoords
+      coordinates: geoCoords,
     }
-    //https://ubiquitous-space-memory-pjg5v97ppq7p3r5p6-5000.app.github.dev/
 
     console.log('Organization Details Submitted:', newData)
 
     try {
-      // const verified = await require2FA();
-      // if (!verified) return;
-      const response = await axiosClient.post('/api/admin/organization/add-organization', newData)
+      const response = await axiosClient.post(
+        '/api/admin/organization/add-organization',
+        newData
+      )
       reset()
       console.log('Response:', response.data)
     } catch (error) {
@@ -74,87 +72,82 @@ const EmployeeDetailsForm = () => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
 
-          {/* LEFT SIDE (2 rows stacked) */}
-          <div className="col-md-8">
-            <div className="row">
-
-              {/* Row 1 */}
-              <div className="col-md-6 mb-3">
-                <Form.Label>Organization Name</Form.Label>
-                <Form.Control
-                  placeholder="Enter Organization Name"
-                  {...register('organizationName')}
-                />
-                <small className="text-danger">
-                  {errors.organizationName?.message}
-                </small>
-              </div>
-
-              <div className="col-md-6 mb-3">
-                <Form.Label>Organization Type</Form.Label>
-                <Form.Control
-                  placeholder="Enter Organization Type"
-                  {...register('organizationType')}
-                />
-                <small className="text-danger">
-                  {errors.organizationType?.message}
-                </small>
-              </div>
-
-              {/* Row 2 */}
-              <div className="col-md-6 mb-3">
-                <Form.Label>Organization IP Address</Form.Label>
-                <Controller
-                  name="ipAddress"
-                  control={control}
-                  render={({ field }) => (
-                    <MaskedInput
-                      {...field}
-                      mask={[
-                        /\d/, /\d/, /\d/, '.',
-                        /\d/, /\d/, /\d/, '.',
-                        /\d/, /\d/, /\d/, '.',
-                        /\d/, /\d/, /\d/
-                      ]}
-                      className="form-control"
-                      placeholder="___.___.___.___"
-                    />
-                  )}
-                />
-                <small className="text-danger">
-                  {errors.ipAddress?.message}
-                </small>
-              </div>
-
-              <div className="col-md-6 mb-3">
-                <Form.Label>Casual Leaves</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Enter Casual Leaves"
-                  {...register('casualLeaves')}
-                />
-                <small className="text-danger">
-                  {errors.casualLeaves?.message}
-                </small>
-              </div>
-
-            </div>
+          <div className="col-md-6 mb-3">
+            <Form.Label>
+              Organization Name <span className="text-danger">*</span>
+            </Form.Label>
+            <Form.Control
+              placeholder="Enter Organization Name"
+              {...register('organizationName')}
+            />
+            <small className="text-danger">
+              {errors.organizationName?.message}
+            </small>
           </div>
 
-          {/* RIGHT SIDE (Description spans full height) */}
-          <div className="col-md-4 mb-3 d-flex flex-column">
+          <div className="col-md-6 mb-3">
+            <Form.Label>
+              Organization Type <span className="text-danger">*</span>
+            </Form.Label>
+            <Form.Control
+              placeholder="Enter Organization Type"
+              {...register('organizationType')}
+            />
+            <small className="text-danger">
+              {errors.organizationType?.message}
+            </small>
+          </div>
+
+          <div className="col-md-6 mb-3">
+            <Form.Label>
+              Organization IP Address <span className="text-danger">*</span>
+            </Form.Label>
+            <Controller
+              name="ipAddress"
+              control={control}
+              render={({ field }) => (
+                <MaskedInput
+                  {...field}
+                  mask={[
+                    /\d/, /\d/, /\d/, '.',
+                    /\d/, /\d/, /\d/, '.',
+                    /\d/, /\d/, /\d/, '.',
+                    /\d/, /\d/, /\d/,
+                  ]}
+                  className="form-control"
+                  placeholder="___.___.___.___"
+                />
+              )}
+            />
+            <small className="text-danger">{errors.ipAddress?.message}</small>
+          </div>
+
+          <div className="col-md-6 mb-3">
+            <Form.Label>
+              Casual Leaves <span className="text-danger">*</span>
+            </Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter Casual Leaves"
+              {...register('casualLeaves')}
+            />
+            <small className="text-danger">
+              {errors.casualLeaves?.message}
+            </small>
+          </div>
+
+          {/* Description moved down */}
+          <div className="col-12 mb-3">
             <Form.Label>
               Description <small className="text-muted">(Optional)</small>
             </Form.Label>
             <Form.Control
               as="textarea"
-              rows={5}
-              className="flex-grow-1"
+              rows={4}
               {...register('description')}
             />
           </div>
 
-          {/* Submit Button */}
           <div className="col-12 text-center mt-3">
             <Button type="submit" variant="primary">
               Submit
@@ -163,9 +156,8 @@ const EmployeeDetailsForm = () => {
 
         </div>
       </Form>
-
     </ComponentContainerCard>
   )
 }
 
-export default EmployeeDetailsForm; 
+export default EmployeeDetailsForm

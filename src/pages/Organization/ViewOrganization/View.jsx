@@ -116,7 +116,7 @@ const ViewOrganization= () => {
                   <th>CL Days</th>
                   <th>Type</th>
                   <th>IP Address</th>
-                  <th>Founded At</th>
+                  <th>Created At</th>
 
                 </tr>
               </thead>

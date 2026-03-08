@@ -10,6 +10,7 @@ const schema = yup.object({
   teamName: yup.string().required('Team Name is required'),
   organizationId: yup.string().required('Organization ID is required'),
   teamManagerId: yup.string().nullable(),
+  teamLeaderId: yup.string().nullable(),
   description: yup.string().nullable(),
 })
 
@@ -26,6 +27,7 @@ const CreateTeam = () => {
       teamName: '',
       organizationId: '',
       teamManagerId: '',
+      teamLeaderId: '',
       description: '',
     },
   })
@@ -41,7 +43,6 @@ const CreateTeam = () => {
 
       console.log('Response ', res.data)
 
-      // Reset form after success
       reset()
       toast.success('Team created successfully!')
 
@@ -56,44 +57,63 @@ const CreateTeam = () => {
 
       <Form className="row g-4" onSubmit={handleSubmit(onSubmit)}>
 
-        {/* LEFT SIDE */}
+        {/* Team Name + Organization ID */}
         <div className="col-md-6">
-          <div className="row g-3">
-
-            <div className="col-12">
-              <Form.Label>Team Name</Form.Label>
-              <Form.Control {...register('teamName')} />
-              <small className="text-danger">
-                {errors.teamName?.message}
-              </small>
-            </div>
-
-            <div className="col-12">
-              <Form.Label>Organization ID</Form.Label>
-              <Form.Control {...register('organizationId')} />
-              <small className="text-danger">
-                {errors.organizationId?.message}
-              </small>
-            </div>
-
-            <div className="col-12">
-              <Form.Label>
-                Team Manager ID <small className="text-muted">(Optional)</small>
-              </Form.Label>
-              <Form.Control {...register('teamManagerId')} />
-            </div>
-
-          </div>
+          <Form.Label>
+            Team Name <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control
+            placeholder="Enter Team Name"
+            {...register('teamName')}
+          />
+          <small className="text-danger">
+            {errors.teamName?.message}
+          </small>
         </div>
 
-        {/* RIGHT SIDE */}
         <div className="col-md-6">
+          <Form.Label>
+            Organization ID <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control
+            placeholder="Enter Organization ID"
+            {...register('organizationId')}
+          />
+          <small className="text-danger">
+            {errors.organizationId?.message}
+          </small>
+        </div>
+
+        {/* Team Manager + Team Leader */}
+        <div className="col-md-6">
+          <Form.Label>
+            Team Manager ID <small className="text-muted">(Optional)</small>
+          </Form.Label>
+          <Form.Control
+            placeholder="Enter Team Manager ID"
+            {...register('teamManagerId')}
+          />
+        </div>
+
+        <div className="col-md-6">
+          <Form.Label>
+            Team Leader ID <small className="text-muted">(Optional)</small>
+          </Form.Label>
+          <Form.Control
+            placeholder="Enter Team Leader ID"
+            {...register('teamLeaderId')}
+          />
+        </div>
+
+        {/* Description */}
+        <div className="col-12">
           <Form.Label>
             Description <small className="text-muted">(Optional)</small>
           </Form.Label>
           <Form.Control
             as="textarea"
-            rows={9}
+            rows={5}
+            placeholder="Enter Team Description"
             {...register('description')}
           />
         </div>

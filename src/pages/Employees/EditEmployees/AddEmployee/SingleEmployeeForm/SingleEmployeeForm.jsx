@@ -19,7 +19,6 @@ import FaceEmbeddings from './FaceEmbeddings'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
 
-/* ---------------- Validation Schema ---------------- */
 const schema = yup.object({
   userId: yup.string().required('User Id is required'),
   userName: yup.string().required('User Name is required'),
@@ -45,12 +44,12 @@ const schema = yup.object({
     .nullable()
     .transform(v => (v === '' ? null : v))
     .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format'),
+
   organizationName: yup.string().required('organizationName is required'),
   teamName: yup.string().required('teamName is required'),
   address: yup.string().required('Address is required'),
 })
 
-/* ---------------- Component ---------------- */
 const AddEmployee = () => {
   const navigate = useNavigate()
 
@@ -69,7 +68,6 @@ const AddEmployee = () => {
   })
 
   const goNext = handleSubmit(() => {
-
     setStep(1)
     console.log(step)
   })
@@ -92,7 +90,6 @@ const AddEmployee = () => {
     <>
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* ---------------- STEP 1 ---------------- */}
       {step === 0 && (
         <ComponentContainerCard
           title={
@@ -115,35 +112,37 @@ const AddEmployee = () => {
           <Form className="row g-3">
 
             <div className="col-md-4">
-              <Form.Label>User-Id</Form.Label>
+              <Form.Label>User-Id <span className="text-danger">*</span></Form.Label>
               <Form.Control placeholder="Enter User Id" {...register('userId')} />
               <small className="text-danger">{errors.userId?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>User-Name</Form.Label>
+              <Form.Label>User-Name <span className="text-danger">*</span></Form.Label>
               <Form.Control placeholder="Enter Full Name" {...register('userName')} />
               <small className="text-danger">{errors.userName?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>Email <span className="text-danger">*</span></Form.Label>
               <Form.Control placeholder="Enter Email" {...register('email')} />
               <small className="text-danger">{errors.email?.message}</small>
             </div>
+
             <div className="col-md-4">
-              <Form.Label>OrganizationName</Form.Label>
+              <Form.Label>OrganizationName <span className="text-danger">*</span></Form.Label>
               <Form.Control placeholder="Enter Full Name" {...register('organizationName')} />
               <small className="text-danger">{errors.organizationName?.message}</small>
             </div>
+
             <div className="col-md-4">
-              <Form.Label>Team Name</Form.Label>
+              <Form.Label>Team Name <span className="text-danger">*</span></Form.Label>
               <Form.Control placeholder="Enter Team Name" {...register('teamName')} />
               <small className="text-danger">{errors.teamName?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Contact-Number</Form.Label>
+              <Form.Label>Contact-Number <span className="text-danger">*</span></Form.Label>
               <div className="d-flex gap-2">
                 <Dropdown>
                   <DropdownToggle
@@ -188,13 +187,13 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Date of Birth</Form.Label>
+              <Form.Label>Date of Birth <span className="text-danger">*</span></Form.Label>
               <Form.Control type="date" {...register('dob')} />
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Gender</Form.Label>
+              <Form.Label>Gender <span className="text-danger">*</span></Form.Label>
               <Form.Select {...register('gender')}>
                 <option value="">Select Gender</option>
                 <option>Male</option>
@@ -205,19 +204,18 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Date of Joining</Form.Label>
+              <Form.Label>Date of Joining <span className="text-danger">*</span></Form.Label>
               <Form.Control type="date" {...register('doj')} />
               <small className="text-danger">{errors.doj?.message}</small>
             </div>
 
-            {/* ---- ROLE + AADHAAR + ADDRESS CUSTOM GRID ---- */}
             <div className="col-12">
-              <div className="row" >
+              <div className="row">
 
                 <div className="col-md-4 d-flex flex-column gap-3">
 
                   <div>
-                    <Form.Label>Role</Form.Label>
+                    <Form.Label>Role <span className="text-danger">*</span></Form.Label>
                     <Form.Select {...register('role')}>
                       <option value="">Select Role</option>
                       <option>Admin</option>
@@ -228,7 +226,7 @@ const AddEmployee = () => {
                   </div>
 
                   <div>
-                    <Form.Label>Aadhaar</Form.Label>
+                    <Form.Label>Aadhaar <span className="text-danger">*</span></Form.Label>
                     <Form.Control
                       placeholder="12-digit Aadhaar number"
                       {...register('aadhaar')}
@@ -237,11 +235,12 @@ const AddEmployee = () => {
                   </div>
 
                 </div>
+
                 <div className="col-md-8">
-                  <Form.Label>Address</Form.Label>
+                  <Form.Label>Address <span className="text-danger">*</span></Form.Label>
                   <Form.Control
                     as="textarea"
-                    rows={5}  
+                    rows={5}
                     {...register('address')}
                   />
                   <small className="text-danger">{errors.address?.message}</small>
@@ -277,7 +276,6 @@ const AddEmployee = () => {
         </ComponentContainerCard>
       )}
 
-      {/* ---------------- STEP 2 ---------------- */}
       {step === 1 && (
         <>
           <FaceEmbeddings onCapture={d => setFaceEmbedding(d)} />
