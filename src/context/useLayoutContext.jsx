@@ -23,7 +23,7 @@ const LayoutProvider = ({
     topbarTheme: queryParams['topbar_theme'] ? queryParams['topbar_theme'] : 'light',
     menu: {
       theme: queryParams['menu_theme'] ? queryParams['menu_theme'] : 'light',
-      size: queryParams['menu_size'] ? queryParams['menu_size'] : 'sm-hover-active'
+      size: queryParams['menu_size'] ? queryParams['menu_size'] :window.innerWidth<768?'hidden':'default'
     }
   };
   const [settings, setSettings] = useLocalStorage('__REBACK_NEXT_CONFIG__', INIT_STATE,override);
@@ -120,6 +120,25 @@ const LayoutProvider = ({
       toggleDocumentAttribute('data-menu-size', settings.menu.size, true);
     };
   }, [settings]);
+  useEffect(() => {
+  if (window.innerWidth >= 768) {
+    setSettings(prev => ({
+      ...prev,
+      menu: {
+        ...prev.menu,
+        size: 'default'
+      }
+    }));
+  } else {
+    setSettings(prev => ({
+      ...prev,
+      menu: {
+        ...prev.menu,
+        size: 'hidden'
+      }
+    }));
+  }
+}, []);
   const resetSettings = () => updateSettings(INIT_STATE);
   return <ThemeContext.Provider value={useMemo(() => ({
     ...settings,

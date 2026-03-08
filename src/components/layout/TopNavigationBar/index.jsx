@@ -48,12 +48,9 @@ const TopNavigationBar = () => {
             </Suspense> */}
 
             {/* Notification Dropdown */}
-            <Suspense>
-              <Notifications />
-            </Suspense>
-
+           
             {/* Toggle for Theme Customizer */}
-            <ThemeCustomizerToggle />
+            
 
             {/* Toggle for Activity Stream */}
             {/* <ActivityStreamToggle /> */}

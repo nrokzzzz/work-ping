@@ -17,13 +17,18 @@ const LeftSideBarToggle = () => {
   } = useLocation();
   const isFirstRender = useRef(true);
   const handleMenuSize = () => {
-    if (size === 'hidden') toggleBackdrop();
-    if (size === 'condensed') changeMenuSize('default');else if (size === 'default') changeMenuSize('condensed');
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) toggleBackdrop();
+    else{
+      if (size === 'default') changeMenuSize('hidden');
+      else if (size === 'hidden') changeMenuSize('default');
+    }
   };
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-    } else if (size === 'hidden') {
+    } else if (size === 'hidden' && window.innerWidth < 768) {
       toggleBackdrop();
     }
   }, [pathname]);
