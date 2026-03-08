@@ -2,9 +2,10 @@ import ComponentContainerCard from '@/components/ComponentContainerCard'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Button, Form, Card, CardBody, Row, Col } from 'react-bootstrap'
-
+import { Button, Form, Dropdown } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
 import axiosClient from '@/helpers/httpClient'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
 
 const schema = yup.object({
   name: yup.string().required('Name is required'),
@@ -12,21 +13,76 @@ const schema = yup.object({
   dueDate: yup.string().required('Due Date is required'),
   contractedBy: yup.string().required('Contracted By is required'),
   organizationId: yup.string().required('Organization ID is required'),
+  projectManagerId: yup.string().required('Project Manager ID is required'),
   description: yup.string().nullable(),
 })
 
 const AddProjects = () => {
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   })
 
+  const [organizations, setOrganizations] = useState([])
+  const [search, setSearch] = useState('')
+  const [selectedOrg, setSelectedOrg] = useState('')
+
+  const [projectManagers, setProjectManagers] = useState([])
+  const [pmSearch, setPmSearch] = useState('')
+  const [selectedPM, setSelectedPM] = useState('')
+
+  useEffect(() => {
+
+    const fetchOrganizations = async () => {
+      try {
+        const res = await axiosClient.get(
+          '/api/admin/get-all-employees/get-organization-info'
+        )
+
+        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+          name,
+          organizationId: obj.organizationId
+        }))
+
+        setOrganizations(formatted)
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const fetchProjectManagers = async () => {
+      try {
+        const res = await axiosClient.get(
+          '/api/admin/get-all-employees/get-project-managers'
+        )
+
+        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+          name,
+          employeeId: obj.employeeId
+        }))
+
+        setProjectManagers(formatted)
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchOrganizations()
+    fetchProjectManagers()
+
+  }, [])
+
   const onSubmit = async (data) => {
     console.log('FORM DATA:', data)
+
     try {
       const res = await axiosClient.post('/api/project/create-project', data)
       console.log(res)
@@ -39,85 +95,190 @@ const AddProjects = () => {
     <ComponentContainerCard id="basic" title="Add Projects">
       <Form className="row g-4" onSubmit={handleSubmit(onSubmit)}>
 
+        {/* Name */}
         <div className="col-md-6">
-          <div className="row g-3">
-
-            <div className="col-12">
-              <Form.Label>
-                Name <span className="text-danger">*</span>
-              </Form.Label>
-              <Form.Control
-                placeholder="Enter Project Name"
-                {...register('name')}
-              />
-              <small className="text-danger">{errors.name?.message}</small>
-            </div>
-
-            <div className="col-12">
-              <Form.Label>
-                Assigned Date <span className="text-danger">*</span>
-              </Form.Label>
-              <Form.Control
-                type="date"
-                {...register('assignedDate')}
-              />
-              <small className="text-danger">{errors.assignedDate?.message}</small>
-            </div>
-
-            <div className="col-12">
-              <Form.Label>
-                Due Date <span className="text-danger">*</span>
-              </Form.Label>
-              <Form.Control
-                type="date"
-                {...register('dueDate')}
-              />
-              <small className="text-danger">{errors.dueDate?.message}</small>
-            </div>
-
-            <div className="col-12">
-              <Form.Label>
-                Contracted By <span className="text-danger">*</span>
-              </Form.Label>
-              <Form.Control
-                placeholder="Enter Contracted By"
-                {...register('contractedBy')}
-              />
-              <small className="text-danger">{errors.contractedBy?.message}</small>
-            </div>
-
-          </div>
+          <Form.Label>
+            Name <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control
+            placeholder="Enter Project Name"
+            {...register('name')}
+          />
+          <small className="text-danger">{errors.name?.message}</small>
         </div>
 
+        {/* Assigned Date */}
         <div className="col-md-6">
-          <div className="row g-3">
-
-            <div className="col-12">
-              <Form.Label>
-                Organization ID <span className="text-danger">*</span>
-              </Form.Label>
-              <Form.Control
-                placeholder="Enter Organization ID"
-                {...register('organizationId')}
-              />
-              <small className="text-danger">{errors.organizationId?.message}</small>
-            </div>
-
-            <div className="col-12">
-              <Form.Label>
-                Description <small className="text-muted">(Optional)</small>
-              </Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={9}
-                placeholder="Enter Project Description"
-                {...register('description')}
-              />
-            </div>
-
-          </div>
+          <Form.Label>
+            Assigned Date <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control
+            type="date"
+            {...register('assignedDate')}
+          />
+          <small className="text-danger">{errors.assignedDate?.message}</small>
         </div>
 
+        {/* Due Date */}
+        <div className="col-md-6">
+          <Form.Label>
+            Due Date <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control
+            type="date"
+            {...register('dueDate')}
+          />
+          <small className="text-danger">{errors.dueDate?.message}</small>
+        </div>
+
+        {/* Contracted By */}
+        <div className="col-md-6">
+          <Form.Label>
+            Contracted By <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control
+            placeholder="Enter Contracted By"
+            {...register('contractedBy')}
+          />
+          <small className="text-danger">{errors.contractedBy?.message}</small>
+        </div>
+
+        {/* Organization ID */}
+        <div className="col-md-6">
+          <Form.Label>
+            Organization ID <span className="text-danger">*</span>
+          </Form.Label>
+
+          <Dropdown className="w-100">
+
+            <Dropdown.Toggle
+              as="div"
+              className="form-control d-flex justify-content-between align-items-center arrow-none"
+              style={{ cursor: "pointer" }}
+            >
+              <span>{selectedOrg || "Select Organization"}</span>
+              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu
+              className="w-100 p-2"
+              style={{
+                maxHeight: '220px',
+                overflowY: 'auto',
+                overflowX: 'hidden'
+              }}
+            >
+
+              <Form.Control
+                placeholder="Search organization"
+                className="mb-2"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+
+              {organizations
+                .filter(o =>
+                  o.name.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((o) => (
+                  <Dropdown.Item
+                    key={o.organizationId}
+                    onClick={() => {
+                      setSelectedOrg(o.name)
+                      setValue('organizationId', o.organizationId)
+                      setSearch('')
+                    }}
+                  >
+                    {o.name}
+                  </Dropdown.Item>
+                ))}
+
+            </Dropdown.Menu>
+
+          </Dropdown>
+
+          <input type="hidden" {...register('organizationId')} />
+
+          <small className="text-danger">
+            {errors.organizationId?.message}
+          </small>
+        </div>
+
+        {/* Project Manager ID */}
+        <div className="col-md-6">
+          <Form.Label>
+            Project Manager ID <span className="text-danger">*</span>
+          </Form.Label>
+
+          <Dropdown className="w-100">
+
+            <Dropdown.Toggle
+              as="div"
+              className="form-control d-flex justify-content-between align-items-center arrow-none"
+              style={{ cursor: "pointer" }}
+            >
+              <span>{selectedPM || "Select Project Manager"}</span>
+              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu
+              className="w-100 p-2"
+              style={{
+                maxHeight: '220px',
+                overflowY: 'auto',
+                overflowX: 'hidden'
+              }}
+            >
+
+              <Form.Control
+                placeholder="Search Project Manager"
+                className="mb-2"
+                value={pmSearch}
+                onChange={(e) => setPmSearch(e.target.value)}
+              />
+
+              {projectManagers
+                .filter(p =>
+                  p.name.toLowerCase().includes(pmSearch.toLowerCase())
+                )
+                .map((p) => (
+                  <Dropdown.Item
+                    key={p.employeeId}
+                    onClick={() => {
+                      setSelectedPM(p.name)
+                      setValue('projectManagerId', p.employeeId)
+                      setPmSearch('')
+                    }}
+                  >
+                    {p.name}
+                  </Dropdown.Item>
+                ))}
+
+            </Dropdown.Menu>
+
+          </Dropdown>
+
+          <input type="hidden" {...register('projectManagerId')} />
+
+          <small className="text-danger">
+            {errors.projectManagerId?.message}
+          </small>
+        </div>
+
+        {/* Description */}
+        <div className="col-12">
+          <Form.Label>
+            Description <small className="text-muted">(Optional)</small>
+          </Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={6}
+            placeholder="Enter Project Description"
+            {...register('description')}
+          />
+        </div>
+
+        {/* Buttons */}
         <div className="col-12 d-flex justify-content-center gap-4">
           <Button
             variant="secondary"

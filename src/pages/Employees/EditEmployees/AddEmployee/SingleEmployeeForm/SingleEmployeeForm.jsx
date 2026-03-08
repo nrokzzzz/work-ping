@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
@@ -52,20 +52,23 @@ const schema = yup.object({
 
 const AddEmployee = () => {
   const navigate = useNavigate()
-
+  const [organizations, setOrganizations] = useState([])
+const [orgSearch, setOrgSearch] = useState('')
+const [selectedOrg, setSelectedOrg] = useState('')
   const [step, setStep] = useState(0)
   const [countryCode, setCountryCode] = useState('+91')
   const [search, setSearch] = useState('')
   const [faceEmbedding, setFaceEmbedding] = useState(null)
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    getValues,
-  } = useForm({
-    resolver: yupResolver(schema),
-  })
+  register,
+  handleSubmit,
+  formState: { errors },
+  getValues,
+  setValue,
+} = useForm({
+  resolver: yupResolver(schema),
+})
 
   const goNext = handleSubmit(() => {
     setStep(1)
@@ -85,7 +88,27 @@ const AddEmployee = () => {
       console.error('Error adding employee:', error)
     }
   }
+useEffect(() => {
+  const fetchOrganizations = async () => {
+    try {
+      const res = await axiosClient.get(
+        '/api/admin/get-all-employees/get-organization-info'
+      )
 
+      const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        name,
+        organizationId: obj.organizationId
+      }))
+
+      setOrganizations(formatted)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  fetchOrganizations()
+}, [])
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
@@ -130,10 +153,64 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>OrganizationName <span className="text-danger">*</span></Form.Label>
-              <Form.Control placeholder="Enter Full Name" {...register('organizationName')} />
-              <small className="text-danger">{errors.organizationName?.message}</small>
-            </div>
+  <Form.Label>
+    Organization Name <span className="text-danger">*</span>
+  </Form.Label>
+
+  <Dropdown className="w-100">
+
+    <Dropdown.Toggle
+      as="div"
+      className="form-control d-flex justify-content-between align-items-center arrow-none"
+      style={{ cursor: "pointer" }}
+    >
+      <span>{selectedOrg || "Select Organization"}</span>
+      <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+    </Dropdown.Toggle>
+
+    <Dropdown.Menu
+      className="w-100 p-2"
+      style={{
+        maxHeight: '220px',
+        overflowY: 'auto',
+        overflowX: 'hidden'
+      }}
+    >
+
+      <Form.Control
+        placeholder="Search organization"
+        className="mb-2"
+        value={orgSearch}
+        onChange={(e) => setOrgSearch(e.target.value)}
+      />
+
+      {organizations
+        .filter(o =>
+          o.name.toLowerCase().includes(orgSearch.toLowerCase())
+        )
+        .map((o) => (
+          <Dropdown.Item
+            key={o.organizationId}
+            onClick={() => {
+              setSelectedOrg(o.name)
+              setValue('organizationName', o.name)
+              setOrgSearch('')
+            }}
+          >
+            {o.name}
+          </Dropdown.Item>
+        ))}
+
+    </Dropdown.Menu>
+
+  </Dropdown>
+
+  <input type="hidden" {...register('organizationName')} />
+
+  <small className="text-danger">
+    {errors.organizationName?.message}
+  </small>
+</div>
 
             <div className="col-md-4">
               <Form.Label>Team Name <span className="text-danger">*</span></Form.Label>
