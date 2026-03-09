@@ -106,7 +106,7 @@ const CreateTeam = () => {
         {/* Organization Dropdown */}
         <div className="col-md-6">
           <Form.Label>
-            Organization ID <span className="text-danger">*</span>
+            Organization Name <span className="text-danger">*</span>
           </Form.Label>
 
           <Dropdown className="w-100">
