@@ -15,10 +15,10 @@ export default function Home() {
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/auth/sign-in')
-    }else{
-      if(!is2FAAuthnticator){
+    }else if(!is2FAAuthnticator){
+      
         navigate('/2fa-authnticator')
-      }
+      
     }
   },[])
   return <>

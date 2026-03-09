@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // import dotenv from 'dotenv';
 import axiosClient from '@/helpers/httpClient';
-import axios from 'axios';
+
 import { useNavigate } from 'react-router-dom';
 // dotenv.config();  
 const SignUpForm = () => {
@@ -42,9 +42,7 @@ const SignUpForm = () => {
         password: values.password
       };
       console.log(payload)
-      const res = await axiosClient.post('/api/admin/auth/register', payload,{
-        withCredentials: true
-      });
+      const res = await axiosClient.post('/api/admin/auth/register', payload);
 
       const data = res.data;
 
@@ -52,7 +50,13 @@ const SignUpForm = () => {
         throw new Error(data.error || 'Signup failed');
       }
       console.log('Signup successful:', data);
-      navigate('/auth/sign-in');
+      async function hello(){
+        console.log("checker")
+        await navigate('/2fa-authnticator')
+      }
+      await hello()
+     
+
       reset();
     } catch (error) {
       alert(error.message);

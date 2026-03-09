@@ -23,7 +23,7 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
       setLoading(true)
       setError('')
 
-      const res = await axiosClient.post('/api/auth/verify-2fa', { code })
+      const res = await axiosClient.post('/api/auth/2fa/verify', { code })
 
       if (!isMounted.current) return
 
