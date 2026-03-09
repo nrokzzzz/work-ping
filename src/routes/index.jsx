@@ -552,7 +552,8 @@ const ProjectTeamMembers = lazy(()=> import('@/pages/Projects/ViewProject-Teams/
 const TwoFactorAuthCard = lazy(()=> import('@/pages/TwoFactorAuthentication/TwoFactorAuthentication'));
 const QrCodeAuthentication = lazy(()=>import('@/pages/TwoFactorAuthentication/QrcodeAuthentication'));
 
-
+//team-members
+const ButtonPage = lazy(()=>import('@/pages/teamMember/ButtonPage'))
 
 export const authRoutes = [{
   path: '/auth/sign-in',
@@ -717,6 +718,10 @@ const TwoFactorAuthentication=[
     path:'/2fa-authnticator',
     name: 'QrCodeAuthentication',
     element: <QrCodeAuthentication/>
+  },{
+    path:'/button-page',
+    name:'Button-page',
+    element:<ButtonPage/>
   }
 ]
 

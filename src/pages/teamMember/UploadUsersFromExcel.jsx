@@ -1,0 +1,197 @@
+import { useState, useRef } from "react"
+import { Modal, Button, Table, Form } from "react-bootstrap"
+import * as XLSX from "xlsx"
+import axiosClient from "@/helpers/httpClient"
+
+const UploadUsersFromExcel = ({ show, handleClose }) => {
+
+    const [rollNumbers, setRollNumbers] = useState([])
+    const [selectedIds, setSelectedIds] = useState([])
+    const fileInputRef = useRef(null)
+    const handleFileUpload = (e) => {
+
+        const file = e.target.files[0]
+        if (!file) return
+
+        const reader = new FileReader()
+
+        reader.onload = (evt) => {
+
+            const data = new Uint8Array(evt.target.result)
+
+            const workbook = XLSX.read(data, { type: "array" })
+
+            const sheetName = workbook.SheetNames[0]
+
+            const worksheet = workbook.Sheets[sheetName]
+
+            const jsonData = XLSX.utils.sheet_to_json(worksheet)
+
+            // Extract RollNumber column
+            const rolls = jsonData
+                .map((row) => row.RollNumber)
+                .filter(Boolean)
+
+            setRollNumbers(rolls)
+
+            // reset selection
+            setSelectedIds([])
+        }
+
+        reader.readAsArrayBuffer(file)
+    }
+
+    const toggleSelect = (id) => {
+
+        setSelectedIds((prev) =>
+            prev.includes(id)
+                ? prev.filter((x) => x !== id)
+                : [...prev, id]
+        )
+    }
+
+    const toggleSelectAll = () => {
+
+        if (selectedIds.length === rollNumbers.length) {
+            setSelectedIds([])
+        } else {
+            setSelectedIds(rollNumbers)
+        }
+    }
+
+    const sendToBackend = async () => {
+
+        try {
+            console.log(selectedIds)
+            await axiosClient.post("/api/send-user-ids", {
+                rollNumbers: selectedIds,
+            })
+
+            alert("Users sent successfully")
+
+            handleClose()
+
+        } catch (err) {
+            console.error(err)
+            alert("Failed to send users")
+        } finally {
+            // reset states
+            setRollNumbers([])
+            setSelectedIds([])
+
+            // reset file input
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ""
+            }
+        }
+    }
+
+    return (
+        <Modal show={show} onHide={handleClose} size="lg" centered scrollable>
+
+            <Modal.Header closeButton>
+                <Modal.Title>Upload Roll Numbers</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+
+                {/* Excel Upload */}
+
+                <Form.Group className="mb-3">
+                    <Form.Label>Upload Excel File</Form.Label>
+                    <Form.Control
+                        type="file"
+                        accept=".xlsx,.xls"
+                        ref={fileInputRef}
+                        onChange={handleFileUpload}
+                    />
+                </Form.Group>
+
+                {/* Table */}
+
+                {rollNumbers.length > 0 && (
+
+                    <div className="table-responsive">
+
+                        <Table bordered hover>
+
+                            <thead className="bg-light">
+
+                                <tr>
+
+                                    <th>
+
+                                        <Form.Check
+                                            type="checkbox"
+                                            checked={
+                                                selectedIds.length === rollNumbers.length &&
+                                                rollNumbers.length > 0
+                                            }
+                                            onChange={toggleSelectAll}
+                                        />
+
+                                    </th>
+
+                                    <th>#</th>
+
+                                    <th>Roll Number</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {rollNumbers.map((roll, index) => (
+
+                                    <tr key={index}>
+
+                                        <td>
+
+                                            <Form.Check
+                                                type="checkbox"
+                                                checked={selectedIds.includes(roll)}
+                                                onChange={() => toggleSelect(roll)}
+                                            />
+
+                                        </td>
+
+                                        <td>{index + 1}</td>
+
+                                        <td>{roll}</td>
+
+                                    </tr>
+
+                                ))}
+
+                            </tbody>
+
+                        </Table>
+
+                    </div>
+
+                )}
+
+            </Modal.Body>
+
+            <Modal.Footer>
+
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+
+                <Button
+                    variant="primary"
+                    disabled={selectedIds.length === 0}
+                    onClick={sendToBackend}
+                >
+                    Send Selected ({selectedIds.length})
+                </Button>
+
+            </Modal.Footer>
+
+        </Modal>
+    )
+}
+
+export default UploadUsersFromExcel
