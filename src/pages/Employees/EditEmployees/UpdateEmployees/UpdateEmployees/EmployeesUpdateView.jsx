@@ -282,7 +282,7 @@ const ViewEmployees = () => {
                           size="sm"
                           className="me-2"
                           onClick={() =>
-                            navigate(`/employees/update-employees/${emp.USER_ID}`)
+                            navigate(`/employees/update-employees/${emp._id}`)
                           }
                         >
                           <IconifyIcon icon="bx:edit" />

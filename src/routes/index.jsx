@@ -663,7 +663,7 @@ const employeesRoutes=[
   element:<EmployeesUpdateView/>
  },
  {
-  path:'/employees/update-employees/:empId',
+  path:'/employees/update-employees/:employeeId',
   name:'UpdateEmployees',
   element:<EmployeesUpdate/>
  },
