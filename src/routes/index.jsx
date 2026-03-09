@@ -635,7 +635,7 @@ const organizationRoutes=[
     element: <AddOrganization />
   },
   {
-    path: '/organization/update-organization/:orgId',
+    path: '/organization/update-organization/:organizationId',
     name: 'UpdateOrganization',
     element: <OrganizationUpdateDetails />
   },{

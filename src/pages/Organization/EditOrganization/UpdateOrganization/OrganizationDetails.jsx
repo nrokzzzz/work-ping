@@ -1,33 +1,40 @@
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import { Button, Form } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { useParams,useNavigate } from 'react-router-dom'
+
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import MaskedInput from 'react-text-mask-legacy'
-import { useParams } from 'react-router-dom'
-import { useEffect } from 'react'
+import axiosClient from '@/helpers/httpClient'
+import axios from 'axios'
+import { use2FA } from '@/context/useVerification2FA'
 
 const schema = yup.object({
-  organizationName: yup.string().required(),
-  organizationType: yup.string().required(),
-  casualLeaves: yup.number().required(),
-  ipAddress: yup.string().required(),
- 
+  organizationName: yup.string().required('Organization Name is required'),
+  organizationType: yup.string().required('Organization Type is required'),
+  casualLeaves: yup
+    .number()
+    .typeError('Casual Leaves must be a number')
+    .min(0, 'Minimum 0')
+    .max(15, 'Maximum 15')
+    .required('Casual Leaves is required'),
+  ipAddress: yup
+    .string()
+    .matches(
+      /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
+      'Invalid IP Address'
+    )
+    .required('IP Address is required'),
 })
 
-const tempOrg = {
-  id: '1',
-  organizationName: 'Aditya University',
-  organizationType: 'Education',
-  casualLeaves: 10,
-  ipAddress: '192.168.001.010',
- 
-  description: 'Demo organization',
-}
-
-const EmployeeDetailsForm = () => {
-  const { orgId } = useParams()
-
+const OrganizationDetailsForm = () => {
+  const navigate = useNavigate()
+  const { require2FA } = use2FA()
+  const [geoCoords, setGeoCoords] = useState([])
+  const { organizationId } = useParams();
+  console.log('Organization ID from URL:', organizationId)
   const {
     register,
     control,
@@ -36,69 +43,104 @@ const EmployeeDetailsForm = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: {
-      organizationName: '',
-      organizationType: '',
-      casualLeaves: '',
-      ipAddress: '',
-      description: '',
-    },
+    shouldFocusError: false,
   })
+useEffect(() => {
+  const fetchOrganizationDetails = async () => {
+    try {
+      const res = await axiosClient.get(
+        `/api/admin/organization/get-organization-by-id/${organizationId}`
+      )
 
-  /* ================= DEBUG ================= */
+      const data = res.data
 
-  // console.log("Param id =",id)
+      reset({
+        organizationName: data?.name || '',
+        organizationType: data?.type || '',
+        casualLeaves: data?.clDays || '',
+        ipAddress: data?.IPWhitelist?.[0] || '',
+        description: data?.description || '',
+      })
 
-  /* ================= AUTO FILL ================= */
-
-  useEffect(() => {
-    if (orgId === tempOrg.id) {
-      reset(tempOrg)
+    } catch (error) {
+      console.error('Error fetching organization details:', error)
     }
-  }, [orgId, reset])
-
-  /* ================= SUBMIT ================= */
-
-  const onSubmit = (data) => {
-    console.log("Submitted:", data)
   }
 
-  /* ================= UI ================= */
+  if (organizationId) {
+    fetchOrganizationDetails()
+  }
+}, [organizationId, reset])
+ const onSubmit = async (data) => {
+  const newData = {
+    _id: organizationId,
+    name: data.organizationName,
+    type: data.organizationType,
+    clDays: Number(data.casualLeaves),
+    description: data.description,
+    IPWhitelist: [data.ipAddress],
+  }
+
+  console.log('Organization Update Payload:', newData)
+
+  try {
+    const response = await axiosClient.post(
+      '/api/admin/organization/update-organization',
+      newData
+    )
+
+    console.log('Update Response:', response.data)
+
+    if (response?.data) {
+      navigate('/organization/update-view-organization')
+    }
+
+  } catch (error) {
+    console.error('Error updating organization:', error)
+  }
+}
 
   return (
-    <ComponentContainerCard title="Organization Details">
+    <ComponentContainerCard id="basic" title="Organization Details">
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
 
-          <div className="col-md-4 mb-3">
-            <Form.Label>Name</Form.Label>
-            <Form.Control placeholder="Enter Organization Name"
-              {...register('organizationName')} />
+          <div className="col-md-6 mb-3">
+            <Form.Label>
+              Organization Name <span className="text-danger">*</span>
+            </Form.Label>
+            <Form.Control
+              placeholder="Enter Organization Name"
+              {...register('organizationName')}
+            />
+            <small className="text-danger">
+              {errors.organizationName?.message}
+            </small>
           </div>
 
-          <div className="col-md-4 mb-3">
-            <Form.Label>Type</Form.Label>
-            <Form.Control placeholder="Enter Organization Type"
-              {...register('organizationType')} />
+          <div className="col-md-6 mb-3">
+            <Form.Label>
+              Organization Type <span className="text-danger">*</span>
+            </Form.Label>
+            <Form.Control
+              placeholder="Enter Organization Type"
+              {...register('organizationType')}
+            />
+            <small className="text-danger">
+              {errors.organizationType?.message}
+            </small>
           </div>
 
-          <div className="col-md-4 mb-3">
-            <Form.Label>Leaves</Form.Label>
-            <Form.Control type="number"
-              placeholder="Enter Casual Leaves"
-              {...register('casualLeaves')} />
-          </div>
-
-          <div className="col-md-4 mb-3">
-            <Form.Label>IP</Form.Label>
+          <div className="col-md-6 mb-3">
+            <Form.Label>
+              Organization IP Address <span className="text-danger">*</span>
+            </Form.Label>
             <Controller
               name="ipAddress"
               control={control}
               render={({ field }) => (
                 <MaskedInput
                   {...field}
-                  value={field.value || ''}
-                  onChange={(e) => field.onChange(e.target.value)}
                   mask={[
                     /\d/, /\d/, /\d/, '.',
                     /\d/, /\d/, /\d/, '.',
@@ -110,19 +152,39 @@ const EmployeeDetailsForm = () => {
                 />
               )}
             />
+            <small className="text-danger">{errors.ipAddress?.message}</small>
           </div>
 
-          
+          <div className="col-md-6 mb-3">
+            <Form.Label>
+              Casual Leaves <span className="text-danger">*</span>
+            </Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter Casual Leaves"
+              {...register('casualLeaves')}
+            />
+            <small className="text-danger">
+              {errors.casualLeaves?.message}
+            </small>
+          </div>
 
+          {/* Description moved down */}
           <div className="col-12 mb-3">
-            <Form.Label>Description</Form.Label>
-            <Form.Control as="textarea"
-              placeholder="Enter Description"
-              {...register('description')} />
+            <Form.Label>
+              Description <small className="text-muted">(Optional)</small>
+            </Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={4}
+              {...register('description')}
+            />
           </div>
 
-          <div className="col-12 text-center">
-            <Button type="submit">Submit</Button>
+          <div className="col-12 text-center mt-3">
+            <Button type="submit" variant="primary">
+              Submit
+            </Button>
           </div>
 
         </div>
@@ -131,4 +193,4 @@ const EmployeeDetailsForm = () => {
   )
 }
 
-export default EmployeeDetailsForm
+export default OrganizationDetailsForm

@@ -28,7 +28,7 @@ const schema = yup.object({
     .required('IP Address is required'),
 })
 
-const EmployeeDetailsForm = () => {
+const OrganizationDetailsForm = () => {
   const { require2FA } = use2FA()
   const [geoCoords, setGeoCoords] = useState([])
 
@@ -160,4 +160,4 @@ const EmployeeDetailsForm = () => {
   )
 }
 
-export default EmployeeDetailsForm
+export default OrganizationDetailsForm
