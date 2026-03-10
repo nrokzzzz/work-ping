@@ -2,13 +2,16 @@ import { useState, useEffect, useRef } from 'react'
 import { Button, Form, Card, Spinner } from 'react-bootstrap'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
-import { use2FA } from '@/context/useVerification2FA'
+import { use2FA } from '@/context/TwoFAContext'
 
-const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
-  const {setShowModal} = use2FA()
+const TwoFactorAuthModal = () => {
+
+  const { showModal, executeAction, cancel } = use2FA()
+
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
   const isMounted = useRef(true)
 
   useEffect(() => {
@@ -17,36 +20,70 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
     }
   }, [])
 
+  if (!showModal) return null
+
   const handleVerify = async () => {
+
     if (code.length !== 6 || loading) return
 
     try {
+
       setLoading(true)
       setError('')
 
-      const res = await axiosClient.post('/api/auth/2fa/verify', { code })
+      // Step 1: Verify OTP
+      const verifyRes = await axiosClient.post('/api/auth/2fa/verify', {
+        code
+      })
 
-      if (!isMounted.current) return
-
-      if (res?.data?.success === true) {
-        onSuccess(true)
-      } else {
+      if (!verifyRes?.data?.verified) {
         setError('Invalid verification code')
+        return
       }
+
+      // Step 2: Execute pending action
+      try {
+
+        await executeAction()
+
+        // reset code after success
+        setCode('')
+
+      } catch (actionError) {
+
+        const backendMessage =
+          actionError?.response?.data?.message ||
+          actionError?.message ||
+          'Operation failed'
+
+        setError(backendMessage)
+      }
+
     } catch (err) {
-      if (!isMounted.current) return
-      setError('Verification failed. Please try again.')
+
+      const message =
+        err?.response?.data?.message ||
+        'Verification failed. Please try again.'
+
+      setError(message)
+
     } finally {
+
       if (isMounted.current) {
         setLoading(false)
       }
+
     }
   }
 
   const handleCancel = () => {
+
     if (loading) return
-    onCancel(false)
-    
+
+    setCode('')
+    setError('')
+    cancel()
+
   }
 
   const handleKeyDown = (e) => {
@@ -63,6 +100,7 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
 
   return (
     <ComponentContainerCard>
+
       {/* Background Overlay */}
       <div
         className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
@@ -75,11 +113,14 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
         className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
         style={{ zIndex: 100000 }}
       >
+
         <Card
           className="text-center shadow-lg border-0"
           style={{ width: 420, borderRadius: 16 }}
         >
+
           <Card.Body className="p-4">
+
             <div className="mb-3">
               <div
                 className="mx-auto d-flex align-items-center justify-content-center rounded-circle border border-primary"
@@ -119,6 +160,7 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
             )}
 
             <div className="d-flex justify-content-center gap-3">
+
               <Button
                 variant="outline-secondary"
                 onClick={handleCancel}
@@ -134,6 +176,7 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
                 onClick={handleVerify}
                 className="px-4"
               >
+
                 {loading ? (
                   <>
                     <Spinner size="sm" className="me-2" />
@@ -142,10 +185,14 @@ const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
                 ) : (
                   'Verify'
                 )}
+
               </Button>
+
             </div>
+
           </Card.Body>
         </Card>
+
       </div>
     </ComponentContainerCard>
   )
