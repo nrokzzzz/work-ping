@@ -108,42 +108,47 @@ const CreateTeam = () => {
 
   const onSubmit = async (data) => {
 
-    console.log('Payload ', data)
+  const payload = {
+    ...data,
+    teamLeaderIds: data.teamLeaderId ? [data.teamLeaderId] : []
+  }
 
-    if (is2FAAuthnticator) {
+  console.log('Payload ', payload)
 
-      try {
+  if (is2FAAuthnticator) {
 
-        await createTeamApi(data)
+    try {
 
-      } catch (error) {
+      await createTeamApi(payload)
 
-        console.error('SAVE TEAM ERROR ', error)
-        toast.error('Failed to create team. Please try again.')
+    } catch (error) {
 
-      }
-
-    } else {
-
-      require2FA(async () => {
-
-        try {
-
-          await createTeamApi(data)
-
-        } catch (error) {
-
-          throw new Error(
-            error?.response?.data?.message || "Failed to create team"
-          )
-
-        }
-
-      })
+      console.error('SAVE TEAM ERROR ', error)
+      toast.error('Failed to create team. Please try again.')
 
     }
 
+  } else {
+
+    require2FA(async () => {
+
+      try {
+
+        await createTeamApi(payload)
+
+      } catch (error) {
+
+        throw new Error(
+          error?.response?.data?.message || "Failed to create team"
+        )
+
+      }
+
+    })
+
   }
+
+}
 
   return (
     <ComponentContainerCard id="basic" title="Add Teams">
