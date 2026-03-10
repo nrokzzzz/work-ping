@@ -63,23 +63,23 @@ const AddProjects = () => {
   }, [])
 
   const fetchProjectManagers = async (orgId) => {
-    try {
+  try {
 
-      const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-project-managers/${orgId}`
-      )
+    const res = await axiosClient.get(
+      `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
+    )
 
-      const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
-        name,
-        employeeId: obj.employeeId
-      }))
+    const formatted = (res.data.data || []).map((emp) => ({
+      name: emp.name,
+      employeeId: emp._id
+    }))
 
-      setProjectManagers(formatted)
+    setProjectManagers(formatted)
 
-    } catch (error) {
-      console.log(error)
-    }
+  } catch (error) {
+    console.log(error)
   }
+}
 
   const onSubmit = async (data) => {
     console.log('FORM DATA:', data)
