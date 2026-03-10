@@ -122,19 +122,15 @@ const UpdateTeam = () => {
 
         fetchEmployees(team.organizationId)
 
-        setTimeout(() => {
+        if (team.managerId) {
+          setSelectedManager(team.managerId.employeeId)
+          setValue('teamManagerId', team.managerId._id)
+        }
 
-          if (team.managerId) {
-            const manager = employees.find(e => e._id === team.managerId._id)
-            if (manager) setSelectedManager(manager.employeeId)
-          }
-
-          if (team.leaderIds?.length) {
-            const leader = employees.find(e => e._id === team.leaderIds[0]._id)
-            if (leader) setSelectedLeader(leader.employeeId)
-          }
-
-        }, 300)
+        if (team.leaderIds?.length) {
+          setSelectedLeader(team.leaderIds[0].employeeId)
+          setValue('teamLeaderId', team.leaderIds[0]._id)
+        }
 
       } catch (error) {
 
@@ -146,7 +142,7 @@ const UpdateTeam = () => {
 
     if (id && organizations.length) fetchTeam()
 
-  }, [id, organizations, reset])
+  }, [id, organizations, reset, setValue])
 
   const updateTeamApi = async (payload) => {
 

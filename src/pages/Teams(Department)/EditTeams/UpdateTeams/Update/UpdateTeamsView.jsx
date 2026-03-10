@@ -240,9 +240,9 @@ const ViewTeams = () => {
                       </td>
 
                       <td>{team.teamName}</td>
-                      <td>{team.teamManagerId}</td>
+                      <td>{team.managerId}</td>
                       <td>{getOrganizationName(team.organizationId)}</td>
-                      <td>{team.teamLeaderId}</td>
+                      <td>{team.leaderIds[0]}</td>
                     </tr>
                   ))
                 )}
