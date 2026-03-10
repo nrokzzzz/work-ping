@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
+
 const ViewOrganization = () => {
   const navigate = useNavigate()
   const itemsPerPage = 10
@@ -18,6 +21,9 @@ const ViewOrganization = () => {
   const [search, setSearch] = useState('')
 
   const [selectedIds, setSelectedIds] = useState(new Set())
+
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
 
   const fetchorganizations = async (page, q) => {
     setLoading(true)
@@ -61,16 +67,47 @@ const ViewOrganization = () => {
   }
 
   const deleteOrganizations = async () => {
-    try {
-      await axiosClient.post('/api/admin/organization/delete-organizations', {
-        data: [...selectedIds],
+
+    if (is2FAAuthnticator) {
+
+      try {
+
+        await axiosClient.post('/api/admin/organization/delete-organizations', {
+          data: [...selectedIds],
+        })
+
+        setSelectedIds(new Set())
+        fetchorganizations(currentPage, search)
+
+      } catch (e) {
+        console.error(e)
+      }
+
+    } else {
+
+      require2FA(async () => {
+
+        try {
+
+          await axiosClient.post('/api/admin/organization/delete-organizations', {
+            data: [...selectedIds],
+          })
+
+          setSelectedIds(new Set())
+          fetchorganizations(currentPage, search)
+
+        } catch (error) {
+
+          throw new Error(
+            error?.response?.data?.message || "Failed to delete organizations"
+          )
+
+        }
+
       })
 
-      setSelectedIds(new Set())
-      fetchorganizations(currentPage, search)
-    } catch (e) {
-      console.error(e)
     }
+
   }
 
   const getPages = () => {

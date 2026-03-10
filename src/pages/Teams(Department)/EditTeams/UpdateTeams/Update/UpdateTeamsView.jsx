@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
+
 const ViewTeams = () => {
   const itemsPerPage = 10
 
@@ -24,6 +27,9 @@ const ViewTeams = () => {
   const [selectedIds, setSelectedIds] = useState(new Set())
 
   const navigate = useNavigate()
+
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -95,16 +101,47 @@ const ViewTeams = () => {
   }
 
   const deleteTeams = async () => {
-    try {
-      await axiosClient.post('/api/admin/team/delete-team', {
-        data: [...selectedIds],
+
+    if (is2FAAuthnticator) {
+
+      try {
+
+        await axiosClient.post('/api/admin/team/delete-team', {
+          data: [...selectedIds],
+        })
+
+        setSelectedIds(new Set())
+        fetchTeams(currentPage)
+
+      } catch (err) {
+        console.error(err)
+      }
+
+    } else {
+
+      require2FA(async () => {
+
+        try {
+
+          await axiosClient.post('/api/admin/team/delete-team', {
+            data: [...selectedIds],
+          })
+
+          setSelectedIds(new Set())
+          fetchTeams(currentPage)
+
+        } catch (error) {
+
+          throw new Error(
+            error?.response?.data?.message || "Failed to delete teams"
+          )
+
+        }
+
       })
 
-      setSelectedIds(new Set())
-      fetchTeams(currentPage)
-    } catch (err) {
-      console.error(err)
     }
+
   }
 
   const getPages = () => {
