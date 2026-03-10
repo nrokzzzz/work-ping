@@ -13,7 +13,7 @@ const schema = yup.object({
   dueDate: yup.string().required('Due Date is required'),
   contractedBy: yup.string().required('Contracted By is required'),
   organizationId: yup.string().required('Organization ID is required'),
-  projectManagerId: yup.string().required('Project Manager ID is required'),
+  projectManager: yup.string().required('Project Manager ID is required'),
   description: yup.string().nullable(),
 })
 
@@ -85,7 +85,7 @@ const AddProjects = () => {
     console.log('FORM DATA:', data)
 
     try {
-      const res = await axiosClient.post('/api/project/create-project', data)
+      const res = await axiosClient.post('/api/admin/project/create-project', data)
       console.log(res)
     } catch (error) {
       console.log(error)
@@ -203,7 +203,7 @@ const AddProjects = () => {
 
         <div className="col-md-6">
           <Form.Label>
-            Project Manager ID <span className="text-danger">*</span>
+            Project Manager <span className="text-danger">*</span>
           </Form.Label>
 
           <Dropdown className="w-100">
@@ -242,7 +242,7 @@ const AddProjects = () => {
                     key={p.employeeId}
                     onClick={() => {
                       setSelectedPM(p.name)
-                      setValue('projectManagerId', p.employeeId)
+                      setValue('projectManager', p.employeeId)
                       setPmSearch('')
                     }}
                   >
@@ -254,10 +254,10 @@ const AddProjects = () => {
 
           </Dropdown>
 
-          <input type="hidden" {...register('projectManagerId')} />
+          <input type="hidden" {...register('projectManager')} />
 
           <small className="text-danger">
-            {errors.projectManagerId?.message}
+            {errors.projectManager?.message}
           </small>
         </div>
 
