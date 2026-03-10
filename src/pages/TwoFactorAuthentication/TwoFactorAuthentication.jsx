@@ -14,13 +14,19 @@ const TwoFactorAuthModal = () => {
 
   const isMounted = useRef(true)
 
+  // cleanup
   useEffect(() => {
     return () => {
       isMounted.current = false
     }
   }, [])
 
-  if (!showModal) return null
+  // auto verify when 6 digits entered
+  useEffect(() => {
+    if (code.length === 6) {
+      handleVerify()
+    }
+  }, [code])
 
   const handleVerify = async () => {
 
@@ -31,22 +37,20 @@ const TwoFactorAuthModal = () => {
       setLoading(true)
       setError('')
 
-      // Step 1: Verify OTP
-      const verifyRes = await axiosClient.post('/api/auth/2fa/verify', {
-        code
-      })
+      // verify OTP
+      const res = await axiosClient.post('/api/auth/2fa/verify', { code })
 
-      if (!verifyRes?.data?.verified) {
+      if (!res?.data?.verified) {
         setError('Invalid verification code')
         return
       }
 
-      // Step 2: Execute pending action
+      // run pending action
       try {
 
         await executeAction()
 
-        // reset code after success
+        // reset input
         setCode('')
 
       } catch (actionError) {
@@ -83,7 +87,6 @@ const TwoFactorAuthModal = () => {
     setCode('')
     setError('')
     cancel()
-
   }
 
   const handleKeyDown = (e) => {
@@ -92,16 +95,13 @@ const TwoFactorAuthModal = () => {
     }
   }
 
-  useEffect(() => {
-    if (code.length === 6) {
-      handleVerify()
-    }
-  }, [code])
+  // ⚠️ return after hooks
+  if (!showModal) return null
 
   return (
     <ComponentContainerCard>
 
-      {/* Background Overlay */}
+      {/* Background overlay */}
       <div
         className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
         style={{ zIndex: 99999 }}
@@ -191,9 +191,11 @@ const TwoFactorAuthModal = () => {
             </div>
 
           </Card.Body>
+
         </Card>
 
       </div>
+
     </ComponentContainerCard>
   )
 }
