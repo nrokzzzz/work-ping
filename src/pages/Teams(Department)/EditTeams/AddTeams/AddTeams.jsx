@@ -8,6 +8,9 @@ import axiosClient from '@/helpers/httpClient'
 import { toast } from 'react-toastify'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
+
 const schema = yup.object({
   teamName: yup.string().required('Team Name is required'),
   organizationId: yup.string().required('Organization ID is required'),
@@ -19,8 +22,18 @@ const schema = yup.object({
 const CreateTeam = () => {
 
   const [organizations, setOrganizations] = useState([])
+  const [employees, setEmployees] = useState([])
+
   const [search, setSearch] = useState('')
+  const [managerSearch, setManagerSearch] = useState('')
+  const [leaderSearch, setLeaderSearch] = useState('')
+
   const [selectedOrg, setSelectedOrg] = useState('')
+  const [selectedManager, setSelectedManager] = useState('')
+  const [selectedLeader, setSelectedLeader] = useState('')
+
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
 
   const {
     register,
@@ -62,26 +75,74 @@ const CreateTeam = () => {
     fetchOrganizations()
   }, [])
 
-  const onSubmit = async (data) => {
+  const fetchEmployees = async (orgId) => {
     try {
 
-      console.log('Payload ', data)
-
-      const res = await axiosClient.post(
-        '/api/admin/team/create-team',
-        data
+      const res = await axiosClient.get(
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
       )
 
-      console.log('Response ', res.data)
-
-      reset()
-      setSelectedOrg('')
-      toast.success('Team created successfully!')
+      setEmployees(res.data?.data || [])
 
     } catch (error) {
-      console.error('SAVE TEAM ERROR ', error)
-      toast.error('Failed to create team. Please try again.')
+      console.log(error)
     }
+  }
+
+  const createTeamApi = async (data) => {
+
+    const res = await axiosClient.post(
+      '/api/admin/team/create-team',
+      data
+    )
+
+    console.log('Response ', res.data)
+
+    reset()
+    setSelectedOrg('')
+    setSelectedManager('')
+    setSelectedLeader('')
+
+    toast.success('Team created successfully!')
+  }
+
+  const onSubmit = async (data) => {
+
+    console.log('Payload ', data)
+
+    if (is2FAAuthnticator) {
+
+      try {
+
+        await createTeamApi(data)
+
+      } catch (error) {
+
+        console.error('SAVE TEAM ERROR ', error)
+        toast.error('Failed to create team. Please try again.')
+
+      }
+
+    } else {
+
+      require2FA(async () => {
+
+        try {
+
+          await createTeamApi(data)
+
+        } catch (error) {
+
+          throw new Error(
+            error?.response?.data?.message || "Failed to create team"
+          )
+
+        }
+
+      })
+
+    }
+
   }
 
   return (
@@ -89,7 +150,6 @@ const CreateTeam = () => {
 
       <Form className="row g-4" onSubmit={handleSubmit(onSubmit)}>
 
-        {/* Team Name */}
         <div className="col-md-6">
           <Form.Label>
             Team Name <span className="text-danger">*</span>
@@ -144,9 +204,13 @@ const CreateTeam = () => {
                   <Dropdown.Item
                     key={o.organizationId}
                     onClick={() => {
+
                       setSelectedOrg(o.name)
                       setValue('organizationId', o.organizationId)
                       setSearch('')
+
+                      fetchEmployees(o.organizationId)
+
                     }}
                   >
                     {o.name}
@@ -164,29 +228,110 @@ const CreateTeam = () => {
           </small>
         </div>
 
-        {/* Team Manager */}
+        {/* Team Manager Dropdown */}
         <div className="col-md-6">
           <Form.Label>
             Team Manager ID <small className="text-muted">(Optional)</small>
           </Form.Label>
-          <Form.Control
-            placeholder="Enter Team Manager ID"
-            {...register('teamManagerId')}
-          />
+
+          <Dropdown className="w-100">
+
+            <Dropdown.Toggle
+              as="div"
+              className="form-control d-flex justify-content-between align-items-center arrow-none"
+              style={{ cursor: "pointer" }}
+            >
+              <span>{selectedManager || "Select Manager"}</span>
+              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu className="w-100 p-2"
+              style={{ maxHeight: '220px', overflowY: 'auto' }}>
+
+              <Form.Control
+                placeholder="Search manager"
+                className="mb-2"
+                value={managerSearch}
+                onChange={(e) => setManagerSearch(e.target.value)}
+              />
+
+              {employees
+                .filter(e =>
+                  e.name.toLowerCase().includes(managerSearch.toLowerCase())
+                )
+                .map((emp) => (
+                  <Dropdown.Item
+                    key={emp._id}
+                    onClick={() => {
+                      setSelectedManager(emp.name)
+                      setValue('teamManagerId', emp._id)
+                      setManagerSearch('')
+                    }}
+                  >
+                    {emp.name}
+                  </Dropdown.Item>
+                ))}
+
+            </Dropdown.Menu>
+
+          </Dropdown>
+
+          <input type="hidden" {...register('teamManagerId')} />
+
         </div>
 
-        {/* Team Leader */}
+        {/* Team Leader Dropdown */}
         <div className="col-md-6">
           <Form.Label>
             Team Leader ID <small className="text-muted">(Optional)</small>
           </Form.Label>
-          <Form.Control
-            placeholder="Enter Team Leader ID"
-            {...register('teamLeaderId')}
-          />
+
+          <Dropdown className="w-100">
+
+            <Dropdown.Toggle
+              as="div"
+              className="form-control d-flex justify-content-between align-items-center arrow-none"
+              style={{ cursor: "pointer" }}
+            >
+              <span>{selectedLeader || "Select Leader"}</span>
+              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu className="w-100 p-2"
+              style={{ maxHeight: '220px', overflowY: 'auto' }}>
+
+              <Form.Control
+                placeholder="Search leader"
+                className="mb-2"
+                value={leaderSearch}
+                onChange={(e) => setLeaderSearch(e.target.value)}
+              />
+
+              {employees
+                .filter(e =>
+                  e.name.toLowerCase().includes(leaderSearch.toLowerCase())
+                )
+                .map((emp) => (
+                  <Dropdown.Item
+                    key={emp._id}
+                    onClick={() => {
+                      setSelectedLeader(emp.name)
+                      setValue('teamLeaderId', emp._id)
+                      setLeaderSearch('')
+                    }}
+                  >
+                    {emp.name}
+                  </Dropdown.Item>
+                ))}
+
+            </Dropdown.Menu>
+
+          </Dropdown>
+
+          <input type="hidden" {...register('teamLeaderId')} />
+
         </div>
 
-        {/* Description */}
         <div className="col-12">
           <Form.Label>
             Description <small className="text-muted">(Optional)</small>
@@ -199,7 +344,6 @@ const CreateTeam = () => {
           />
         </div>
 
-        {/* Buttons */}
         <div className="col-12 d-flex justify-content-center gap-4 mt-3">
 
           <Button
@@ -208,6 +352,8 @@ const CreateTeam = () => {
             onClick={() => {
               reset()
               setSelectedOrg('')
+              setSelectedManager('')
+              setSelectedLeader('')
             }}
           >
             Clear
