@@ -1,6 +1,7 @@
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import { Button, Form } from 'react-bootstrap'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -31,6 +32,8 @@ const schema = yup.object({
 
 const OrganizationDetailsForm = () => {
 
+  const navigate = useNavigate()
+
   const [geoCoords, setGeoCoords] = useState([])
 
   const { require2FA } = use2FA()
@@ -60,7 +63,6 @@ const OrganizationDetailsForm = () => {
 
     console.log('Organization Details Submitted:', newData)
 
-    // If user already verified 2FA recently
     if (is2FAAuthnticator) {
 
       try {
@@ -71,6 +73,7 @@ const OrganizationDetailsForm = () => {
         )
 
         reset()
+        navigate('/organization/update-view-organization')
 
       } catch (error) {
 
@@ -80,7 +83,6 @@ const OrganizationDetailsForm = () => {
 
     } else {
 
-      // Trigger 2FA modal
       require2FA(async () => {
 
         try {
@@ -91,6 +93,7 @@ const OrganizationDetailsForm = () => {
           )
 
           reset()
+          navigate('/organization/update-view-organization')
 
         } catch (error) {
 

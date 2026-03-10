@@ -9,7 +9,9 @@ import * as yup from 'yup'
 import MaskedInput from 'react-text-mask-legacy'
 import axiosClient from '@/helpers/httpClient'
 import axios from 'axios'
-import { use2FA } from '@/context/useVerification2FA'
+
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
 
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
@@ -30,11 +32,18 @@ const schema = yup.object({
 })
 
 const OrganizationDetailsForm = () => {
+
   const navigate = useNavigate()
-  const { require2FA } = use2FA()
+
   const [geoCoords, setGeoCoords] = useState([])
-  const { organizationId } = useParams();
+
+  const { organizationId } = useParams()
+
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
+
   console.log('Organization ID from URL:', organizationId)
+
   const {
     register,
     control,
@@ -45,60 +54,103 @@ const OrganizationDetailsForm = () => {
     resolver: yupResolver(schema),
     shouldFocusError: false,
   })
-useEffect(() => {
-  const fetchOrganizationDetails = async () => {
-    try {
-      const res = await axiosClient.get(
-        `/api/admin/organization/get-organization-by-id/${organizationId}`
-      )
 
-      const data = res.data
+  useEffect(() => {
+    const fetchOrganizationDetails = async () => {
+      try {
 
-      reset({
-        organizationName: data?.name || '',
-        organizationType: data?.type || '',
-        casualLeaves: data?.clDays || '',
-        ipAddress: data?.IPWhitelist?.[0] || '',
-        description: data?.description || '',
+        const res = await axiosClient.get(
+          `/api/admin/organization/get-organization-by-id/${organizationId}`
+        )
+
+        const data = res.data
+
+        reset({
+          organizationName: data?.name || '',
+          organizationType: data?.type || '',
+          casualLeaves: data?.clDays || '',
+          ipAddress: data?.IPWhitelist?.[0] || '',
+          description: data?.description || '',
+        })
+
+      } catch (error) {
+
+        console.error('Error fetching organization details:', error)
+
+      }
+    }
+
+    if (organizationId) {
+      fetchOrganizationDetails()
+    }
+
+  }, [organizationId, reset])
+
+
+  const onSubmit = async (data) => {
+
+    const newData = {
+      _id: organizationId,
+      name: data.organizationName,
+      type: data.organizationType,
+      clDays: Number(data.casualLeaves),
+      description: data.description,
+      IPWhitelist: [data.ipAddress],
+    }
+
+    console.log('Organization Update Payload:', newData)
+
+    if (is2FAAuthnticator) {
+
+      try {
+
+        const response = await axiosClient.post(
+          '/api/admin/organization/update-organization',
+          newData
+        )
+
+        console.log('Update Response:', response.data)
+
+        if (response?.data) {
+          navigate('/organization/update-view-organization')
+        }
+
+      } catch (error) {
+
+        console.error('Error updating organization:', error)
+
+      }
+
+    } else {
+
+      require2FA(async () => {
+
+        try {
+
+          const response = await axiosClient.post(
+            '/api/admin/organization/update-organization',
+            newData
+          )
+
+          console.log('Update Response:', response.data)
+
+          if (response?.data) {
+            navigate('/organization/update-view-organization')
+          }
+
+        } catch (error) {
+
+          throw new Error(
+            error?.response?.data?.message || "Failed to update organization"
+          )
+
+        }
+
       })
 
-    } catch (error) {
-      console.error('Error fetching organization details:', error)
-    }
-  }
-
-  if (organizationId) {
-    fetchOrganizationDetails()
-  }
-}, [organizationId, reset])
- const onSubmit = async (data) => {
-  const newData = {
-    _id: organizationId,
-    name: data.organizationName,
-    type: data.organizationType,
-    clDays: Number(data.casualLeaves),
-    description: data.description,
-    IPWhitelist: [data.ipAddress],
-  }
-
-  console.log('Organization Update Payload:', newData)
-
-  try {
-    const response = await axiosClient.post(
-      '/api/admin/organization/update-organization',
-      newData
-    )
-
-    console.log('Update Response:', response.data)
-
-    if (response?.data) {
-      navigate('/organization/update-view-organization')
     }
 
-  } catch (error) {
-    console.error('Error updating organization:', error)
   }
-}
 
   return (
     <ComponentContainerCard id="basic" title="Organization Details">
@@ -169,7 +221,6 @@ useEffect(() => {
             </small>
           </div>
 
-          {/* Description moved down */}
           <div className="col-12 mb-3">
             <Form.Label>
               Description <small className="text-muted">(Optional)</small>
