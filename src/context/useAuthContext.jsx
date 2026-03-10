@@ -58,7 +58,8 @@ export function AuthProvider({ children }) {
         login,
         signUp,
         logout,
-        is2FAAuthnticator
+        is2FAAuthnticator,
+        setIs2FAAuthnticator
       }}
     >
       {children}

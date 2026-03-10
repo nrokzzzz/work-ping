@@ -3,6 +3,7 @@ import { Button, Form, Card, Spinner } from 'react-bootstrap'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
 import { use2FA } from '@/context/useVerification2FA'
+
 const TwoFactorAuthModal = ({ onSuccess, onCancel }) => {
   const {setShowModal} = use2FA()
   const [code, setCode] = useState('')

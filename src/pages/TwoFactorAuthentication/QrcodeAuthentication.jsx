@@ -3,11 +3,12 @@ import { useEffect, useState, useRef } from 'react'
 import { Button, Card, Spinner, Form } from 'react-bootstrap'
 import axiosClient from '@/helpers/httpClient'
 import {useNavigate} from 'react-router-dom'
+import { useAuthContext } from '@/context/useAuthContext';
 const QRAuthModal = () => {
   const [status, setStatus] = useState('Creating QR session...')
   const [loading, setLoading] = useState(true)
   const [qrCode, setQrCode] = useState(null)
-
+  const {setIs2FAAuthnticator} = useAuthContext()
   const [code, setCode] = useState('')
   const [verifying, setVerifying] = useState(false)
   const [error, setError] = useState('')
@@ -43,6 +44,10 @@ const QRAuthModal = () => {
 
       if (res?.data?.verified) {
         setStatus("✅ Authentication successful")
+        const res = await axiosClient.get('/verify-cookie');
+        if(res.data.twoFactorEnabled){
+          setIs2FAAuthnticator(false);
+        }
         navigate('/dashboard/analytics')
         
       } else {
