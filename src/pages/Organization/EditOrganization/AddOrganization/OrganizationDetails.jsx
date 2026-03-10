@@ -1,15 +1,15 @@
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import { Button, Form } from 'react-bootstrap'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useParams,useNavigate } from 'react-router-dom'
 
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import MaskedInput from 'react-text-mask-legacy'
 import axiosClient from '@/helpers/httpClient'
-
-import { use2FA } from '@/context/TwoFAContext'
-import { useAuthContext } from '@/context/useAuthContext'
+import axios from 'axios'
+// import { use2FA } from '@/context/useVerification2FA'
 
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
@@ -30,12 +30,11 @@ const schema = yup.object({
 })
 
 const OrganizationDetailsForm = () => {
-
+  const navigate = useNavigate()
+  
   const [geoCoords, setGeoCoords] = useState([])
-
-  const { require2FA } = use2FA()
-  const { is2FAAuthnticator } = useAuthContext()
-
+  const { organizationId } = useParams();
+  console.log('Organization ID from URL:', organizationId)
   const {
     register,
     control,
@@ -46,82 +45,74 @@ const OrganizationDetailsForm = () => {
     resolver: yupResolver(schema),
     shouldFocusError: false,
   })
+useEffect(() => {
+  const fetchOrganizationDetails = async () => {
+    try {
+      const res = await axiosClient.get(
+        `/api/admin/organization/get-organization-by-id/${organizationId}`
+      )
 
-  const onSubmit = async (data) => {
+      const data = res.data
 
-    const newData = {
-      name: data.organizationName,
-      type: data.organizationType,
-      clDays: data.casualLeaves,
-      description: data.description,
-      IPWhitelist: data.ipAddress,
-      coordinates: geoCoords,
-    }
-
-    console.log('Organization Details Submitted:', newData)
-
-    // If user already verified 2FA recently
-    if (is2FAAuthnticator) {
-
-      try {
-
-        const response = await axiosClient.post(
-          "/api/admin/organization/add-organization",
-          newData
-        )
-
-        reset()
-
-      } catch (error) {
-
-        console.error(error)
-
-      }
-
-    } else {
-      console.log("checkin")
-      // Trigger 2FA modal
-      require2FA(async () => {
-
-        try {
-
-          const response = await axiosClient.post(
-            "/api/admin/organization/add-organization",
-            newData
-          )
-
-          reset()
-
-        } catch (error) {
-
-          throw new Error(
-            error?.response?.data?.message || "Failed to add organization"
-          )
-
-        }
-
+      reset({
+        organizationName: data?.name || '',
+        organizationType: data?.type || '',
+        casualLeaves: data?.clDays || '',
+        ipAddress: data?.IPWhitelist?.[0] || '',
+        description: data?.description || '',
       })
 
+    } catch (error) {
+      console.error('Error fetching organization details:', error)
+    }
+  }
+
+  if (organizationId) {
+    fetchOrganizationDetails()
+  }
+}, [organizationId, reset])
+ const onSubmit = async (data) => {
+  const newData = {
+    _id: organizationId,
+    name: data.organizationName,
+    type: data.organizationType,
+    clDays: Number(data.casualLeaves),
+    description: data.description,
+    IPWhitelist: [data.ipAddress],
+  }
+
+  console.log('Organization Update Payload:', newData)
+
+  try {
+    const response = await axiosClient.post(
+      '/api/admin/organization/update-organization',
+      newData
+    )
+
+    console.log('Update Response:', response.data)
+
+    if (response?.data) {
+      navigate('/organization/update-view-organization')
     }
 
+  } catch (error) {
+    console.error('Error updating organization:', error)
   }
+}
 
   return (
     <ComponentContainerCard id="basic" title="Organization Details">
       <Form onSubmit={handleSubmit(onSubmit)}>
-
         <div className="row">
 
           <div className="col-md-6 mb-3">
             <Form.Label>
               Organization Name <span className="text-danger">*</span>
             </Form.Label>
-
             <Form.Control
               placeholder="Enter Organization Name"
               {...register('organizationName')}
             />
-
             <small className="text-danger">
               {errors.organizationName?.message}
             </small>
@@ -131,12 +122,10 @@ const OrganizationDetailsForm = () => {
             <Form.Label>
               Organization Type <span className="text-danger">*</span>
             </Form.Label>
-
             <Form.Control
               placeholder="Enter Organization Type"
               {...register('organizationType')}
             />
-
             <small className="text-danger">
               {errors.organizationType?.message}
             </small>
@@ -146,7 +135,6 @@ const OrganizationDetailsForm = () => {
             <Form.Label>
               Organization IP Address <span className="text-danger">*</span>
             </Form.Label>
-
             <Controller
               name="ipAddress"
               control={control}
@@ -164,33 +152,28 @@ const OrganizationDetailsForm = () => {
                 />
               )}
             />
-
-            <small className="text-danger">
-              {errors.ipAddress?.message}
-            </small>
+            <small className="text-danger">{errors.ipAddress?.message}</small>
           </div>
 
           <div className="col-md-6 mb-3">
             <Form.Label>
               Casual Leaves <span className="text-danger">*</span>
             </Form.Label>
-
             <Form.Control
               type="number"
               placeholder="Enter Casual Leaves"
               {...register('casualLeaves')}
             />
-
             <small className="text-danger">
               {errors.casualLeaves?.message}
             </small>
           </div>
 
+          {/* Description moved down */}
           <div className="col-12 mb-3">
             <Form.Label>
               Description <small className="text-muted">(Optional)</small>
             </Form.Label>
-
             <Form.Control
               as="textarea"
               rows={4}
@@ -205,7 +188,6 @@ const OrganizationDetailsForm = () => {
           </div>
 
         </div>
-
       </Form>
     </ComponentContainerCard>
   )

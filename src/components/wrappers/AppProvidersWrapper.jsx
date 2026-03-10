@@ -6,7 +6,8 @@ import { AuthProvider } from '@/context/useAuthContext';
 import { LayoutProvider } from '@/context/useLayoutContext';
 import { NotificationProvider } from '@/context/useNotificationContext';
 import { HelmetProvider } from 'react-helmet-async';
-import { TwoFAProvider } from '@/context/useVerification2FA';
+import { TwoFAProvider } from '@/context/TwoFAContext';
+import TwoFactorAuthentication from '@/pages/TwoFactorAuthentication/TwoFactorAuthentication'
 const handleChangeTitle = () => {
   if (document.visibilityState == 'hidden') document.title = 'Please come back 🥺'; else document.title = DEFAULT_PAGE_TITLE;
 };
@@ -25,17 +26,7 @@ const AppProvidersWrapper = ({
         <LayoutProvider>
           <NotificationProvider>
             {children}
-            <ToastContainer
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop
-              closeOnClick
-              pauseOnHover
-              draggable
-              theme="light"
-            />
-
+           <TwoFactorAuthentication/>
           </NotificationProvider>
         </LayoutProvider>
       </TwoFAProvider>  
