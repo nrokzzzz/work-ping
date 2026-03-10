@@ -5,31 +5,35 @@ import UploadUsersFromExcel from "./UploadUsersFromExcel"
 
 const ButtonPage = () => {
 
-    const [showWindow,setShowWindow] = useState(false)
+  const [activeModal, setActiveModal] = useState(null)
 
-    const [showExcelUpload, setShowExcelUpload] = useState(false)
- return (
-   <>
-     <Button onClick={()=>setShowWindow(true)}>
-        Open Employees Window
-     </Button>
+  const openEmployees = () => setActiveModal("employees")
+  const openExcel = () => setActiveModal("excel")
+  const closeModal = () => setActiveModal(null)
 
-     <EmployeesWindow
-        show={showWindow}
-        handleClose={()=>setShowWindow(false)}
-     />
-     <Button onClick={() => setShowExcelUpload(true)}>
-        Upload Excel Users
+  return (
+    <>
+      <Button onClick={openEmployees}>
+        Add
       </Button>
 
-      <UploadUsersFromExcel
-        show={showExcelUpload}
-        handleClose={() => setShowExcelUpload(false)}
-      />
-   </>
- )
+      {activeModal === "employees" && (
+        <EmployeesWindow
+          show={true}
+          handleClose={closeModal}
+          openExcel={openExcel}
+        />
+      )}
+
+      {activeModal === "excel" && (
+        <UploadUsersFromExcel
+          show={true}
+          handleClose={closeModal}
+          openEmployees={openEmployees}
+        />
+      )}
+    </>
+  )
 }
 
 export default ButtonPage
-
-

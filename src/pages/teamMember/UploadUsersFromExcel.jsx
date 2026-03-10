@@ -3,11 +3,12 @@ import { Modal, Button, Table, Form } from "react-bootstrap"
 import * as XLSX from "xlsx"
 import axiosClient from "@/helpers/httpClient"
 
-const UploadUsersFromExcel = ({ show, handleClose }) => {
+const UploadUsersFromExcel = ({ show, handleClose, openEmployees }) => {
 
     const [rollNumbers, setRollNumbers] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
     const fileInputRef = useRef(null)
+
     const handleFileUpload = (e) => {
 
         const file = e.target.files[0]
@@ -27,14 +28,11 @@ const UploadUsersFromExcel = ({ show, handleClose }) => {
 
             const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
-            // Extract RollNumber column
             const rolls = jsonData
                 .map((row) => row.RollNumber)
                 .filter(Boolean)
 
             setRollNumbers(rolls)
-
-            // reset selection
             setSelectedIds([])
         }
 
@@ -62,7 +60,7 @@ const UploadUsersFromExcel = ({ show, handleClose }) => {
     const sendToBackend = async () => {
 
         try {
-            console.log(selectedIds)
+
             await axiosClient.post("/api/send-user-ids", {
                 rollNumbers: selectedIds,
             })
@@ -72,14 +70,15 @@ const UploadUsersFromExcel = ({ show, handleClose }) => {
             handleClose()
 
         } catch (err) {
+
             console.error(err)
             alert("Failed to send users")
+
         } finally {
-            // reset states
+
             setRollNumbers([])
             setSelectedIds([])
 
-            // reset file input
             if (fileInputRef.current) {
                 fileInputRef.current.value = ""
             }
@@ -87,15 +86,27 @@ const UploadUsersFromExcel = ({ show, handleClose }) => {
     }
 
     return (
-        <Modal show={show} onHide={handleClose} size="lg" centered scrollable>
 
-            <Modal.Header closeButton>
-                <Modal.Title>Upload Roll Numbers</Modal.Title>
-            </Modal.Header>
+       <Modal show={show} onHide={handleClose} size="lg" centered scrollable>
+
+                <Modal.Header closeButton>
+
+                    <div className="d-flex align-items-center justify-content-between w-100">
+
+                    <Modal.Title>Upload Roll Numbers</Modal.Title>
+
+                    <Button
+                        className="me-2"
+                        onClick={openEmployees}
+                    >
+                        Open Employees Window
+                    </Button>
+
+                    </div>
+
+                </Modal.Header>
 
             <Modal.Body>
-
-                {/* Excel Upload */}
 
                 <Form.Group className="mb-3">
                     <Form.Label>Upload Excel File</Form.Label>
@@ -106,8 +117,6 @@ const UploadUsersFromExcel = ({ show, handleClose }) => {
                         onChange={handleFileUpload}
                     />
                 </Form.Group>
-
-                {/* Table */}
 
                 {rollNumbers.length > 0 && (
 
@@ -120,7 +129,6 @@ const UploadUsersFromExcel = ({ show, handleClose }) => {
                                 <tr>
 
                                     <th>
-
                                         <Form.Check
                                             type="checkbox"
                                             checked={
@@ -129,7 +137,6 @@ const UploadUsersFromExcel = ({ show, handleClose }) => {
                                             }
                                             onChange={toggleSelectAll}
                                         />
-
                                     </th>
 
                                     <th>#</th>
@@ -147,13 +154,11 @@ const UploadUsersFromExcel = ({ show, handleClose }) => {
                                     <tr key={index}>
 
                                         <td>
-
                                             <Form.Check
                                                 type="checkbox"
                                                 checked={selectedIds.includes(roll)}
                                                 onChange={() => toggleSelect(roll)}
                                             />
-
                                         </td>
 
                                         <td>{index + 1}</td>

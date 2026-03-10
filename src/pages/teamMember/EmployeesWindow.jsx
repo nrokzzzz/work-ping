@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { Modal, Card, CardBody, Row, Col, Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import IconifyIcon from "@/components/wrappers/IconifyIcon"
 import axiosClient from "@/helpers/httpClient"
 
-const EmployeesWindow = ({ show, handleClose }) => {
+const EmployeesWindow = ({ show, handleClose, openExcel }) => {
 
   const itemsPerPage = 10
 
@@ -18,6 +18,7 @@ const EmployeesWindow = ({ show, handleClose }) => {
   const [appliedSearch, setAppliedSearch] = useState("")
 
   const fetchEmployees = async (page) => {
+
     setLoading(true)
 
     try {
@@ -50,12 +51,10 @@ const EmployeesWindow = ({ show, handleClose }) => {
     fetchEmployees(currentPage)
   }, [currentPage, appliedSearch])
 
-
   const handleApply = () => {
     setAppliedSearch(search)
     setCurrentPage(1)
   }
-
 
   const getPages = () => {
 
@@ -69,13 +68,10 @@ const EmployeesWindow = ({ show, handleClose }) => {
       return [1, "...", totalPages - 2, totalPages - 1, totalPages]
 
     return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages]
-
   }
-
 
   const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
-
 
   return (
 
@@ -87,8 +83,22 @@ const EmployeesWindow = ({ show, handleClose }) => {
       scrollable
     >
 
+      {/* Header */}
+
       <Modal.Header closeButton>
-        <Modal.Title>Employees List</Modal.Title>
+
+        <div className="d-flex align-items-center justify-content-between w-100">
+
+          <Modal.Title>Employees List</Modal.Title>
+
+          <Button
+            onClick={openExcel}
+          >
+            Upload Excel Users
+          </Button>
+
+        </div>
+
       </Modal.Header>
 
       <Modal.Body>
@@ -97,41 +107,29 @@ const EmployeesWindow = ({ show, handleClose }) => {
           <CardBody>
 
             {/* Search */}
+          <Row className="g-2 mb-3"> 
+            <Col xs={12} md={9}> 
+            <div className="position-relative"  style={{ maxWidth: "400px" }}>
+               <IconifyIcon 
+               icon="bx:search-alt" 
+               className="position-absolute" 
+               style={{ left: 12, 
+               top: "50%",
+                transform: "translateY(-50%)", 
+                fontSize: 18 }} /> 
 
-            <Row className="g-2 mb-3">
-
-              <Col xs={12} md={9}>
-                <div className="position-relative">
-
-                  <IconifyIcon
-                    icon="bx:search-alt"
-                    className="position-absolute"
-                    style={{
-                      left: 12,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: 18
-                    }}
-                  />
-
-                  <input
-                    type="search"
-                    className="form-control ps-5"
-                    placeholder="Search employees..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-
-                </div>
-              </Col>
-
-              <Col xs={12} md={3}>
-                <Button className="w-100" onClick={handleApply}>
-                  Search
-                </Button>
-              </Col>
-
-            </Row>
+                <input type="search" 
+                className="form-control ps-5" 
+                placeholder="Search employees..." 
+                value={search} onChange={(e) => setSearch(e.target.value)} 
+                /> 
+                </div> 
+                </Col> 
+                <Col xs={12} md={3}> 
+                <Button className="w-100" onClick={handleApply}> 
+                  Search </Button> 
+                  </Col> 
+                  </Row>
 
             {/* Table */}
 
@@ -153,11 +151,15 @@ const EmployeesWindow = ({ show, handleClose }) => {
 
                   {loading ? (
                     <tr>
-                      <td colSpan="5" className="text-center">Loading...</td>
+                      <td colSpan="5" className="text-center">
+                        Loading...
+                      </td>
                     </tr>
                   ) : employees.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="text-center">No Records</td>
+                      <td colSpan="5" className="text-center">
+                        No Records
+                      </td>
                     </tr>
                   ) : (
                     employees.map((emp) => (
@@ -196,7 +198,8 @@ const EmployeesWindow = ({ show, handleClose }) => {
                       className="page-link"
                       onClick={(e) => {
                         e.preventDefault()
-                        if (currentPage > 1) setCurrentPage(currentPage - 1)
+                        if (currentPage > 1)
+                          setCurrentPage(currentPage - 1)
                       }}
                     >
                       <IconifyIcon icon="bx:left-arrow-alt" />
@@ -215,7 +218,8 @@ const EmployeesWindow = ({ show, handleClose }) => {
                         className="page-link"
                         onClick={(e) => {
                           e.preventDefault()
-                          if (typeof p === "number") setCurrentPage(p)
+                          if (typeof p === "number")
+                            setCurrentPage(p)
                         }}
                       >
                         {p}
@@ -235,9 +239,7 @@ const EmployeesWindow = ({ show, handleClose }) => {
                           setCurrentPage(currentPage + 1)
                       }}
                     >
-
                       <IconifyIcon icon="bx:right-arrow-alt" />
-
                     </Link>
 
                   </li>
@@ -254,7 +256,6 @@ const EmployeesWindow = ({ show, handleClose }) => {
       </Modal.Body>
 
     </Modal>
-
   )
 }
 
