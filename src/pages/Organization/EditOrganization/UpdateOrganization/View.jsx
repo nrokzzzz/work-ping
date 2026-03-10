@@ -17,7 +17,6 @@ const ViewOrganization = () => {
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
 
-  const [selectMode, setSelectMode] = useState(false)
   const [selectedIds, setSelectedIds] = useState(new Set())
 
   const fetchorganizations = async (page, q) => {
@@ -130,16 +129,6 @@ const ViewOrganization = () => {
               </Button>
 
               <Button
-                variant="secondary"
-                onClick={() => {
-                  if (selectMode) setSelectedIds(new Set())
-                  setSelectMode(!selectMode)
-                }}
-              >
-                Select
-              </Button>
-
-              <Button
                 variant="danger"
                 disabled={selectedIds.size === 0}
                 onClick={deleteOrganizations}
@@ -153,7 +142,7 @@ const ViewOrganization = () => {
             <table className="table text-nowrap mb-0">
               <thead className="bg-light bg-opacity-50">
                 <tr>
-                  {selectMode && <th>Select</th>}
+                  <th>Select</th>
                   <th>Actions</th>
                   <th>Name</th>
                   <th>CL Days</th>
@@ -180,17 +169,15 @@ const ViewOrganization = () => {
                   organizations.map((organization) => (
                     <tr key={organization._id}>
 
-                      {selectMode && (
-                        <td>
-                          <input
-                            type="checkbox"
-                            checked={selectedIds.has(organization._id)}
-                            onChange={(e) =>
-                              handleSelect(organization._id, e.target.checked)
-                            }
-                          />
-                        </td>
-                      )}
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(organization._id)}
+                          onChange={(e) =>
+                            handleSelect(organization._id, e.target.checked)
+                          }
+                        />
+                      </td>
 
                       <td>
                         <Button
@@ -203,8 +190,6 @@ const ViewOrganization = () => {
                         >
                           <IconifyIcon icon="bx:edit" />
                         </Button>
-
-                       
                       </td>
 
                       <td>{organization.name}</td>

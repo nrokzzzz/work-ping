@@ -41,6 +41,7 @@ const AddProjects = () => {
 
     const fetchOrganizations = async () => {
       try {
+
         const res = await axiosClient.get(
           '/api/admin/get-all-employees/get-organization-info'
         )
@@ -57,28 +58,28 @@ const AddProjects = () => {
       }
     }
 
-    const fetchProjectManagers = async () => {
-      try {
-        const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-project-managers'
-        )
-
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
-          name,
-          employeeId: obj.employeeId
-        }))
-
-        setProjectManagers(formatted)
-
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
     fetchOrganizations()
-    fetchProjectManagers()
 
   }, [])
+
+  const fetchProjectManagers = async (orgId) => {
+    try {
+
+      const res = await axiosClient.get(
+        `/api/admin/get-all-employees/get-project-managers/${orgId}`
+      )
+
+      const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        name,
+        employeeId: obj.employeeId
+      }))
+
+      setProjectManagers(formatted)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const onSubmit = async (data) => {
     console.log('FORM DATA:', data)
@@ -95,7 +96,6 @@ const AddProjects = () => {
     <ComponentContainerCard id="basic" title="Add Projects">
       <Form className="row g-4" onSubmit={handleSubmit(onSubmit)}>
 
-        {/* Name */}
         <div className="col-md-6">
           <Form.Label>
             Name <span className="text-danger">*</span>
@@ -107,7 +107,6 @@ const AddProjects = () => {
           <small className="text-danger">{errors.name?.message}</small>
         </div>
 
-        {/* Assigned Date */}
         <div className="col-md-6">
           <Form.Label>
             Assigned Date <span className="text-danger">*</span>
@@ -119,7 +118,6 @@ const AddProjects = () => {
           <small className="text-danger">{errors.assignedDate?.message}</small>
         </div>
 
-        {/* Due Date */}
         <div className="col-md-6">
           <Form.Label>
             Due Date <span className="text-danger">*</span>
@@ -131,7 +129,6 @@ const AddProjects = () => {
           <small className="text-danger">{errors.dueDate?.message}</small>
         </div>
 
-        {/* Contracted By */}
         <div className="col-md-6">
           <Form.Label>
             Contracted By <span className="text-danger">*</span>
@@ -143,7 +140,6 @@ const AddProjects = () => {
           <small className="text-danger">{errors.contractedBy?.message}</small>
         </div>
 
-        {/* Organization ID */}
         <div className="col-md-6">
           <Form.Label>
             Organization ID <span className="text-danger">*</span>
@@ -187,6 +183,7 @@ const AddProjects = () => {
                       setSelectedOrg(o.name)
                       setValue('organizationId', o.organizationId)
                       setSearch('')
+                      fetchProjectManagers(o.organizationId)
                     }}
                   >
                     {o.name}
@@ -204,7 +201,6 @@ const AddProjects = () => {
           </small>
         </div>
 
-        {/* Project Manager ID */}
         <div className="col-md-6">
           <Form.Label>
             Project Manager ID <span className="text-danger">*</span>
@@ -265,7 +261,6 @@ const AddProjects = () => {
           </small>
         </div>
 
-        {/* Description */}
         <div className="col-12">
           <Form.Label>
             Description <small className="text-muted">(Optional)</small>
@@ -278,7 +273,6 @@ const AddProjects = () => {
           />
         </div>
 
-        {/* Buttons */}
         <div className="col-12 d-flex justify-content-center gap-4">
           <Button
             variant="secondary"
