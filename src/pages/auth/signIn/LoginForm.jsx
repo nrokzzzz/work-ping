@@ -33,22 +33,12 @@ const LoginForm = () => {
       );
 
       console.log('Login response:', response.data);
-
-      // 🔥 IMPORTANT
-      // Assuming backend returns:
-      // { user: {...}, accessToken: "..." }
-
-
-      toast.success('Login Successfully', {
-        position: 'top-right',
-        autoClose: 2000
-      });
-
       login();
+      
 
       setTimeout(() => {
         navigate('/dashboard/analytics');
-      }, 1000);
+      }, 500);
 
 
 

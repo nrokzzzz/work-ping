@@ -13,13 +13,13 @@ export default function Home() {
   const {isAuthenticated,is2FAAuthnticator} = useAuthContext();
   const navigate = useNavigate()
   useEffect(()=>{
-    if(!isAuthenticated){
-      navigate('/auth/sign-in')
-    }else if(!is2FAAuthnticator){
+    // if(!isAuthenticated){
+    //   navigate('/auth/sign-in')
+    // }else if(!is2FAAuthnticator){
       
-        navigate('/2fa-authnticator')
+    //     navigate('/2fa-authnticator')
       
-    }
+    // }
   },[])
   return <>
       <PageBreadcrumb title="Analytics" subName="Dashboards" />

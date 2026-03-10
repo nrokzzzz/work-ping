@@ -7,10 +7,12 @@ import * as yup from 'yup';
 // import dotenv from 'dotenv';
 import axiosClient from '@/helpers/httpClient';
 
+import { useAuthContext } from '@/context/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 // dotenv.config();  
 const SignUpForm = () => {
   const navigate = useNavigate(); 
+   const { signUp } = useAuthContext(); 
   const signUpSchema = yup.object({
     name: yup.string().required('Please enter your name'),
     number: yup.string().required('Please enter your mobile number'),
@@ -49,7 +51,9 @@ const SignUpForm = () => {
       if (res.status !== 201) {
         throw new Error(data.error || 'Signup failed');
       }
+      signUp();
       console.log('Signup successful:', data);
+
       async function hello(){
         console.log("checker")
         await navigate('/2fa-authnticator')
