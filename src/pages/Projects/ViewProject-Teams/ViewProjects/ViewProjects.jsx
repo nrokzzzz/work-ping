@@ -24,7 +24,7 @@ const Viewprojects = () => {
           '/api/admin/get-all-employees/get-organization-info'
         )
         setOrgData(res.data || {})
-        console.log(res.data)
+        
       } catch (err) {
         console.error(err)
       }
@@ -70,7 +70,6 @@ const Viewprojects = () => {
       const result = await axiosClient.get(
         `/api/admin/project/get-projects?${params.toString()}`
       )
-      
       setProjects(result.data.projects || [])
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
@@ -195,7 +194,7 @@ const Viewprojects = () => {
                       <td>{project.assignedDate}</td>
                       <td>{project.dueDate}</td>
                       <td>{project.contractedBy}</td>
-                      <td>{project.organization}</td>
+                      <td>{project.organizationName}</td>
 
                       <td>
                         <Link
