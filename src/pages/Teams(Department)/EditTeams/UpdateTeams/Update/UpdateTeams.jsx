@@ -3,11 +3,14 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Button, Form, Dropdown } from 'react-bootstrap'
-import { useParams,useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
 import { toast } from 'react-toastify'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
+
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
 
 const schema = yup.object({
   teamName: yup.string().required('Team Name is required'),
@@ -21,9 +24,20 @@ const UpdateTeam = () => {
 
   const { id } = useParams()
   const navigate = useNavigate()
+
   const [organizations, setOrganizations] = useState([])
+  const [employees, setEmployees] = useState([])
+
   const [search, setSearch] = useState('')
+  const [managerSearch, setManagerSearch] = useState('')
+  const [leaderSearch, setLeaderSearch] = useState('')
+
   const [selectedOrg, setSelectedOrg] = useState('')
+  const [selectedManager, setSelectedManager] = useState('')
+  const [selectedLeader, setSelectedLeader] = useState('')
+
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
 
   const {
     register,
@@ -36,8 +50,11 @@ const UpdateTeam = () => {
   })
 
   useEffect(() => {
+
     const fetchOrganizations = async () => {
+
       try {
+
         const res = await axiosClient.get(
           '/api/admin/get-all-employees/get-organization-info'
         )
@@ -50,15 +67,39 @@ const UpdateTeam = () => {
         setOrganizations(formatted)
 
       } catch (error) {
+
         console.log(error)
+
       }
+
     }
 
     fetchOrganizations()
+
   }, [])
 
+  const fetchEmployees = async (orgId) => {
+
+    try {
+
+      const res = await axiosClient.get(
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
+      )
+
+      setEmployees(res.data?.data || [])
+
+    } catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
+
   useEffect(() => {
+
     const fetchTeam = async () => {
+
       try {
 
         const res = await axiosClient.get(`/api/admin/team/get-team/${id}`)
@@ -77,21 +118,49 @@ const UpdateTeam = () => {
           (o) => o.organizationId === team.organizationId
         )
 
-        if (org) {
-          setSelectedOrg(org.name)
-        }
+        if (org) setSelectedOrg(org.name)
+
+        fetchEmployees(team.organizationId)
+
+        setTimeout(() => {
+
+          if (team.managerId) {
+            const manager = employees.find(e => e._id === team.managerId._id)
+            if (manager) setSelectedManager(manager.employeeId)
+          }
+
+          if (team.leaderIds?.length) {
+            const leader = employees.find(e => e._id === team.leaderIds[0]._id)
+            if (leader) setSelectedLeader(leader.employeeId)
+          }
+
+        }, 300)
 
       } catch (error) {
+
         console.error(error)
+
       }
+
     }
 
-    if (id) fetchTeam()
+    if (id && organizations.length) fetchTeam()
 
-  }, [id, organizations])
+  }, [id, organizations, reset])
+
+  const updateTeamApi = async (payload) => {
+
+    await axiosClient.post(
+      "/api/admin/team/update-team",
+      payload
+    )
+
+    toast.success("Team updated successfully!")
+    navigate("/teams/update-teams-view")
+
+  }
 
   const onSubmit = async (data) => {
-  try {
 
     const payload = {
       teamId: id,
@@ -102,20 +171,40 @@ const UpdateTeam = () => {
       leaderIds: data.teamLeaderId ? [data.teamLeaderId] : []
     }
 
-    await axiosClient.post(
-      "/api/admin/team/update-team",
-      payload
-    )
+    if (is2FAAuthnticator) {
 
-    toast.success("Team updated successfully!")
+      try {
 
-    navigate("/teams/update-teams-view")
+        await updateTeamApi(payload)
 
-  } catch (error) {
-    console.error(error)
-    toast.error("Failed to update team")
+      } catch (error) {
+
+        console.error(error)
+        toast.error("Failed to update team")
+
+      }
+
+    } else {
+
+      require2FA(async () => {
+
+        try {
+
+          await updateTeamApi(payload)
+
+        } catch (error) {
+
+          throw new Error(
+            error?.response?.data?.message || "Failed to update team"
+          )
+
+        }
+
+      })
+
+    }
+
   }
-}
 
   return (
     <ComponentContainerCard id="basic" title="Update Team">
@@ -175,9 +264,12 @@ const UpdateTeam = () => {
                   <Dropdown.Item
                     key={o.organizationId}
                     onClick={() => {
+
                       setSelectedOrg(o.name)
                       setValue('organizationId', o.organizationId)
                       setSearch('')
+                      fetchEmployees(o.organizationId)
+
                     }}
                   >
                     {o.name}
@@ -199,18 +291,108 @@ const UpdateTeam = () => {
           <Form.Label>
             Team Manager ID <small className="text-muted">(Optional)</small>
           </Form.Label>
-          <Form.Control
-            {...register('teamManagerId')}
-          />
+
+          <Dropdown className="w-100">
+
+            <Dropdown.Toggle
+              as="div"
+              className="form-control d-flex justify-content-between align-items-center arrow-none"
+              style={{ cursor: "pointer" }}
+            >
+              <span>{selectedManager || "Select Manager"}</span>
+              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu
+              className="w-100 p-2"
+              style={{ maxHeight: '220px', overflowY: 'auto' }}
+            >
+
+              <Form.Control
+                placeholder="Search manager"
+                className="mb-2"
+                value={managerSearch}
+                onChange={(e) => setManagerSearch(e.target.value)}
+              />
+
+              {employees
+                .filter(e =>
+                  e.name.toLowerCase().includes(managerSearch.toLowerCase()) ||
+                  e.employeeId.toLowerCase().includes(managerSearch.toLowerCase())
+                )
+                .map((emp) => (
+                  <Dropdown.Item
+                    key={emp._id}
+                    onClick={() => {
+                      setSelectedManager(emp.employeeId)
+                      setValue('teamManagerId', emp._id)
+                      setManagerSearch('')
+                    }}
+                  >
+                    {emp.employeeId}
+                  </Dropdown.Item>
+                ))}
+
+            </Dropdown.Menu>
+
+          </Dropdown>
+
+          <input type="hidden" {...register('teamManagerId')} />
+
         </div>
 
         <div className="col-md-6">
           <Form.Label>
             Team Leader ID <small className="text-muted">(Optional)</small>
           </Form.Label>
-          <Form.Control
-            {...register('teamLeaderId')}
-          />
+
+          <Dropdown className="w-100">
+
+            <Dropdown.Toggle
+              as="div"
+              className="form-control d-flex justify-content-between align-items-center arrow-none"
+              style={{ cursor: "pointer" }}
+            >
+              <span>{selectedLeader || "Select Leader"}</span>
+              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu
+              className="w-100 p-2"
+              style={{ maxHeight: '220px', overflowY: 'auto' }}
+            >
+
+              <Form.Control
+                placeholder="Search leader"
+                className="mb-2"
+                value={leaderSearch}
+                onChange={(e) => setLeaderSearch(e.target.value)}
+              />
+
+              {employees
+                .filter(e =>
+                  e.name.toLowerCase().includes(leaderSearch.toLowerCase()) ||
+                  e.employeeId.toLowerCase().includes(leaderSearch.toLowerCase())
+                )
+                .map((emp) => (
+                  <Dropdown.Item
+                    key={emp._id}
+                    onClick={() => {
+                      setSelectedLeader(emp.employeeId)
+                      setValue('teamLeaderId', emp._id)
+                      setLeaderSearch('')
+                    }}
+                  >
+                    {emp.employeeId}
+                  </Dropdown.Item>
+                ))}
+
+            </Dropdown.Menu>
+
+          </Dropdown>
+
+          <input type="hidden" {...register('teamLeaderId')} />
+
         </div>
 
         <div className="col-12">

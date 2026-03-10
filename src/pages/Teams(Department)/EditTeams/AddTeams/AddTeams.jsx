@@ -53,7 +53,9 @@ const CreateTeam = () => {
   })
 
   useEffect(() => {
+
     const fetchOrganizations = async () => {
+
       try {
 
         const res = await axiosClient.get(
@@ -68,14 +70,19 @@ const CreateTeam = () => {
         setOrganizations(formatted)
 
       } catch (error) {
+
         console.log(error)
+
       }
+
     }
 
     fetchOrganizations()
+
   }, [])
 
   const fetchEmployees = async (orgId) => {
+
     try {
 
       const res = await axiosClient.get(
@@ -85,8 +92,11 @@ const CreateTeam = () => {
       setEmployees(res.data?.data || [])
 
     } catch (error) {
+
       console.log(error)
+
     }
+
   }
 
   const createTeamApi = async (data) => {
@@ -104,33 +114,19 @@ const CreateTeam = () => {
     setSelectedLeader('')
 
     toast.success('Team created successfully!')
+
   }
 
   const onSubmit = async (data) => {
 
-  const payload = {
-    ...data,
-    teamLeaderIds: data.teamLeaderId ? [data.teamLeaderId] : []
-  }
-
-  console.log('Payload ', payload)
-
-  if (is2FAAuthnticator) {
-
-    try {
-
-      await createTeamApi(payload)
-
-    } catch (error) {
-
-      console.error('SAVE TEAM ERROR ', error)
-      toast.error('Failed to create team. Please try again.')
-
+    const payload = {
+      ...data,
+      teamLeaderIds: data.teamLeaderId ? [data.teamLeaderId] : []
     }
 
-  } else {
+    console.log('Payload ', payload)
 
-    require2FA(async () => {
+    if (is2FAAuthnticator) {
 
       try {
 
@@ -138,17 +134,32 @@ const CreateTeam = () => {
 
       } catch (error) {
 
-        throw new Error(
-          error?.response?.data?.message || "Failed to create team"
-        )
+        console.error('SAVE TEAM ERROR ', error)
+        toast.error('Failed to create team. Please try again.')
 
       }
 
-    })
+    } else {
+
+      require2FA(async () => {
+
+        try {
+
+          await createTeamApi(payload)
+
+        } catch (error) {
+
+          throw new Error(
+            error?.response?.data?.message || "Failed to create team"
+          )
+
+        }
+
+      })
+
+    }
 
   }
-
-}
 
   return (
     <ComponentContainerCard id="basic" title="Add Teams">
@@ -168,7 +179,6 @@ const CreateTeam = () => {
           </small>
         </div>
 
-        {/* Organization Dropdown */}
         <div className="col-md-6">
           <Form.Label>
             Organization Name <span className="text-danger">*</span>
@@ -213,7 +223,6 @@ const CreateTeam = () => {
                       setSelectedOrg(o.name)
                       setValue('organizationId', o.organizationId)
                       setSearch('')
-
                       fetchEmployees(o.organizationId)
 
                     }}
@@ -233,7 +242,6 @@ const CreateTeam = () => {
           </small>
         </div>
 
-        {/* Team Manager Dropdown */}
         <div className="col-md-6">
           <Form.Label>
             Team Manager ID <small className="text-muted">(Optional)</small>
@@ -262,18 +270,19 @@ const CreateTeam = () => {
 
               {employees
                 .filter(e =>
-                  e.name.toLowerCase().includes(managerSearch.toLowerCase())
+                  e.name.toLowerCase().includes(managerSearch.toLowerCase()) ||
+                  e.employeeId.toLowerCase().includes(managerSearch.toLowerCase())
                 )
                 .map((emp) => (
                   <Dropdown.Item
                     key={emp._id}
                     onClick={() => {
-                      setSelectedManager(emp.name)
+                      setSelectedManager(emp.employeeId)
                       setValue('teamManagerId', emp._id)
                       setManagerSearch('')
                     }}
                   >
-                    {emp.name}
+                    {emp.employeeId}
                   </Dropdown.Item>
                 ))}
 
@@ -285,7 +294,6 @@ const CreateTeam = () => {
 
         </div>
 
-        {/* Team Leader Dropdown */}
         <div className="col-md-6">
           <Form.Label>
             Team Leader ID <small className="text-muted">(Optional)</small>
@@ -314,18 +322,19 @@ const CreateTeam = () => {
 
               {employees
                 .filter(e =>
-                  e.name.toLowerCase().includes(leaderSearch.toLowerCase())
+                  e.name.toLowerCase().includes(leaderSearch.toLowerCase()) ||
+                  e.employeeId.toLowerCase().includes(leaderSearch.toLowerCase())
                 )
                 .map((emp) => (
                   <Dropdown.Item
                     key={emp._id}
                     onClick={() => {
-                      setSelectedLeader(emp.name)
+                      setSelectedLeader(emp.employeeId)
                       setValue('teamLeaderId', emp._id)
                       setLeaderSearch('')
                     }}
                   >
-                    {emp.name}
+                    {emp.employeeId}
                   </Dropdown.Item>
                 ))}
 
