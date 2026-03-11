@@ -160,44 +160,42 @@ const ViewTeams = () => {
 
           {/* Table */ console.log("teams: " + teams)}
           <div className="table-responsive">
-            <table className="table text-nowrap mb-0">
-              <thead className="bg-light">
-                <tr>
-                  <th>Team Name</th>
-                  <th>Team Manager ID</th>
-                  <th>Organization</th>
-                  <th>Team Leader ID</th>
-                </tr>
-              </thead>
+  <table className="table text-nowrap mb-0">
+    <thead className="bg-light">
+      <tr>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>Organization Name</th>
+        <th>Work Type</th>
+      </tr>
+    </thead>
 
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="4" className="text-center py-4">
-                      Loading...
-                    </td>
-                  </tr>
-                ) : teams.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" className="text-center py-4">
-                      No records found
-                    </td>
-                  </tr>
-                ) : (
-                  teams.map((team) => (
-                    <tr key={team._id}>
-                      <td>{team.teamName}</td>
-                      <td>{team.managerId}</td>
-                      <td>
-                        {getOrganizationName(team.organizationId)}
-                      </td>
-                      <td>{team.leaderIds[0]}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+    <tbody>
+      {loading ? (
+        <tr>
+          <td colSpan="4" className="text-center py-4">
+            Loading...
+          </td>
+        </tr>
+      ) : teams.length === 0 ? (
+        <tr>
+          <td colSpan="4" className="text-center py-4">
+            No records found
+          </td>
+        </tr>
+      ) : (
+        teams.map((team, index) => (
+          <tr key={index}>
+            <td>{team.userId}</td>
+            <td>{team.userName}</td>
+            <td>{getOrganizationName(team.organizationId)}</td>
+            <td>{team.workType}</td>
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+</div>
 
           {/* Pagination */}
           <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
