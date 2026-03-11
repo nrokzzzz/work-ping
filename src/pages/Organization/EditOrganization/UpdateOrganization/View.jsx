@@ -68,22 +68,7 @@ const ViewOrganization = () => {
 
   const deleteOrganizations = async () => {
 
-    if (is2FAAuthnticator) {
-
-      try {
-
-        await axiosClient.post('/api/admin/organization/delete-organizations', {
-          data: [...selectedIds],
-        })
-
-        setSelectedIds(new Set())
-        fetchorganizations(currentPage, search)
-
-      } catch (e) {
-        console.error(e)
-      }
-
-    } else {
+    {
 
       require2FA(async () => {
 
@@ -132,48 +117,67 @@ const ViewOrganization = () => {
         <Card>
 
           <CardBody>
-            <div className="d-flex justify-content-start align-items-center gap-2">
-              <div style={{ width: 300 }}>
-                <div className="position-relative">
-                  <IconifyIcon
-                    icon="bx:search-alt"
-                    className="position-absolute"
-                    style={{
-                      left: 12,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      fontSize: 18,
-                    }}
-                  />
-                  <input
-                    type="search"
-                    className="form-control ps-5"
-                    placeholder="Search by name..."
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                  />
-                </div>
-              </div>
 
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setCurrentPage(1)
-                  setSearch(searchInput)
-                }}
-              >
-                Apply
-              </Button>
+  <Row className="align-items-center g-2">
 
-              <Button
-                variant="danger"
-                disabled={selectedIds.size === 0}
-                onClick={deleteOrganizations}
-              >
-                Delete
-              </Button>
-            </div>
-          </CardBody>
+    {/* Search */}
+    <Col xs={12} md={6} lg={4}>
+      <div className="position-relative">
+        <IconifyIcon
+          icon="bx:search-alt"
+          className="position-absolute"
+          style={{
+            left: 12,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            fontSize: 18,
+          }}
+        />
+
+        <input
+          type="search"
+          className="form-control ps-5"
+          placeholder="Search by name..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+      </div>
+    </Col>
+
+    {/* Buttons */}
+    <Col
+      xs={12}
+      md={6}
+      lg={8}
+      className="d-flex gap-2 justify-content-md-end flex-wrap"
+    >
+
+      <Button
+        variant="primary"
+        className="flex-grow-1 flex-md-grow-0 px-4"
+        onClick={() => {
+          setCurrentPage(1)
+          setSearch(searchInput)
+        }}
+      >
+        Apply
+      </Button>
+
+      <Button
+        variant="danger"
+        className="flex-grow-1 flex-md-grow-0 px-4"
+        disabled={selectedIds.size === 0}
+        onClick={deleteOrganizations}
+      >
+        Delete
+      </Button>
+
+    </Col>
+
+  </Row>
+
+</CardBody>
+
 
           <div className="table-responsive table-centered">
             <table className="table text-nowrap mb-0">

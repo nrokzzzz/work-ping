@@ -1,5 +1,5 @@
 import ComponentContainerCard from '@/components/ComponentContainerCard'
-import { Button, Form } from 'react-bootstrap'
+import { Button, Form,Row,Col } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
@@ -123,26 +123,7 @@ const UpdateOrganizationDetailsForm = () => {
 
     console.log('Organization Update Payload:', newData)
 
-    if (is2FAAuthnticator) {
-
-      try {
-
-        const response = await axiosClient.post(
-          '/api/admin/organization/update-organization',
-          newData
-        )
-
-        if (response?.data) {
-          navigate('/organization/update-view-organization')
-        }
-
-      } catch (error) {
-
-        console.error('Error updating organization:', error)
-
-      }
-
-    } else {
+     {
 
       require2FA(async () => {
 
@@ -172,6 +153,10 @@ const UpdateOrganizationDetailsForm = () => {
   }
 
   return (
+   <Row className="justify-content-center mt-4">
+
+  <Col xs={12} md={10} lg={8} xl={7}>
+
     <ComponentContainerCard id="basic" title="Organization Details">
 
       <Form noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -280,6 +265,10 @@ const UpdateOrganizationDetailsForm = () => {
       </Form>
 
     </ComponentContainerCard>
+
+  </Col>
+
+</Row>
   )
 }
 
