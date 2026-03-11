@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 
 const Viewprojects = () => {
   const itemsPerPage = 10
+  const navigate = useNavigate()
+
   const [projects, setProjects] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
@@ -16,7 +18,7 @@ const Viewprojects = () => {
   const [orgData, setOrgData] = useState({})
   const [organization, setOrganization] = useState('')
   const [appliedOrganization, setAppliedOrganization] = useState('')
-  
+
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -24,7 +26,6 @@ const Viewprojects = () => {
           '/api/admin/get-all-employees/get-organization-info'
         )
         setOrgData(res.data || {})
-        
       } catch (err) {
         console.error(err)
       }
@@ -70,9 +71,11 @@ const Viewprojects = () => {
       const result = await axiosClient.get(
         `/api/admin/project/get-projects?${params.toString()}`
       )
+
       setProjects(result.data.projects || [])
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
+
     } catch (e) {
       console.error(e)
     } finally {
@@ -82,7 +85,7 @@ const Viewprojects = () => {
 
   useEffect(() => {
     fetchprojects(currentPage)
-  }, [currentPage, appliedOrganization,appliedSearch])
+  }, [currentPage, appliedOrganization, appliedSearch])
 
   const handleApply = () => {
     setAppliedSearch(search)
@@ -105,6 +108,7 @@ const Viewprojects = () => {
 
   const start =
     totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
+
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
   return (
@@ -113,6 +117,7 @@ const Viewprojects = () => {
         <Card>
           <CardBody>
             <Row className="g-2">
+
               <Col xs={12} md={4}>
                 <div className="position-relative">
                   <IconifyIcon
@@ -125,6 +130,7 @@ const Viewprojects = () => {
                       fontSize: 18,
                     }}
                   />
+
                   <input
                     type="search"
                     className="form-control ps-5"
@@ -158,11 +164,13 @@ const Viewprojects = () => {
                   Apply
                 </Button>
               </Col>
+
             </Row>
           </CardBody>
 
           <div className="table-responsive">
             <table className="table text-nowrap mb-0">
+
               <thead className="bg-light">
                 <tr>
                   <th>Name</th>
@@ -170,50 +178,52 @@ const Viewprojects = () => {
                   <th>Due Date</th>
                   <th>Contracted By</th>
                   <th>Organization Name</th>
-                  <th>View Members</th>
                 </tr>
               </thead>
 
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="15" className="text-center py-4">
+                    <td colSpan="10" className="text-center py-4">
                       Loading...
                     </td>
                   </tr>
+
                 ) : projects.length === 0 ? (
+
                   <tr>
-                    <td colSpan="15" className="text-center py-4">
+                    <td colSpan="10" className="text-center py-4">
                       No records found
                     </td>
                   </tr>
+
                 ) : (
+
                   projects.map((project) => (
-                    <tr key={project._id}>
+
+                    <tr
+                      key={project._id}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() =>
+                        navigate(`/projects/view-project-teams/project-team-members/${project._id}`)
+                      }
+                    >
                       <td>{project.name}</td>
                       <td>{project.assignedDate}</td>
                       <td>{project.dueDate}</td>
                       <td>{project.contractedBy}</td>
                       <td>{project.organizationName}</td>
-
-                      <td>
-                        <Link
-                          to={`/projects/view-project-teams/project-team-members/${project._id}`}
-                        >
-                          <Button size="sm" variant="info">
-                            View
-                          </Button>
-                        </Link>
-                      </td>
-
                     </tr>
+
                   ))
                 )}
               </tbody>
+
             </table>
           </div>
 
           <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
+
             <div className="col-12 col-sm">
               <div className="text-muted">
                 Showing {start} to {end} of {totalRecords} records
@@ -221,7 +231,9 @@ const Viewprojects = () => {
             </div>
 
             <Col xs={12} sm="auto">
+
               <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
+
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                   <Link
                     to="#"
@@ -239,6 +251,7 @@ const Viewprojects = () => {
                   <li
                     key={i}
                     className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+
                     <Link
                       to="#"
                       className="page-link"
@@ -249,6 +262,7 @@ const Viewprojects = () => {
                       }}>
                       {p}
                     </Link>
+
                   </li>
                 ))}
 
@@ -264,9 +278,12 @@ const Viewprojects = () => {
                     <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
                 </li>
+
               </ul>
+
             </Col>
           </div>
+
         </Card>
       </Col>
     </Row>
