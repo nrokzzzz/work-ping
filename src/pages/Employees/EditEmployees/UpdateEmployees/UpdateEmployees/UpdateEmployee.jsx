@@ -19,6 +19,8 @@ import FaceEmbeddings from './FaceEmbeddings'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
 
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
 const schema = yup.object({
   userId: yup.string().required('User Id is required'),
   userName: yup.string().required('User Name is required'),
@@ -60,6 +62,9 @@ const [selectedOrg, setSelectedOrg] = useState('')
   const [search, setSearch] = useState('')
   const [faceEmbedding, setFaceEmbedding] = useState(null)
   const { employeeId } = useParams()
+  const [id,setId] = useState('')
+    const { require2FA } = use2FA()
+    const { is2FAAuthnticator } = useAuthContext()
   const {
   register,
   handleSubmit,
@@ -75,17 +80,81 @@ const [selectedOrg, setSelectedOrg] = useState('')
     console.log(step)
   })
 
-  const submitForm = async () => {
-    const data = getValues()
-    data.phone = countryCode + data.phone
-    data.faceEmbedding = faceEmbedding?.hash
-    data.faceSource = faceEmbedding?.source
+ const submitForm = async () => {
+    const v = getValues()
+
+    const data = {
+      employeeId:id,
+      userName: v.userName,
+      email: v.email,
+      phone: v.phone,
+      userId: v.userId,
+      organizationName: v.organizationName,
+      doj: v.doj,
+
+      gender: v.gender,
+      salary: v.salary,
+      dob: v.dob,
+      address: v.address,
+      isActive: true,
+
+      aadhaar: v.aadhaar,
+      pan: v.pan,
+      passport: v.passport,
+      bankId: v.bankId
+    }
+
     try {
-      console.log('Submitting Employee Data:', data)
-      const res = await axiosClient.post('/api/admin/add-employees/by-form', data)
-      console.log('Employee added:', res.data)
+      console.log("Submitting Employee Data:", data)
+
+
+      if (is2FAAuthnticator) {
+
+        try {
+
+          const response = await axiosClient.post(
+            "/api/admin/employee/update",
+            data
+          )
+
+          reset()
+          navigate('/employees/view-employees')
+
+        } catch (error) {
+
+          console.error(error)
+
+        }
+
+      } else {
+
+        require2FA(async () => {
+
+          try {
+
+            const response = await axiosClient.post(
+              "/api/admin/employee/update",
+              data
+            )
+
+
+            navigate('/employees/view-employees')
+
+          } catch (error) {
+
+            throw new Error(
+              error?.response?.data?.message || "Failed to add Employee"
+            )
+
+          }
+
+        })
+
+      }
+
+      
     } catch (error) {
-      console.error('Error adding employee:', error)
+      console.error("Error adding employee:", error)
     }
   }
 useEffect(() => {
@@ -119,7 +188,7 @@ useEffect(() => {
       )
 
       const emp = res.data
-
+      setId(emp._id)
       setValue("userId", emp.employeeId)
       setValue("userName", emp.name)
       setValue("email", emp.email)
@@ -153,26 +222,17 @@ useEffect(() => {
   if (employeeId) fetchEmployee()
 
 }, [employeeId])
+  
   return (
     <>
-      <ToastContainer position="top-right" autoClose={3000} />
 
       {step === 0 && (
         <ComponentContainerCard
           title={
             <div className="d-flex justify-content-between align-items-center">
-              <span>Add Basic Employee Details</span>
+              <span>Update Employee Details</span>
 
-              <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={() =>
-                  navigate('/employees/add-employees/bulk-upload')
-                }
-              >
-                <IconifyIcon icon="bx:upload" className="me-1" />
-                Spread-Sheet
-              </Button>
+              
             </div>
           }
         >
@@ -197,70 +257,66 @@ useEffect(() => {
             </div>
 
             <div className="col-md-4">
-  <Form.Label>
-    Organization Name <span className="text-danger">*</span>
-  </Form.Label>
+              <Form.Label>
+                Organization Name <span className="text-danger">*</span>
+              </Form.Label>
 
-  <Dropdown className="w-100">
+              <Dropdown className="w-100">
 
-    <Dropdown.Toggle
-      as="div"
-      className="form-control d-flex justify-content-between align-items-center arrow-none"
-      style={{ cursor: "pointer" }}
-    >
-      <span>{selectedOrg || "Select Organization"}</span>
-      <IconifyIcon icon="bx:chevron-down" className="fs-4" />
-    </Dropdown.Toggle>
+                <Dropdown.Toggle
+                  as="div"
+                  className="form-control d-flex justify-content-between align-items-center arrow-none"
+                  style={{ cursor: "pointer" }}
+                >
+                  <span>{selectedOrg || "Select Organization"}</span>
+                  <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+                </Dropdown.Toggle>
 
-    <Dropdown.Menu
-      className="w-100 p-2"
-      style={{
-        maxHeight: '220px',
-        overflowY: 'auto',
-        overflowX: 'hidden'
-      }}
-    >
+                <Dropdown.Menu
+                  className="w-100 p-2"
+                  style={{
+                    maxHeight: '220px',
+                    overflowY: 'auto',
+                    overflowX: 'hidden'
+                  }}
+                >
 
-      <Form.Control
-        placeholder="Search organization"
-        className="mb-2"
-        value={orgSearch}
-        onChange={(e) => setOrgSearch(e.target.value)}
-      />
+                  <Form.Control
+                    placeholder="Search organization"
+                    className="mb-2"
+                    value={orgSearch}
+                    onChange={(e) => setOrgSearch(e.target.value)}
+                  />
 
-      {organizations
-        .filter(o =>
-          o.name.toLowerCase().includes(orgSearch.toLowerCase())
-        )
-        .map((o) => (
-          <Dropdown.Item
-            key={o.organizationId}
-            onClick={() => {
-              setSelectedOrg(o.name)
-              setValue('organizationName', o.name)
-              setOrgSearch('')
-            }}
-          >
-            {o.name}
-          </Dropdown.Item>
-        ))}
+                  {organizations
+                    .filter(o =>
+                      o.name.toLowerCase().includes(orgSearch.toLowerCase())
+                    )
+                    .map((o) => (
+                      <Dropdown.Item
+                        key={o.organizationId}
+                        onClick={() => {
+                          setSelectedOrg(o.name)
+                          setValue('organizationName', o.name)
+                          setOrgSearch('')
+                        }}
+                      >
+                        {o.name}
+                      </Dropdown.Item>
+                    ))}
 
-    </Dropdown.Menu>
+                </Dropdown.Menu>
 
-  </Dropdown>
+              </Dropdown>
 
-  <input type="hidden" {...register('organizationName')} />
+              <input type="hidden" {...register('organizationName')} />
 
-  <small className="text-danger">
-    {errors.organizationName?.message}
-  </small>
-</div>
-
-            <div className="col-md-4">
-              <Form.Label>Team Name <span className="text-danger">*</span></Form.Label>
-              <Form.Control placeholder="Enter Team Name" {...register('teamName')} />
-              <small className="text-danger">{errors.teamName?.message}</small>
+              <small className="text-danger">
+                {errors.organizationName?.message}
+              </small>
             </div>
+
+
 
             <div className="col-md-4">
               <Form.Label>Contact-Number <span className="text-danger">*</span></Form.Label>
@@ -313,64 +369,81 @@ useEffect(() => {
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
-            <div className="col-md-4">
-              <Form.Label>Gender <span className="text-danger">*</span></Form.Label>
-              <Form.Select {...register('gender')}>
-                <option value="">Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </Form.Select>
-              <small className="text-danger">{errors.gender?.message}</small>
-            </div>
-
-            <div className="col-md-4">
-              <Form.Label>Date of Joining <span className="text-danger">*</span></Form.Label>
-              <Form.Control type="date" {...register('doj')} />
-              <small className="text-danger">{errors.doj?.message}</small>
-            </div>
-
             <div className="col-12">
               <div className="row">
 
+                {/* Left Side Stack */}
                 <div className="col-md-4 d-flex flex-column gap-3">
 
+                  {/* Gender */}
                   <div>
-                    <Form.Label>Role <span className="text-danger">*</span></Form.Label>
-                    <Form.Select {...register('role')}>
-                      <option value="">Select Role</option>
-                      <option>Admin</option>
-                      <option>Developer</option>
-                      <option>Tester</option>
-                      <option>Member</option>
+                    <Form.Label>
+                      Gender <span className="text-danger">*</span>
+                    </Form.Label>
+
+                    <Form.Select {...register('gender')}>
+                      <option value="">Select Gender</option>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option>
                     </Form.Select>
-                    <small className="text-danger">{errors.role?.message}</small>
+
+                    <small className="text-danger">
+                      {errors.gender?.message}
+                    </small>
                   </div>
 
+                  {/* DOJ */}
                   <div>
-                    <Form.Label>Aadhaar <span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Date of Joining <span className="text-danger">*</span>
+                    </Form.Label>
+
+                    <Form.Control type="date" {...register('doj')} />
+
+                    <small className="text-danger">
+                      {errors.doj?.message}
+                    </small>
+                  </div>
+
+                  {/* Aadhaar */}
+                  <div>
+                    <Form.Label>
+                      Aadhaar <span className="text-danger">*</span>
+                    </Form.Label>
+
                     <Form.Control
                       placeholder="12-digit Aadhaar number"
                       {...register('aadhaar')}
                     />
-                    <small className="text-danger">{errors.aadhaar?.message}</small>
+
+                    <small className="text-danger">
+                      {errors.aadhaar?.message}
+                    </small>
                   </div>
 
                 </div>
 
+                {/* Address */}
                 <div className="col-md-8">
-                  <Form.Label>Address <span className="text-danger">*</span></Form.Label>
+                  <Form.Label>
+                    Address <span className="text-danger">*</span>
+                  </Form.Label>
+
                   <Form.Control
                     as="textarea"
-                    rows={5}
+                    placeholder="Enter the user address here..."
+                    rows={9}
                     {...register('address')}
                   />
-                  <small className="text-danger">{errors.address?.message}</small>
+
+                  <small className="text-danger">
+                    {errors.address?.message}
+                  </small>
                 </div>
 
               </div>
             </div>
-
             <div className="col-md-4">
               <Form.Label>Passport <small className="text-muted">(Optional)</small></Form.Label>
               <Form.Control placeholder="Enter passport number" {...register('passport')} />
@@ -391,24 +464,13 @@ useEffect(() => {
             </div>
 
             <div className="col-12 d-flex justify-content-end mt-3">
-              <Button onClick={goNext}>Next</Button>
+              <Button onClick={submitForm}>Submit</Button>
             </div>
 
           </Form>
         </ComponentContainerCard>
       )}
 
-      {step === 1 && (
-        <>
-          <FaceEmbeddings onCapture={d => setFaceEmbedding(d)} />
-          <div className="d-flex justify-content-between mt-3">
-            <Button onClick={() => setStep(0)}>Previous</Button>
-            <Button variant="success" onClick={submitForm}>
-              Submit
-            </Button>
-          </div>
-        </>
-      )}
     </>
   )
 }

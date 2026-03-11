@@ -23,9 +23,9 @@ const BulkUpload = () => {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [allTasks, setAllTasks] = useState([])
   const [showTable, setShowTable] = useState(false)
-  
-    const { require2FA } = use2FA()
-    const { is2FAAuthnticator } = useAuthContext()
+
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
   const fileInputRef = useRef(null)
 
   const formatSize = (size) => {
@@ -61,7 +61,7 @@ const BulkUpload = () => {
       setLoading(true)
       setUploadProgress(0)
 
-      
+
       if (fileInputRef.current) fileInputRef.current.value = ''
       if (is2FAAuthnticator) {
 
@@ -81,7 +81,7 @@ const BulkUpload = () => {
             }
           )
           console.log(res.data)
-          setAllTasks(res.data || [])
+          setAllTasks(res.data)
           setShowTable(true)
 
           setFile(null)
@@ -112,7 +112,7 @@ const BulkUpload = () => {
               }
             )
             console.log(res.data)
-            setAllTasks(res.data || [])
+            setAllTasks(res.data)
             setShowTable(true)
 
             setFile(null)
@@ -235,7 +235,11 @@ const BulkUpload = () => {
               <Col xl={12} className="mt-4">
                 <Card>
                   <CardBody>
-                    <h5 className="mb-2">You Uploaded {allTasks.count.total} Records, {allTasks.count.total - allTasks.count.failed} Success, {allTasks.count.failed} Failed.</h5>
+                    <h5 className="mb-2">
+                      You Uploaded {allTasks?.count?.total || 0} Records,
+                      {(allTasks?.count?.total || 0) - (allTasks?.count?.failed || 0)} Success,
+                      {allTasks?.count?.failed || 0} Failed.
+                    </h5>
                     <div className="table-responsive">
                       <table className="table table-bordered table-hover text-nowrap">
                         <thead className="table-light">
@@ -250,7 +254,7 @@ const BulkUpload = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {allTasks.error.map((task, idx) => (
+                          {allTasks?.failedRecords?.map((task, idx) => (
                             <tr key={idx}>
                               <td>{task.rowNumber}</td>
                               <td>{task.error}</td>
