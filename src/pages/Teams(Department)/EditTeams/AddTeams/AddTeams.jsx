@@ -7,7 +7,7 @@ import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
 import { toast } from 'react-toastify'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
-
+import {useNavigate} from 'react-router-dom'
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
 
@@ -20,7 +20,7 @@ const schema = yup.object({
 })
 
 const CreateTeam = () => {
-
+  const navigate = useNavigate()
   const [organizations, setOrganizations] = useState([])
   const [employees, setEmployees] = useState([])
 
@@ -113,17 +113,20 @@ const CreateTeam = () => {
     setSelectedManager('')
     setSelectedLeader('')
 
-    toast.success('Team created successfully!')
-
+    // toast.success('Team created successfully!')
+    navigate('/teams/update-teams-view')
   }
 
   const onSubmit = async (data) => {
-
+    if(data.teamLeaderId===data.teamManagerId){
+      alert("Team Leader and Team Manager cannot be the same person.")
+      return
+    }
     const payload = {
       ...data,
       teamLeaderIds: data.teamLeaderId ? [data.teamLeaderId] : []
     }
-
+  
     console.log('Payload ', payload)
 
     if (is2FAAuthnticator) {
