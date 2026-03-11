@@ -371,7 +371,10 @@ const AddEmployee = () => {
 
             <div className="col-md-4">
               <Form.Label>Date of Birth <span className="text-danger">*</span></Form.Label>
-              <Form.Control type="date" placeholder="dd-mm-yyyy" {...register('dob')} />
+              <Form.Control type="date"
+                max={new Date().toISOString().split("T")[0]}
+                {...register('dob')}
+                placeholder="dd-mm-yyyy" {...register('dob')} />
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
@@ -405,7 +408,10 @@ const AddEmployee = () => {
                       Date of Joining <span className="text-danger">*</span>
                     </Form.Label>
 
-                    <Form.Control type="date" {...register('doj')} />
+                    <Form.Control type="date"
+                      max={new Date().toISOString().split("T")[0]}
+                      {...register('dob')}
+                      {...register('doj')} />
 
                     <small className="text-danger">
                       {errors.doj?.message}
@@ -461,7 +467,7 @@ const AddEmployee = () => {
                   {/* Salary */}
                   <div>
                     <Form.Label>
-                      Salary 
+                      Salary
                     </Form.Label>
 
                     <div className="d-flex gap-2">

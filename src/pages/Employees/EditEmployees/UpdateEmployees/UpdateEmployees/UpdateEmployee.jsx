@@ -1,5 +1,5 @@
-import { useState,useEffect } from 'react'
-import { useNavigate,useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
   Button,
@@ -46,7 +46,7 @@ const schema = yup.object({
   dob: yup
     .string()
     .matches(
-     /^\d{4}-\d{2}-\d{2}$/,
+      /^\d{4}-\d{2}-\d{2}$/,
       'Date of Birth must be in dd-mm-yyyy format'
     )
     .required('Date of Birth is required'),
@@ -58,7 +58,7 @@ const schema = yup.object({
   doj: yup
     .string()
     .matches(
-     /^\d{4}-\d{2}-\d{2}$/,
+      /^\d{4}-\d{2}-\d{2}$/,
       'Date of Joining must be in dd-mm-yyyy format'
     )
     .required('Date of Joining is required'),
@@ -95,37 +95,37 @@ const schema = yup.object({
 const UpdateEmployee = () => {
   const navigate = useNavigate()
   const [organizations, setOrganizations] = useState([])
-const [orgSearch, setOrgSearch] = useState('')
-const [selectedOrg, setSelectedOrg] = useState('')
+  const [orgSearch, setOrgSearch] = useState('')
+  const [selectedOrg, setSelectedOrg] = useState('')
   const [step, setStep] = useState(0)
   const [countryCode, setCountryCode] = useState('+91')
   const [search, setSearch] = useState('')
   const [faceEmbedding, setFaceEmbedding] = useState(null)
   const { employeeId } = useParams()
   const [currency, setCurrency] = useState("₹")
-  const [id,setId] = useState('')
-    const { require2FA } = use2FA()
-    const { is2FAAuthnticator } = useAuthContext()
+  const [id, setId] = useState('')
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
   const {
-  register,
-  handleSubmit,
-  formState: { errors },
-  getValues,
-  setValue,
-} = useForm({
-  resolver: yupResolver(schema),
-})
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    setValue,
+  } = useForm({
+    resolver: yupResolver(schema),
+  })
 
   const goNext = handleSubmit(() => {
     setStep(1)
     console.log(step)
   })
 
- const submitForm = async () => {
+  const submitForm = async () => {
     const v = getValues()
 
     const data = {
-      employeeId:id,
+      employeeId: id,
       userName: v.userName,
       email: v.email,
       phone: v.phone,
@@ -193,83 +193,83 @@ const [selectedOrg, setSelectedOrg] = useState('')
 
       }
 
-      
+
     } catch (error) {
       console.error("Error adding employee:", error)
     }
   }
-useEffect(() => {
-  const fetchOrganizations = async () => {
-    try {
-      const res = await axiosClient.get(
-        '/api/admin/get-all-employees/get-organization-info'
-      )
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const res = await axiosClient.get(
+          '/api/admin/get-all-employees/get-organization-info'
+        )
 
-      const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
-        name,
-        organizationId: obj.organizationId
-      }))
+        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+          name,
+          organizationId: obj.organizationId
+        }))
 
-      setOrganizations(formatted)
+        setOrganizations(formatted)
 
-    } catch (error) {
-      console.log(error)
+      } catch (error) {
+        console.log(error)
+      }
     }
-  }
 
-  fetchOrganizations()
-}, [])
-useEffect(() => {
+    fetchOrganizations()
+  }, [])
+  useEffect(() => {
 
-  const fetchEmployee = async () => {
-    try {
+    const fetchEmployee = async () => {
+      try {
 
-      const res = await axiosClient.get(
-        `/api/admin/employee/get-employee/${employeeId}`
-      )
+        const res = await axiosClient.get(
+          `/api/admin/employee/get-employee/${employeeId}`
+        )
 
-      const emp = res.data
-      setId(emp._id)
-      setValue("userId", emp.employeeId)
-      setValue("userName", emp.name)
-      setValue("email", emp.email)
+        const emp = res.data
+        setId(emp._id)
+        setValue("userId", emp.employeeId)
+        setValue("userName", emp.name)
+        setValue("email", emp.email)
 
-      const phone = emp.phone?.replace(/^\+\d{1,3}/, '')
-      setValue("phone", phone)
+        const phone = emp.phone?.replace(/^\+\d{1,3}/, '')
+        setValue("phone", phone)
 
-      setValue("dob", emp.dob?.split("T")[0])
-      setValue("address", emp.address)
-      setValue(
-        "gender",
-        emp.gender ? emp.gender.charAt(0).toUpperCase() + emp.gender.slice(1) : ""
-      )
+        setValue("dob", emp.dob?.split("T")[0])
+        setValue("address", emp.address)
+        setValue(
+          "gender",
+          emp.gender ? emp.gender.charAt(0).toUpperCase() + emp.gender.slice(1) : ""
+        )
 
-      setValue("doj", emp.dateOfJoining?.split("T")[0])
+        setValue("doj", emp.dateOfJoining?.split("T")[0])
 
-      setValue(
-        "role",
-        emp.roleInTeam ? emp.roleInTeam.charAt(0).toUpperCase() + emp.roleInTeam.slice(1) : ""
-      )
+        setValue(
+          "role",
+          emp.roleInTeam ? emp.roleInTeam.charAt(0).toUpperCase() + emp.roleInTeam.slice(1) : ""
+        )
 
-      setValue("organizationName", emp.organizationId?.name)
-      setValue("aadhaar",emp.aadhaarNumber)
-      setValue("salary",emp.salary)
-      setValue("pan",emp.panNumber)
-      setValue("passport",emp.passportNumber)
-      setValue("bankId",emp.bankAccount)
+        setValue("organizationName", emp.organizationId?.name)
+        setValue("aadhaar", emp.aadhaarNumber)
+        setValue("salary", emp.salary)
+        setValue("pan", emp.panNumber)
+        setValue("passport", emp.passportNumber)
+        setValue("bankId", emp.bankAccount)
 
 
-      setSelectedOrg(emp.organizationId?.name)
+        setSelectedOrg(emp.organizationId?.name)
 
-    } catch (error) {
-      console.error("Failed to fetch employee", error)
+      } catch (error) {
+        console.error("Failed to fetch employee", error)
+      }
     }
-  }
 
-  if (employeeId) fetchEmployee()
+    if (employeeId) fetchEmployee()
 
-}, [employeeId])
-  
+  }, [employeeId])
+
   return (
     <>
 
@@ -279,7 +279,7 @@ useEffect(() => {
             <div className="d-flex justify-content-between align-items-center">
               <span>Update Employee Details</span>
 
-              
+
             </div>
           }
         >
@@ -417,7 +417,10 @@ useEffect(() => {
 
             <div className="col-md-4">
               <Form.Label>Date of Birth <span className="text-danger">*</span></Form.Label>
-              <Form.Control type="date" placeholder="dd-mm-yyyy" {...register('dob')} />
+              <Form.Control type="date"
+                max={new Date().toISOString().split("T")[0]}
+                {...register('dob')}
+                placeholder="dd-mm-yyyy" {...register('dob')} />
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
@@ -451,7 +454,10 @@ useEffect(() => {
                       Date of Joining <span className="text-danger">*</span>
                     </Form.Label>
 
-                    <Form.Control type="date" {...register('doj')} />
+                    <Form.Control type="date"
+                      max={new Date().toISOString().split("T")[0]}
+                      {...register('dob')}
+                      {...register('doj')} />
 
                     <small className="text-danger">
                       {errors.doj?.message}
@@ -507,7 +513,7 @@ useEffect(() => {
                   {/* Salary */}
                   <div>
                     <Form.Label>
-                      Salary 
+                      Salary
                     </Form.Label>
 
                     <div className="d-flex gap-2">
