@@ -289,10 +289,13 @@ const BulkUpload = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td>1</td><td>UserId</td><td>1</td></tr>
-                    <tr><td>2</td><td>UserName</td><td>DragoN28</td></tr>
-                    <tr><td>3</td><td>Email</td><td>example@gmail.com</td></tr>
-                    <tr><td>4</td><td>Phone</td><td>07013874687</td></tr>
+                    name	email	phone	employeeId	organizationName	dateOfJoining	aadhaar	role	gender	salary	teamName	pan	bankId
+                    <tr><td>1</td><td>employeeId</td><td>1</td></tr>
+                    <tr><td>2</td><td>name</td><td>DragoN28</td></tr>
+                    <tr><td>3</td><td>email</td><td>example@gmail.com</td></tr>
+                    <tr><td>4</td><td>phone</td><td>07013874687</td></tr>
+                    <tr><td>4</td><td>organizationName</td><td>ORG-27</td></tr>
+                    <tr><td>4</td><td>dateOfJoining</td><td>dd-mm-yyyy</td></tr>
                     <tr><td>5</td><td>Address</td><td>Jetla Pedda Kapu Street</td></tr>
                     <tr><td>6</td><td>Aadhaar</td><td>123412341234</td></tr>
                     <tr><td>7</td><td>Passport</td><td>P1234567</td></tr>

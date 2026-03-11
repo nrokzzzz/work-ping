@@ -528,7 +528,7 @@ const AddTeams = lazy(()=>import('@/pages/Teams(Department)/EditTeams/AddTeams/A
 const UpdateTeams = lazy(()=>import('@/pages/Teams(Department)/EditTeams/UpdateTeams/Update/UpdateTeams'));
 const UpdateTeamsView = lazy(()=>import('@/pages/Teams(Department)/EditTeams/UpdateTeams/Update/UpdateTeamsView'));
 const ViewTeams = lazy(()=>import('@/pages/Teams(Department)/ViewTeams/ViewTeams'))
-const TeamMembersView = lazy(()=>import('@/pages/Teams(Department)/TeamMembers/TeamMembersView'))
+// const TeamMembersView = lazy(()=>import('@/pages/Teams(Department)/TeamMembers/TeamMembersView'))
       //organization routes
 const OrganizationViews = lazy(()=>import('@/pages/Organization/ViewOrganization/View'))
 const OrganizationUpdateDetails= lazy(()=>import('@/pages/Organization/EditOrganization/UpdateOrganization/OrganizationDetails'));
