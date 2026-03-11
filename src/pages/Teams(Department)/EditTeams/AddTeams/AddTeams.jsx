@@ -5,22 +5,41 @@ import * as yup from 'yup'
 import { Button, Form, Dropdown } from 'react-bootstrap'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
-import { toast } from 'react-toastify'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
 
 const schema = yup.object({
+
   teamName: yup.string().required('Team Name is required'),
-  organizationId: yup.string().required('Organization ID is required'),
-  teamManagerId: yup.string().nullable(),
-  teamLeaderId: yup.string().nullable(),
+
+  organizationId: yup.string().required('Organization is required'),
+
+  teamManagerId: yup
+    .string()
+    .nullable()
+    .notOneOf(
+      [yup.ref('teamLeaderId')],
+      'Manager and Team Leader cannot be the same'
+    ),
+
+  teamLeaderId: yup
+    .string()
+    .nullable()
+    .notOneOf(
+      [yup.ref('teamManagerId')],
+      'Manager and Team Leader cannot be the same'
+    ),
+
   description: yup.string().nullable(),
+
 })
 
 const CreateTeam = () => {
+
   const navigate = useNavigate()
+
   const [organizations, setOrganizations] = useState([])
   const [employees, setEmployees] = useState([])
 
@@ -40,6 +59,7 @@ const CreateTeam = () => {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
@@ -51,6 +71,9 @@ const CreateTeam = () => {
       description: '',
     },
   })
+
+  const managerId = watch("teamManagerId")
+  const leaderId = watch("teamLeaderId")
 
   useEffect(() => {
 
@@ -106,83 +129,87 @@ const CreateTeam = () => {
       data
     )
 
-    console.log('Response ', res.data)
+    console.log("Response ", res.data)
 
     reset()
     setSelectedOrg('')
     setSelectedManager('')
     setSelectedLeader('')
 
-    // toast.success('Team created successfully!')
     navigate('/teams/update-teams-view')
+
   }
 
   const onSubmit = async (data) => {
-    if(data.teamLeaderId===data.teamManagerId){
-      alert("Team Leader and Team Manager cannot be the same person.")
-      return
-    }
+
     const payload = {
       ...data,
       teamLeaderIds: data.teamLeaderId ? [data.teamLeaderId] : []
     }
-  
-    console.log('Payload ', payload)
 
-    if (is2FAAuthnticator) {
+    delete payload.teamLeaderId
 
-      try {
+    console.log("Payload ", payload)
 
-        await createTeamApi(payload)
+    try {
 
-      } catch (error) {
+      {
 
-        console.error('SAVE TEAM ERROR ', error)
-        toast.error('Failed to create team. Please try again.')
+        require2FA(async () => {
+
+          try {
+
+            await createTeamApi(payload)
+
+          } catch (error) {
+
+            throw new Error(
+              error?.response?.data?.message || "Failed to create team"
+            )
+
+          }
+
+        })
 
       }
 
-    } else {
+    } catch (error) {
 
-      require2FA(async () => {
-
-        try {
-
-          await createTeamApi(payload)
-
-        } catch (error) {
-
-          throw new Error(
-            error?.response?.data?.message || "Failed to create team"
-          )
-
-        }
-
-      })
+      console.error(error)
 
     }
 
   }
 
   return (
+
     <ComponentContainerCard id="basic" title="Add Teams">
 
       <Form className="row g-4" onSubmit={handleSubmit(onSubmit)}>
 
+        {/* TEAM NAME */}
+
         <div className="col-md-6">
+
           <Form.Label>
             Team Name <span className="text-danger">*</span>
           </Form.Label>
+
           <Form.Control
             placeholder="Enter Team Name"
             {...register('teamName')}
           />
+
           <small className="text-danger">
             {errors.teamName?.message}
           </small>
+
         </div>
 
+        {/* ORGANIZATION */}
+
         <div className="col-md-6">
+
           <Form.Label>
             Organization Name <span className="text-danger">*</span>
           </Form.Label>
@@ -200,11 +227,7 @@ const CreateTeam = () => {
 
             <Dropdown.Menu
               className="w-100 p-2"
-              style={{
-                maxHeight: '220px',
-                overflowY: 'auto',
-                overflowX: 'hidden'
-              }}
+              style={{ maxHeight: '220px', overflowY: 'auto' }}
             >
 
               <Form.Control
@@ -219,6 +242,7 @@ const CreateTeam = () => {
                   o.name.toLowerCase().includes(search.toLowerCase())
                 )
                 .map((o) => (
+
                   <Dropdown.Item
                     key={o.organizationId}
                     onClick={() => {
@@ -232,6 +256,7 @@ const CreateTeam = () => {
                   >
                     {o.name}
                   </Dropdown.Item>
+
                 ))}
 
             </Dropdown.Menu>
@@ -243,11 +268,15 @@ const CreateTeam = () => {
           <small className="text-danger">
             {errors.organizationId?.message}
           </small>
+
         </div>
 
+        {/* TEAM MANAGER */}
+
         <div className="col-md-6">
+
           <Form.Label>
-            Team Manager ID <small className="text-muted">(Optional)</small>
+            Team Manager ID
           </Form.Label>
 
           <Dropdown className="w-100">
@@ -255,10 +284,9 @@ const CreateTeam = () => {
             <Dropdown.Toggle
               as="div"
               className="form-control d-flex justify-content-between align-items-center arrow-none"
-              style={{ cursor: "pointer" }}
             >
               <span>{selectedManager || "Select Manager"}</span>
-              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+              <IconifyIcon icon="bx:chevron-down" />
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="w-100 p-2"
@@ -272,21 +300,26 @@ const CreateTeam = () => {
               />
 
               {employees
+                .filter(e => e._id !== leaderId)
                 .filter(e =>
                   e.name.toLowerCase().includes(managerSearch.toLowerCase()) ||
                   e.employeeId.toLowerCase().includes(managerSearch.toLowerCase())
                 )
-                .map((emp) => (
+                .map(emp => (
+
                   <Dropdown.Item
                     key={emp._id}
                     onClick={() => {
+
                       setSelectedManager(emp.employeeId)
                       setValue('teamManagerId', emp._id)
                       setManagerSearch('')
+
                     }}
                   >
                     {emp.employeeId}
                   </Dropdown.Item>
+
                 ))}
 
             </Dropdown.Menu>
@@ -295,11 +328,18 @@ const CreateTeam = () => {
 
           <input type="hidden" {...register('teamManagerId')} />
 
+          <small className="text-danger">
+            {errors.teamManagerId?.message}
+          </small>
+
         </div>
 
+        {/* TEAM LEADER */}
+
         <div className="col-md-6">
+
           <Form.Label>
-            Team Leader ID <small className="text-muted">(Optional)</small>
+            Team Leader ID
           </Form.Label>
 
           <Dropdown className="w-100">
@@ -307,10 +347,9 @@ const CreateTeam = () => {
             <Dropdown.Toggle
               as="div"
               className="form-control d-flex justify-content-between align-items-center arrow-none"
-              style={{ cursor: "pointer" }}
             >
               <span>{selectedLeader || "Select Leader"}</span>
-              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+              <IconifyIcon icon="bx:chevron-down" />
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="w-100 p-2"
@@ -324,21 +363,26 @@ const CreateTeam = () => {
               />
 
               {employees
+                .filter(e => e._id !== managerId)
                 .filter(e =>
                   e.name.toLowerCase().includes(leaderSearch.toLowerCase()) ||
                   e.employeeId.toLowerCase().includes(leaderSearch.toLowerCase())
                 )
-                .map((emp) => (
+                .map(emp => (
+
                   <Dropdown.Item
                     key={emp._id}
                     onClick={() => {
+
                       setSelectedLeader(emp.employeeId)
                       setValue('teamLeaderId', emp._id)
                       setLeaderSearch('')
+
                     }}
                   >
                     {emp.employeeId}
                   </Dropdown.Item>
+
                 ))}
 
             </Dropdown.Menu>
@@ -347,19 +391,28 @@ const CreateTeam = () => {
 
           <input type="hidden" {...register('teamLeaderId')} />
 
+          <small className="text-danger">
+            {errors.teamLeaderId?.message}
+          </small>
+
         </div>
 
+        {/* DESCRIPTION */}
+
         <div className="col-12">
-          <Form.Label>
-            Description <small className="text-muted">(Optional)</small>
-          </Form.Label>
+
+          <Form.Label>Description</Form.Label>
+
           <Form.Control
             as="textarea"
             rows={5}
             placeholder="Enter Team Description"
             {...register('description')}
           />
+
         </div>
+
+        {/* BUTTONS */}
 
         <div className="col-12 d-flex justify-content-center gap-4 mt-3">
 
@@ -367,10 +420,12 @@ const CreateTeam = () => {
             variant="secondary"
             type="button"
             onClick={() => {
+
               reset()
               setSelectedOrg('')
               setSelectedManager('')
               setSelectedLeader('')
+
             }}
           >
             Clear
@@ -385,6 +440,7 @@ const CreateTeam = () => {
       </Form>
 
     </ComponentContainerCard>
+
   )
 }
 

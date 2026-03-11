@@ -71,7 +71,7 @@ const ViewOrganization= () => {
 
 
           <CardBody>
-            <div className="d-flex justify-content-start align-items-center gap-2">
+            <div className="d-flex justify-content-between align-items-center gap-2">
               <div style={{ width: 300 }}>
                 <div className="position-relative">
                   <IconifyIcon

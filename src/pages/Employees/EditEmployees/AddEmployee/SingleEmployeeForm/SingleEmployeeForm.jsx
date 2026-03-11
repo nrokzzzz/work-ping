@@ -143,27 +143,7 @@ const AddEmployee = () => {
 
     try {
       console.log("Submitting Employee Data:", data)
-
-
-      if (is2FAAuthnticator) {
-
-        try {
-
-          const response = await axiosClient.post(
-            "/api/admin/add-employees/by-form",
-            data
-          )
-
-          reset()
-          navigate('/employees/view-employees')
-
-        } catch (error) {
-
-          console.error(error)
-
-        }
-
-      } else {
+      {
 
         require2FA(async () => {
 

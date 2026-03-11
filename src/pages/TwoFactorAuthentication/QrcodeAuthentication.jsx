@@ -2,17 +2,22 @@
 import { useEffect, useState, useRef } from 'react'
 import { Button, Card, Spinner, Form } from 'react-bootstrap'
 import axiosClient from '@/helpers/httpClient'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '@/context/useAuthContext';
+import { useLocation } from "react-router-dom"
 const QRAuthModal = () => {
   const [status, setStatus] = useState('Creating QR session...')
   const [loading, setLoading] = useState(true)
   const [qrCode, setQrCode] = useState(null)
-  const {setIs2FAAuthnticator} = useAuthContext()
+  const { setIs2FAAuthnticator } = useAuthContext()
   const [code, setCode] = useState('')
   const [verifying, setVerifying] = useState(false)
   const [error, setError] = useState('')
+  const location = useLocation()
+
+  const data = location.state
   const navigate = useNavigate();
+
   const pollRef = useRef(null)
 
   // Load QR
@@ -41,15 +46,18 @@ const QRAuthModal = () => {
       setError('')
 
       const res = await axiosClient.post('/api/auth/2fa/verify', { code })
-
+      console.log(res)
       if (res?.data?.verified) {
         setStatus("✅ Authentication successful")
         const res = await axiosClient.get('/verify-cookie');
-        if(res.data.twoFactorEnabled){
+
+        if (res.data.twoFactorEnabled) {
           setIs2FAAuthnticator(false);
         }
-        navigate('/dashboard/analytics')
-        
+        if (data.action === "ORG")
+          navigate(data.path)
+        if (data.action === "SIGN-UP")
+          navigate(data.path)
       } else {
         setError('Invalid verification code')
       }
@@ -149,7 +157,12 @@ const QRAuthModal = () => {
             <div className="d-flex justify-content-center gap-3">
               <Button
                 variant="secondary"
-                onClick={() => window.history.back()}
+                onClick={() => {
+                  if (data.action === "ORG")
+                    navigate(data.path)
+                  if (data.action === "SIGN-UP")
+                    navigate(data.path)
+                }}
                 className="px-4"
               >
                 Skip

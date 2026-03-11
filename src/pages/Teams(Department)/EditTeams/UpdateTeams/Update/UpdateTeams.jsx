@@ -13,11 +13,29 @@ import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
 
 const schema = yup.object({
+
   teamName: yup.string().required('Team Name is required'),
+
   organizationId: yup.string().required('Organization ID is required'),
-  teamManagerId: yup.string().nullable(),
-  teamLeaderId: yup.string().nullable(),
+
+  teamManagerId: yup
+    .string()
+    .nullable()
+    .notOneOf(
+      [yup.ref('teamLeaderId')],
+      'Manager and Team Leader cannot be the same'
+    ),
+
+  teamLeaderId: yup
+    .string()
+    .nullable()
+    .notOneOf(
+      [yup.ref('teamManagerId')],
+      'Manager and Team Leader cannot be the same'
+    ),
+
   description: yup.string().nullable(),
+
 })
 
 const UpdateTeam = () => {
@@ -44,10 +62,14 @@ const UpdateTeam = () => {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
   })
+
+  const managerId = watch("teamManagerId")
+  const leaderId = watch("teamLeaderId")
 
   useEffect(() => {
 
@@ -123,13 +145,17 @@ const UpdateTeam = () => {
         fetchEmployees(team.organizationId)
 
         if (team.managerId) {
+
           setSelectedManager(team.managerId.employeeId)
           setValue('teamManagerId', team.managerId._id)
+
         }
 
         if (team.leaderIds?.length) {
+
           setSelectedLeader(team.leaderIds[0].employeeId)
           setValue('teamLeaderId', team.leaderIds[0]._id)
+
         }
 
       } catch (error) {
@@ -152,6 +178,7 @@ const UpdateTeam = () => {
     )
 
     toast.success("Team updated successfully!")
+
     navigate("/teams/update-teams-view")
 
   }
@@ -167,20 +194,7 @@ const UpdateTeam = () => {
       leaderIds: data.teamLeaderId ? [data.teamLeaderId] : []
     }
 
-    if (is2FAAuthnticator) {
-
-      try {
-
-        await updateTeamApi(payload)
-
-      } catch (error) {
-
-        console.error(error)
-        toast.error("Failed to update team")
-
-      }
-
-    } else {
+     {
 
       require2FA(async () => {
 
@@ -203,24 +217,34 @@ const UpdateTeam = () => {
   }
 
   return (
+
     <ComponentContainerCard id="basic" title="Update Team">
 
       <Form className="row g-4" onSubmit={handleSubmit(onSubmit)}>
 
+        {/* TEAM NAME */}
+
         <div className="col-md-6">
+
           <Form.Label>
             Team Name <span className="text-danger">*</span>
           </Form.Label>
+
           <Form.Control
             placeholder="Enter Team Name"
             {...register('teamName')}
           />
+
           <small className="text-danger">
             {errors.teamName?.message}
           </small>
+
         </div>
 
+        {/* ORGANIZATION */}
+
         <div className="col-md-6">
+
           <Form.Label>
             Organization Name <span className="text-danger">*</span>
           </Form.Label>
@@ -236,14 +260,8 @@ const UpdateTeam = () => {
               <IconifyIcon icon="bx:chevron-down" className="fs-4" />
             </Dropdown.Toggle>
 
-            <Dropdown.Menu
-              className="w-100 p-2"
-              style={{
-                maxHeight: '220px',
-                overflowY: 'auto',
-                overflowX: 'hidden'
-              }}
-            >
+            <Dropdown.Menu className="w-100 p-2"
+              style={{ maxHeight: '220px', overflowY: 'auto' }}>
 
               <Form.Control
                 placeholder="Search organization"
@@ -256,7 +274,8 @@ const UpdateTeam = () => {
                 .filter(o =>
                   o.name.toLowerCase().includes(search.toLowerCase())
                 )
-                .map((o) => (
+                .map(o => (
+
                   <Dropdown.Item
                     key={o.organizationId}
                     onClick={() => {
@@ -270,6 +289,7 @@ const UpdateTeam = () => {
                   >
                     {o.name}
                   </Dropdown.Item>
+
                 ))}
 
             </Dropdown.Menu>
@@ -281,11 +301,15 @@ const UpdateTeam = () => {
           <small className="text-danger">
             {errors.organizationId?.message}
           </small>
+
         </div>
 
+        {/* MANAGER */}
+
         <div className="col-md-6">
+
           <Form.Label>
-            Team Manager ID <small className="text-muted">(Optional)</small>
+            Team Manager ID
           </Form.Label>
 
           <Dropdown className="w-100">
@@ -293,16 +317,13 @@ const UpdateTeam = () => {
             <Dropdown.Toggle
               as="div"
               className="form-control d-flex justify-content-between align-items-center arrow-none"
-              style={{ cursor: "pointer" }}
             >
               <span>{selectedManager || "Select Manager"}</span>
-              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+              <IconifyIcon icon="bx:chevron-down" />
             </Dropdown.Toggle>
 
-            <Dropdown.Menu
-              className="w-100 p-2"
-              style={{ maxHeight: '220px', overflowY: 'auto' }}
-            >
+            <Dropdown.Menu className="w-100 p-2"
+              style={{ maxHeight: '220px', overflowY: 'auto' }}>
 
               <Form.Control
                 placeholder="Search manager"
@@ -312,21 +333,26 @@ const UpdateTeam = () => {
               />
 
               {employees
+                .filter(e => e._id !== leaderId)
                 .filter(e =>
                   e.name.toLowerCase().includes(managerSearch.toLowerCase()) ||
                   e.employeeId.toLowerCase().includes(managerSearch.toLowerCase())
                 )
-                .map((emp) => (
+                .map(emp => (
+
                   <Dropdown.Item
                     key={emp._id}
                     onClick={() => {
+
                       setSelectedManager(emp.employeeId)
                       setValue('teamManagerId', emp._id)
                       setManagerSearch('')
+
                     }}
                   >
                     {emp.employeeId}
                   </Dropdown.Item>
+
                 ))}
 
             </Dropdown.Menu>
@@ -335,11 +361,18 @@ const UpdateTeam = () => {
 
           <input type="hidden" {...register('teamManagerId')} />
 
+          <small className="text-danger">
+            {errors.teamManagerId?.message}
+          </small>
+
         </div>
 
+        {/* LEADER */}
+
         <div className="col-md-6">
+
           <Form.Label>
-            Team Leader ID <small className="text-muted">(Optional)</small>
+            Team Leader ID
           </Form.Label>
 
           <Dropdown className="w-100">
@@ -347,16 +380,13 @@ const UpdateTeam = () => {
             <Dropdown.Toggle
               as="div"
               className="form-control d-flex justify-content-between align-items-center arrow-none"
-              style={{ cursor: "pointer" }}
             >
               <span>{selectedLeader || "Select Leader"}</span>
-              <IconifyIcon icon="bx:chevron-down" className="fs-4" />
+              <IconifyIcon icon="bx:chevron-down" />
             </Dropdown.Toggle>
 
-            <Dropdown.Menu
-              className="w-100 p-2"
-              style={{ maxHeight: '220px', overflowY: 'auto' }}
-            >
+            <Dropdown.Menu className="w-100 p-2"
+              style={{ maxHeight: '220px', overflowY: 'auto' }}>
 
               <Form.Control
                 placeholder="Search leader"
@@ -366,21 +396,26 @@ const UpdateTeam = () => {
               />
 
               {employees
+                .filter(e => e._id !== managerId)
                 .filter(e =>
                   e.name.toLowerCase().includes(leaderSearch.toLowerCase()) ||
                   e.employeeId.toLowerCase().includes(leaderSearch.toLowerCase())
                 )
-                .map((emp) => (
+                .map(emp => (
+
                   <Dropdown.Item
                     key={emp._id}
                     onClick={() => {
+
                       setSelectedLeader(emp.employeeId)
                       setValue('teamLeaderId', emp._id)
                       setLeaderSearch('')
+
                     }}
                   >
                     {emp.employeeId}
                   </Dropdown.Item>
+
                 ))}
 
             </Dropdown.Menu>
@@ -389,25 +424,41 @@ const UpdateTeam = () => {
 
           <input type="hidden" {...register('teamLeaderId')} />
 
+          <small className="text-danger">
+            {errors.teamLeaderId?.message}
+          </small>
+
         </div>
 
+        {/* DESCRIPTION */}
+
         <div className="col-12">
-          <Form.Label>
-            Description <small className="text-muted">(Optional)</small>
-          </Form.Label>
+
+          <Form.Label>Description</Form.Label>
+
           <Form.Control
             as="textarea"
             rows={5}
             {...register('description')}
           />
+
         </div>
+
+        {/* BUTTONS */}
 
         <div className="col-12 d-flex justify-content-center gap-4 mt-3">
 
           <Button
             variant="secondary"
             type="button"
-            onClick={() => reset()}
+            onClick={() => {
+
+              reset()
+              setSelectedOrg('')
+              setSelectedManager('')
+              setSelectedLeader('')
+
+            }}
           >
             Clear
           </Button>
@@ -421,6 +472,7 @@ const UpdateTeam = () => {
       </Form>
 
     </ComponentContainerCard>
+
   )
 }
 

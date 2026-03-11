@@ -1,5 +1,5 @@
 import ComponentContainerCard from '@/components/ComponentContainerCard'
-import { Button, Form } from 'react-bootstrap'
+import { Button, Form,Row,Col } from 'react-bootstrap'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -71,14 +71,14 @@ const OrganizationDetailsForm = () => {
 
       try {
 
-        await axiosClient.post(
-          "/api/admin/organization/add-organization",
-          newData
-        )
-
-        reset()
-        navigate('/organization/update-view-organization')
-
+       navigate('/2fa-authnticator', {
+      state: {
+        action: "ORG",
+        path: "/organization/organization-details"
+      }
+    }
+        
+       )
       } catch (error) {
 
         console.error(error)
@@ -86,7 +86,7 @@ const OrganizationDetailsForm = () => {
       }
 
     } else {
-
+      console.log(is2FAAuthnticator)
       require2FA(async () => {
 
         try {
@@ -114,7 +114,12 @@ const OrganizationDetailsForm = () => {
   }
 
   return (
+    <Row className="justify-content-center mt-4">
+
+  <Col xs={12} md={10} lg={8} xl={7}>
+
     <ComponentContainerCard id="basic" title="Organization Details">
+
       <Form noValidate onSubmit={handleSubmit(onSubmit)}>
 
         <div className="row">
@@ -219,7 +224,12 @@ const OrganizationDetailsForm = () => {
         </div>
 
       </Form>
+
     </ComponentContainerCard>
+
+  </Col>
+
+</Row>
   )
 }
 

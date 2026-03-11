@@ -101,23 +101,7 @@ const ViewTeams = () => {
   }
 
   const deleteTeams = async () => {
-
-    if (is2FAAuthnticator) {
-
-      try {
-
-        await axiosClient.post('/api/admin/team/delete-team', {
-          data: [...selectedIds],
-        })
-
-        setSelectedIds(new Set())
-        fetchTeams(currentPage)
-
-      } catch (err) {
-        console.error(err)
-      }
-
-    } else {
+ {
 
       require2FA(async () => {
 

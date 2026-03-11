@@ -11,8 +11,8 @@ import { useAuthContext } from '@/context/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 // dotenv.config();  
 const SignUpForm = () => {
-  const navigate = useNavigate(); 
-   const { signUp } = useAuthContext(); 
+  const navigate = useNavigate();
+  const { signUp } = useAuthContext();
   const signUpSchema = yup.object({
     name: yup.string().required('Please enter your name'),
     number: yup.string().required('Please enter your mobile number'),
@@ -54,12 +54,19 @@ const SignUpForm = () => {
       signUp();
       console.log('Signup successful:', data);
 
-      async function hello(){
+      async function hello() {
         console.log("checker")
-        await navigate('/2fa-authnticator')
+        await navigate('/2fa-authnticator', {
+          state: {
+            action: "SIGN-UP",
+            path: "/"
+          }
+        }
+
+        )
       }
       await hello()
-     
+
 
       reset();
     } catch (error) {
