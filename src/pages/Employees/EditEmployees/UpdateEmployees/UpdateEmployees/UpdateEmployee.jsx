@@ -252,6 +252,12 @@ useEffect(() => {
       )
 
       setValue("organizationName", emp.organizationId?.name)
+      setValue("aadhaar",emp.aadhaarNumber)
+      setValue("salary",emp.salary)
+      setValue("pan",emp.panNumber)
+      setValue("passport",emp.passportNumber)
+      setValue("bankId",emp.bankAccount)
+
 
       setSelectedOrg(emp.organizationId?.name)
 

@@ -23,7 +23,7 @@ const ViewEmployees = () => {
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
   const navigate = useNavigate()
-
+  const show = (val) => val || "--";
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -205,22 +205,32 @@ const ViewEmployees = () => {
                 </select>
               </Col>
 
-              <Col xs={12} md={3}>
-                <div className="d-flex gap-2">
-                  <Button className="flex-fill" onClick={handleApply}>
-                    Apply
-                  </Button>
+              <Col xs={12} md={4}>
+  <div className="d-flex gap-2 justify-content-end">
 
-                  <Button
-                    variant="danger"
-                    className="flex-fill"
-                    disabled={selectedIds.size === 0}
-                    onClick={deleteEmployees}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </Col>
+    <Button
+      className="flex-fill"
+      onClick={handleApply}
+    >
+      Apply
+    </Button>
+
+    <div
+      className="flex-fill"
+      style={{ cursor: selectedIds.size === 0 ? "not-allowed" : "pointer" }}
+    >
+      <Button
+        variant="danger"
+        className="w-100"
+        disabled={selectedIds.size === 0}
+        onClick={deleteEmployees}
+      >
+        Delete
+      </Button>
+    </div>
+
+  </div>
+</Col>
 
             </Row>
           </CardBody>
@@ -289,21 +299,21 @@ const ViewEmployees = () => {
                         </Button>
                       </td>
 
-                      <td>{emp.employeeId}</td>
-                      <td>{emp.name}</td>
-                      <td>{emp.email}</td>
-                      <td>{emp.phone}</td>
-                      <td>{emp.roleInTeam}</td>
-                      <td>{emp.organization}</td>
-                      <td>{emp.department}</td>
-                      <td>{emp.dob}</td>
-                      <td>{emp.gender}</td>
-                      <td>{emp.dof}</td>
-                      <td>{emp.salary}</td>
-                      <td>{emp.aadhar}</td>
-                      <td>{emp.pan}</td>
-                      <td>{emp.passport}</td>
-                      <td>{emp.bank}</td>
+                      <td>{show(emp.employeeId)}</td>
+                      <td>{show(emp.name)}</td>
+                      <td>{show(emp.email)}</td>
+                      <td>{show(emp.phone)}</td>
+                      <td>{show(emp.role)}</td>
+                      <td>{show(emp.organizationName)}</td>
+                      <td>{show(emp.departmentName)}</td>
+                      <td>{show(emp.dob)}</td>
+                      <td>{show(emp.gender)}</td>
+                      <td>{show(emp.dateOfJoining)}</td>
+                      <td>{show(emp.salary)}</td>
+                      <td>{show(emp.aadhaarNumber)}</td>
+                      <td>{show(emp.panNumber)}</td>
+                      <td>{show(emp.passportNumber)}</td>
+                      <td>{show(emp.bankAccount)}</td>
                     </tr>
                   ))
                 )}
