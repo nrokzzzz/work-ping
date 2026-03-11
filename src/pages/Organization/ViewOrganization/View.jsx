@@ -116,7 +116,7 @@ const ViewOrganization= () => {
                   <th>CL Days</th>
                   <th>Type</th>
                   <th>IP Address</th>
-                  <th>Created At</th>
+                  <th>Founded At</th>
 
                 </tr>
               </thead>
@@ -141,7 +141,7 @@ const ViewOrganization= () => {
                       <td>{organization.clDays}</td>
                       <td>{organization.type}</td>
                       <td>{organization.IPWhitelist[0]}</td>
-                      <td>{new Date(organization.updatedAt).toDateString()}</td>
+                      <td>{new Date(organization.updatedAt).getFullYear()}</td>
 
                     </tr>
                   ))
