@@ -254,11 +254,11 @@ const Viewprojects = () => {
                         </Button>
                       </td>
 
-                      <td>{project.name}</td>
-                      <td>{project.assignedDate}</td>
-                      <td>{project.dueDate}</td>
-                      <td>{project.contractedBy}</td>
-                      <td>{project.organization}</td>
+                      <td>{project.name || '-'}</td>
+                      <td>{project.assignedDate || '-'}</td>
+                      <td>{project.dueDate || '-'}</td>
+                      <td>{project.contractedBy || '-'}</td>
+                      <td>{project.organizationName || '-'}</td>
                     </tr>
                   ))
                 )}
