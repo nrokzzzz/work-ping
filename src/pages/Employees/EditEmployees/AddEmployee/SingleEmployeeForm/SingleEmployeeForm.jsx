@@ -19,6 +19,8 @@ import FaceEmbeddings from './FaceEmbeddings'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
 
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
 const schema = yup.object({
   userId: yup.string().required('User Id is required'),
   userName: yup.string().required('User Name is required'),
@@ -46,7 +48,6 @@ const schema = yup.object({
     .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format'),
 
   organizationName: yup.string().required('organizationName is required'),
-  teamName: yup.string().required('teamName is required'),
   address: yup.string().required('Address is required'),
 })
 
@@ -58,8 +59,9 @@ const AddEmployee = () => {
   const [step, setStep] = useState(0)
   const [countryCode, setCountryCode] = useState('+91')
   const [search, setSearch] = useState('')
-  const [faceEmbedding, setFaceEmbedding] = useState(null)
 
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
   const {
     register,
     handleSubmit,
@@ -76,43 +78,81 @@ const AddEmployee = () => {
   })
 
   const submitForm = async () => {
-  const v = getValues()
+    const v = getValues()
 
-  const data = {
-    userName: v.userName,
-    email: v.email,
-    phone: v.phone,
-    userId: v.userId,
-    organizationName: v.organizationName,
-    teamName: v.teamName,
-    doj: v.doj,
-    role: v.role,
+    const data = {
+      userName: v.userName,
+      email: v.email,
+      phone: v.phone,
+      userId: v.userId,
+      organizationName: v.organizationName,
+      doj: v.doj,
 
-    gender: v.gender,
-    salary: v.salary,
-    dob: v.dob,
-    address: v.address,
-    isActive: true,
+      gender: v.gender,
+      salary: v.salary,
+      dob: v.dob,
+      address: v.address,
+      isActive: true,
 
-    aadhaar: v.aadhaar,
-    pan: v.pan,
-    passport: v.passport,
-    bankId: v.bankId
+      aadhaar: v.aadhaar,
+      pan: v.pan,
+      passport: v.passport,
+      bankId: v.bankId
+    }
+
+    try {
+      console.log("Submitting Employee Data:", data)
+
+
+      if (is2FAAuthnticator) {
+
+        try {
+
+          const response = await axiosClient.post(
+            "/api/admin/add-employees/by-form",
+            data
+          )
+
+          reset()
+          navigate('/employees/view-employees')
+
+        } catch (error) {
+
+          console.error(error)
+
+        }
+
+      } else {
+
+        require2FA(async () => {
+
+          try {
+
+            const response = await axiosClient.post(
+              "/api/admin/add-employees/by-form",
+              data
+            )
+
+
+            navigate('/employees/view-employees')
+
+          } catch (error) {
+
+            throw new Error(
+              error?.response?.data?.message || "Failed to add Employee"
+            )
+
+          }
+
+        })
+
+      }
+
+      
+    } catch (error) {
+      console.error("Error adding employee:", error)
+    }
   }
-
-  try {
-    console.log("Submitting Employee Data:", data)
-
-    const res = await axiosClient.post(
-      "/api/admin/add-employees/by-form",
-      data
-    )
-
-    console.log("Employee added:", res.data)
-  } catch (error) {
-    console.error("Error adding employee:", error)
-  }
-}
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -136,7 +176,6 @@ const AddEmployee = () => {
   }, [])
   return (
     <>
-      <ToastContainer position="top-right" autoClose={3000} />
 
       {step === 0 && (
         <ComponentContainerCard
@@ -237,11 +276,7 @@ const AddEmployee = () => {
               </small>
             </div>
 
-            <div className="col-md-4">
-              <Form.Label>Team Name <span className="text-danger">*</span></Form.Label>
-              <Form.Control placeholder="Enter Team Name" {...register('teamName')} />
-              <small className="text-danger">{errors.teamName?.message}</small>
-            </div>
+
 
             <div className="col-md-4">
               <Form.Label>Contact-Number <span className="text-danger">*</span></Form.Label>
@@ -294,65 +329,81 @@ const AddEmployee = () => {
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
-            <div className="col-md-4">
-              <Form.Label>Gender <span className="text-danger">*</span></Form.Label>
-              <Form.Select {...register('gender')}>
-                <option value="">Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </Form.Select>
-              <small className="text-danger">{errors.gender?.message}</small>
-            </div>
-
-            <div className="col-md-4">
-              <Form.Label>Date of Joining <span className="text-danger">*</span></Form.Label>
-              <Form.Control type="date" {...register('doj')} />
-              <small className="text-danger">{errors.doj?.message}</small>
-            </div>
-
             <div className="col-12">
               <div className="row">
 
+                {/* Left Side Stack */}
                 <div className="col-md-4 d-flex flex-column gap-3">
 
+                  {/* Gender */}
                   <div>
-                    <Form.Label>Role <span className="text-danger">*</span></Form.Label>
-                    <Form.Select {...register('role')}>
-                      <option value="">Select Role</option>
-                      <option value="manager">Manager</option>
-                      <option value="teamLead">Team Lead</option>
-                      <option value="employee">Employee</option>
-                      <option value="admin">Admin</option>
-                      <optoin value="user">User</optoin>
+                    <Form.Label>
+                      Gender <span className="text-danger">*</span>
+                    </Form.Label>
+
+                    <Form.Select {...register('gender')}>
+                      <option value="">Select Gender</option>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option>
                     </Form.Select>
-                    <small className="text-danger">{errors.role?.message}</small>
+
+                    <small className="text-danger">
+                      {errors.gender?.message}
+                    </small>
                   </div>
 
+                  {/* DOJ */}
                   <div>
-                    <Form.Label>Aadhaar <span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Date of Joining <span className="text-danger">*</span>
+                    </Form.Label>
+
+                    <Form.Control type="date" {...register('doj')} />
+
+                    <small className="text-danger">
+                      {errors.doj?.message}
+                    </small>
+                  </div>
+
+                  {/* Aadhaar */}
+                  <div>
+                    <Form.Label>
+                      Aadhaar <span className="text-danger">*</span>
+                    </Form.Label>
+
                     <Form.Control
                       placeholder="12-digit Aadhaar number"
                       {...register('aadhaar')}
                     />
-                    <small className="text-danger">{errors.aadhaar?.message}</small>
+
+                    <small className="text-danger">
+                      {errors.aadhaar?.message}
+                    </small>
                   </div>
 
                 </div>
 
+                {/* Address */}
                 <div className="col-md-8">
-                  <Form.Label>Address <span className="text-danger">*</span></Form.Label>
+                  <Form.Label>
+                    Address <span className="text-danger">*</span>
+                  </Form.Label>
+
                   <Form.Control
                     as="textarea"
-                    rows={5}
+                    placeholder="Enter the user address here..."
+                    rows={9}
                     {...register('address')}
                   />
-                  <small className="text-danger">{errors.address?.message}</small>
+
+                  <small className="text-danger">
+                    {errors.address?.message}
+                  </small>
                 </div>
 
               </div>
             </div>
-
             <div className="col-md-4">
               <Form.Label>Passport <small className="text-muted">(Optional)</small></Form.Label>
               <Form.Control placeholder="Enter passport number" {...register('passport')} />
@@ -373,24 +424,13 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-12 d-flex justify-content-end mt-3">
-              <Button onClick={goNext}>Next</Button>
+              <Button onClick={submitForm}>Submit</Button>
             </div>
 
           </Form>
         </ComponentContainerCard>
       )}
 
-      {step === 1 && (
-        <>
-          <FaceEmbeddings onCapture={d => setFaceEmbedding(d)} />
-          <div className="d-flex justify-content-between mt-3">
-            <Button onClick={() => setStep(0)}>Previous</Button>
-            <Button variant="success" onClick={submitForm}>
-              Submit
-            </Button>
-          </div>
-        </>
-      )}
     </>
   )
 }

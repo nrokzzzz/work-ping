@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
 const BulkUpload = () => {
   const navigate = useNavigate()
 
@@ -21,7 +23,9 @@ const BulkUpload = () => {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [allTasks, setAllTasks] = useState([])
   const [showTable, setShowTable] = useState(false)
-
+  
+    const { require2FA } = use2FA()
+    const { is2FAAuthnticator } = useAuthContext()
   const fileInputRef = useRef(null)
 
   const formatSize = (size) => {
@@ -57,27 +61,74 @@ const BulkUpload = () => {
       setLoading(true)
       setUploadProgress(0)
 
-      const res = await axiosClient.post(
-        '/api/admin/add-employees/by-excel',
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          onUploadProgress: (progressEvent) => {
-            const percent = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            )
-            setUploadProgress(percent)
-          },
-        }
-      )
-      console.log(res.data)
-      setAllTasks(res.data || [])
-      setShowTable(true)
-
-      setFile(null)
+      
       if (fileInputRef.current) fileInputRef.current.value = ''
+      if (is2FAAuthnticator) {
 
-     
+        try {
+
+          const res = await axiosClient.post(
+            '/api/admin/add-employees/by-excel',
+            formData,
+            {
+              headers: { 'Content-Type': 'multipart/form-data' },
+              onUploadProgress: (progressEvent) => {
+                const percent = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                )
+                setUploadProgress(percent)
+              },
+            }
+          )
+          console.log(res.data)
+          setAllTasks(res.data || [])
+          setShowTable(true)
+
+          setFile(null)
+
+        } catch (error) {
+
+          console.error(error)
+
+        }
+
+      } else {
+
+        require2FA(async () => {
+
+          try {
+
+            const res = await axiosClient.post(
+              '/api/admin/add-employees/by-excel',
+              formData,
+              {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: (progressEvent) => {
+                  const percent = Math.round(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                  )
+                  setUploadProgress(percent)
+                },
+              }
+            )
+            console.log(res.data)
+            setAllTasks(res.data || [])
+            setShowTable(true)
+
+            setFile(null)
+
+          } catch (error) {
+
+            throw new Error(
+              error?.response?.data?.message || "Failed to add Employee"
+            )
+
+          }
+
+        })
+
+      }
+
     } catch (err) {
       console.error(err)
       alert('Upload Failed')
@@ -207,8 +258,8 @@ const BulkUpload = () => {
                               <td>{task.rowData.name}</td>
                               <td>{task.rowData.email}</td>
                               <td>{task.rowData.phone}</td>
-                              
-                              
+
+
                             </tr>
                           ))}
                         </tbody>
