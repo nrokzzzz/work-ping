@@ -22,24 +22,67 @@ import axiosClient from '@/helpers/httpClient'
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
 const schema = yup.object({
-  userId: yup.string().required('User Id is required'),
-  userName: yup.string().required('User Name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+
+  userId: yup
+    .string()
+    .trim()
+    .required('User Id is required'),
+
+  userName: yup
+    .string()
+    .trim()
+    .required('User Name is required'),
+
+  email: yup
+    .string()
+    .email('Invalid email')
+    .required('Email is required'),
 
   phone: yup
     .string()
-    .matches(/^[0-9]{10}$/, 'Phone must be 10 digits')
+    .matches(/^[0-9]{10}$/, 'Phone must be exactly 10 digits')
     .required('Phone is required'),
 
-  dob: yup.string().required('Date of Birth is required'),
-  gender: yup.string().required('Gender is required'),
-  doj: yup.string().required('Date of Joining is required'),
-  role: yup.string().required('Role is required'),
+  dob: yup
+    .string()
+    .matches(
+      /^\d{4}-\d{2}-\d{2}$/,
+      'Date of Birth must be in dd-mm-yyyy format'
+    )
+    .required('Date of Birth is required'),
+
+  gender: yup
+    .string()
+    .required('Gender is required'),
+
+  doj: yup
+    .string()
+    .matches(
+      /^\d{4}-\d{2}-\d{2}$/,
+      'Date of Joining must be in yyyy-mm-dd format'
+    )
+    .required('Date of Joining is required'),
 
   aadhaar: yup
     .string()
-    .matches(/^[0-9]{12}$/, 'Aadhaar must be 12 digits')
+    .matches(/^[0-9]{12}$/, 'Aadhaar must be exactly 12 digits')
     .required('Aadhaar is required'),
+
+  organizationName: yup
+    .string()
+    .required('Organization Name is required'),
+
+  address: yup
+    .string()
+    .required('Address is required'),
+
+  passport: yup
+    .string()
+    .nullable(),
+
+  bankId: yup
+    .string()
+    .nullable(),
 
   pan: yup
     .string()
@@ -47,8 +90,6 @@ const schema = yup.object({
     .transform(v => (v === '' ? null : v))
     .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format'),
 
-  organizationName: yup.string().required('organizationName is required'),
-  address: yup.string().required('Address is required'),
 })
 
 const AddEmployee = () => {
@@ -59,7 +100,7 @@ const AddEmployee = () => {
   const [step, setStep] = useState(0)
   const [countryCode, setCountryCode] = useState('+91')
   const [search, setSearch] = useState('')
-
+  const [currency, setCurrency] = useState("₹")
   const { require2FA } = use2FA()
   const { is2FAAuthnticator } = useAuthContext()
   const {
@@ -148,7 +189,7 @@ const AddEmployee = () => {
 
       }
 
-      
+
     } catch (error) {
       console.error("Error adding employee:", error)
     }
@@ -199,13 +240,13 @@ const AddEmployee = () => {
           <Form className="row g-3">
 
             <div className="col-md-4">
-              <Form.Label>User-Id <span className="text-danger">*</span></Form.Label>
+              <Form.Label>User ID <span className="text-danger">*</span></Form.Label>
               <Form.Control placeholder="Enter User Id" {...register('userId')} />
               <small className="text-danger">{errors.userId?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>User-Name <span className="text-danger">*</span></Form.Label>
+              <Form.Label>User Name <span className="text-danger">*</span></Form.Label>
               <Form.Control placeholder="Enter Full Name" {...register('userName')} />
               <small className="text-danger">{errors.userName?.message}</small>
             </div>
@@ -279,7 +320,7 @@ const AddEmployee = () => {
 
 
             <div className="col-md-4">
-              <Form.Label>Contact-Number <span className="text-danger">*</span></Form.Label>
+              <Form.Label>Contact Number <span className="text-danger">*</span></Form.Label>
               <div className="d-flex gap-2">
                 <Dropdown>
                   <DropdownToggle
@@ -317,6 +358,11 @@ const AddEmployee = () => {
 
                 <Form.Control
                   placeholder="10-digit phone number"
+                  maxLength={10}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '')
+                  }}
+                  {...register('phone')}
                   {...register('phone')}
                 />
               </div>
@@ -325,14 +371,14 @@ const AddEmployee = () => {
 
             <div className="col-md-4">
               <Form.Label>Date of Birth <span className="text-danger">*</span></Form.Label>
-              <Form.Control type="date" {...register('dob')} />
+              <Form.Control type="date" placeholder="dd-mm-yyyy" {...register('dob')} />
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
             <div className="col-12">
               <div className="row">
 
-                {/* Left Side Stack */}
+                {/* LEFT COLUMN */}
                 <div className="col-md-4 d-flex flex-column gap-3">
 
                   {/* Gender */}
@@ -366,6 +412,31 @@ const AddEmployee = () => {
                     </small>
                   </div>
 
+                </div>
+
+
+                {/* ADDRESS CENTER COLUMN */}
+                <div className="col-md-4">
+                  <Form.Label>
+                    Address <span className="text-danger">*</span>
+                  </Form.Label>
+
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Enter the user address here..."
+                    rows={5}
+                    {...register('address')}
+                  />
+
+                  <small className="text-danger">
+                    {errors.address?.message}
+                  </small>
+                </div>
+
+
+                {/* RIGHT COLUMN */}
+                <div className="col-md-4 d-flex flex-column gap-3">
+
                   {/* Aadhaar */}
                   <div>
                     <Form.Label>
@@ -374,6 +445,10 @@ const AddEmployee = () => {
 
                     <Form.Control
                       placeholder="12-digit Aadhaar number"
+                      maxLength={12}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[^0-9]/g, '')
+                      }}
                       {...register('aadhaar')}
                     />
 
@@ -382,24 +457,46 @@ const AddEmployee = () => {
                     </small>
                   </div>
 
-                </div>
 
-                {/* Address */}
-                <div className="col-md-8">
-                  <Form.Label>
-                    Address <span className="text-danger">*</span>
-                  </Form.Label>
+                  {/* Salary */}
+                  <div>
+                    <Form.Label>
+                      Salary 
+                    </Form.Label>
 
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Enter the user address here..."
-                    rows={9}
-                    {...register('address')}
-                  />
+                    <div className="d-flex gap-2">
 
-                  <small className="text-danger">
-                    {errors.address?.message}
-                  </small>
+                      <Dropdown>
+                        <DropdownToggle
+                          className="btn btn-light border arrow-none"
+                          style={{ minWidth: 90 }}
+                        >
+                          {currency}
+                          <IconifyIcon icon="bx:chevron-down" className="ms-2" />
+                        </DropdownToggle>
+
+                        <DropdownMenu>
+                          <DropdownItem onClick={() => setCurrency("₹")}>₹ INR</DropdownItem>
+                          <DropdownItem onClick={() => setCurrency("$")}>$ USD</DropdownItem>
+                          <DropdownItem onClick={() => setCurrency("€")}>€ EUR</DropdownItem>
+                          <DropdownItem onClick={() => setCurrency("£")}>£ GBP</DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+
+                      <Form.Control
+                        placeholder="Enter salary"
+                        inputMode="numeric"
+                        onInput={(e) => {
+                          e.target.value = e.target.value.replace(/[^0-9]/g, "")
+                        }}
+                        {...register("salary")}
+                      />
+
+                    </div>
+
+                    <small className="text-danger">{errors.salary?.message}</small>
+                  </div>
+
                 </div>
 
               </div>
@@ -413,6 +510,12 @@ const AddEmployee = () => {
               <Form.Label>PAN <small className="text-muted">(Optional)</small></Form.Label>
               <Form.Control
                 placeholder="ABCDE1234F"
+                maxLength={10}
+                onInput={(e) => {
+                  e.target.value = e.target.value
+                    .toUpperCase()
+                    .replace(/[^A-Z0-9]/g, '')
+                }}
                 {...register('pan')}
               />
               <small className="text-danger">{errors.pan?.message}</small>
@@ -423,8 +526,8 @@ const AddEmployee = () => {
               <Form.Control placeholder="Enter bank account number" {...register('bankId')} />
             </div>
 
-            <div className="col-12 d-flex justify-content-end mt-3">
-              <Button onClick={submitForm}>Submit</Button>
+            <div className="col-12 d-flex justify-content-center mt-3">
+              <Button onClick={handleSubmit(submitForm)}>Submit</Button>
             </div>
 
           </Form>

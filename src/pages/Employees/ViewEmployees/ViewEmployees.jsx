@@ -14,14 +14,14 @@ const ViewEmployees = () => {
   const [loading, setLoading] = useState(false)
 
   const [search, setSearch] = useState('')
-  const [appliedSearch,setAppliedSearch]=useState('')
+  const [appliedSearch, setAppliedSearch] = useState('')
   const [orgData, setOrgData] = useState({})
   const [organization, setOrganization] = useState('')
   const [department, setDepartment] = useState('')
 
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
-  
+
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -71,9 +71,9 @@ const ViewEmployees = () => {
       if (appliedDepartment) {
         params.append('teamId', appliedDepartment)
       }
-       if (appliedSearch) {
-      params.append('search', appliedSearch)
-    }
+      if (appliedSearch) {
+        params.append('search', appliedSearch)
+      }
 
       const result = await axiosClient.get(
         `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
@@ -91,10 +91,10 @@ const ViewEmployees = () => {
 
   useEffect(() => {
     fetchEmployees(currentPage)
-  }, [currentPage, appliedOrganization, appliedDepartment,appliedSearch])
+  }, [currentPage, appliedOrganization, appliedDepartment, appliedSearch])
 
   const handleApply = () => {
-     setAppliedSearch(search)
+    setAppliedSearch(search)
     setAppliedOrganization(organization)
     setAppliedDepartment(department)
     setCurrentPage(1)
@@ -116,7 +116,7 @@ const ViewEmployees = () => {
   const start =
     totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
-
+  const show = (val) => val || "--";
   return (
     <Row>
       <Col>
@@ -227,21 +227,21 @@ const ViewEmployees = () => {
                 ) : (
                   employees.map((emp) => (
                     <tr key={emp.USER_ID}>
-                      <td>{emp.employeeId}</td>
-                      <td>{emp.name}</td>
-                      <td>{emp.email}</td>
-                      <td>{emp.phone}</td>
-                      <td>{emp.roleInTeam}</td>
-                      <td>{emp.organization}</td>
-                      <td>{emp.department}</td>
-                      <td>{emp.dob}</td>
-                      <td>{emp.gender}</td>
-                      <td>{emp.dof}</td>
-                      <td>{emp.salary}</td>
-                      <td>{emp.aadhar}</td>
-                      <td>{emp.pan}</td>
-                      <td>{emp.passport}</td>
-                      <td>{emp.bank}</td>
+                      <td>{show(emp.employeeId)}</td>
+                      <td>{show(emp.name)}</td>
+                      <td>{show(emp.email)}</td>
+                      <td>{show(emp.phone)}</td>
+                      <td>{show(emp.role)}</td>
+                      <td>{show(emp.organizationName)}</td>
+                      <td>{show(emp.departmentName)}</td>
+                      <td>{show(emp.dob)}</td>
+                      <td>{show(emp.gender)}</td>
+                      <td>{show(emp.dateOfJoining)}</td>
+                      <td>{show(emp.salary)}</td>
+                      <td>{show(emp.aadhaarNumber)}</td>
+                      <td>{show(emp.panNumber)}</td>
+                      <td>{show(emp.passportNumber)}</td>
+                      <td>{show(emp.bankAccount)}</td>
                     </tr>
                   ))
                 )}
