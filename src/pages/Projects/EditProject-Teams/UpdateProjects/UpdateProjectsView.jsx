@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
+
 const Viewprojects = () => {
   const itemsPerPage = 10
   const [projects, setProjects] = useState([])
@@ -20,6 +23,9 @@ const Viewprojects = () => {
   const [selectedIds, setSelectedIds] = useState(new Set())
 
   const navigate = useNavigate()
+
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -94,7 +100,7 @@ const Viewprojects = () => {
     })
   }
 
-  const deleteProjects = async () => {
+  const performDelete = async () => {
     try {
       await axiosClient.post('/api/admin/project/delete-projects', {
         data: [...selectedIds],
@@ -104,6 +110,16 @@ const Viewprojects = () => {
       fetchprojects(currentPage)
     } catch (e) {
       console.error(e)
+    }
+  }
+
+  const deleteProjects = async () => {
+    if (is2FAAuthnticator) {
+      await performDelete()
+    } else {
+      require2FA(async () => {
+        await performDelete()
+      })
     }
   }
 
@@ -206,6 +222,7 @@ const Viewprojects = () => {
                   <th>Assigned Date</th>
                   <th>Due Date</th>
                   <th>Contracted By</th>
+                  <th>Project Manager</th>
                   <th>Organization Name</th>
                 </tr>
               </thead>
@@ -258,6 +275,7 @@ const Viewprojects = () => {
                       <td>{project.assignedDate || '-'}</td>
                       <td>{project.dueDate || '-'}</td>
                       <td>{project.contractedBy || '-'}</td>
+                      <td>{project.projectManagerName || '-'}</td>
                       <td>{project.organizationName || '-'}</td>
                     </tr>
                   ))
