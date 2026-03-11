@@ -4,8 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Button, Form, Dropdown } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axiosClient from '@/helpers/httpClient'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
+
+import { use2FA } from '@/context/TwoFAContext'
+import { useAuthContext } from '@/context/useAuthContext'
 
 const schema = yup.object({
   name: yup.string().required('Name is required'),
@@ -18,6 +22,11 @@ const schema = yup.object({
 })
 
 const AddProjects = () => {
+
+  const navigate = useNavigate()
+
+  const { require2FA } = use2FA()
+  const { is2FAAuthnticator } = useAuthContext()
 
   const {
     register,
@@ -63,33 +72,64 @@ const AddProjects = () => {
   }, [])
 
   const fetchProjectManagers = async (orgId) => {
-  try {
-
-    const res = await axiosClient.get(
-      `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
-    )
-
-    const formatted = (res.data.data || []).map((emp) => ({
-      name: emp.name,
-      employeeId: emp._id
-    }))
-
-    setProjectManagers(formatted)
-
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-  const onSubmit = async (data) => {
-    console.log('FORM DATA:', data)
-
     try {
-      const res = await axiosClient.post('/api/admin/project/create-project', data)
-      console.log(res)
+
+      const res = await axiosClient.get(
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
+      )
+
+      const formatted = (res.data.data || []).map((emp) => ({
+        name: emp.name,
+        employeeId: emp._id
+      }))
+
+      setProjectManagers(formatted)
+
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const onSubmit = async (data) => {
+
+    if (is2FAAuthnticator) {
+
+      try {
+
+        await axiosClient.post('/api/admin/project/create-project', data)
+
+        reset()
+        navigate('/projects/update-projects')
+
+      } catch (error) {
+
+        console.log(error)
+
+      }
+
+    } else {
+
+      require2FA(async () => {
+
+        try {
+
+          await axiosClient.post('/api/admin/project/create-project', data)
+
+          reset()
+          navigate('/projects/update-projects')
+
+        } catch (error) {
+
+          throw new Error(
+            error?.response?.data?.message || "Failed to create project"
+          )
+
+        }
+
+      })
+
+    }
+
   }
 
   return (
