@@ -289,22 +289,21 @@ const BulkUpload = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    name	email	phone	employeeId	organizationName	dateOfJoining	aadhaar	role	gender	salary	teamName	pan	bankId
+                   
                     <tr><td>1</td><td>employeeId</td><td>1</td></tr>
                     <tr><td>2</td><td>name</td><td>DragoN28</td></tr>
                     <tr><td>3</td><td>email</td><td>example@gmail.com</td></tr>
                     <tr><td>4</td><td>phone</td><td>07013874687</td></tr>
+                    <tr><td>4</td><td>date Of Birth</td><td>dd-mm-yyyy</td></tr>
                     <tr><td>4</td><td>organizationName</td><td>ORG-27</td></tr>
-                    <tr><td>4</td><td>dateOfJoining</td><td>dd-mm-yyyy</td></tr>
-                    <tr><td>5</td><td>Address</td><td>Jetla Pedda Kapu Street</td></tr>
-                    <tr><td>6</td><td>Aadhaar</td><td>123412341234</td></tr>
-                    <tr><td>7</td><td>Passport</td><td>P1234567</td></tr>
-                    <tr><td>8</td><td>Pan</td><td>ABCDE1234F</td></tr>
-                    <tr><td>9</td><td>Bank</td><td>1234567890</td></tr>
-                    <tr><td>10</td><td>Gender</td><td>Male / Female</td></tr>
-                    <tr><td>11</td><td>Role</td><td>Admin / Employee</td></tr>
-                    <tr><td>12</td><td>CountryCode</td><td>+91</td></tr>
-                    <tr><td>13</td><td>Image</td><td>image_url_or_name</td></tr>
+                    <tr><td>10</td><td>gender</td><td>Male / Female</td></tr>
+                    <tr><td>4</td><td>date Of Joining</td><td>dd-mm-yyyy</td></tr>
+                    <tr><td>5</td><td>address</td><td>5-45,GEDDANAPALLI</td></tr>
+                    <tr><td>6</td><td>aadhaar</td><td>123412341234</td></tr>
+                    <tr><td>7</td><td>passport</td><td>P1234567</td></tr>
+                    <tr><td>8</td><td>salary</td><td>50000</td></tr>
+                    <tr><td>8</td><td>pan</td><td>ABCDE1234F</td></tr>
+                    <tr><td>9</td><td>bankId</td><td>1234567890</td></tr>
                   </tbody>
                 </table>
               </div>
