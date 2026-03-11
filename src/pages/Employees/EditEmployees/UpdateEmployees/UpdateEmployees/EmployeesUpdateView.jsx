@@ -4,7 +4,7 @@ import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
-
+import { use2FA } from '@/context/TwoFAContext'
 const ViewEmployees = () => {
   const itemsPerPage = 10
   const [selectedIds, setSelectedIds] = useState(new Set())
@@ -19,7 +19,7 @@ const ViewEmployees = () => {
   const [orgData, setOrgData] = useState({})
   const [organization, setOrganization] = useState('')
   const [department, setDepartment] = useState('')
-
+  const {require2FA}=use2FA()
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
   const navigate = useNavigate()
@@ -32,6 +32,7 @@ const ViewEmployees = () => {
         )
         setOrgData(res.data || {})
         console.log(res.data)
+
       } catch (err) {
         console.error(err)
       }
@@ -109,11 +110,28 @@ const ViewEmployees = () => {
 
   const deleteEmployees = async () => {
     try {
-      await axiosClient.post('/api/admin/employees/delete-employees', {
-        data: [...selectedIds],
-      })
-      setSelectedIds(new Set())
+      require2FA(async () => {
+        
+        try {
+          
+          
+          await axiosClient.post('/api/admin/employees/delete-employees', {
+            data: [...selectedIds],
+          })
+       setSelectedIds(new Set())
       fetchEmployees(currentPage)
+      
+                 
+                } catch (error) {
+      
+                  throw new Error(
+                    error?.response?.data?.message || "Failed to add Employee"
+                  )
+      
+                }
+      
+              })
+     
     } catch (e) {
       console.error(e)
     }

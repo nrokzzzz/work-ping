@@ -528,7 +528,7 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Bank-Id <small className="text-muted">(Optional)</small></Form.Label>
+              <Form.Label>Bank ID <small className="text-muted">(Optional)</small></Form.Label>
               <Form.Control placeholder="Enter bank account number" {...register('bankId')} />
             </div>
 
