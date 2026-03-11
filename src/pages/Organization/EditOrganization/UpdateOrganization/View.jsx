@@ -229,11 +229,11 @@ const ViewOrganization = () => {
                         </Button>
                       </td>
 
-                      <td>{organization.name}</td>
-                      <td>{organization.clDays}</td>
-                      <td>{organization.type}</td>
-                      <td>{organization.IPWhitelist[0]}</td>
-                      <td>{new Date(organization.updatedAt).getFullYear()}</td>
+                      <td>{organization.name || '-'}</td>
+                      <td>{organization.clDays || '-'}</td>
+                      <td>{organization.type || '-' }</td>
+                      <td>{organization.IPWhitelist[0] || '-'}</td>
+                      <td>{organization.foundedAt || '-'}</td>
 
                     </tr>
                   ))

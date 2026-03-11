@@ -3,10 +3,9 @@ import { Button, Form } from 'react-bootstrap'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import MaskedInput from 'react-text-mask-legacy'
 import axiosClient from '@/helpers/httpClient'
 
 import { use2FA } from '@/context/TwoFAContext'
@@ -15,6 +14,10 @@ import { useAuthContext } from '@/context/useAuthContext'
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
   organizationType: yup.string().required('Organization Type is required'),
+  foundedAt: yup
+    .date()
+    .max(new Date(), 'Founded Date cannot be in the future')
+    .required('Founded Date is required'),
   casualLeaves: yup
     .number()
     .typeError('Casual Leaves must be a number')
@@ -23,11 +26,11 @@ const schema = yup.object({
     .required('Casual Leaves is required'),
   ipAddress: yup
     .string()
+    .required('IP Address is required')
     .matches(
       /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
       'Invalid IP Address'
-    )
-    .required('IP Address is required'),
+    ),
 })
 
 const OrganizationDetailsForm = () => {
@@ -41,7 +44,6 @@ const OrganizationDetailsForm = () => {
 
   const {
     register,
-    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -51,10 +53,12 @@ const OrganizationDetailsForm = () => {
   })
 
   const onSubmit = async (data) => {
-
+    const d = new Date(data.foundedAt)
+  const foundedAt = `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`
     const newData = {
       name: data.organizationName,
       type: data.organizationType,
+      foundedAt: foundedAt,
       clDays: data.casualLeaves,
       description: data.description,
       IPWhitelist: data.ipAddress,
@@ -67,7 +71,7 @@ const OrganizationDetailsForm = () => {
 
       try {
 
-        const response = await axiosClient.post(
+        await axiosClient.post(
           "/api/admin/organization/add-organization",
           newData
         )
@@ -87,7 +91,7 @@ const OrganizationDetailsForm = () => {
 
         try {
 
-          const response = await axiosClient.post(
+          await axiosClient.post(
             "/api/admin/organization/add-organization",
             newData
           )
@@ -111,7 +115,7 @@ const OrganizationDetailsForm = () => {
 
   return (
     <ComponentContainerCard id="basic" title="Organization Details">
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form noValidate onSubmit={handleSubmit(onSubmit)}>
 
         <div className="row">
 
@@ -147,25 +151,30 @@ const OrganizationDetailsForm = () => {
 
           <div className="col-md-6 mb-3">
             <Form.Label>
+              Founded At <span className="text-danger">*</span>
+            </Form.Label>
+
+            <Form.Control
+              type="date"
+              max={new Date().toISOString().split('T')[0]}
+              {...register('foundedAt')}
+            />
+
+            <small className="text-danger">
+              {errors.foundedAt?.message}
+            </small>
+          </div>
+
+          <div className="col-md-6 mb-3">
+            <Form.Label>
               Organization IP Address <span className="text-danger">*</span>
             </Form.Label>
 
-            <Controller
-              name="ipAddress"
-              control={control}
-              render={({ field }) => (
-                <MaskedInput
-                  {...field}
-                  mask={[
-                    /\d/, /\d/, /\d/, '.',
-                    /\d/, /\d/, /\d/, '.',
-                    /\d/, /\d/, /\d/, '.',
-                    /\d/, /\d/, /\d/,
-                  ]}
-                  className="form-control"
-                  placeholder="___.___.___.___"
-                />
-              )}
+            <Form.Control
+              type="text"
+              placeholder="Enter IP Address (e.g., 192.168.1.1)"
+              {...register('ipAddress')}
+              maxLength={15}
             />
 
             <small className="text-danger">

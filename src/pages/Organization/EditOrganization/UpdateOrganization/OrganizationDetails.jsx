@@ -1,37 +1,44 @@
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import { Button, Form } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
-import { useParams,useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import MaskedInput from 'react-text-mask-legacy'
+
 import axiosClient from '@/helpers/httpClient'
-import axios from 'axios'
 
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
 
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
+
   organizationType: yup.string().required('Organization Type is required'),
+
+  foundedAt: yup
+    .date()
+    .max(new Date(), 'Founded Date cannot be in the future')
+    .required('Founded Date is required'),
+
   casualLeaves: yup
     .number()
     .typeError('Casual Leaves must be a number')
     .min(0, 'Minimum 0')
     .max(15, 'Maximum 15')
     .required('Casual Leaves is required'),
+
   ipAddress: yup
     .string()
+    .required('IP Address is required')
     .matches(
       /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
       'Invalid IP Address'
-    )
-    .required('IP Address is required'),
+    ),
 })
 
-const OrganizationDetailsForm = () => {
+const UpdateOrganizationDetailsForm = () => {
 
   const navigate = useNavigate()
 
@@ -42,11 +49,8 @@ const OrganizationDetailsForm = () => {
   const { require2FA } = use2FA()
   const { is2FAAuthnticator } = useAuthContext()
 
-  console.log('Organization ID from URL:', organizationId)
-
   const {
     register,
-    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -56,7 +60,9 @@ const OrganizationDetailsForm = () => {
   })
 
   useEffect(() => {
+
     const fetchOrganizationDetails = async () => {
+
       try {
 
         const res = await axiosClient.get(
@@ -65,9 +71,17 @@ const OrganizationDetailsForm = () => {
 
         const data = res.data
 
+        let foundedAt = ''
+
+        if (data?.foundedAt) {
+          const d = new Date(data.foundedAt)
+          foundedAt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+        }
+
         reset({
           organizationName: data?.name || '',
           organizationType: data?.type || '',
+          foundedAt: foundedAt,
           casualLeaves: data?.clDays || '',
           ipAddress: data?.IPWhitelist?.[0] || '',
           description: data?.description || '',
@@ -78,6 +92,7 @@ const OrganizationDetailsForm = () => {
         console.error('Error fetching organization details:', error)
 
       }
+
     }
 
     if (organizationId) {
@@ -89,13 +104,21 @@ const OrganizationDetailsForm = () => {
 
   const onSubmit = async (data) => {
 
+    const d = new Date(data.foundedAt)
+
+    const foundedAt = `${String(d.getDate()).padStart(2, '0')}-${String(
+      d.getMonth() + 1
+    ).padStart(2, '0')}-${d.getFullYear()}`
+
     const newData = {
       _id: organizationId,
       name: data.organizationName,
       type: data.organizationType,
+      foundedAt: foundedAt,
       clDays: Number(data.casualLeaves),
       description: data.description,
       IPWhitelist: [data.ipAddress],
+      coordinates: geoCoords,
     }
 
     console.log('Organization Update Payload:', newData)
@@ -108,8 +131,6 @@ const OrganizationDetailsForm = () => {
           '/api/admin/organization/update-organization',
           newData
         )
-
-        console.log('Update Response:', response.data)
 
         if (response?.data) {
           navigate('/organization/update-view-organization')
@@ -132,8 +153,6 @@ const OrganizationDetailsForm = () => {
             newData
           )
 
-          console.log('Update Response:', response.data)
-
           if (response?.data) {
             navigate('/organization/update-view-organization')
           }
@@ -154,17 +173,21 @@ const OrganizationDetailsForm = () => {
 
   return (
     <ComponentContainerCard id="basic" title="Organization Details">
-      <Form onSubmit={handleSubmit(onSubmit)}>
+
+      <Form noValidate onSubmit={handleSubmit(onSubmit)}>
+
         <div className="row">
 
           <div className="col-md-6 mb-3">
             <Form.Label>
               Organization Name <span className="text-danger">*</span>
             </Form.Label>
+
             <Form.Control
               placeholder="Enter Organization Name"
               {...register('organizationName')}
             />
+
             <small className="text-danger">
               {errors.organizationName?.message}
             </small>
@@ -174,10 +197,12 @@ const OrganizationDetailsForm = () => {
             <Form.Label>
               Organization Type <span className="text-danger">*</span>
             </Form.Label>
+
             <Form.Control
               placeholder="Enter Organization Type"
               {...register('organizationType')}
             />
+
             <small className="text-danger">
               {errors.organizationType?.message}
             </small>
@@ -185,37 +210,48 @@ const OrganizationDetailsForm = () => {
 
           <div className="col-md-6 mb-3">
             <Form.Label>
+              Founded At <span className="text-danger">*</span>
+            </Form.Label>
+
+            <Form.Control
+              type="date"
+              max={new Date().toISOString().split('T')[0]}
+              {...register('foundedAt')}
+            />
+
+            <small className="text-danger">
+              {errors.foundedAt?.message}
+            </small>
+          </div>
+
+          <div className="col-md-6 mb-3">
+            <Form.Label>
               Organization IP Address <span className="text-danger">*</span>
             </Form.Label>
-            <Controller
-              name="ipAddress"
-              control={control}
-              render={({ field }) => (
-                <MaskedInput
-                  {...field}
-                  mask={[
-                    /\d/, /\d/, /\d/, '.',
-                    /\d/, /\d/, /\d/, '.',
-                    /\d/, /\d/, /\d/, '.',
-                    /\d/, /\d/, /\d/,
-                  ]}
-                  className="form-control"
-                  placeholder="___.___.___.___"
-                />
-              )}
+
+            <Form.Control
+              type="text"
+              placeholder="Enter IP Address (e.g., 192.168.1.1)"
+              {...register('ipAddress')}
+              maxLength={15}
             />
-            <small className="text-danger">{errors.ipAddress?.message}</small>
+
+            <small className="text-danger">
+              {errors.ipAddress?.message}
+            </small>
           </div>
 
           <div className="col-md-6 mb-3">
             <Form.Label>
               Casual Leaves <span className="text-danger">*</span>
             </Form.Label>
+
             <Form.Control
               type="number"
               placeholder="Enter Casual Leaves"
               {...register('casualLeaves')}
             />
+
             <small className="text-danger">
               {errors.casualLeaves?.message}
             </small>
@@ -225,6 +261,7 @@ const OrganizationDetailsForm = () => {
             <Form.Label>
               Description <small className="text-muted">(Optional)</small>
             </Form.Label>
+
             <Form.Control
               as="textarea"
               rows={4}
@@ -239,9 +276,11 @@ const OrganizationDetailsForm = () => {
           </div>
 
         </div>
+
       </Form>
+
     </ComponentContainerCard>
   )
 }
 
-export default OrganizationDetailsForm
+export default UpdateOrganizationDetailsForm
