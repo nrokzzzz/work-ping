@@ -99,20 +99,29 @@ const UpdateProjects = () => {
 
       try {
 
-        const res = await axiosClient.get(`/api/admin/project/get-project/${projectId}`)
+        const res = await axiosClient.get(
+          `/api/admin/project/get-project?projectId=${projectId}`
+        )
 
-        const data = res.data
+        const data = res.data._doc
 
         setValue('name', data.name)
         setValue('assignedDate', data.assignedDate?.slice(0,10))
         setValue('dueDate', data.dueDate?.slice(0,10))
         setValue('contractedBy', data.contractedBy)
         setValue('organizationId', data.organizationId)
-        setValue('projectManager', data.projectManager)
+        setValue('projectManager', data.projectManager?._id)
         setValue('description', data.description)
 
-        setSelectedOrg(data.organizationName)
-        setSelectedPM(data.projectManagerName)
+        setSelectedPM(data.projectManager?.name || '')
+
+        const org = organizations.find(
+          o => o.organizationId === data.organizationId
+        )
+
+        if (org) {
+          setSelectedOrg(org.name)
+        }
 
         fetchProjectManagers(data.organizationId)
 
@@ -126,43 +135,49 @@ const UpdateProjects = () => {
 
     if(projectId) fetchProject()
 
-  }, [projectId, setValue])
+  }, [projectId, setValue, organizations])
+
+  const updateProject = async (payload) => {
+
+    try {
+
+      await axiosClient.post(
+        '/api/admin/project/update-project',
+        payload
+      )
+
+      reset()
+      navigate('/projects/update-projects')
+
+    } catch (error) {
+
+      console.log(error)
+
+    }
+
+  }
 
   const onSubmit = async (data) => {
 
+    const payload = {
+      id: projectId,
+      name: data.name,
+      description: data.description,
+      projectManager: data.projectManager,
+      organizationId: data.organizationId,
+      dueDate: new Date(data.dueDate).toISOString(),
+      contractedBy: data.contractedBy
+    }
+
     if (is2FAAuthnticator) {
 
-      try {
-
-        await axiosClient.put(`/api/admin/project/update-project/${projectId}`, data)
-
-        reset()
-        navigate('/projects/update-projects')
-
-      } catch (error) {
-
-        console.log(error)
-
-      }
+      await updateProject(payload)
 
     } else {
 
       require2FA(async () => {
 
-        try {
-
-          await axiosClient.put(`/api/admin/project/update-project/${projectId}`, data)
-
-          reset()
-          navigate('/projects/update-projects')
-
-        } catch (error) {
-
-          throw new Error(
-            error?.response?.data?.message || "Failed to update project"
-          )
-
-        }
+        await updateProject(payload)
 
       })
 
@@ -220,7 +235,7 @@ const UpdateProjects = () => {
 
         <div className="col-md-6">
           <Form.Label>
-            Organization ID <span className="text-danger">*</span>
+            Organization Name <span className="text-danger">*</span>
           </Form.Label>
 
           <Dropdown className="w-100">
