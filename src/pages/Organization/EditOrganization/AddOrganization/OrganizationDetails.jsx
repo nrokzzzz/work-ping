@@ -34,6 +34,22 @@ const schema = yup.object({
     ),
 })
 
+const handleIpKeyDown = (e) => {
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End']
+  if (allowedKeys.includes(e.key)) return
+  if ((e.ctrlKey || e.metaKey) && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return
+  if (!/^[0-9.]$/.test(e.key)) {
+    e.preventDefault()
+  }
+}
+
+const handleIpPaste = (e) => {
+  const pasted = e.clipboardData.getData('text')
+  if (!/^[0-9.]+$/.test(pasted)) {
+    e.preventDefault()
+  }
+}
+
 const OrganizationDetailsForm = () => {
 
   const navigate = useNavigate()
@@ -67,7 +83,7 @@ const OrganizationDetailsForm = () => {
     }
 
     if (is2FAAuthnticator) {
-      // 2FA is not set up yet — redirect to QR setup first
+      // 2FA not set up at all — redirect to QR setup page
       toast('Please set up Two-Factor Authentication first.', { icon: '🔐' })
       navigate('/2fa-authnticator', {
         state: {
@@ -78,6 +94,7 @@ const OrganizationDetailsForm = () => {
       return
     }
 
+    // 2FA is set up — use verification modal and create org
     require2FA(async () => {
       try {
         await axiosClient.post(
@@ -163,6 +180,8 @@ const OrganizationDetailsForm = () => {
                   placeholder="Enter IP Address (e.g., 192.168.1.1)"
                   {...register('ipAddress')}
                   maxLength={15}
+                  onKeyDown={handleIpKeyDown}
+                  onPaste={handleIpPaste}
                 />
 
                 <small className="text-danger">

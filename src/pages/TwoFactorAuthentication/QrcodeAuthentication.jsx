@@ -89,8 +89,9 @@ const QRAuthModal = () => {
     }
   }
 
-  // Handle skip with confirmation
+  // Handle skip — mark 2FA as not completed so org flow redirects back to QR
   const handleSkip = () => {
+    setIs2FAAuthnticator(true)
     if (navigationState?.path) {
       navigate(navigationState.path)
     } else {

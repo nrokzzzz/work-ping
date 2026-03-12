@@ -39,6 +39,22 @@ const schema = yup.object({
     ),
 })
 
+const handleIpKeyDown = (e) => {
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End']
+  if (allowedKeys.includes(e.key)) return
+  if ((e.ctrlKey || e.metaKey) && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return
+  if (!/^[0-9.]$/.test(e.key)) {
+    e.preventDefault()
+  }
+}
+
+const handleIpPaste = (e) => {
+  const pasted = e.clipboardData.getData('text')
+  if (!/^[0-9.]+$/.test(pasted)) {
+    e.preventDefault()
+  }
+}
+
 const UpdateOrganizationDetailsForm = () => {
 
   const navigate = useNavigate()
@@ -221,6 +237,8 @@ const UpdateOrganizationDetailsForm = () => {
                   placeholder="Enter IP Address (e.g., 192.168.1.1)"
                   {...register('ipAddress')}
                   maxLength={15}
+                  onKeyDown={handleIpKeyDown}
+                  onPaste={handleIpPaste}
                 />
 
                 <small className="text-danger">
