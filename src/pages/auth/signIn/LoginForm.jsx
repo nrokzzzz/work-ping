@@ -15,7 +15,14 @@ const LoginForm = () => {
 
   const loginSchema = yup.object({
     email: yup.string().email('Please enter a valid email').required('Please enter your email'),
-    password: yup.string().required('Please enter your password')
+    password: yup
+      .string()
+      .required('Please enter your password')
+      .min(8, 'Password must be at least 8 characters')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .matches(/[0-9]/, 'Password must contain at least one number')
+      .matches(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
   });
 
   const {

@@ -13,17 +13,32 @@ const SignUpForm = () => {
   const navigate = useNavigate();
   const { signUp } = useAuthContext();
   const signUpSchema = yup.object({
-    name: yup.string().required('Please enter your name'),
-    number: yup.string().required('Please enter your mobile number'),
+    name: yup
+      .string()
+      .required('Please enter your name')
+      .matches(/^[A-Za-z\s]+$/, 'Name must contain only alphabets'),
+    number: yup
+      .string()
+      .required('Please enter your mobile number')
+      .matches(/^\d+$/, 'Mobile number must contain only digits')
+      .min(10, 'Mobile number must be at least 10 digits')
+      .max(15, 'Mobile number must be at most 15 digits'),
     userEmail: yup
       .string()
       .email('Please enter a valid email')
       .required('Please enter your email'),
-    password: yup.string().required('Please enter your password'),
+    password: yup
+      .string()
+      .required('Please enter your password')
+      .min(8, 'Password must be at least 8 characters')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .matches(/[0-9]/, 'Password must contain at least one number')
+      .matches(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('password')], 'Passwords must match')
-      .required('Please confirm your password')
+      .required('Please confirm your password'),
   });
 
   const {
@@ -78,6 +93,12 @@ const SignUpForm = () => {
         id="name"
         placeholder="Enter your name"
         required
+        onKeyDown={(e) => {
+          // allow: letters, space, backspace, delete, arrows, tab
+          if (!/^[A-Za-z ]$/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'].includes(e.key)) {
+            e.preventDefault()
+          }
+        }}
       />
 
       <TextFormInput
@@ -87,6 +108,14 @@ const SignUpForm = () => {
         containerClassName="mb-3"
         control={control}
         required
+        inputMode="numeric"
+        pattern="\d*"
+        onKeyDown={(e) => {
+          // allow: digits, backspace, delete, arrows, tab
+          if (!/^\d$/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'].includes(e.key)) {
+            e.preventDefault()
+          }
+        }}
       />
 
       <TextFormInput
