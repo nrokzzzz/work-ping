@@ -112,60 +112,55 @@ const Viewprojects = () => {
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
   return (
-    <Row>
-      <Col>
+    <Row className="justify-content-center">
+      <Col xs={12} xl={11}>
         <Card>
-          <CardBody>
-            <Row className="g-2">
+          <CardBody className="py-2">
+            <div className="d-flex flex-wrap align-items-center gap-2">
 
-              <Col xs={12} md={4}>
-                <div className="position-relative">
-                  <IconifyIcon
-                    icon="bx:search-alt"
-                    className="position-absolute"
-                    style={{
-                      left: 12,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      fontSize: 18,
-                    }}
-                  />
-
-                  <input
-                    type="search"
-                    className="form-control ps-5"
-                    placeholder="Search projects..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </div>
-              </Col>
-
-              <Col xs={12} md={3}>
-                <select
-                  className="form-select"
-                  value={organization}
-                  onChange={(e) => {
-                    setOrganization(e.target.value)
+              <div className="position-relative" style={{ maxWidth: 220 }}>
+                <IconifyIcon
+                  icon="bx:search-alt"
+                  className="position-absolute"
+                  style={{
+                    left: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    fontSize: 18,
                   }}
-                >
-                  <option value="">Select Organization</option>
+                />
+                <input
+                  type="search"
+                  className="form-control ps-5"
+                  placeholder="Search projects..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
 
-                  {organizationList.map((org) => (
-                    <option key={org} value={org}>
-                      {org}
-                    </option>
-                  ))}
-                </select>
-              </Col>
+              <select
+                className="form-select"
+                style={{ maxWidth: 200 }}
+                value={organization}
+                onChange={(e) => {
+                  setOrganization(e.target.value)
+                }}
+              >
+                <option value="">Select Organization</option>
 
-              <Col xs={12} md={2}>
-                <Button className="w-100" onClick={handleApply}>
-                  Apply
-                </Button>
-              </Col>
+                {organizationList.map((org) => (
+                  <option key={org} value={org}>
+                    {org}
+                  </option>
+                ))}
+              </select>
 
-            </Row>
+              {/* Apply — pinned right */}
+              <Button size="sm" className="ms-auto px-4" onClick={handleApply}>
+                Apply
+              </Button>
+
+            </div>
           </CardBody>
 
           <div className="table-responsive">

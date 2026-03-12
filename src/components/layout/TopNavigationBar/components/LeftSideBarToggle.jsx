@@ -20,9 +20,9 @@ const LeftSideBarToggle = () => {
     const isMobile = window.innerWidth < 768;
 
     if (isMobile) toggleBackdrop();
-    else{
-      if (size === 'default') changeMenuSize('hidden');
-      else if (size === 'hidden') changeMenuSize('default');
+    else {
+      if (size === 'hidden') changeMenuSize('default');
+      else changeMenuSize('hidden');
     }
   };
   useEffect(() => {

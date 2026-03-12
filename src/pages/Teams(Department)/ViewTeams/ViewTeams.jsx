@@ -111,48 +111,45 @@ const ViewTeams = () => {
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
   return (
-    <Row>
-      <Col>
+    <Row className="justify-content-center">
+      <Col xs={12} xl={11}>
         <Card>
-          <CardBody>
-            <Row className="g-2">
+          <CardBody className="py-2">
+            <div className="d-flex flex-wrap align-items-center gap-2">
               {/* Search */}
-              <Col xs={12} md={4}>
-                <input
-                  type="search"
-                  className="form-control"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </Col>
+              <input
+                type="search"
+                className="form-control"
+                style={{ maxWidth: 220 }}
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
 
               {/* Organization Dropdown */}
-              <Col xs={12} md={4}>
-                <select
-                  className="form-select"
-                  value={organization}
-                  onChange={(e) => setOrganization(e.target.value)}
-                >
-                  <option value="">Select Organization</option>
+              <select
+                className="form-select"
+                style={{ maxWidth: 200 }}
+                value={organization}
+                onChange={(e) => setOrganization(e.target.value)}
+              >
+                <option value="">Select Organization</option>
 
-                  {organizations.map((org) => (
-                    <option
-                      key={org.organizationId}
-                      value={org.organizationId}
-                    >
-                      {org.name}
-                    </option>
-                  ))}
-                </select>
-              </Col>
+                {organizations.map((org) => (
+                  <option
+                    key={org.organizationId}
+                    value={org.organizationId}
+                  >
+                    {org.name}
+                  </option>
+                ))}
+              </select>
 
-              <Col xs={12} md={4}>
-                <Button className="w-100" onClick={handleApply}>
-                  Apply
-                </Button>
-              </Col>
-            </Row>
+              {/* Apply — pinned right */}
+              <Button size="sm" className="ms-auto px-4" onClick={handleApply}>
+                Apply
+              </Button>
+            </div>
           </CardBody>
 
           {/* Table */}
