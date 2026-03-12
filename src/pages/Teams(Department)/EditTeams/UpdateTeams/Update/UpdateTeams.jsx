@@ -19,20 +19,32 @@ const schema = yup.object({
   organizationId: yup.string().required('Organization ID is required'),
 
   teamManagerId: yup
-    .string()
-    .nullable()
-    .notOneOf(
-      [yup.ref('teamLeaderId')],
-      'Manager and Team Leader cannot be the same'
-    ),
-
-  teamLeaderId: yup
-    .string()
-    .nullable()
-    .notOneOf(
-      [yup.ref('teamManagerId')],
-      'Manager and Team Leader cannot be the same'
-    ),
+      .string()
+      .nullable()
+      .test(
+        "not-same",
+        "Manager and Team Leader cannot be the same",
+        function (value) {
+          const { teamLeaderId } = this.parent
+  
+          if (!value || !teamLeaderId) return true // allow empty
+          return value !== teamLeaderId
+        }
+      ),
+  
+    teamLeaderId: yup
+      .string()
+      .nullable()
+      .test(
+        "not-same",
+        "Manager and Team Leader cannot be the same",
+        function (value) {
+          const { teamManagerId } = this.parent
+  
+          if (!value || !teamManagerId) return true // allow empty
+          return value !== teamManagerId
+        }
+      ),
 
   description: yup.string().nullable(),
 
