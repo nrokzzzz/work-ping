@@ -429,10 +429,6 @@ html[data-menu-size='sm-hover'] {
         position: relative;
     }
 
-    .button-toggle-menu {
-        display: none;
-    }
-
     .main-nav:not(:hover) {
         width: $main-nav-width-sm;
         min-width: $main-nav-width-sm;
@@ -502,10 +498,6 @@ html[data-menu-size='sm-hover'] {
 
 // Small Hover Active
 html[data-menu-size='sm-hover-active'] {
-    .button-toggle-menu {
-        display: none;
-    }
-
     .main-nav {
         .logo-box {
             text-align: left;
