@@ -116,7 +116,7 @@ const AddProjects = () => {
           await axiosClient.post('/api/admin/project/create-project', data)
           toast.success('Project created successfully!')
           reset()
-          navigate('/projects/update-projects')
+          navigate('/projects/view-projects')
 
         } catch (error) {
 
