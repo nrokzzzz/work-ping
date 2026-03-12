@@ -349,7 +349,7 @@ const AddEmployee = () => {
 
               <Form.Label className="mt-3">Work Type <span className="text-danger">*</span></Form.Label>
               <Form.Select {...register('workType')}>
-                <option value="onSite">On-Site</option>
+                <option value="onSite">OnSite</option>
                 <option value="Remote">Remote</option>
                 <option value="Hybrid">Hybrid</option>
               </Form.Select>

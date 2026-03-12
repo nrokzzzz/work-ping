@@ -147,7 +147,7 @@ const CreateTeam = () => {
     setSelectedManager('')
     setSelectedLeader('')
 
-    navigate('/teams/update-teams-view')
+    navigate('/teams/view-teams')
 
   }
 
