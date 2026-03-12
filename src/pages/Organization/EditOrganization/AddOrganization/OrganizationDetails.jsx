@@ -1,6 +1,6 @@
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import { Button, Form, Row, Col } from 'react-bootstrap'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useForm } from 'react-hook-form'
@@ -11,6 +11,8 @@ import toast from 'react-hot-toast'
 
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
+
+const STORAGE_KEY = 'org_form_draft'
 
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
@@ -63,11 +65,25 @@ const OrganizationDetailsForm = () => {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
     shouldFocusError: false,
   })
+
+  // Restore saved form data on mount (after QR redirect)
+  useEffect(() => {
+    const saved = sessionStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        reset(parsed)
+      } catch {
+        sessionStorage.removeItem(STORAGE_KEY)
+      }
+    }
+  }, [reset])
 
   const onSubmit = async (data) => {
     const d = new Date(data.foundedAt)
@@ -83,7 +99,8 @@ const OrganizationDetailsForm = () => {
     }
 
     if (is2FAAuthnticator) {
-      // 2FA not set up at all — redirect to QR setup page
+      // Save form data before navigating away
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data))
       toast('Please set up Two-Factor Authentication first.', { icon: '🔐' })
       navigate('/2fa-authnticator', {
         state: {
@@ -102,6 +119,8 @@ const OrganizationDetailsForm = () => {
           newData
         )
 
+        // Clear saved draft on success
+        sessionStorage.removeItem(STORAGE_KEY)
         toast.success('Organization added successfully!')
         reset()
         navigate('/organization/view-organization')
