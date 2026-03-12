@@ -7,7 +7,6 @@ import { NotificationProvider } from '@/context/useNotificationContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { TwoFAProvider } from '@/context/TwoFAContext';
 import TwoFactorAuthentication from '@/pages/TwoFactorAuthentication/TwoFactorAuthentication';
-import Loader from '@/pages/loader/Loader';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 const handleChangeTitle = () => {
@@ -31,7 +30,6 @@ const AppProvidersWrapper = ({
               {children}
             </ErrorBoundary>
             <TwoFactorAuthentication />
-            <Loader />
             <Toaster
               position="top-center"
               toastOptions={{

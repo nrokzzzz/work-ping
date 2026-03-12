@@ -20,9 +20,14 @@ const Loader = () => {
 
     return (
         <div
-            className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-body bg-opacity-75"
             style={{
-                zIndex: 9999
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(var(--bs-body-bg-rgb), 0.75)',
+                zIndex: 1000,
             }}
         >
             <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
