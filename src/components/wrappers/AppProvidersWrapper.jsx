@@ -7,7 +7,9 @@ import { LayoutProvider } from '@/context/useLayoutContext';
 import { NotificationProvider } from '@/context/useNotificationContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { TwoFAProvider } from '@/context/TwoFAContext';
-import TwoFactorAuthentication from '@/pages/TwoFactorAuthentication/TwoFactorAuthentication'
+import TwoFactorAuthentication from '@/pages/TwoFactorAuthentication/TwoFactorAuthentication';
+import Loader from '@/pages/loader/Loader';
+
 const handleChangeTitle = () => {
   if (document.visibilityState == 'hidden') document.title = 'Please come back 🥺'; else document.title = DEFAULT_PAGE_TITLE;
 };
@@ -26,10 +28,11 @@ const AppProvidersWrapper = ({
         <LayoutProvider>
           <NotificationProvider>
             {children}
-           <TwoFactorAuthentication/>
+            <TwoFactorAuthentication />
+            <Loader />
           </NotificationProvider>
         </LayoutProvider>
-      </TwoFAProvider>  
+      </TwoFAProvider>
     </AuthProvider>
   </HelmetProvider>;
 };

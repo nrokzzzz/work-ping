@@ -19,4 +19,40 @@ const axiosClient = axios.create({
   }
 });
 
+let activeRequests = 0;
+
+axiosClient.interceptors.request.use(
+  (config) => {
+    activeRequests++;
+    if (activeRequests === 1) {
+      window.dispatchEvent(new Event('SHOW_LOADER'));
+    }
+    return config;
+  },
+  (error) => {
+    activeRequests--;
+    if (activeRequests === 0) {
+      window.dispatchEvent(new Event('HIDE_LOADER'));
+    }
+    return Promise.reject(error);
+  }
+);
+
+axiosClient.interceptors.response.use(
+  (response) => {
+    activeRequests--;
+    if (activeRequests === 0) {
+      window.dispatchEvent(new Event('HIDE_LOADER'));
+    }
+    return response;
+  },
+  (error) => {
+    activeRequests--;
+    if (activeRequests === 0) {
+      window.dispatchEvent(new Event('HIDE_LOADER'));
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosClient;

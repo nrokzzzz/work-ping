@@ -23,10 +23,10 @@ const LayoutProvider = ({
     topbarTheme: queryParams['topbar_theme'] ? queryParams['topbar_theme'] : 'light',
     menu: {
       theme: queryParams['menu_theme'] ? queryParams['menu_theme'] : 'light',
-      size: queryParams['menu_size'] ? queryParams['menu_size'] : 'sm-hover-active'
+      size: queryParams['menu_size'] ? queryParams['menu_size'] : 'default'
     }
   };
-  const [settings, setSettings] = useLocalStorage('__REBACK_NEXT_CONFIG__', INIT_STATE,override);
+  const [settings, setSettings] = useLocalStorage('__REBACK_NEXT_CONFIG__', INIT_STATE, override);
   const [offcanvasStates, setOffcanvasStates] = useState({
     showThemeCustomizer: false,
     showActivityStream: false,
@@ -100,7 +100,7 @@ const LayoutProvider = ({
   // toggle backdrop
   const toggleBackdrop = useCallback(() => {
     const htmlTag = document.getElementsByTagName('html')[0];
-    if (offcanvasStates.showBackdrop) htmlTag.classList.remove('sidebar-enable');else htmlTag.classList.add('sidebar-enable');
+    if (offcanvasStates.showBackdrop) htmlTag.classList.remove('sidebar-enable'); else htmlTag.classList.add('sidebar-enable');
     setOffcanvasStates({
       ...offcanvasStates,
       showBackdrop: !offcanvasStates.showBackdrop
@@ -135,8 +135,8 @@ const LayoutProvider = ({
     toggleBackdrop,
     resetSettings
   }), [settings, offcanvasStates])}>
-      {children}
-      {offcanvasStates.showBackdrop && <div className="offcanvas-backdrop fade show" onClick={toggleBackdrop} />}
-    </ThemeContext.Provider>;
+    {children}
+    {offcanvasStates.showBackdrop && <div className="offcanvas-backdrop fade show" onClick={toggleBackdrop} />}
+  </ThemeContext.Provider>;
 };
 export { LayoutProvider, useLayoutContext };
