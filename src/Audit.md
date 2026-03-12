@@ -1,173 +1,92 @@
-# Frontend Audit Report — Error Boundary, Fallback & Bug Analysis
-
-> **Date**: 2026-03-12  
-> **Scope**: All files under `src/` in the work-ping frontend
+# 2FA Audit — TwoFactorAuthentication & QrcodeAuthentication
 
 ---
 
-## 🔴 CRITICAL — No React Error Boundaries
+## 🔴 Critical
 
-**Finding**: The entire application has **zero** `ErrorBoundary` or `componentDidCatch` implementations. If any component throws a rendering error (e.g., accessing a property of `undefined`), the **entire app will crash to a white screen** with no recovery option.
-
-**Affected**: Every single page and component.
-
-**Recommendation**: Create a global `<ErrorBoundary>` component and wrap it around the app in `AppProvidersWrapper.jsx`. Also add route-level error boundaries for critical sections (Dashboard, Teams, Employees, Projects, Organization).
-
----
-
-## 🔴 CRITICAL — Silent Error Swallowing (No User Feedback)
-
-Many `catch` blocks only call `console.log()` or `console.error()` without showing any feedback to the user. The user has no idea the operation failed.
-
-| File | Line | Issue |
-|------|------|-------|
-| `LoginForm.jsx` | L45-47 | Login failure is silently logged — user sees nothing |
-| `useAuthContext.jsx` | L30-31 | Cookie verify error silently logged |
-| `ProfileDropdown.jsx` | L19-21 | Logout error silently logged |
-| `ViewTeams.jsx` | L33-34, L66-67 | Fetch organizations/teams errors only logged |
-| `ViewEmployees.jsx` | L33-34, L85-86 | Fetch organizations/employees errors only logged |
-| `ViewProjects.jsx` | L29-30, L79-80 | Fetch organizations/projects errors only logged |
-| `ViewOrganization/View.jsx` | L39-40 | Fetch organizations error only logged |
-| `TeamMembersView.jsx` | L34, L67 | Fetch errors only logged |
-| `UpdateTeamsView.jsx` | L42, L71 | Fetch errors only logged |
-| `UpdateProjectsView.jsx` | L38, L76, L112 | Fetch/delete errors only logged |
-| `SingleEmployeeForm.jsx` | L173-174, L191-192 | Employee add/fetch org errors only logged |
-| `BulkUpload.jsx` | L90-91 | Upload error silently logged (no toast) |
-
-**Recommendation**: Replace `console.log(error)` / `console.error(err)` in catch blocks with `toast.error(message)` from `react-toastify` (already installed) to provide user-visible feedback.
-
----
-
-## 🟡 MEDIUM — Usage of `alert()` for Error Feedback
-
-| File | Line | Issue |
-|------|------|-------|
-| `SignUpForm.jsx` | L73 | Uses `alert(error.message)` on sign-up failure |
-| `BulkUpload.jsx` | L53, L134 | Uses `alert('Please select a file')` and `alert('Upload Failed')` |
-
-**Recommendation**: Replace all `alert()` calls with `toast.error()` or a Bootstrap modal for a consistent, professional UX.
-
----
-
-## 🔴 CRITICAL — Potential Runtime Crash in ViewOrganization
-
-**File**: `ViewOrganization/View.jsx` — **Line 143**
-
-```jsx
-<td>{organization.IPWhitelist[0] || '-'}</td>
+### 1. `QrcodeAuthentication.jsx` — Runtime crash when `location.state` is null
+**Line 18:** `const data = location.state` — if a user navigates to `/2fa-authnticator` directly (no state), `data` is `null`. Lines 57–60 and 162 access `data.action` and `data.path` which will crash.
+```js
+// Crashes with: TypeError: Cannot read properties of null (reading 'action')
+if (data.action === "ORG")
+  navigate(data.path)
 ```
 
-If `organization.IPWhitelist` is `undefined` or `null`, accessing `[0]` on it will throw a **TypeError** and crash the component.
+### 2. `QrcodeAuthentication.jsx` — `console.log` in production (Lines 33, 49)
+```js
+console.log(error)    // Line 33
+console.log(res)      // Line 49
+```
+Leaks sensitive 2FA responses to the browser dev console.
 
-**Fix**: Use optional chaining: `organization.IPWhitelist?.[0] || '-'`
+### 3. `QrcodeAuthentication.jsx` — Variable shadowing bug (Line 52)
+Inside `handleVerify`, `res` is already declared on line 48. Line 52 redeclares `const res = await axiosClient.get('/verify-cookie')` — this shadows the outer `res` and can cause confusion.
 
----
-
-## 🟡 MEDIUM — Duplicate `register()` Calls in SingleEmployeeForm
-
-**File**: `SingleEmployeeForm.jsx`
-
-| Line | Issue |
-|------|-------|
-| L345-346 | `{...register('phone')}` is called **twice** on the same input |
-| L356-357 | `{...register('dob')}` is called on the DOB field, then L393 calls `{...register('dob')}` again before `{...register('doj')}` on the DOJ field — the DOJ field has TWO register calls, one for the wrong field |
-
-**Impact**: The DOJ (Date of Joining) field is secretly registering as `dob` first then being overwritten by `doj`. This may cause subtle form data bugs.
-
-**Fix**: Remove the duplicate `{...register('phone')}` on L346 and remove `{...register('dob')}` on L393.
+### 4. `TwoFAContext.jsx` — `use2FA()` returns `undefined` outside provider
+**Line 45:** `useContext(TwoFAContext)` returns `undefined` if called outside `<TwoFAProvider>`. No guard/throw.
 
 ---
 
-## 🟡 MEDIUM — OTP Resend Button Has No Error Handling
+## 🟠 Medium
 
-**File**: `ResetPassForm.jsx` — **Lines 181-189**
-
-The "Resend OTP" button's `onClick` handler makes an API call but has **no try-catch**. If the API call fails, the error is completely unhandled and will result in an unhandled promise rejection.
-
-```jsx
-onClick={async () => {
-  if (otpTimer === 0) {
-    await axiosClient.post(  // ❌ No try-catch!
-      "/api/admin/auth/forgot-password/send-otp",
-      { email: field.value }  // ❌ Also uses wrong field — should use watch('email')
-    );
-    setOtpTimer(60);
-    setIsTimerActive(true);
+### 5. `TwoFactorAuthentication.jsx` — `handleVerify` called from stale closure in useEffect
+**Line 25–29:** `useEffect` calls `handleVerify()` when `code.length === 6`, but `handleVerify` is **not** in the dependency array. This creates a stale closure that captures old `code`, `loading`, and `error` values.
+```js
+useEffect(() => {
+  if (code.length === 6) {
+    handleVerify()  // stale closure — not in deps
   }
-}}
+}, [code])
 ```
 
-**Additional Bug**: `field.value` at this point references the OTP field's value, NOT the email field's value. The email is not being passed correctly to the resend endpoint.
+### 6. `QrcodeAuthentication.jsx` — Same stale closure issue (Lines 72–76)
+Same pattern as #5 above — `handleVerify` not in deps of `useEffect`.
+
+### 7. `QrcodeAuthentication.jsx` — No error toast on QR load failure
+**Line 32–34:** `qrPage` catches errors but only does `console.log` and sets a status string. No toast notification to the user.
+
+### 8. `QrcodeAuthentication.jsx` — No recovery from QR load failure
+If the QR setup API fails, the user sees "Failed to load QR" text but has no guided way to retry except clicking "Refresh QR". Should show a clearer error with a visible retry button.
+
+### 9. `TwoFactorAuthentication.jsx` — `executeAction` error not surfaced via toast
+**Lines 56–63:** The caught `actionError` only updates the inline `error` state. Should also fire `toast.error()` for consistency with the rest of the app.
+
+### 10. `QrcodeAuthentication.jsx` — No input `autoFocus` on code field
+**Line 133:** Unlike `TwoFactorAuthentication.jsx` (which uses `autoFocus`), the QR page does not auto-focus the code input.
+
+### 11. `QrcodeAuthentication.jsx` — No `onKeyDown` handler for Enter key
+Unlike `TwoFactorAuthentication.jsx`, pressing Enter does not trigger verification.
+
+### 12. `QrcodeAuthentication.jsx` — "Skip" button navigates without warning
+**Line 160–164:** The "Skip" button does `navigate(data.path)` immediately, bypassing 2FA entirely. No confirmation dialog.
 
 ---
 
-## 🟡 MEDIUM — Auth Context Race Condition
+## 🟡 Low
 
-**File**: `useAuthContext.jsx` — **Lines 40-42**
+### 13. `TwoFactorAuthentication.jsx` — Wrapped in `ComponentContainerCard` unnecessarily
+**Line 102:** The modal overlay is wrapped in `<ComponentContainerCard>` which adds an extra card container around the full-screen overlay. The overlay should be a standalone portal or fragment.
 
-```jsx
-const login = () => {
-  fetch()            // async, not awaited
-  setIsAuthenticated(true)  // runs immediately before fetch completes
-}
-```
+### 14. `TwoFAContext.jsx` — `executeAction` sets `pendingAction(null)` even on failure
+**Line 19:** If `pendingAction()` throws, the error is re-thrown, but `setPendingAction(null)` on line 19 is **not reached** (it's after the await, caught by try-catch). This is actually fine behavior-wise, but the intent should be clarified with a comment or by placing cleanup in `finally`.
 
-`setIsAuthenticated(true)` is called **before** the `fetch()` (cookie verify) call completes. If the verify fails, the user is still marked as authenticated. The same issue exists in `signUp()` (Lines 49-52).
+### 15. `QrcodeAuthentication.jsx` — Missing `alt` attribute sizing on QR image
+**Line 126:** `<img src={qrCode} alt="QR Code" />` has no explicit `width`/`height`, which can cause layout shifts.
 
-**Fix**: `await fetch()` and only set authenticated if it succeeds, or remove the redundant `setIsAuthenticated(true)` since `fetch()` already handles it.
+### 16. `TwoFactorAuthentication.jsx` — Hardcoded z-index values (99999, 100000)
+**Lines 107, 114:** Magic numbers should be centralized or use CSS variables.
 
----
-
-## 🟢 LOW — Console.log Statements Left in Production Code
-
-Over **30+** `console.log()` statements remain across the codebase in production files. These leak data to the browser console.
-
-**Examples**:
-- `LoginForm.jsx` L35: `console.log('Login response:', response.data)`
-- `ViewTeams.jsx` L30, L44, L62, L161
-- `ViewEmployees.jsx` L32
-- `ViewOrganization/View.jsx` L35
-- `SignUpForm.jsx` L46, L55, L58
-- `useAuthContext.jsx` L28
-- `SingleEmployeeForm.jsx` L118, L145
-
-**Recommendation**: Remove all `console.log` statements from production code, or use a conditional logger that only logs in development mode.
+### 17. `QrcodeAuthentication.jsx` — Same hardcoded z-index values (99999, 100000)
+**Lines 91, 97:** Duplicated magic numbers.
 
 ---
 
-## 🟢 LOW — Incorrect Toast Message in ResetPassForm
+## Summary
 
-**File**: `ResetPassForm.jsx` — **Lines 119-122**
+| Severity | Count |
+|----------|-------|
+| 🔴 Critical | 4 |
+| 🟠 Medium | 8 |
+| 🟡 Low | 5 |
+| **Total** | **17** |
 
-```jsx
-toast.success('Copy To Clipboard', {
-  position: 'top-right',
-  autoClose: 2000
-});
-```
-
-After successfully changing the password, the success toast says **"Copy To Clipboard"** which is unrelated. It should say something like **"Password changed successfully!"**.
-
----
-
-## 🟢 LOW — Hardcoded Welcome Name in ProfileDropdown
-
-**File**: `ProfileDropdown.jsx` — **Line 32**
-
-```jsx
-<DropdownHeader as="h6">Welcome Gaston!</DropdownHeader>
-```
-
-The welcome message is hardcoded to "Gaston" instead of dynamically showing the logged-in user's name.
-
----
-
-## Summary Table
-
-| Severity | Count | Category |
-|----------|-------|----------|
-| 🔴 Critical | 3 | No ErrorBoundary, Silent errors, Runtime crash |
-| 🟡 Medium | 4 | `alert()` usage, Duplicate registers, OTP resend no error handling, Auth race condition |
-| 🟢 Low | 3 | Console.log in prod, Wrong toast message, Hardcoded name |
-
-**Total Issues Found: 10**

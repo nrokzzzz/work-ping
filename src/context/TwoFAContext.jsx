@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react"
 
-const TwoFAContext = createContext()
+const TwoFAContext = createContext(undefined)
 
 export const TwoFAProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false)
@@ -11,17 +11,19 @@ export const TwoFAProvider = ({ children }) => {
     setShowModal(true)
   }
 
-const executeAction = async () => {
-  try {
-    if (pendingAction) {
-      await pendingAction()
+  const executeAction = async () => {
+    try {
+      if (pendingAction) {
+        await pendingAction()
+      }
+    } catch (err) {
+      // Re-throw so the caller (TwoFactorAuthModal) can handle it
+      throw err
+    } finally {
+      setPendingAction(null)
+      setShowModal(false)
     }
-    setPendingAction(null)
-    setShowModal(false)
-  } catch (err) {
-    throw err
   }
-}
 
   const cancel = () => {
     setPendingAction(null)
@@ -42,4 +44,10 @@ const executeAction = async () => {
   )
 }
 
-export const use2FA = () => useContext(TwoFAContext)
+export const use2FA = () => {
+  const context = useContext(TwoFAContext)
+  if (context === undefined) {
+    throw new Error('use2FA must be used within a TwoFAProvider')
+  }
+  return context
+}

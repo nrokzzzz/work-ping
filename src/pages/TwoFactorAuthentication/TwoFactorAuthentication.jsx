@@ -1,8 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Button, Form, Card, Spinner } from 'react-bootstrap'
-import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
+import toast from 'react-hot-toast'
 import { use2FA } from '@/context/TwoFAContext'
+
+const MODAL_OVERLAY_Z_INDEX = 99999
+const MODAL_CONTENT_Z_INDEX = 100000
 
 const TwoFactorAuthModal = () => {
 
@@ -14,21 +17,13 @@ const TwoFactorAuthModal = () => {
 
   const isMounted = useRef(true)
 
-  // cleanup
   useEffect(() => {
     return () => {
       isMounted.current = false
     }
   }, [])
 
-  // auto verify when 6 digits entered
-  useEffect(() => {
-    if (code.length === 6) {
-      handleVerify()
-    }
-  }, [code])
-
-  const handleVerify = async () => {
+  const handleVerify = useCallback(async () => {
 
     if (code.length !== 6 || loading) return
 
@@ -37,20 +32,16 @@ const TwoFactorAuthModal = () => {
       setLoading(true)
       setError('')
 
-      // verify OTP
-      const res = await axiosClient.post('/api/auth/2fa/verify', { code })
+      const verifyResponse = await axiosClient.post('/api/auth/2fa/verify', { code })
 
-      if (!res?.data?.verified) {
+      if (!verifyResponse?.data?.verified) {
         setError('Invalid verification code')
         return
       }
 
-      // run pending action
       try {
 
         await executeAction()
-
-        // reset input
         setCode('')
 
       } catch (actionError) {
@@ -61,6 +52,7 @@ const TwoFactorAuthModal = () => {
           'Operation failed'
 
         setError(backendMessage)
+        toast.error(backendMessage)
       }
 
     } catch (err) {
@@ -78,7 +70,14 @@ const TwoFactorAuthModal = () => {
       }
 
     }
-  }
+  }, [code, loading, executeAction])
+
+  // Auto-verify when 6 digits entered
+  useEffect(() => {
+    if (code.length === 6) {
+      handleVerify()
+    }
+  }, [code, handleVerify])
 
   const handleCancel = () => {
 
@@ -95,23 +94,22 @@ const TwoFactorAuthModal = () => {
     }
   }
 
-  // ⚠️ return after hooks
   if (!showModal) return null
 
   return (
-    <ComponentContainerCard>
+    <>
 
       {/* Background overlay */}
       <div
         className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
-        style={{ zIndex: 99999 }}
+        style={{ zIndex: MODAL_OVERLAY_Z_INDEX }}
         onClick={handleCancel}
       />
 
       {/* Modal */}
       <div
         className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-        style={{ zIndex: 100000 }}
+        style={{ zIndex: MODAL_CONTENT_Z_INDEX }}
       >
 
         <Card
@@ -196,7 +194,7 @@ const TwoFactorAuthModal = () => {
 
       </div>
 
-    </ComponentContainerCard>
+    </>
   )
 }
 

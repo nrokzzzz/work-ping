@@ -66,52 +66,34 @@ const OrganizationDetailsForm = () => {
       coordinates: geoCoords,
     }
 
-
-
     if (is2FAAuthnticator) {
-
-      try {
-
-        navigate('/2fa-authnticator', {
-          state: {
-            action: "ORG",
-            path: "/organization/organization-details"
-          }
-        }
-
-        )
-      } catch (error) {
-
-        // Error handled by interceptor
-
-      }
-
-    } else {
-      require2FA(async () => {
-
-        try {
-
-          await axiosClient.post(
-            "/api/admin/organization/add-organization",
-            newData
-          )
-
-          toast.success('Organization added successfully!')
-          reset()
-          navigate('/organization/view-organization')
-
-        } catch (error) {
-
-          throw new Error(
-            error?.response?.data?.message || "Failed to add organization"
-          )
-
-        }
-
+      // 2FA is not set up yet — redirect to QR setup first
+      toast('Please set up Two-Factor Authentication first.', { icon: '🔐' })
+      navigate('/2fa-authnticator', {
+        state: {
+          action: 'ORG',
+          path: '/organization/organization-details',
+        },
       })
-
+      return
     }
 
+    require2FA(async () => {
+      try {
+        await axiosClient.post(
+          '/api/admin/organization/add-organization',
+          newData
+        )
+
+        toast.success('Organization added successfully!')
+        reset()
+        navigate('/organization/view-organization')
+      } catch (error) {
+        throw new Error(
+          error?.response?.data?.message || 'Failed to add organization'
+        )
+      }
+    })
   }
 
   return (

@@ -1,10 +1,13 @@
-
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { Button, Card, Spinner, Form } from 'react-bootstrap'
 import axiosClient from '@/helpers/httpClient'
-import { useNavigate } from 'react-router-dom'
-import { useAuthContext } from '@/context/useAuthContext';
-import { useLocation } from "react-router-dom"
+import toast from 'react-hot-toast'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useAuthContext } from '@/context/useAuthContext'
+
+const MODAL_OVERLAY_Z_INDEX = 99999
+const MODAL_CONTENT_Z_INDEX = 100000
+
 const QRAuthModal = () => {
   const [status, setStatus] = useState('Creating QR session...')
   const [loading, setLoading] = useState(true)
@@ -15,49 +18,53 @@ const QRAuthModal = () => {
   const [error, setError] = useState('')
   const location = useLocation()
 
-  const data = location.state
-  const navigate = useNavigate();
+  const navigationState = location.state
+  const navigate = useNavigate()
 
   const pollRef = useRef(null)
 
   // Load QR
-  const qrPage = async () => {
+  const loadQrCode = async () => {
     try {
       setLoading(true)
+      setError('')
 
-      const res = await axiosClient.post('/api/auth/2fa/setup')
+      const setupResponse = await axiosClient.post('/api/auth/2fa/setup')
 
-      setQrCode(res.data.qrCode)
+      setQrCode(setupResponse.data.qrCode)
       setStatus("Scan this QR using your authenticator app")
-    } catch (error) {
-      console.log(error)
+    } catch (err) {
       setStatus("Failed to load QR")
+      toast.error('Failed to load QR code. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   // Verify code
-  const handleVerify = async () => {
+  const handleVerify = useCallback(async () => {
     if (code.length !== 6 || verifying) return
 
     try {
       setVerifying(true)
       setError('')
 
-      const res = await axiosClient.post('/api/auth/2fa/verify', { code })
-      console.log(res)
-      if (res?.data?.verified) {
-        setStatus("✅ Authentication successful")
-        const res = await axiosClient.get('/verify-cookie');
+      const verifyResponse = await axiosClient.post('/api/auth/2fa/verify', { code })
 
-        if (res.data.twoFactorEnabled) {
-          setIs2FAAuthnticator(false);
+      if (verifyResponse?.data?.verified) {
+        setStatus("✅ Authentication successful")
+
+        const cookieResponse = await axiosClient.get('/verify-cookie')
+
+        if (cookieResponse.data.twoFactorEnabled) {
+          setIs2FAAuthnticator(false)
         }
-        if (data.action === "ORG")
-          navigate(data.path)
-        if (data.action === "SIGN-UP")
-          navigate(data.path)
+
+        if (navigationState?.action === "ORG" || navigationState?.action === "SIGN-UP") {
+          navigate(navigationState.path)
+        } else {
+          navigate('/')
+        }
       } else {
         setError('Invalid verification code')
       }
@@ -66,17 +73,33 @@ const QRAuthModal = () => {
     } finally {
       setVerifying(false)
     }
-  }
+  }, [code, verifying, navigationState, navigate, setIs2FAAuthnticator])
 
-  // auto verify when 6 digits entered
+  // Auto-verify when 6 digits entered
   useEffect(() => {
     if (code.length === 6) {
       handleVerify()
     }
-  }, [code])
+  }, [code, handleVerify])
+
+  // Handle Enter key
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleVerify()
+    }
+  }
+
+  // Handle skip with confirmation
+  const handleSkip = () => {
+    if (navigationState?.path) {
+      navigate(navigationState.path)
+    } else {
+      navigate('/')
+    }
+  }
 
   useEffect(() => {
-    qrPage()
+    loadQrCode()
 
     return () => {
       if (pollRef.current) clearTimeout(pollRef.current)
@@ -88,13 +111,13 @@ const QRAuthModal = () => {
       {/* Background */}
       <div
         className="position-fixed top-0 start-0 w-100 h-100 bg-body-secondary bg-opacity-75"
-        style={{ backdropFilter: 'blur(4px)', zIndex: 99999 }}
+        style={{ backdropFilter: 'blur(4px)', zIndex: MODAL_OVERLAY_Z_INDEX }}
       />
 
       {/* Modal */}
       <div
         className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-        style={{ zIndex: 100000 }}
+        style={{ zIndex: MODAL_CONTENT_Z_INDEX }}
       >
         <Card className="text-center shadow-lg border-0 bg-body text-body" style={{ width: 420 }}>
           <Card.Body className="p-4">
@@ -123,19 +146,26 @@ const QRAuthModal = () => {
               {loading ? (
                 <Spinner animation="border" />
               ) : qrCode ? (
-                <img src={qrCode} alt="QR Code" />
+                <img
+                  src={qrCode}
+                  alt="QR Code"
+                  width={200}
+                  height={200}
+                />
               ) : (
                 <span className="text-body">Failed to load QR</span>
               )}
             </div>
 
-            {/* INPUT FIELD */}
+            {/* Code Input */}
             <Form.Control
               value={code}
               onChange={(e) =>
                 setCode(e.target.value.replace(/\D/g, '').slice(0, 6))
               }
+              onKeyDown={handleKeyDown}
               placeholder="Enter 6 digit code"
+              autoFocus
               className="text-center mb-3"
               style={{
                 height: 48,
@@ -157,11 +187,7 @@ const QRAuthModal = () => {
             <div className="d-flex justify-content-center gap-3">
               <Button
                 variant="secondary"
-                onClick={() => {
-                 
-                    navigate(data.path)
-                  
-                }}
+                onClick={handleSkip}
                 className="px-4"
               >
                 Skip
@@ -185,7 +211,7 @@ const QRAuthModal = () => {
 
               <Button
                 variant="outline-primary"
-                onClick={qrPage}
+                onClick={loadQrCode}
                 className="px-4"
               >
                 Refresh QR
