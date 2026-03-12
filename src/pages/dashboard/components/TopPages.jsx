@@ -28,8 +28,8 @@ const TopPages = () => {
                     {page.path}
                   </Link>
                 </td>
-                <td> {page.views}</td>
-                <td>{page.time}</td>
+                <td> {page.views || '--'}</td>
+                <td>{page.time || '--'}</td>
                 <td>
                   <span className={`badge badge-soft-${page.variant}`}>{page.rate}%</span>
                 </td>

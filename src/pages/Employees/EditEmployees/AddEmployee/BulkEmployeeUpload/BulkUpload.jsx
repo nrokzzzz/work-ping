@@ -255,12 +255,12 @@ const BulkUpload = () => {
                         <tbody>
                           {allTasks?.failedRecords?.map((task, idx) => (
                             <tr key={idx}>
-                              <td>{task.rowNumber}</td>
-                              <td>{task.error}</td>
-                              <td>{task.rowData.employeeId}</td>
-                              <td>{task.rowData.name}</td>
-                              <td>{task.rowData.email}</td>
-                              <td>{task.rowData.phone}</td>
+                              <td>{task.rowNumber || '--'}</td>
+                              <td>{task.error || '--'}</td>
+                              <td>{task.rowData.employeeId || '--'}</td>
+                              <td>{task.rowData.name || '--'}</td>
+                              <td>{task.rowData.email || '--'}</td>
+                              <td>{task.rowData.phone || '--'}</td>
 
 
                             </tr>

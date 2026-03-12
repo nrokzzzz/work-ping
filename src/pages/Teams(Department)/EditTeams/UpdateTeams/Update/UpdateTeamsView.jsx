@@ -87,7 +87,7 @@ const ViewTeams = () => {
 
   const getOrganizationName = (orgId) => {
     const org = organizations.find((o) => o.organizationId === orgId)
-    return org?.name || '-'
+    return org?.name || '--'
   }
 
   const handleSelect = (id, checked) => {
@@ -269,10 +269,10 @@ const ViewTeams = () => {
                         </Button>
                       </td>
 
-                      <td>{team.teamName}</td>
-                      <td>{team.managerId}</td>
-                      <td>{getOrganizationName(team.organizationId)}</td>
-                      <td>{team.leaderIds[0]}</td>
+                      <td>{team.teamName || '--'}</td>
+                      <td>{team.managerId || '--'}</td>
+                      <td>{getOrganizationName(team.organizationId) || '--'}</td>
+                      <td>{team.leaderIds[0] || '--'}</td>
                     </tr>
                   ))
                 )}

@@ -210,11 +210,11 @@ const Viewprojects = () => {
                         navigate(`/projects/view-project-teams/project-team-members/${project._id}`)
                       }
                     >
-                      <td>{project.name}</td>
-                      <td>{project.assignedDate}</td>
-                      <td>{project.dueDate}</td>
-                      <td>{project.contractedBy}</td>
-                      <td>{project.organizationName}</td>
+                      <td>{project.name || '--'}</td>
+                      <td>{project.assignedDate || '--'}</td>
+                      <td>{project.dueDate || '--'}</td>
+                      <td>{project.contractedBy || '--'}</td>
+                      <td>{project.organizationName || '--'}</td>
                     </tr>
 
                   ))

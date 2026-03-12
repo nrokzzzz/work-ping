@@ -164,11 +164,11 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
                   ) : (
                     employees.map((emp) => (
                       <tr key={emp.employeeId}>
-                        <td>{emp.employeeId}</td>
-                        <td>{emp.name}</td>
-                        <td>{emp.email}</td>
-                        <td>{emp.phone}</td>
-                        <td>{emp.department}</td>
+                        <td>{emp.employeeId || '--'}</td>
+                        <td>{emp.name || '--'}</td>
+                        <td>{emp.email || '--'}</td>
+                        <td>{emp.phone || '--'}</td>
+                        <td>{emp.department || '--'}</td>
                       </tr>
                     ))
                   )}

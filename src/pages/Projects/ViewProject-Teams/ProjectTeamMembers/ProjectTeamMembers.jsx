@@ -88,7 +88,7 @@ const ViewTeams = () => {
 
   const getOrganizationName = (orgId) => {
     const org = organizations.find((o) => o.organizationId === orgId)
-    return org?.name || '-'
+    return org?.name || '--'
   }
 
   const getPages = () => {
@@ -198,9 +198,9 @@ const ViewTeams = () => {
                 ) : (
                   teams.map((team) => (
                     <tr key={team._id}>
-                      <td>{team.teamName}</td>
-                      <td>{team.teamManagerId}</td>
-                      <td>{team.workType || '-'}</td>
+                      <td>{team.teamName || '--'}</td>
+                      <td>{team.teamManagerId || '--'}</td>
+                      <td>{team.workType || '--'}</td>
                     </tr>
                   ))
                 )}

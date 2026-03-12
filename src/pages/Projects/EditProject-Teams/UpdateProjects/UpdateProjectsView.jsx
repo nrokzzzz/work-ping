@@ -280,12 +280,12 @@ const Viewprojects = () => {
                         </Button>
                       </td>
 
-                      <td>{project.name || '-'}</td>
-                      <td>{project.assignedDate || '-'}</td>
-                      <td>{project.dueDate || '-'}</td>
-                      <td>{project.contractedBy || '-'}</td>
-                      <td>{project.projectManagerName || '-'}</td>
-                      <td>{project.organizationName || '-'}</td>
+                      <td>{project.name || '--'}</td>
+                      <td>{project.assignedDate || '--'}</td>
+                      <td>{project.dueDate || '--'}</td>
+                      <td>{project.contractedBy || '--'}</td>
+                      <td>{project.projectManagerName || '--'}</td>
+                      <td>{project.organizationName || '--'}</td>
                     </tr>
                   ))
                 )}

@@ -163,7 +163,7 @@ const UploadUsersFromExcel = ({ show, handleClose, openEmployees }) => {
 
                                         <td>{index + 1}</td>
 
-                                        <td>{roll}</td>
+                                        <td>{roll || '--'}</td>
 
                                     </tr>
 

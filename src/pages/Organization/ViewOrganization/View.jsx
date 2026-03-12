@@ -144,11 +144,11 @@ const ViewOrganization = () => {
                 ) : (
                   organizations.map((organization) => (
                     <tr key={organization._id}>
-                      <td>{organization.name || '-'}</td>
-                      <td>{organization.clDays || '-'}</td>
-                      <td>{organization.type || '-'}</td>
-                      <td>{organization.IPWhitelist?.[0] || '-'}</td>
-                      <td>{organization.foundedAt || '-'}</td>
+                      <td>{organization.name || '--'}</td>
+                      <td>{organization.clDays || '--'}</td>
+                      <td>{organization.type || '--'}</td>
+                      <td>{organization.IPWhitelist?.[0] || '--'}</td>
+                      <td>{organization.foundedAt || '--'}</td>
 
                     </tr>
                   ))
