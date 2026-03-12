@@ -61,7 +61,9 @@ const QRAuthModal = () => {
         }
 
         if (navigationState?.action === "ORG" || navigationState?.action === "SIGN-UP") {
-          navigate(navigationState.path)
+          navigate(navigationState.path, {
+            state: { formData: navigationState?.formData },
+          })
         } else {
           navigate('/')
         }
@@ -93,7 +95,9 @@ const QRAuthModal = () => {
   const handleSkip = () => {
     setIs2FAAuthnticator(true)
     if (navigationState?.path) {
-      navigate(navigationState.path)
+      navigate(navigationState.path, {
+        state: { formData: navigationState?.formData },
+      })
     } else {
       navigate('/')
     }
