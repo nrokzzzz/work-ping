@@ -14,7 +14,7 @@ const Viewprojects = () => {
   const [totalRecords, setTotalRecords] = useState(0)
   const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
-  const [appliedSearch,setAppliedSearch]=useState('')
+  const [appliedSearch, setAppliedSearch] = useState('')
   const [orgData, setOrgData] = useState({})
   const [organization, setOrganization] = useState('')
   const [appliedOrganization, setAppliedOrganization] = useState('')
@@ -27,7 +27,7 @@ const Viewprojects = () => {
         )
         setOrgData(res.data || {})
       } catch (err) {
-        console.error(err)
+        // Error handled by interceptor
       }
     }
 
@@ -77,7 +77,7 @@ const Viewprojects = () => {
       setTotalRecords(result.data.totalRecords || 0)
 
     } catch (e) {
-      console.error(e)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }

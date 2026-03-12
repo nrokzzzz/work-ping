@@ -15,6 +15,7 @@ import axiosClient from '@/helpers/httpClient'
 
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
+import toast from 'react-hot-toast'
 const BulkUpload = () => {
   const navigate = useNavigate()
 
@@ -50,7 +51,7 @@ const BulkUpload = () => {
 
   const handleUpload = async () => {
     if (!file) {
-      alert('Please select a file')
+      toast.error('Please select a file')
       return
     }
 
@@ -87,8 +88,7 @@ const BulkUpload = () => {
           setFile(null)
 
         } catch (error) {
-
-          console.error(error)
+          // Error handled by interceptor
 
         }
 
@@ -130,8 +130,7 @@ const BulkUpload = () => {
       }
 
     } catch (err) {
-      console.error(err)
-      alert('Upload Failed')
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }
@@ -289,7 +288,7 @@ const BulkUpload = () => {
                     </tr>
                   </thead>
                   <tbody>
-                   
+
                     <tr><td>1</td><td>employeeId</td><td>1</td></tr>
                     <tr><td>2</td><td>name</td><td>DragoN28</td></tr>
                     <tr><td>3</td><td>email</td><td>example@gmail.com</td></tr>

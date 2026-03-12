@@ -3,7 +3,7 @@ import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
-const ViewOrganization= () => {
+const ViewOrganization = () => {
   const navigate = useNavigate()
   const itemsPerPage = 10
 
@@ -138,9 +138,9 @@ const ViewOrganization= () => {
                   organizations.map((organization) => (
                     <tr key={organization._id}>
                       <td>{organization.name || '-'}</td>
-                      <td>{organization.clDays || '-' }</td>
-                      <td>{organization.type || '-' }</td>
-                      <td>{organization.IPWhitelist[0] || '-'}</td>
+                      <td>{organization.clDays || '-'}</td>
+                      <td>{organization.type || '-'}</td>
+                      <td>{organization.IPWhitelist?.[0] || '-'}</td>
                       <td>{organization.foundedAt || '-'}</td>
 
                     </tr>

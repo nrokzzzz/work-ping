@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import axiosClient from "@/helpers/httpClient";
 import * as yup from "yup";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 const ResetPassForm = () => {
   const [step, setStep] = useState(1); // 1=email, 2=otp, 3=password
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +54,7 @@ const ResetPassForm = () => {
   });
 
   /* ---------------- React Hook Form ---------------- */
-  const { control, handleSubmit, setError } = useForm({
+  const { control, handleSubmit, setError, getValues } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       email: "",
@@ -97,7 +97,6 @@ const ResetPassForm = () => {
 
       else if (step === 2) {
         setIsTimerActive(false);
-        console.log(data)
         await axiosClient.post(
           "/api/admin/forgot-password/verify-otp",
           { email: data.email, otp: data.otp }
@@ -115,11 +114,8 @@ const ResetPassForm = () => {
             newPassword: data.newPassword,
           }
         );
-        
-         toast.success('Copy To Clipboard', {
-                  position: 'top-right',
-                  autoClose: 2000
-          });
+
+        toast.success('Password changed successfully!');
 
         navigate("/auth/sign-in");
 
@@ -180,12 +176,16 @@ const ResetPassForm = () => {
                   disabled={otpTimer > 0}
                   onClick={async () => {
                     if (otpTimer === 0) {
-                      await axiosClient.post(
-                        "/api/admin/auth/forgot-password/send-otp",
-                        { email: field.value }
-                      );
-                      setOtpTimer(60);
-                      setIsTimerActive(true);
+                      try {
+                        await axiosClient.post(
+                          "/api/admin/auth/forgot-password/send-otp",
+                          { email: getValues('email') }
+                        );
+                        setOtpTimer(60);
+                        setIsTimerActive(true);
+                      } catch (error) {
+                        // Error toast handled by interceptor
+                      }
                     }
                   }}
                 >
@@ -228,11 +228,10 @@ const ResetPassForm = () => {
                     }
                   >
                     <i
-                      className={`bi ${
-                        showPassword
+                      className={`bi ${showPassword
                           ? "bi-eye-slash"
                           : "bi-eye"
-                      }`}
+                        }`}
                     ></i>
                   </InputGroup.Text>
                   <Form.Control.Feedback type="invalid">
@@ -270,11 +269,10 @@ const ResetPassForm = () => {
                     }
                   >
                     <i
-                      className={`bi ${
-                        showConfirmPassword
+                      className={`bi ${showConfirmPassword
                           ? "bi-eye-slash"
                           : "bi-eye"
-                      }`}
+                        }`}
                     ></i>
                   </InputGroup.Text>
                   <Form.Control.Feedback type="invalid">
@@ -292,8 +290,8 @@ const ResetPassForm = () => {
           {step === 1
             ? "Send OTP"
             : step === 2
-            ? "Verify OTP"
-            : "Change Password"}
+              ? "Verify OTP"
+              : "Change Password"}
         </Button>
       </div>
     </form>

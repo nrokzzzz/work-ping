@@ -1,26 +1,17 @@
 import axios from 'axios';
-// function HttpClient() {
-//   return {
-//     get: axios.get,
-//     post: axios.post,
-//     patch: axios.patch,
-//     put: axios.put,
-//     delete: axios.delete
-//   };
-// }
-// export default HttpClient();
-
+import toast from 'react-hot-toast';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json"
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 let activeRequests = 0;
 
+// ── Request Interceptor ──────────────────────────────────────────────
 axiosClient.interceptors.request.use(
   (config) => {
     activeRequests++;
@@ -38,12 +29,24 @@ axiosClient.interceptors.request.use(
   }
 );
 
+// ── Response Interceptor ─────────────────────────────────────────────
 axiosClient.interceptors.response.use(
   (response) => {
     activeRequests--;
     if (activeRequests === 0) {
       window.dispatchEvent(new Event('HIDE_LOADER'));
     }
+
+    // Auto-toast on { type, message } shaped responses
+    const data = response?.data;
+    if (data?.message && data?.type) {
+      if (data.type === 'success') {
+        toast.success(data.message);
+      } else if (data.type === 'error') {
+        toast.error(data.message);
+      }
+    }
+
     return response;
   },
   (error) => {
@@ -51,6 +54,15 @@ axiosClient.interceptors.response.use(
     if (activeRequests === 0) {
       window.dispatchEvent(new Event('HIDE_LOADER'));
     }
+
+    // Extract and display error message
+    const errorMessage =
+      error?.response?.data?.message ||
+      error?.message ||
+      'Something went wrong. Please try again.';
+
+    toast.error(errorMessage);
+
     return Promise.reject(error);
   }
 );

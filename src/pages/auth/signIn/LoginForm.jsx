@@ -7,10 +7,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import axiosClient from '@/helpers/httpClient';
 import { useAuthContext } from '@/context/useAuthContext';
-import { toast } from 'react-toastify';
+
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuthContext();  // ✅ correct method
+  const { login } = useAuthContext();
 
   const loginSchema = yup.object({
     email: yup.string().email('Please enter a valid email').required('Please enter your email'),
@@ -27,23 +27,14 @@ const LoginForm = () => {
 
   const onSubmit = async (values) => {
     try {
-      const response = await axiosClient.post(
-        '/api/admin/auth/login',
-        values
-      );
-
-      console.log('Login response:', response.data);
-      login();
-      
+      await axiosClient.post('/api/admin/auth/login', values);
+      await login();
 
       setTimeout(() => {
         navigate('/dashboard/analytics');
       }, 500);
-
-
-
     } catch (error) {
-      console.error('Login error:', error);
+      // Error toast is handled by httpClient interceptor
     }
   };
 

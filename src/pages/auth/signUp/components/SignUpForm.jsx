@@ -4,12 +4,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, FormCheck } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// import dotenv from 'dotenv';
 import axiosClient from '@/helpers/httpClient';
-
 import { useAuthContext } from '@/context/useAuthContext';
 import { useNavigate } from 'react-router-dom';
-// dotenv.config();  
+
 const SignUpForm = () => {
   const navigate = useNavigate();
   const { signUp } = useAuthContext();
@@ -43,34 +41,25 @@ const SignUpForm = () => {
         email: values.userEmail,
         password: values.password
       };
-      console.log(payload)
+
       const res = await axiosClient.post('/api/admin/auth/register', payload);
 
-      const data = res.data;
-
       if (res.status !== 201) {
-        throw new Error(data.error || 'Signup failed');
+        throw new Error(res.data?.error || 'Signup failed');
       }
-      signUp();
-      console.log('Signup successful:', data);
 
-      async function hello() {
-        console.log("checker")
-        await navigate('/2fa-authnticator', {
-          state: {
-            action: "SIGN-UP",
-            path: "/"
-          }
-        }
+      await signUp();
 
-        )
-      }
-      await hello()
-
+      await navigate('/2fa-authnticator', {
+        state: {
+          action: 'SIGN-UP',
+          path: '/',
+        },
+      });
 
       reset();
     } catch (error) {
-      alert(error.message);
+      // Error toast is handled by httpClient interceptor
     }
   };
 

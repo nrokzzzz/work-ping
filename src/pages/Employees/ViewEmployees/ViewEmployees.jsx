@@ -29,9 +29,8 @@ const ViewEmployees = () => {
           '/api/admin/get-all-employees/get-organization-info'
         )
         setOrgData(res.data || {})
-        console.log(res.data)
       } catch (err) {
-        console.error(err)
+        // Error handled by interceptor
       }
     }
 
@@ -83,7 +82,7 @@ const ViewEmployees = () => {
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
     } catch (e) {
-      console.error(e)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }

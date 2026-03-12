@@ -58,6 +58,7 @@
     "react-flatpickr": "^3.10.13",
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.51.4",
+    "react-hot-toast": "^2.6.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.23.1",
     "react-select": "^5.8.0",

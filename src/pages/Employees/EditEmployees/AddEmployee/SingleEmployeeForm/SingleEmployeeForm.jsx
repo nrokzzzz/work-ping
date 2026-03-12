@@ -11,8 +11,7 @@ import {
 } from 'react-bootstrap'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import countryCodes from 'country-calling-code'
 import FaceEmbeddings from './FaceEmbeddings'
@@ -115,7 +114,6 @@ const AddEmployee = () => {
 
   const goNext = handleSubmit(() => {
     setStep(1)
-    console.log(step)
   })
 
   const submitForm = async () => {
@@ -128,13 +126,11 @@ const AddEmployee = () => {
       userId: v.userId,
       organizationName: v.organizationName,
       doj: v.doj,
-
       gender: v.gender,
       salary: v.salary,
       dob: v.dob,
       address: v.address,
       isActive: true,
-
       aadhaar: v.aadhaar,
       pan: v.pan,
       passport: v.passport,
@@ -142,38 +138,24 @@ const AddEmployee = () => {
     }
 
     try {
-      console.log("Submitting Employee Data:", data)
-      {
-
-        require2FA(async () => {
-
-          try {
-
-            const response = await axiosClient.post(
-              "/api/admin/add-employees/by-form",
-              data
-            )
-
-
-            navigate('/employees/view-employees')
-
-          } catch (error) {
-
-            throw new Error(
-              error?.response?.data?.message || "Failed to add Employee"
-            )
-
-          }
-
-        })
-
-      }
-
-
+      require2FA(async () => {
+        try {
+          await axiosClient.post(
+            "/api/admin/add-employees/by-form",
+            data
+          )
+          navigate('/employees/view-employees')
+        } catch (error) {
+          throw new Error(
+            error?.response?.data?.message || "Failed to add Employee"
+          )
+        }
+      })
     } catch (error) {
-      console.error("Error adding employee:", error)
+      // Error handled by interceptor
     }
   }
+
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -189,7 +171,7 @@ const AddEmployee = () => {
         setOrganizations(formatted)
 
       } catch (error) {
-        console.log(error)
+        // Error handled by interceptor
       }
     }
 
@@ -343,7 +325,6 @@ const AddEmployee = () => {
                     e.target.value = e.target.value.replace(/[^0-9]/g, '')
                   }}
                   {...register('phone')}
-                  {...register('phone')}
                 />
               </div>
               <small className="text-danger">{errors.phone?.message}</small>
@@ -390,7 +371,6 @@ const AddEmployee = () => {
 
                     <Form.Control type="date"
                       max={new Date().toISOString().split("T")[0]}
-                      {...register('dob')}
                       {...register('doj')} />
 
                     <small className="text-danger">

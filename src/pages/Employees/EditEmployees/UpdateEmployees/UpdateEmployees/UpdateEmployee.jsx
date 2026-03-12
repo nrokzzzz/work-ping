@@ -11,8 +11,7 @@ import {
 } from 'react-bootstrap'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import countryCodes from 'country-calling-code'
 import FaceEmbeddings from './FaceEmbeddings'
@@ -118,7 +117,6 @@ const UpdateEmployee = () => {
 
   const goNext = handleSubmit(() => {
     setStep(1)
-    console.log(step)
   })
 
   const submitForm = async () => {
@@ -146,10 +144,10 @@ const UpdateEmployee = () => {
     }
 
     try {
-      console.log("Submitting Employee Data:", data)
 
 
-       {
+
+      {
 
         require2FA(async () => {
 
@@ -177,7 +175,7 @@ const UpdateEmployee = () => {
 
 
     } catch (error) {
-      console.error("Error adding employee:", error)
+      // Error handled by interceptor
     }
   }
   useEffect(() => {
@@ -195,7 +193,7 @@ const UpdateEmployee = () => {
         setOrganizations(formatted)
 
       } catch (error) {
-        console.log(error)
+        // Error handled by interceptor
       }
     }
 
@@ -244,7 +242,7 @@ const UpdateEmployee = () => {
         setSelectedOrg(emp.organizationId?.name)
 
       } catch (error) {
-        console.error("Failed to fetch employee", error)
+        // Error handled by interceptor
       }
     }
 
@@ -391,7 +389,6 @@ const UpdateEmployee = () => {
                     e.target.value = e.target.value.replace(/[^0-9]/g, '')
                   }}
                   {...register('phone')}
-                  {...register('phone')}
                 />
               </div>
               <small className="text-danger">{errors.phone?.message}</small>
@@ -438,7 +435,6 @@ const UpdateEmployee = () => {
 
                     <Form.Control type="date"
                       max={new Date().toISOString().split("T")[0]}
-                      {...register('dob')}
                       {...register('doj')} />
 
                     <small className="text-danger">

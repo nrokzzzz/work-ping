@@ -27,11 +27,9 @@ const ViewTeams = () => {
         const res = await axiosClient.get(
           'api/admin/organization/get-all-organization-ids'
         )
-        console.log(res.data)
-        // backend returns { data: [...] }
         setOrganizations(res.data || [])
       } catch (err) {
-        console.error(err)
+        // Error handled by interceptor
       }
     }
 
@@ -59,12 +57,11 @@ const ViewTeams = () => {
       const res = await axiosClient.get(
         `api/admin/team/get-teams-filter?${params.toString()}`
       )
-      console.log(res)
       setTeams(res.data?.teamList || [])
       setTotalPages(res.data?.totalPages || 0)
       setTotalRecords(res.data?.totalRecords || 0)
     } catch (err) {
-      console.error(err)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }
@@ -158,7 +155,7 @@ const ViewTeams = () => {
             </Row>
           </CardBody>
 
-          {/* Table */ console.log("teams: " + teams)}
+          {/* Table */}
           <div className="table-responsive">
             <table className="table text-nowrap mb-0">
               <thead className="bg-light">

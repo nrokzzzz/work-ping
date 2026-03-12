@@ -6,7 +6,7 @@ import { Button, Form, Dropdown } from 'react-bootstrap'
 import { useParams, useNavigate } from 'react-router-dom'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 
 import { use2FA } from '@/context/TwoFAContext'
@@ -90,7 +90,7 @@ const UpdateTeam = () => {
 
       } catch (error) {
 
-        console.log(error)
+        // Error handled by interceptor
 
       }
 
@@ -112,7 +112,7 @@ const UpdateTeam = () => {
 
     } catch (error) {
 
-      console.log(error)
+      // Error handled by interceptor
 
     }
 
@@ -160,7 +160,7 @@ const UpdateTeam = () => {
 
       } catch (error) {
 
-        console.error(error)
+        // Error handled by interceptor
 
       }
 
@@ -194,7 +194,7 @@ const UpdateTeam = () => {
       leaderIds: data.teamLeaderId ? [data.teamLeaderId] : []
     }
 
-     {
+    {
 
       require2FA(async () => {
 
