@@ -78,6 +78,15 @@ const OrganizationDetailsForm = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
+
+        // Convert date to YYYY-MM-DD format for the date input
+        if (parsed.foundedAt) {
+          const d = new Date(parsed.foundedAt)
+          if (!isNaN(d.getTime())) {
+            parsed.foundedAt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+          }
+        }
+
         reset(parsed)
       } catch {
         sessionStorage.removeItem(STORAGE_KEY)
