@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axiosClient from '@/helpers/httpClient'
 
 const ViewTeams = () => {
+  const navigate = useNavigate()
   const itemsPerPage = 10
 
   const [teams, setTeams] = useState([])
@@ -186,7 +187,11 @@ const ViewTeams = () => {
                   </tr>
                 ) : (
                   teams.map((team) => (
-                    <tr key={team._id}>
+                    <tr 
+                      key={team._id}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => navigate(`/teams/team-members/team-members-view/${team._id}`)}
+                    >
                       <td>{team.teamName || '--'}</td>
                       <td>{team.managerId || '--'}</td>
                       <td>
