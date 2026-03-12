@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import axiosClient from "@/helpers/httpClient";
 import * as yup from "yup";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import toast from "react-hot-toast";
+
 const ResetPassForm = () => {
   const [step, setStep] = useState(1); // 1=email, 2=otp, 3=password
   const [showPassword, setShowPassword] = useState(false);
@@ -14,6 +15,9 @@ const ResetPassForm = () => {
 
   const [otpTimer, setOtpTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(false);
+
+  // loading state for resending OTP specifically
+  const [isResending, setIsResending] = useState(false);
 
   const navigate = useNavigate();
 
@@ -54,7 +58,7 @@ const ResetPassForm = () => {
   });
 
   /* ---------------- React Hook Form ---------------- */
-  const { control, handleSubmit, setError, getValues } = useForm({
+  const { control, handleSubmit, setError, getValues, formState: { isSubmitting } } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       email: "",
@@ -115,18 +119,39 @@ const ResetPassForm = () => {
           }
         );
 
-        toast.success('Password changed successfully!');
-
+        toast.success("Password changed successfully!");
         navigate("/auth/sign-in");
-
       }
 
     } catch (error) {
-      setError("email", {
+      // Show error on the relevant field for the current step
+      const targetField = step === 1 ? "email" : step === 2 ? "otp" : "newPassword";
+      
+      setError(targetField, {
         message:
           error?.response?.data?.message ||
           "Something went wrong. Please try again.",
       });
+    }
+  };
+
+  /* ---------------- Resend OTP Handler ---------------- */
+  const handleResendOTP = async () => {
+    if (otpTimer > 0 || isResending) return;
+
+    try {
+      setIsResending(true);
+      await axiosClient.post(
+        "/api/admin/forgot-password/send-otp", // Fixed endpoint to match original send
+        { email: getValues("email") }
+      );
+      toast.success("OTP resent successfully!");
+      setOtpTimer(60);
+      setIsTimerActive(true);
+    } catch (error) {
+      // Error toast handled by interceptor
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -148,6 +173,7 @@ const ResetPassForm = () => {
               {...field}
               placeholder="Enter your email"
               isInvalid={!!error}
+              disabled={step > 1 || isSubmitting}
             />
             <Form.Control.Feedback type="invalid">
               {error?.message}
@@ -169,32 +195,26 @@ const ResetPassForm = () => {
                   {...field}
                   placeholder="Enter OTP"
                   isInvalid={!!error}
+                  disabled={step > 2 || isSubmitting}
                 />
 
-                <Button
-                  variant={otpTimer > 0 ? "secondary" : "primary"}
-                  disabled={otpTimer > 0}
-                  onClick={async () => {
-                    if (otpTimer === 0) {
-                      try {
-                        await axiosClient.post(
-                          "/api/admin/auth/forgot-password/send-otp",
-                          { email: getValues('email') }
-                        );
-                        setOtpTimer(60);
-                        setIsTimerActive(true);
-                      } catch (error) {
-                        // Error toast handled by interceptor
-                      }
-                    }
-                  }}
-                >
-                  {otpTimer > 0
-                    ? `Resend in ${otpTimer}s`
-                    : "Resend OTP"}
-                </Button>
+                {step === 2 && (
+                  <Button
+                    variant={otpTimer > 0 ? "secondary" : "primary"}
+                    disabled={otpTimer > 0 || isResending || isSubmitting}
+                    onClick={handleResendOTP}
+                  >
+                    {isResending ? (
+                      <Spinner size="sm" />
+                    ) : otpTimer > 0 ? (
+                      `Resend in ${otpTimer}s`
+                    ) : (
+                      "Resend OTP"
+                    )}
+                  </Button>
+                )}
 
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type="invalid" className="d-block">
                   {error?.message}
                 </Form.Control.Feedback>
               </InputGroup>
@@ -211,34 +231,30 @@ const ResetPassForm = () => {
             name="newPassword"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <Form.Group className="mb-3">
-                <Form.Label>New Password</Form.Label>
-                <InputGroup>
-                  <Form.Control
-                    {...field}
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter new password"
-                    autoComplete="new-password"
-                    isInvalid={!!error}
-                  />
-                  <InputGroup.Text
-                    style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      setShowPassword(!showPassword)
-                    }
-                  >
-                    <i
-                      className={`bi ${showPassword
-                          ? "bi-eye-slash"
-                          : "bi-eye"
-                        }`}
-                    ></i>
-                  </InputGroup.Text>
-                  <Form.Control.Feedback type="invalid">
-                    {error?.message}
-                  </Form.Control.Feedback>
-                </InputGroup>
-              </Form.Group>
+               <Form.Group className="mb-3">
+                 <Form.Label>New Password</Form.Label>
+                 <InputGroup>
+                   <Form.Control
+                     {...field}
+                     type={showPassword ? "text" : "password"}
+                     placeholder="Enter new password"
+                     autoComplete="new-password"
+                     isInvalid={!!error}
+                     disabled={isSubmitting}
+                   />
+                   <InputGroup.Text
+                     style={{ cursor: "pointer" }}
+                     onClick={() => setShowPassword(!showPassword)}
+                     aria-label={showPassword ? "Hide password" : "Show password"}
+                     role="button"
+                   >
+                     <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                   </InputGroup.Text>
+                   <Form.Control.Feedback type="invalid" className="d-block">
+                     {error?.message}
+                   </Form.Control.Feedback>
+                 </InputGroup>
+               </Form.Group>
             )}
           />
 
@@ -252,30 +268,20 @@ const ResetPassForm = () => {
                 <InputGroup>
                   <Form.Control
                     {...field}
-                    type={
-                      showConfirmPassword
-                        ? "text"
-                        : "password"
-                    }
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm password"
                     isInvalid={!!error}
+                    disabled={isSubmitting}
                   />
                   <InputGroup.Text
                     style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      setShowConfirmPassword(
-                        !showConfirmPassword
-                      )
-                    }
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    role="button"
                   >
-                    <i
-                      className={`bi ${showConfirmPassword
-                          ? "bi-eye-slash"
-                          : "bi-eye"
-                        }`}
-                    ></i>
+                    <i className={`bi ${showConfirmPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
                   </InputGroup.Text>
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type="invalid" className="d-block">
                     {error?.message}
                   </Form.Control.Feedback>
                 </InputGroup>
@@ -286,12 +292,19 @@ const ResetPassForm = () => {
       )}
 
       <div className="d-grid">
-        <Button type="submit" variant="primary">
-          {step === 1
-            ? "Send OTP"
-            : step === 2
-              ? "Verify OTP"
-              : "Change Password"}
+        <Button type="submit" variant="primary" disabled={isSubmitting || isResending}>
+          {isSubmitting ? (
+            <>
+               <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
+               Processing...
+            </>
+          ) : step === 1 ? (
+            "Send OTP"
+          ) : step === 2 ? (
+            "Verify OTP"
+          ) : (
+            "Change Password"
+          )}
         </Button>
       </div>
     </form>

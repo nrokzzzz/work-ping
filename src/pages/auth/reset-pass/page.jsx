@@ -3,6 +3,7 @@ import { Card, CardBody, Col, Row } from 'react-bootstrap';
 import LogoBox from '@/components/LogoBox';
 import PageMetaData from '@/components/PageTitle';
 import ResetPassForm from './components/ResetPassForm';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import signInImg from '@/assets/images/sign-in.svg';
 const ResetPassword = () => {
   return <>
@@ -30,7 +31,9 @@ const ResetPassword = () => {
                 </p>
                 <Row className="justify-content-center">
                   <Col xs={12} md={8}>
-                    <ResetPassForm />
+                    <ErrorBoundary>
+                      <ResetPassForm />
+                    </ErrorBoundary>
                   </Col>
                 </Row>
               </div>

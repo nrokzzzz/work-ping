@@ -81,7 +81,7 @@ Unlike `TwoFactorAuthentication.jsx`, pressing Enter does not trigger verificati
 
 ---
 
-## Summary
+## Summary (2FA)
 
 | Severity | Count |
 |----------|-------|
@@ -90,3 +90,59 @@ Unlike `TwoFactorAuthentication.jsx`, pressing Enter does not trigger verificati
 | 🟡 Low | 5 |
 | **Total** | **17** |
 
+
+---
+---
+
+# Reset Password Audit (`reset-pass`)
+
+---
+
+## 🔴 Critical
+
+### 1. Inconsistent API Endpoints for OTP Resend vs Send
+**Lines 88-91 vs Lines 180-183:**
+The initial send OTP uses `/api/admin/forgot-password/send-otp`, but the "Resend OTP" button uses `/api/admin/auth/forgot-password/send-otp` (includes `/auth/`). One of these is incorrect and will return a 404.
+
+### 2. Invalid Error Handling State (Cross-Field Errors)
+**Lines 125-130:**
+The global `catch` block for forms sets all backend errors on the `email` field (`setError("email", ...)`), regardless of the current step.
+- If Step 2 (Verify OTP) fails due to a wrong code, the error message appears under the Email input instead of the OTP input.
+- If Step 3 (Change Password) fails, the error also appears under the Email input.
+
+---
+
+## 🟠 Medium
+
+### 3. Fields Are Editable in Subsequent Steps
+**Lines 140-157:**
+When the user progresses to Step 2 (OTP) or Step 3 (Password), the previously filled fields (like `Email` and `OTP`) remain fully editable.
+- **Bug:** A user can receive an OTP for `user1@example.com`, change the email field to `user2@example.com`, and submit in Step 2, which could cause bad server logic or discrepancies.
+- **Fix:** Fields from previous steps should be marked `disabled={step > 1}` or `readOnly`.
+
+### 4. InputGroup Feedback Rendering Issue
+**Lines 197-199 and 237-239:**
+In Bootstrap, placing `<Form.Control.Feedback type="invalid">` inside an `<InputGroup>` alongside a `<Button>` or `<InputGroup.Text>` without proper placement can sometimes cause layout issues or not display the error text correctly relative to the input if the `<Form.Control>` doesn't have the `isInvalid` class positioned optimally.
+
+### 5. Lack of Explicit Error Boundary / Fallback
+There is no local scope `<ErrorBoundary>` around the `ResetPassForm` component. If any UI rendering bug occurs (for example, if `fieldState` or `control` somehow become corrupted), it will crash the whole page rather than showing a localized form fallback error. *Note: We do have a global ErrorBoundary around App Providers, but missing a localized one.*
+
+---
+
+## 🟡 Low
+
+### 6. No `isSubmitting` Loading State
+**Lines 288-296:**
+The submit button does not show a loading spinner or disable itself during API calls (e.g., waiting for the email or OTP verification). Users might click multiple times, triggering duplicate API requests.
+
+### 7. Form Accessibility (ARIA)
+Password visibility toggles (Lines 226 and 266) use `<i className="...">` inside `InputGroup.Text` but lack `aria-label` or role attributes for screen readers to announce "Toggle password visibility".
+
+## Summary (Reset Password)
+
+| Severity | Count |
+|----------|-------|
+| 🔴 Critical | 2 |
+| 🟠 Medium | 3 |
+| 🟡 Low | 2 |
+| **Total** | **7** |
