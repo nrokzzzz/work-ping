@@ -197,6 +197,7 @@ const ViewEmployees = () => {
                   <th>Gmail</th>
                   <th>Phone</th>
                   <th>Role</th>
+                  <th>Work Type</th>
                   <th>Organization</th>
                   <th>Department</th>
                   <th>Dob</th>
@@ -231,6 +232,7 @@ const ViewEmployees = () => {
                       <td>{show(emp.email)}</td>
                       <td>{show(emp.phone)}</td>
                       <td>{show(emp.role)}</td>
+                      <td>{show(emp.workType)}</td>
                       <td>{show(emp.organizationName)}</td>
                       <td>{show(emp.departmentName)}</td>
                       <td>{show(emp.dob)}</td>

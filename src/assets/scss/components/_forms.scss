@@ -66,3 +66,9 @@ input.form-control[type='range'] {
         text-decoration: line-through;
     }
 }
+
+// Global placeholder opacity
+input::placeholder,
+textarea::placeholder {
+    opacity: 0.45 !important;
+}

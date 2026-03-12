@@ -54,6 +54,10 @@ const schema = yup.object({
     .string()
     .required('Gender is required'),
 
+  workType: yup
+    .string()
+    .required('Work Type is required'),
+
   doj: yup
     .string()
     .matches(
@@ -110,6 +114,9 @@ const AddEmployee = () => {
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      workType: 'onSite',
+    },
   })
 
   const goNext = handleSubmit(() => {
@@ -127,6 +134,7 @@ const AddEmployee = () => {
       organizationName: v.organizationName,
       doj: v.doj,
       gender: v.gender,
+      workType: v.workType,
       salary: v.salary,
       dob: v.dob,
       address: v.address,
@@ -201,6 +209,7 @@ const AddEmployee = () => {
         >
           <Form className="row g-3">
 
+            {/* Row 1 */}
             <div className="col-md-4">
               <Form.Label>User ID <span className="text-danger">*</span></Form.Label>
               <Form.Control placeholder="Enter User Id" {...register('userId')} />
@@ -219,31 +228,24 @@ const AddEmployee = () => {
               <small className="text-danger">{errors.email?.message}</small>
             </div>
 
+            {/* Row 2 */}
             <div className="col-md-4">
-              <Form.Label>
-                Organization Name <span className="text-danger">*</span>
-              </Form.Label>
+              <Form.Label>Organization Name <span className="text-danger">*</span></Form.Label>
 
               <Dropdown className="w-100">
-
                 <Dropdown.Toggle
                   as="div"
                   className="form-control d-flex justify-content-between align-items-center arrow-none"
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: 'pointer' }}
                 >
-                  <span>{selectedOrg || "Select Organization"}</span>
+                  <span>{selectedOrg || 'Select Organization'}</span>
                   <IconifyIcon icon="bx:chevron-down" className="fs-4" />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu
                   className="w-100 p-2"
-                  style={{
-                    maxHeight: '220px',
-                    overflowY: 'auto',
-                    overflowX: 'hidden'
-                  }}
+                  style={{ maxHeight: '220px', overflowY: 'auto' }}
                 >
-
                   <Form.Control
                     placeholder="Search organization"
                     className="mb-2"
@@ -252,9 +254,7 @@ const AddEmployee = () => {
                   />
 
                   {organizations
-                    .filter(o =>
-                      o.name.toLowerCase().includes(orgSearch.toLowerCase())
-                    )
+                    .filter(o => o.name.toLowerCase().includes(orgSearch.toLowerCase()))
                     .map((o) => (
                       <Dropdown.Item
                         key={o.organizationId}
@@ -267,22 +267,16 @@ const AddEmployee = () => {
                         {o.name}
                       </Dropdown.Item>
                     ))}
-
                 </Dropdown.Menu>
-
               </Dropdown>
 
               <input type="hidden" {...register('organizationName')} />
-
-              <small className="text-danger">
-                {errors.organizationName?.message}
-              </small>
+              <small className="text-danger">{errors.organizationName?.message}</small>
             </div>
-
-
 
             <div className="col-md-4">
               <Form.Label>Contact Number <span className="text-danger">*</span></Form.Label>
+
               <div className="d-flex gap-2">
                 <Dropdown>
                   <DropdownToggle
@@ -300,10 +294,9 @@ const AddEmployee = () => {
                       value={search}
                       onChange={e => setSearch(e.target.value)}
                     />
+
                     {countryCodes
-                      .filter(c =>
-                        c.country.toLowerCase().includes(search.toLowerCase())
-                      )
+                      .filter(c => c.country.toLowerCase().includes(search.toLowerCase()))
                       .map(c => (
                         <DropdownItem
                           key={c.isoCode2}
@@ -327,146 +320,117 @@ const AddEmployee = () => {
                   {...register('phone')}
                 />
               </div>
+
               <small className="text-danger">{errors.phone?.message}</small>
             </div>
 
             <div className="col-md-4">
               <Form.Label>Date of Birth <span className="text-danger">*</span></Form.Label>
-              <Form.Control type="date"
-                max={new Date().toISOString().split("T")[0]}
+              <Form.Control
+                type="date"
+                max={new Date().toISOString().split('T')[0]}
                 {...register('dob')}
-                placeholder="dd-mm-yyyy" {...register('dob')} />
+              />
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
-            <div className="col-12">
-              <div className="row">
+            {/* Row 3 : Gender + WorkType | Address */}
 
-                {/* LEFT COLUMN */}
-                <div className="col-md-4 d-flex flex-column gap-3">
+            <div className="col-md-4">
 
-                  {/* Gender */}
-                  <div>
-                    <Form.Label>
-                      Gender <span className="text-danger">*</span>
-                    </Form.Label>
+              <Form.Label>Gender <span className="text-danger">*</span></Form.Label>
+              <Form.Select {...register('gender')}>
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </Form.Select>
+              <small className="text-danger">{errors.gender?.message}</small>
 
-                    <Form.Select {...register('gender')}>
-                      <option value="">Select Gender</option>
-                      <option>Male</option>
-                      <option>Female</option>
-                      <option>Other</option>
-                    </Form.Select>
+              <Form.Label className="mt-3">Work Type <span className="text-danger">*</span></Form.Label>
+              <Form.Select {...register('workType')}>
+                <option value="onSite">On-Site</option>
+                <option value="Remote">Remote</option>
+                <option value="Hybrid">Hybrid</option>
+              </Form.Select>
+              <small className="text-danger">{errors.workType?.message}</small>
 
-                    <small className="text-danger">
-                      {errors.gender?.message}
-                    </small>
-                  </div>
+            </div>
 
-                  {/* DOJ */}
-                  <div>
-                    <Form.Label>
-                      Date of Joining <span className="text-danger">*</span>
-                    </Form.Label>
+            <div className="col-md-8">
+              <Form.Label>Address <span className="text-danger">*</span></Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={5}
+                placeholder="Enter the user address here..."
+                {...register('address')}
+              />
+              <small className="text-danger">{errors.address?.message}</small>
+            </div>
 
-                    <Form.Control type="date"
-                      max={new Date().toISOString().split("T")[0]}
-                      {...register('doj')} />
+            {/* Row 4 */}
 
-                    <small className="text-danger">
-                      {errors.doj?.message}
-                    </small>
-                  </div>
+            <div className="col-md-4">
+              <Form.Label>Date of Joining <span className="text-danger">*</span></Form.Label>
+              <Form.Control
+                type="date"
+                max={new Date().toISOString().split('T')[0]}
+                {...register('doj')}
+              />
+              <small className="text-danger">{errors.doj?.message}</small>
+            </div>
 
-                </div>
+            <div className="col-md-4">
+              <Form.Label>Aadhaar <span className="text-danger">*</span></Form.Label>
+              <Form.Control
+                placeholder="12-digit Aadhaar number"
+                maxLength={12}
+                onInput={(e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, '')
+                }}
+                {...register('aadhaar')}
+              />
+              <small className="text-danger">{errors.aadhaar?.message}</small>
+            </div>
 
+            <div className="col-md-4">
+              <Form.Label>Salary</Form.Label>
 
-                {/* ADDRESS CENTER COLUMN */}
-                <div className="col-md-4">
-                  <Form.Label>
-                    Address <span className="text-danger">*</span>
-                  </Form.Label>
+              <div className="d-flex gap-2">
 
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Enter the user address here..."
-                    rows={5}
-                    {...register('address')}
-                  />
+                <Dropdown>
+                  <DropdownToggle
+                    className="btn btn-light border arrow-none"
+                    style={{ minWidth: 90 }}
+                  >
+                    {currency}
+                    <IconifyIcon icon="bx:chevron-down" className="ms-2" />
+                  </DropdownToggle>
 
-                  <small className="text-danger">
-                    {errors.address?.message}
-                  </small>
-                </div>
+                  <DropdownMenu>
+                    <DropdownItem onClick={() => setCurrency('₹')}>₹ INR</DropdownItem>
+                    <DropdownItem onClick={() => setCurrency('$')}>$ USD</DropdownItem>
+                    <DropdownItem onClick={() => setCurrency('€')}>€ EUR</DropdownItem>
+                    <DropdownItem onClick={() => setCurrency('£')}>£ GBP</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
 
-
-                {/* RIGHT COLUMN */}
-                <div className="col-md-4 d-flex flex-column gap-3">
-
-                  {/* Aadhaar */}
-                  <div>
-                    <Form.Label>
-                      Aadhaar <span className="text-danger">*</span>
-                    </Form.Label>
-
-                    <Form.Control
-                      placeholder="12-digit Aadhaar number"
-                      maxLength={12}
-                      onInput={(e) => {
-                        e.target.value = e.target.value.replace(/[^0-9]/g, '')
-                      }}
-                      {...register('aadhaar')}
-                    />
-
-                    <small className="text-danger">
-                      {errors.aadhaar?.message}
-                    </small>
-                  </div>
-
-
-                  {/* Salary */}
-                  <div>
-                    <Form.Label>
-                      Salary
-                    </Form.Label>
-
-                    <div className="d-flex gap-2">
-
-                      <Dropdown>
-                        <DropdownToggle
-                          className="btn btn-light border arrow-none"
-                          style={{ minWidth: 90 }}
-                        >
-                          {currency}
-                          <IconifyIcon icon="bx:chevron-down" className="ms-2" />
-                        </DropdownToggle>
-
-                        <DropdownMenu>
-                          <DropdownItem onClick={() => setCurrency("₹")}>₹ INR</DropdownItem>
-                          <DropdownItem onClick={() => setCurrency("$")}>$ USD</DropdownItem>
-                          <DropdownItem onClick={() => setCurrency("€")}>€ EUR</DropdownItem>
-                          <DropdownItem onClick={() => setCurrency("£")}>£ GBP</DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-
-                      <Form.Control
-                        placeholder="Enter salary"
-                        inputMode="numeric"
-                        onInput={(e) => {
-                          e.target.value = e.target.value.replace(/[^0-9]/g, "")
-                        }}
-                        {...register("salary")}
-                      />
-
-                    </div>
-
-                    <small className="text-danger">{errors.salary?.message}</small>
-                  </div>
-
-                </div>
+                <Form.Control
+                  placeholder="Enter salary"
+                  inputMode="numeric"
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '')
+                  }}
+                  {...register('salary')}
+                />
 
               </div>
+
+              <small className="text-danger">{errors.salary?.message}</small>
             </div>
+
+            {/* Row 5 */}
+
             <div className="col-md-4">
               <Form.Label>Passport <small className="text-muted">(Optional)</small></Form.Label>
               <Form.Control placeholder="Enter passport number" {...register('passport')} />
@@ -478,9 +442,7 @@ const AddEmployee = () => {
                 placeholder="ABCDE1234F"
                 maxLength={10}
                 onInput={(e) => {
-                  e.target.value = e.target.value
-                    .toUpperCase()
-                    .replace(/[^A-Z0-9]/g, '')
+                  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '')
                 }}
                 {...register('pan')}
               />
@@ -492,8 +454,12 @@ const AddEmployee = () => {
               <Form.Control placeholder="Enter bank account number" {...register('bankId')} />
             </div>
 
+            {/* Submit */}
+
             <div className="col-12 d-flex justify-content-center mt-3">
-              <Button onClick={handleSubmit(submitForm)}>Submit</Button>
+              <Button onClick={handleSubmit(submitForm)}>
+                Submit
+              </Button>
             </div>
 
           </Form>
