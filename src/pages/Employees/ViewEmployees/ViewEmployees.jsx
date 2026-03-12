@@ -22,6 +22,9 @@ const ViewEmployees = () => {
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
 
+  // "Go to page" input state
+  const [jumpPage, setJumpPage] = useState('')
+
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -33,14 +36,10 @@ const ViewEmployees = () => {
         // Error handled by interceptor
       }
     }
-
     fetchOrganizations()
   }, [])
 
-  const organizationList = useMemo(
-    () => Object.keys(orgData),
-    [orgData]
-  )
+  const organizationList = useMemo(() => Object.keys(orgData), [orgData])
 
   const departmentList = useMemo(
     () =>
@@ -53,26 +52,14 @@ const ViewEmployees = () => {
   const fetchEmployees = async (page) => {
     setLoading(true)
     try {
-      const params = new URLSearchParams({
-        page,
-        limit: itemsPerPage,
-      })
+      const params = new URLSearchParams({ page, limit: itemsPerPage })
 
       if (appliedOrganization) {
-        const organizationId =
-          orgData[appliedOrganization]?.organizationId
-
-        if (organizationId) {
-          params.append('organizationId', organizationId)
-        }
+        const organizationId = orgData[appliedOrganization]?.organizationId
+        if (organizationId) params.append('organizationId', organizationId)
       }
-
-      if (appliedDepartment) {
-        params.append('teamId', appliedDepartment)
-      }
-      if (appliedSearch) {
-        params.append('search', appliedSearch)
-      }
+      if (appliedDepartment) params.append('teamId', appliedDepartment)
+      if (appliedSearch) params.append('search', appliedSearch)
 
       const result = await axiosClient.get(
         `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
@@ -99,23 +86,27 @@ const ViewEmployees = () => {
     setCurrentPage(1)
   }
 
+  const handleJumpGo = () => {
+    const n = parseInt(jumpPage, 10)
+    if (!isNaN(n) && n >= 1 && n <= totalPages) {
+      setCurrentPage(n)
+    }
+    setJumpPage('')
+  }
+
   const getPages = () => {
     if (totalPages <= 5)
       return Array.from({ length: totalPages }, (_, i) => i + 1)
-
-    if (currentPage <= 2)
-      return [1, 2, 3, '...', totalPages]
-
+    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
     if (currentPage >= totalPages - 1)
       return [1, '...', totalPages - 2, totalPages - 1, totalPages]
-
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
-  const start =
-    totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
+  const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
-  const show = (val) => val || "--";
+  const show = (val) => val || '--'
+
   return (
     <Row>
       <Col>
@@ -127,12 +118,7 @@ const ViewEmployees = () => {
                   <IconifyIcon
                     icon="bx:search-alt"
                     className="position-absolute"
-                    style={{
-                      left: 12,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      fontSize: 18,
-                    }}
+                    style={{ left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 18 }}
                   />
                   <input
                     type="search"
@@ -154,11 +140,8 @@ const ViewEmployees = () => {
                   }}
                 >
                   <option value="">Select Organization</option>
-
                   {organizationList.map((org) => (
-                    <option key={org} value={org}>
-                      {org}
-                    </option>
+                    <option key={org} value={org}>{org}</option>
                   ))}
                 </select>
               </Col>
@@ -170,20 +153,14 @@ const ViewEmployees = () => {
                   onChange={(e) => setDepartment(e.target.value)}
                 >
                   <option value="">Select Department</option>
-
                   {departmentList.map((team) => (
-                    <option key={team._id} value={team._id}>
-                      {team.teamName}
-                    </option>
+                    <option key={team._id} value={team._id}>{team.teamName}</option>
                   ))}
-
                 </select>
               </Col>
 
               <Col xs={12} md={2}>
-                <Button className="w-100" onClick={handleApply}>
-                  Apply
-                </Button>
+                <Button className="w-100" onClick={handleApply}>Apply</Button>
               </Col>
             </Row>
           </CardBody>
@@ -213,17 +190,9 @@ const ViewEmployees = () => {
 
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="15" className="text-center py-4">
-                      Loading...
-                    </td>
-                  </tr>
+                  <tr><td colSpan="16" className="text-center py-4">Loading...</td></tr>
                 ) : employees.length === 0 ? (
-                  <tr>
-                    <td colSpan="15" className="text-center py-4">
-                      No records found
-                    </td>
-                  </tr>
+                  <tr><td colSpan="16" className="text-center py-4">No records found</td></tr>
                 ) : (
                   employees.map((emp) => (
                     <tr key={emp.USER_ID}>
@@ -250,60 +219,90 @@ const ViewEmployees = () => {
             </table>
           </div>
 
-          <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
-            <div className="col-12 col-sm">
-              <div className="text-muted">
-                Showing {start} to {end} of {totalRecords} records
-              </div>
+          {/* ── Pagination footer ── */}
+          <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
+
+            {/* Records info */}
+            <div className="text-muted small">
+              Showing {start} to {end} of {totalRecords} records
             </div>
 
-            <Col xs={12} sm="auto">
-              <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
+            {/* Page buttons + jump-to-page */}
+            <div className="d-flex flex-wrap align-items-center gap-2">
+
+              <ul className="pagination pagination-rounded m-0">
+                {/* Prev */}
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                   <Link
                     to="#"
                     className="page-link"
                     onClick={(e) => {
                       e.preventDefault()
-                      if (currentPage > 1)
-                        setCurrentPage(currentPage - 1)
-                    }}>
+                      if (currentPage > 1) setCurrentPage(currentPage - 1)
+                    }}
+                  >
                     <IconifyIcon icon="bx:left-arrow-alt" />
                   </Link>
                 </li>
 
+                {/* Page numbers */}
                 {getPages().map((p, i) => (
                   <li
                     key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}
+                  >
                     <Link
                       to="#"
                       className="page-link"
                       onClick={(e) => {
                         e.preventDefault()
-                        if (typeof p === 'number')
-                          setCurrentPage(p)
-                      }}>
+                        if (typeof p === 'number') setCurrentPage(p)
+                      }}
+                    >
                       {p}
                     </Link>
                   </li>
                 ))}
 
+                {/* Next */}
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
                   <Link
                     to="#"
                     className="page-link"
                     onClick={(e) => {
                       e.preventDefault()
-                      if (currentPage < totalPages)
-                        setCurrentPage(currentPage + 1)
-                    }}>
+                      if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+                    }}
+                  >
                     <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
                 </li>
               </ul>
-            </Col>
+
+              {/* Jump-to-page — only show when there are multiple pages */}
+              {totalPages > 1 && (
+                <div className="d-flex align-items-center gap-1">
+                  <span className="text-muted small text-nowrap">Go to</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={totalPages}
+                    value={jumpPage}
+                    onChange={(e) => setJumpPage(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
+                    className="form-control form-control-sm text-center"
+                    style={{ width: 60 }}
+                    placeholder={`/${totalPages}`}
+                  />
+                  <Button size="sm" variant="primary" onClick={handleJumpGo}>
+                    Go
+                  </Button>
+                </div>
+              )}
+
+            </div>
           </div>
+
         </Card>
       </Col>
     </Row>

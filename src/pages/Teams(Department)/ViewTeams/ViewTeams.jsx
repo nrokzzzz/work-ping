@@ -110,6 +110,13 @@ const ViewTeams = () => {
     totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
+  const [jumpPage, setJumpPage] = useState('')
+  const handleJumpGo = () => {
+    const n = parseInt(jumpPage, 10)
+    if (!isNaN(n) && n >= 1 && n <= totalPages) setCurrentPage(n)
+    setJumpPage('')
+  }
+
   return (
     <Row className="justify-content-center">
       <Col xs={12} xl={11}>
@@ -194,66 +201,30 @@ const ViewTeams = () => {
           </div>
 
           {/* Pagination */}
-          <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
-            <div className="col-12 col-sm">
-              <div className="text-muted">
-                Showing {start} to {end} of {totalRecords} records
-              </div>
-            </div>
-
-            <Col xs={12} sm="auto">
-              <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
-
+          <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
+            <div className="text-muted small">Showing {start} to {end} of {totalRecords} records</div>
+            <div className="d-flex flex-wrap align-items-center gap-2">
+              <ul className="pagination pagination-rounded m-0">
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage > 1)
-                        setCurrentPage(currentPage - 1)
-                    }}
-                  >
-                    ‹
-                  </Link>
+                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}>‹</Link>
                 </li>
-
                 {getPages().map((p, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''
-                      } ${p === '...' ? 'disabled' : ''}`}
-                  >
-                    <Link
-                      to="#"
-                      className="page-link"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        if (typeof p === 'number')
-                          setCurrentPage(p)
-                      }}
-                    >
-                      {p}
-                    </Link>
+                  <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === 'number') setCurrentPage(p) }}>{p}</Link>
                   </li>
                 ))}
-
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage < totalPages)
-                        setCurrentPage(currentPage + 1)
-                    }}
-                  >
-                    ›
-                  </Link>
+                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}>›</Link>
                 </li>
-
               </ul>
-            </Col>
+              {totalPages > 1 && (
+                <div className="d-flex align-items-center gap-1">
+                  <span className="text-muted small text-nowrap">Go to</span>
+                  <input type="number" min={1} max={totalPages} value={jumpPage} onChange={(e) => setJumpPage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()} className="form-control form-control-sm text-center" style={{ width: 60 }} placeholder={`/${totalPages}`} />
+                  <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
+                </div>
+              )}
+            </div>
           </div>
         </Card>
       </Col>
