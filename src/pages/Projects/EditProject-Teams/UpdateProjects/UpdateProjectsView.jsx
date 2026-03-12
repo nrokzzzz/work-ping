@@ -3,6 +3,7 @@ import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
+import toast from 'react-hot-toast'
 
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
@@ -35,7 +36,7 @@ const Viewprojects = () => {
         )
         setOrgData(res.data || {})
       } catch (err) {
-        console.error(err)
+        // Error handled by interceptor
       }
     }
 
@@ -73,7 +74,7 @@ const Viewprojects = () => {
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
     } catch (e) {
-      console.error(e)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }
@@ -106,10 +107,11 @@ const Viewprojects = () => {
         data: [...selectedIds],
       })
 
+      toast.success('Project(s) deleted successfully!')
       setSelectedIds(new Set())
       fetchprojects(currentPage)
     } catch (e) {
-      console.error(e)
+      // Error handled by interceptor
     }
   }
 
@@ -294,9 +296,8 @@ const Viewprojects = () => {
             <Col xs={12} sm="auto">
               <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
                 <li
-                  className={`page-item ${
-                    currentPage === 1 ? 'disabled' : ''
-                  }`}
+                  className={`page-item ${currentPage === 1 ? 'disabled' : ''
+                    }`}
                 >
                   <Link
                     to="#"
@@ -314,9 +315,8 @@ const Viewprojects = () => {
                 {getPages().map((p, i) => (
                   <li
                     key={i}
-                    className={`page-item ${
-                      currentPage === p ? 'active' : ''
-                    } ${p === '...' ? 'disabled' : ''}`}
+                    className={`page-item ${currentPage === p ? 'active' : ''
+                      } ${p === '...' ? 'disabled' : ''}`}
                   >
                     <Link
                       to="#"
@@ -333,11 +333,10 @@ const Viewprojects = () => {
                 ))}
 
                 <li
-                  className={`page-item ${
-                    currentPage === totalPages
+                  className={`page-item ${currentPage === totalPages
                       ? 'disabled'
                       : ''
-                  }`}
+                    }`}
                 >
                   <Link
                     to="#"

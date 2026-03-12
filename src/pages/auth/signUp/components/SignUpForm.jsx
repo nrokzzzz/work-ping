@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import axiosClient from '@/helpers/httpClient';
 import { useAuthContext } from '@/context/useAuthContext';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ const SignUpForm = () => {
       }
 
       await signUp();
+      toast.success('Signup successful!');
 
       await navigate('/2fa-authnticator', {
         state: {

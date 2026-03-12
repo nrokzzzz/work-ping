@@ -4,6 +4,7 @@ import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
+import toast from 'react-hot-toast'
 import { use2FA } from '@/context/TwoFAContext'
 const ViewEmployees = () => {
   const itemsPerPage = 10
@@ -19,7 +20,7 @@ const ViewEmployees = () => {
   const [orgData, setOrgData] = useState({})
   const [organization, setOrganization] = useState('')
   const [department, setDepartment] = useState('')
-  const {require2FA}=use2FA()
+  const { require2FA } = use2FA()
   const [appliedOrganization, setAppliedOrganization] = useState('')
   const [appliedDepartment, setAppliedDepartment] = useState('')
   const navigate = useNavigate()
@@ -31,10 +32,9 @@ const ViewEmployees = () => {
           '/api/admin/get-all-employees/get-organization-info'
         )
         setOrgData(res.data || {})
-        console.log(res.data)
 
       } catch (err) {
-        console.error(err)
+        // Error handled by interceptor
       }
     }
 
@@ -87,7 +87,7 @@ const ViewEmployees = () => {
       setTotalPages(result.data.totalPages || 0)
       setTotalRecords(result.data.totalRecords || 0)
     } catch (e) {
-      console.error(e)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }
@@ -111,29 +111,30 @@ const ViewEmployees = () => {
   const deleteEmployees = async () => {
     try {
       require2FA(async () => {
-        
+
         try {
-          
-          
+
+
           await axiosClient.post('/api/admin/employees/delete-employees', {
             data: [...selectedIds],
           })
-       setSelectedIds(new Set())
-      fetchEmployees(currentPage)
-      
-                 
-                } catch (error) {
-      
-                  throw new Error(
-                    error?.response?.data?.message || "Failed to add Employee"
-                  )
-      
-                }
-      
-              })
-     
+          toast.success('Employee(s) deleted successfully!')
+          setSelectedIds(new Set())
+          fetchEmployees(currentPage)
+
+
+        } catch (error) {
+
+          throw new Error(
+            error?.response?.data?.message || "Failed to add Employee"
+          )
+
+        }
+
+      })
+
     } catch (e) {
-      console.error(e)
+      // Error handled by interceptor
     }
   }
 
@@ -224,31 +225,31 @@ const ViewEmployees = () => {
               </Col>
 
               <Col xs={12} md={4}>
-  <div className="d-flex gap-2 justify-content-end">
+                <div className="d-flex gap-2 justify-content-end">
 
-    <Button
-      className="flex-fill"
-      onClick={handleApply}
-    >
-      Apply
-    </Button>
+                  <Button
+                    className="flex-fill"
+                    onClick={handleApply}
+                  >
+                    Apply
+                  </Button>
 
-    <div
-      className="flex-fill"
-      style={{ cursor: selectedIds.size === 0 ? "not-allowed" : "pointer" }}
-    >
-      <Button
-        variant="danger"
-        className="w-100"
-        disabled={selectedIds.size === 0}
-        onClick={deleteEmployees}
-      >
-        Delete
-      </Button>
-    </div>
+                  <div
+                    className="flex-fill"
+                    style={{ cursor: selectedIds.size === 0 ? "not-allowed" : "pointer" }}
+                  >
+                    <Button
+                      variant="danger"
+                      className="w-100"
+                      disabled={selectedIds.size === 0}
+                      onClick={deleteEmployees}
+                    >
+                      Delete
+                    </Button>
+                  </div>
 
-  </div>
-</Col>
+                </div>
+              </Col>
 
             </Row>
           </CardBody>

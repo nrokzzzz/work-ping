@@ -6,6 +6,7 @@ import { Button, Form, Dropdown } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosClient from '@/helpers/httpClient'
+import toast from 'react-hot-toast'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 
 import { use2FA } from '@/context/TwoFAContext'
@@ -63,7 +64,7 @@ const AddProjects = () => {
         setOrganizations(formatted)
 
       } catch (error) {
-        console.log(error)
+        // Error handled by interceptor
       }
     }
 
@@ -86,7 +87,7 @@ const AddProjects = () => {
       setProjectManagers(formatted)
 
     } catch (error) {
-      console.log(error)
+      // Error handled by interceptor
     }
   }
 
@@ -97,13 +98,12 @@ const AddProjects = () => {
       try {
 
         await axiosClient.post('/api/admin/project/create-project', data)
-
+        toast.success('Project created successfully!')
         reset()
         navigate('/projects/update-projects')
 
       } catch (error) {
-
-        console.log(error)
+        // Error handled by interceptor
 
       }
 
@@ -114,7 +114,7 @@ const AddProjects = () => {
         try {
 
           await axiosClient.post('/api/admin/project/create-project', data)
-
+          toast.success('Project created successfully!')
           reset()
           navigate('/projects/update-projects')
 

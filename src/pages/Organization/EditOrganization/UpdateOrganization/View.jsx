@@ -3,6 +3,7 @@ import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
+import toast from 'react-hot-toast'
 
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
@@ -45,7 +46,7 @@ const ViewOrganization = () => {
       setTotalPages(response.data.totalPages)
       setTotalRecords(response.data.totalRecords)
     } catch (error) {
-      console.error('Error fetching companies:', error)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }
@@ -78,6 +79,7 @@ const ViewOrganization = () => {
             data: [...selectedIds],
           })
 
+          toast.success('Organization(s) deleted successfully!')
           setSelectedIds(new Set())
           fetchorganizations(currentPage, search)
 
@@ -118,65 +120,65 @@ const ViewOrganization = () => {
 
           <CardBody>
 
-  <Row className="align-items-center g-2">
+            <Row className="align-items-center g-2">
 
-    {/* Search */}
-    <Col xs={12} md={6} lg={4}>
-      <div className="position-relative">
-        <IconifyIcon
-          icon="bx:search-alt"
-          className="position-absolute"
-          style={{
-            left: 12,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            fontSize: 18,
-          }}
-        />
+              {/* Search */}
+              <Col xs={12} md={6} lg={4}>
+                <div className="position-relative">
+                  <IconifyIcon
+                    icon="bx:search-alt"
+                    className="position-absolute"
+                    style={{
+                      left: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      fontSize: 18,
+                    }}
+                  />
 
-        <input
-          type="search"
-          className="form-control ps-5"
-          placeholder="Search by name..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-      </div>
-    </Col>
+                  <input
+                    type="search"
+                    className="form-control ps-5"
+                    placeholder="Search by name..."
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                  />
+                </div>
+              </Col>
 
-    {/* Buttons */}
-    <Col
-      xs={12}
-      md={6}
-      lg={8}
-      className="d-flex gap-2 justify-content-md-end flex-wrap"
-    >
+              {/* Buttons */}
+              <Col
+                xs={12}
+                md={6}
+                lg={8}
+                className="d-flex gap-2 justify-content-md-end flex-wrap"
+              >
 
-      <Button
-        variant="primary"
-        className="flex-grow-1 flex-md-grow-0 px-4"
-        onClick={() => {
-          setCurrentPage(1)
-          setSearch(searchInput)
-        }}
-      >
-        Apply
-      </Button>
+                <Button
+                  variant="primary"
+                  className="flex-grow-1 flex-md-grow-0 px-4"
+                  onClick={() => {
+                    setCurrentPage(1)
+                    setSearch(searchInput)
+                  }}
+                >
+                  Apply
+                </Button>
 
-      <Button
-        variant="danger"
-        className="flex-grow-1 flex-md-grow-0 px-4"
-        disabled={selectedIds.size === 0}
-        onClick={deleteOrganizations}
-      >
-        Delete
-      </Button>
+                <Button
+                  variant="danger"
+                  className="flex-grow-1 flex-md-grow-0 px-4"
+                  disabled={selectedIds.size === 0}
+                  onClick={deleteOrganizations}
+                >
+                  Delete
+                </Button>
 
-    </Col>
+              </Col>
 
-  </Row>
+            </Row>
 
-</CardBody>
+          </CardBody>
 
 
           <div className="table-responsive table-centered">
@@ -235,8 +237,8 @@ const ViewOrganization = () => {
 
                       <td>{organization.name || '-'}</td>
                       <td>{organization.clDays || '-'}</td>
-                      <td>{organization.type || '-' }</td>
-                      <td>{organization.IPWhitelist[0] || '-'}</td>
+                      <td>{organization.type || '-'}</td>
+                      <td>{organization.IPWhitelist?.[0] || '-'}</td>
                       <td>{organization.foundedAt || '-'}</td>
 
                     </tr>

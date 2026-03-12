@@ -1,5 +1,5 @@
 import ComponentContainerCard from '@/components/ComponentContainerCard'
-import { Button, Form,Row,Col } from 'react-bootstrap'
+import { Button, Form, Row, Col } from 'react-bootstrap'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import axiosClient from '@/helpers/httpClient'
+import toast from 'react-hot-toast'
 
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
@@ -54,7 +55,7 @@ const OrganizationDetailsForm = () => {
 
   const onSubmit = async (data) => {
     const d = new Date(data.foundedAt)
-  const foundedAt = `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`
+    const foundedAt = `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`
     const newData = {
       name: data.organizationName,
       type: data.organizationType,
@@ -65,28 +66,27 @@ const OrganizationDetailsForm = () => {
       coordinates: geoCoords,
     }
 
-    console.log('Organization Details Submitted:', newData)
+
 
     if (is2FAAuthnticator) {
 
       try {
 
-       navigate('/2fa-authnticator', {
-      state: {
-        action: "ORG",
-        path: "/organization/organization-details"
-      }
-    }
-        
-       )
+        navigate('/2fa-authnticator', {
+          state: {
+            action: "ORG",
+            path: "/organization/organization-details"
+          }
+        }
+
+        )
       } catch (error) {
 
-        console.error(error)
+        // Error handled by interceptor
 
       }
 
     } else {
-      console.log(is2FAAuthnticator)
       require2FA(async () => {
 
         try {
@@ -96,6 +96,7 @@ const OrganizationDetailsForm = () => {
             newData
           )
 
+          toast.success('Organization added successfully!')
           reset()
           navigate('/organization/view-organization')
 
@@ -116,120 +117,120 @@ const OrganizationDetailsForm = () => {
   return (
     <Row className="justify-content-center mt-4">
 
-  <Col xs={12} md={10} lg={8} xl={7}>
+      <Col xs={12} md={10} lg={8} xl={7}>
 
-    <ComponentContainerCard id="basic" title="Organization Details">
+        <ComponentContainerCard id="basic" title="Organization Details">
 
-      <Form noValidate onSubmit={handleSubmit(onSubmit)}>
+          <Form noValidate onSubmit={handleSubmit(onSubmit)}>
 
-        <div className="row">
+            <div className="row">
 
-          <div className="col-md-6 mb-3">
-            <Form.Label>
-              Organization Name <span className="text-danger">*</span>
-            </Form.Label>
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Organization Name <span className="text-danger">*</span>
+                </Form.Label>
 
-            <Form.Control
-              placeholder="Enter Organization Name"
-              {...register('organizationName')}
-            />
+                <Form.Control
+                  placeholder="Enter Organization Name"
+                  {...register('organizationName')}
+                />
 
-            <small className="text-danger">
-              {errors.organizationName?.message}
-            </small>
-          </div>
+                <small className="text-danger">
+                  {errors.organizationName?.message}
+                </small>
+              </div>
 
-          <div className="col-md-6 mb-3">
-            <Form.Label>
-              Organization Type <span className="text-danger">*</span>
-            </Form.Label>
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Organization Type <span className="text-danger">*</span>
+                </Form.Label>
 
-            <Form.Control
-              placeholder="Enter Organization Type"
-              {...register('organizationType')}
-            />
+                <Form.Control
+                  placeholder="Enter Organization Type"
+                  {...register('organizationType')}
+                />
 
-            <small className="text-danger">
-              {errors.organizationType?.message}
-            </small>
-          </div>
+                <small className="text-danger">
+                  {errors.organizationType?.message}
+                </small>
+              </div>
 
-          <div className="col-md-6 mb-3">
-            <Form.Label>
-              Founded At <span className="text-danger">*</span>
-            </Form.Label>
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Founded At <span className="text-danger">*</span>
+                </Form.Label>
 
-            <Form.Control
-              type="date"
-              max={new Date().toISOString().split('T')[0]}
-              {...register('foundedAt')}
-            />
+                <Form.Control
+                  type="date"
+                  max={new Date().toISOString().split('T')[0]}
+                  {...register('foundedAt')}
+                />
 
-            <small className="text-danger">
-              {errors.foundedAt?.message}
-            </small>
-          </div>
+                <small className="text-danger">
+                  {errors.foundedAt?.message}
+                </small>
+              </div>
 
-          <div className="col-md-6 mb-3">
-            <Form.Label>
-              Organization IP Address <span className="text-danger">*</span>
-            </Form.Label>
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Organization IP Address <span className="text-danger">*</span>
+                </Form.Label>
 
-            <Form.Control
-              type="text"
-              placeholder="Enter IP Address (e.g., 192.168.1.1)"
-              {...register('ipAddress')}
-              maxLength={15}
-            />
+                <Form.Control
+                  type="text"
+                  placeholder="Enter IP Address (e.g., 192.168.1.1)"
+                  {...register('ipAddress')}
+                  maxLength={15}
+                />
 
-            <small className="text-danger">
-              {errors.ipAddress?.message}
-            </small>
-          </div>
+                <small className="text-danger">
+                  {errors.ipAddress?.message}
+                </small>
+              </div>
 
-          <div className="col-md-6 mb-3">
-            <Form.Label>
-              Casual Leaves <span className="text-danger">*</span>
-            </Form.Label>
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Casual Leaves <span className="text-danger">*</span>
+                </Form.Label>
 
-            <Form.Control
-              type="number"
-              placeholder="Enter Casual Leaves"
-              {...register('casualLeaves')}
-            />
+                <Form.Control
+                  type="number"
+                  placeholder="Enter Casual Leaves"
+                  {...register('casualLeaves')}
+                />
 
-            <small className="text-danger">
-              {errors.casualLeaves?.message}
-            </small>
-          </div>
+                <small className="text-danger">
+                  {errors.casualLeaves?.message}
+                </small>
+              </div>
 
-          <div className="col-12 mb-3">
-            <Form.Label>
-              Description <small className="text-muted">(Optional)</small>
-            </Form.Label>
+              <div className="col-12 mb-3">
+                <Form.Label>
+                  Description <small className="text-muted">(Optional)</small>
+                </Form.Label>
 
-            <Form.Control
-              as="textarea"
-              rows={4}
-              {...register('description')}
-            />
-          </div>
+                <Form.Control
+                  as="textarea"
+                  rows={4}
+                  {...register('description')}
+                />
+              </div>
 
-          <div className="col-12 text-center mt-3">
-            <Button type="submit" variant="primary">
-              Submit
-            </Button>
-          </div>
+              <div className="col-12 text-center mt-3">
+                <Button type="submit" variant="primary">
+                  Submit
+                </Button>
+              </div>
 
-        </div>
+            </div>
 
-      </Form>
+          </Form>
 
-    </ComponentContainerCard>
+        </ComponentContainerCard>
 
-  </Col>
+      </Col>
 
-</Row>
+    </Row>
   )
 }
 

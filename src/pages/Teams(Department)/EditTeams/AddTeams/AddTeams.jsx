@@ -6,6 +6,7 @@ import { Button, Form, Dropdown } from 'react-bootstrap'
 import ComponentContainerCard from '@/components/ComponentContainerCard'
 import axiosClient from '@/helpers/httpClient'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
@@ -17,32 +18,32 @@ const schema = yup.object({
   organizationId: yup.string().required('Organization is required'),
 
   teamManagerId: yup
-  .string()
-  .nullable()
-  .test(
-    "not-same",
-    "Manager and Team Leader cannot be the same",
-    function (value) {
-      const { teamLeaderId } = this.parent
+    .string()
+    .nullable()
+    .test(
+      "not-same",
+      "Manager and Team Leader cannot be the same",
+      function (value) {
+        const { teamLeaderId } = this.parent
 
-      if (!value || !teamLeaderId) return true // allow empty
-      return value !== teamLeaderId
-    }
-  ),
+        if (!value || !teamLeaderId) return true // allow empty
+        return value !== teamLeaderId
+      }
+    ),
 
-teamLeaderId: yup
-  .string()
-  .nullable()
-  .test(
-    "not-same",
-    "Manager and Team Leader cannot be the same",
-    function (value) {
-      const { teamManagerId } = this.parent
+  teamLeaderId: yup
+    .string()
+    .nullable()
+    .test(
+      "not-same",
+      "Manager and Team Leader cannot be the same",
+      function (value) {
+        const { teamManagerId } = this.parent
 
-      if (!value || !teamManagerId) return true // allow empty
-      return value !== teamManagerId
-    }
-  ),
+        if (!value || !teamManagerId) return true // allow empty
+        return value !== teamManagerId
+      }
+    ),
 
   description: yup.string().nullable(),
 
@@ -105,8 +106,7 @@ const CreateTeam = () => {
         setOrganizations(formatted)
 
       } catch (error) {
-
-        console.log(error)
+        // Error handled by interceptor
 
       }
 
@@ -127,8 +127,7 @@ const CreateTeam = () => {
       setEmployees(res.data?.data || [])
 
     } catch (error) {
-
-      console.log(error)
+      // Error handled by interceptor
 
     }
 
@@ -136,12 +135,12 @@ const CreateTeam = () => {
 
   const createTeamApi = async (data) => {
 
-    const res = await axiosClient.post(
+    await axiosClient.post(
       '/api/admin/team/create-team',
       data
     )
 
-    console.log("Response ", res.data)
+    toast.success('Team created successfully!')
 
     reset()
     setSelectedOrg('')
@@ -161,7 +160,7 @@ const CreateTeam = () => {
 
     delete payload.teamLeaderId
 
-    console.log("Payload ", payload)
+
 
     try {
 
@@ -186,8 +185,7 @@ const CreateTeam = () => {
       }
 
     } catch (error) {
-
-      console.error(error)
+      // Error handled by interceptor
 
     }
 

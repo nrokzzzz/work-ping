@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import axiosClient from '@/helpers/httpClient';
 import { useAuthContext } from '@/context/useAuthContext';
+import toast from 'react-hot-toast';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const LoginForm = () => {
     try {
       await axiosClient.post('/api/admin/auth/login', values);
       await login();
+      toast.success('Login successful!');
 
       setTimeout(() => {
         navigate('/dashboard/analytics');
