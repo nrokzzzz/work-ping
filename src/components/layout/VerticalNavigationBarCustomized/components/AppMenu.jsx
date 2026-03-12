@@ -40,7 +40,7 @@ const MenuItemWithChildren = ({
           <ul className={clsx(subMenuClassName)}>
             {(item.children || []).map((child, idx) => {
             return <Fragment key={child.key + idx}>
-                  {child.children ? <MenuItemWithChildren item={child} linkClassName={clsx('nav-link', getActiveClass(child))} activeMenuItems={activeMenuItems} className="sub-nav-item" subMenuClassName="nav sub-navbar-nav" toggleMenu={toggleMenu} /> : <MenuItem item={child} className="sub-nav-item" linkClassName={clsx('sub-nav-link', getActiveClass(child))} />}
+                  {child.children ? <MenuItemWithChildren item={child} linkClassName={clsx('sub-nav-link', getActiveClass(child))} activeMenuItems={activeMenuItems} className="sub-nav-item" subMenuClassName="nav sub-navbar-nav" toggleMenu={toggleMenu} /> : <MenuItem item={child} className="sub-nav-item" linkClassName={clsx('sub-nav-link', getActiveClass(child))} />}
                 </Fragment>;
           })}
           </ul>

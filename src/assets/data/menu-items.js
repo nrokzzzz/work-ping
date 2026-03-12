@@ -1,4 +1,3 @@
-
 export const MENU_ITEMS = [
   {
     key: 'organizations',
@@ -7,24 +6,28 @@ export const MENU_ITEMS = [
     children: [
       {
         key: 'view-organizations',
-        label: 'View Organizations',
+        icon: 'mdi:format-list-bulleted',
+        label: 'View All',
         url: '/organization/view-organizations',
         parentKey: 'organizations',
       },
       {
         key: 'edit-organizations',
-        label: 'Edit Organizations',
+        icon: 'mdi:cogs',
+        label: 'Manage',
         parentKey: 'organizations',
         children: [
           {
             key: 'add-organization',
-            label: 'Add Organization',
+            label: 'Add New',
+            icon: 'mdi:plus-circle-outline',
             url: '/organization/organization-details',
             parentKey: 'edit-organizations',
           },
           {
             key: 'update-organization',
-            label: 'Update Organization',
+            label: 'Update',
+            icon: 'mdi:pencil-outline',
             url: '/organization/update-view-organization',
             parentKey: 'edit-organizations',
           },
@@ -34,29 +37,33 @@ export const MENU_ITEMS = [
   },
   {
     key: 'teams',
-    icon: 'mdi:account-multiple',
+    icon: 'mdi:account-group-outline',
     label: 'Teams',
     children: [
       {
         key: 'view-teams',
-        label: 'View Teams',
+        icon: 'mdi:format-list-bulleted',
+        label: 'View All',
         url: '/teams/view-teams',
         parentKey: 'teams',
       },
       {
         key: 'edit-teams',
-        label: 'Edit Teams',
+        icon: 'mdi:cogs',
+        label: 'Manage',
         parentKey: 'teams',
         children: [
           {
             key: 'add-teams',
-            label: 'Add Teams',
+            label: 'Add New',
+            icon: 'mdi:plus-circle-outline',
             url: '/teams/edit-teams/add-teams',
             parentKey: 'edit-teams',
           },
           {
             key: 'update-teams',
-            label: 'Update Teams',
+            label: 'Update',
+            icon: 'mdi:pencil-outline',
             url: '/teams/update-teams-view',
             parentKey: 'edit-teams',
           },
@@ -66,29 +73,33 @@ export const MENU_ITEMS = [
   },
   {
     key: 'employees',
-    icon: 'mdi:account-group',
+    icon: 'mdi:account-tie',
     label: 'Employees',
     children: [
       {
         key: 'view-employees',
-        label: 'View Employees',
+        icon: 'mdi:format-list-bulleted',
+        label: 'View All',
         url: '/employees/view-employees',
         parentKey: 'employees',
       },
       {
         key: 'edit-employees',
-        label: 'Edit Employees',
+        icon: 'mdi:cogs',
+        label: 'Manage',
         parentKey: 'employees',
         children: [
           {
             key: 'add-employee',
-            label: 'Add Employee',
+            label: 'Add New',
+            icon: 'mdi:plus-circle-outline',
             url: '/employees/add-employees/single-employee-form',
             parentKey: 'edit-employees',
           },
           {
             key: 'update-employees',
-            label: 'Update Employees',
+            label: 'Update',
+            icon: 'mdi:pencil-outline',
             url: '/employees/employees-update-view',
             parentKey: 'edit-employees',
           },
@@ -96,34 +107,37 @@ export const MENU_ITEMS = [
       },
     ],
   },
-
   {
-    key: 'Project-teams',
-    icon: 'mdi:account-multiple',
-    label: 'Project-Teams',
+    key: 'projects',
+    icon: 'mdi:briefcase-variant-outline',
+    label: 'Projects',
     children: [
       {
-        key: 'view-Projectteams',
-        label: 'Project-Teams View',
+        key: 'view-projects',
+        icon: 'mdi:format-list-bulleted',
+        label: 'View All',
         url: '/projects/view-projects',
-        parentKey: 'Project-teams',
+        parentKey: 'projects',
       },
       {
-        key: 'edit-Projectteams',
-        label: 'Edit Project-Teams',
-        parentKey: 'Project-teams',
+        key: 'edit-projects',
+        icon: 'mdi:cogs',
+        label: 'Manage',
+        parentKey: 'projects',
         children: [
           {
-            key: 'add-teams',
-            label: 'Add Project-Teams',
+            key: 'add-projects',
+            label: 'Add New',
+            icon: 'mdi:plus-circle-outline',
             url: '/projects/add-projects',
-            parentKey: 'edit-Projectteams',
+            parentKey: 'edit-projects',
           },
           {
-            key: 'update-teams',
-            label: 'Update Project-Teams',
+            key: 'update-projects',
+            label: 'Update',
+            icon: 'mdi:pencil-outline',
             url: '/projects/update-projects',
-            parentKey: 'edit-Projectteams',
+            parentKey: 'edit-projects',
           },
         ],
       },

@@ -158,12 +158,21 @@
 
                     .sub-nav-link {
                         display: flex;
+                        gap: 10px;
+                        align-items: center;
                         position: relative;
                         white-space: nowrap;
                         transition: all 0.3s ease-in-out;
                         color: $main-nav-item-color;
                         font-size: calc($main-nav-item-font-size * 0.95);
                         padding: calc($main-nav-item-padding-y * 0.25) $main-nav-item-padding-x;
+
+                        .nav-icon {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: calc($main-nav-item-icon-size * 0.85);
+                        }
 
                         &.active {
                             font-weight: $font-weight-medium;
