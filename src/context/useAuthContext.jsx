@@ -24,8 +24,8 @@ export function AuthProvider({ children }) {
       if(res.data.twoFactorEnabled){
         setIs2FAAuthnticator(false);
       }
-      console.log(res);
       setIsAuthenticated(true)
+      console.log(res);
      
     }catch(error){
       console.log(error)

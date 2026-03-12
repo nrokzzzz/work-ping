@@ -158,10 +158,9 @@ const QRAuthModal = () => {
               <Button
                 variant="secondary"
                 onClick={() => {
-                  if (data.action === "ORG")
+                 
                     navigate(data.path)
-                  if (data.action === "SIGN-UP")
-                    navigate(data.path)
+                  
                 }}
                 className="px-4"
               >
