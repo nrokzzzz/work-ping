@@ -97,7 +97,7 @@ const OrganizationDetailsForm = () => {
           )
 
           reset()
-          navigate('/organization/update-view-organization')
+          navigate('/organization/view-organization')
 
         } catch (error) {
 

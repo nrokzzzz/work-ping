@@ -41,7 +41,7 @@ const SignUp = () => {
       </Card>
       <p className="text-white mb-0 text-center">
         I already have an account
-        <Link to="/auth/sign-in-customized" className="text-white fw-bold ms-1">
+        <Link to="/auth/sign-in" className="text-white fw-bold ms-1">
           Sign In
         </Link>
       </p>
