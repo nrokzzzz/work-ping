@@ -36,6 +36,7 @@ const TwoFactorAuthModal = () => {
 
       if (!verifyResponse?.data?.verified) {
         setError('Invalid verification code')
+        setCode('')
         return
       }
 
@@ -62,6 +63,7 @@ const TwoFactorAuthModal = () => {
         'Verification failed. Please try again.'
 
       setError(message)
+      setCode('')
 
     } finally {
 
