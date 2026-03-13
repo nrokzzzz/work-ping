@@ -53,10 +53,11 @@ const AddProjects = () => {
       try {
 
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -79,7 +80,7 @@ const AddProjects = () => {
         `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
       )
 
-      const formatted = (res.data.data || []).map((emp) => ({
+      const formatted = (res.data?.data?.data || []).map((emp) => ({
         name: emp.name,
         employeeId: emp._id
       }))
