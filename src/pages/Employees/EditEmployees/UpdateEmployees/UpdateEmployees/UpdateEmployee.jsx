@@ -299,7 +299,7 @@ const UpdateEmployee = () => {
                   className="form-control d-flex justify-content-between align-items-center arrow-none"
                   style={{ cursor: 'pointer' }}
                 >
-                  <span>{selectedOrg || 'Select Organization'}</span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedOrg || 'Select Organization'}</span>
                   <IconifyIcon icon="bx:chevron-down" className="fs-4" />
                 </Dropdown.Toggle>
 
