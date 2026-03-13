@@ -272,7 +272,7 @@ const BulkUpload = () => {
             <div className="mt-4 p-3 border rounded bg-light">
               <h6 className="mb-2">📌 File Format Instructions</h6>
               <p className="text-muted mb-2">
-                Your Excel / CSV file must contain the following columns in the same order:
+                Your Excel / CSV file must contain the following columns in the same order and must maintain the same label names*:
               </p>
 
               <div className="table-responsive">
@@ -285,22 +285,21 @@ const BulkUpload = () => {
                     </tr>
                   </thead>
                   <tbody>
-
-                    <tr><td>1</td><td>User ID</td><td>23A91A5000</td></tr>
-                    <tr><td>2</td><td>User Name</td><td>Rahul Singh</td></tr>
-                    <tr><td>3</td><td>Email</td><td>example@gmail.com</td></tr>
-                    <tr><td>4</td><td>Organization Name</td><td>Vishnu_priya_1212's Organization</td></tr>
-                    <tr><td>5</td><td>Contact Number</td><td>3690249011</td></tr>
-                    <tr><td>6</td><td>Date of Birth</td><td>28/03/2008</td></tr>
-                    <tr><td>7</td><td>Gender</td><td>Male / Female</td></tr>
-                    <tr><td>8</td><td>Work Type</td><td>Remote / Onsite / Hybrid</td></tr>
-                    <tr><td>9</td><td>Address</td><td>Street 0, City</td></tr>
-                    <tr><td>10</td><td>Date of Joining</td><td>14/04/2025</td></tr>
-                    <tr><td>11</td><td>Aadhaar</td><td>478166794292</td></tr>
-                    <tr><td>12</td><td>Salary</td><td>50000</td></tr>
-                    <tr><td>13</td><td>Passport</td><td>C4047249</td></tr>
-                    <tr><td>14</td><td>PAN</td><td>YVQCB8999N</td></tr>
-                    <tr><td>15</td><td>Bank ID</td><td>35788501242</td></tr>
+                    <tr><td>1</td><td>employeeId</td><td>23A91A5000</td></tr>
+                    <tr><td>2</td><td>name</td><td>Rahul Singh</td></tr>
+                    <tr><td>3</td><td>email</td><td>example@gmail.com</td></tr>
+                    <tr><td>4</td><td>organizationName</td><td>Vishnu_priya_1212's Organization</td></tr>
+                    <tr><td>5</td><td>phone</td><td>3690249011</td></tr>
+                    <tr><td>6</td><td>dob</td><td>28/03/2008</td></tr>
+                    <tr><td>7</td><td>gender</td><td>Male / Female</td></tr>
+                    <tr><td>8</td><td>workType</td><td>Remote / Onsite / Hybrid</td></tr>
+                    <tr><td>9</td><td>address</td><td>Street 0, City</td></tr>
+                    <tr><td>10</td><td>dateOfJoining</td><td>14/04/2025</td></tr>
+                    <tr><td>11</td><td>aadhaar</td><td>478166794292</td></tr>
+                    <tr><td>12</td><td>salary</td><td>50000</td></tr>
+                    <tr><td>13</td><td>passport</td><td>C4047249</td></tr>
+                    <tr><td>14</td><td>pan</td><td>YVQCB8999N</td></tr>
+                    <tr><td>15</td><td>bankId</td><td>35788501242</td></tr>
                   </tbody>
                 </table>
               </div>
