@@ -138,9 +138,9 @@ const UpdateTeam = () => {
 
       try {
 
-        const res = await axiosClient.get(`/api/admin/team/get-team/${id}`)
+        const res = await axiosClient.get(`/api/admin/team/get-team/${id}`, { silent: true })
 
-        const team = res.data
+        const team = res.data?.data
 
         reset({
           teamName: team.teamName,
