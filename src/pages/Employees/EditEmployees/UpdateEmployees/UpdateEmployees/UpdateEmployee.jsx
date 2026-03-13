@@ -184,7 +184,8 @@ const UpdateEmployee = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
         const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
@@ -207,7 +208,8 @@ const UpdateEmployee = () => {
       try {
 
         const res = await axiosClient.get(
-          `/api/admin/employee/get-employee/${employeeId}`
+          `/api/admin/employee/get-employee/${employeeId}`,
+          { silent: true }
         )
 
         const emp = res.data?.data
@@ -215,7 +217,8 @@ const UpdateEmployee = () => {
         setValue("userId", emp.employeeId)
         setValue("userName", emp.name)
         setValue("email", emp.email)
-        setValue("workType", emp.workType)
+        const workTypeMap = { onsite: 'onSite', remote: 'Remote', hybrid: 'Hybrid' }
+        setValue("workType", workTypeMap[emp.workType?.toLowerCase()] || emp.workType)
         const phone = emp.phone?.replace(/^\+\d{1,3}/, '')
         setValue("phone", phone)
 

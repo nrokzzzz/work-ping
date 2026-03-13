@@ -29,7 +29,8 @@ const ViewEmployees = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
         setOrgData(res.data?.data || {})
       } catch (err) {
@@ -62,7 +63,8 @@ const ViewEmployees = () => {
       if (appliedSearch) params.append('search', appliedSearch)
 
       const result = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`,
+        { silent: true }
       )
 
       setEmployees(result.data?.data?.data || [])

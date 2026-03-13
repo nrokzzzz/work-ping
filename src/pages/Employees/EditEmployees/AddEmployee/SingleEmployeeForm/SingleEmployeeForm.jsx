@@ -168,7 +168,8 @@ const AddEmployee = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
         const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
