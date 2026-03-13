@@ -33,12 +33,13 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
       }
 
       const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params}`,
+        { silent: true }
       )
 
-      setEmployees(res.data.data || [])
-      setTotalPages(res.data.totalPages || 0)
-      setTotalRecords(res.data.totalRecords || 0)
+      setEmployees(res.data?.data?.data || [])
+      setTotalPages(res.data?.data?.totalPages || 0)
+      setTotalRecords(res.data?.data?.totalRecords || 0)
 
     } catch (err) {
       console.log(err)

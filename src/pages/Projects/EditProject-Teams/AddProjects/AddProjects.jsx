@@ -77,7 +77,8 @@ const AddProjects = () => {
     try {
 
       const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`,
+        { silent: true }
       )
 
       const formatted = (res.data?.data?.data || []).map((emp) => ({
