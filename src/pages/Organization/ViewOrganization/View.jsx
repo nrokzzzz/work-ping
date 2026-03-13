@@ -29,15 +29,15 @@ const ViewOrganization = () => {
       }
 
       const response = await axiosClient.get(
-        `/api/admin/organization/get-organizations?${params.toString()}`
+        `/api/admin/organization/get-organizations?${params.toString()}`,
+        { silent: true }
       )
 
-      console.log(response.data.organizations)
-      setorganizations(response.data.organizations)
-      setTotalPages(response.data.totalPages)
-      setTotalRecords(response.data.totalRecords)
+      setorganizations(response.data?.data?.organizations || [])
+      setTotalPages(response.data?.data?.totalPages || 0)
+      setTotalRecords(response.data?.data?.totalRecords || 0)
     } catch (error) {
-      console.error('Error fetching companies:', error)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }
