@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
+import toast from 'react-hot-toast'
+import { use2FA } from '@/context/TwoFAContext'
 
 const ViewTeams = () => {
   const itemsPerPage = 10
 
   const [teams, setTeams] = useState([])
   const [organizations, setOrganizations] = useState([])
+  const [selectedIds, setSelectedIds] = useState(new Set())
 
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
@@ -19,6 +23,8 @@ const ViewTeams = () => {
   const [appliedOrganization, setAppliedOrganization] = useState('')
 
   const [loading, setLoading] = useState(false)
+
+  const { require2FA } = use2FA()
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -39,10 +45,7 @@ const ViewTeams = () => {
   const fetchTeams = async (page) => {
     setLoading(true)
     try {
-      const params = new URLSearchParams({
-        page,
-        limit: itemsPerPage,
-      })
+      const params = new URLSearchParams({ page, limit: itemsPerPage })
 
       if (appliedSearch) params.append('search', appliedSearch)
       if (appliedOrganization) params.append('organizationId', appliedOrganization)
@@ -71,38 +74,58 @@ const ViewTeams = () => {
     setCurrentPage(1)
   }
 
-  // ✅ Convert organizationId → organization name
   const getOrganizationName = (orgId) => {
-    const org = organizations.find(
-      (o) => o.organizationId === orgId
-    )
+    const org = organizations.find((o) => o.organizationId === orgId)
     return org?.name || '--'
+  }
+
+  const handleSelect = (id, checked) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (checked) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
+
+  const deleteTeams = () => {
+    require2FA(async () => {
+      try {
+        await axiosClient.post(
+          '/api/admin/team/delete-team',
+          { data: [...selectedIds] },
+          { silent: true }
+        )
+        toast.success('Team(s) deleted successfully!')
+        setSelectedIds(new Set())
+        fetchTeams(currentPage)
+      } catch (error) {
+        throw new Error(error?.response?.data?.message || 'Failed to delete teams')
+      }
+    })
   }
 
   const getPages = () => {
     if (totalPages <= 5)
       return Array.from({ length: totalPages }, (_, i) => i + 1)
 
-    if (currentPage <= 2)
-      return [1, 2, 3, '...', totalPages]
+    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
 
     if (currentPage >= totalPages - 1)
       return [1, '...', totalPages - 2, totalPages - 1, totalPages]
 
-    return [
-      1,
-      '...',
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      '...',
-      totalPages,
-    ]
+    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
-  const start =
-    totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
+  const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
+
+  const [jumpPage, setJumpPage] = useState('')
+  const handleJumpGo = () => {
+    const n = parseInt(jumpPage, 10)
+    if (!isNaN(n) && n >= 1 && n <= totalPages) setCurrentPage(n)
+    setJumpPage('')
+  }
 
   return (
     <Row>
@@ -110,7 +133,7 @@ const ViewTeams = () => {
         <Card>
           <CardBody>
             <Row className="g-2">
-              {/* Search */}
+
               <Col xs={12} md={4}>
                 <input
                   type="search"
@@ -121,7 +144,6 @@ const ViewTeams = () => {
                 />
               </Col>
 
-              {/* Organization Dropdown */}
               <Col xs={12} md={4}>
                 <select
                   className="form-select"
@@ -129,12 +151,8 @@ const ViewTeams = () => {
                   onChange={(e) => setOrganization(e.target.value)}
                 >
                   <option value="">Select Organization</option>
-
                   {organizations.map((org) => (
-                    <option
-                      key={org.organizationId}
-                      value={org.organizationId}
-                    >
+                    <option key={org.organizationId} value={org.organizationId}>
                       {org.name}
                     </option>
                   ))}
@@ -142,10 +160,21 @@ const ViewTeams = () => {
               </Col>
 
               <Col xs={12} md={4}>
-                <Button className="w-100" onClick={handleApply}>
-                  Apply
-                </Button>
+                <div className="d-flex gap-2">
+                  <Button className="flex-fill" onClick={handleApply}>
+                    Apply
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="flex-fill"
+                    disabled={selectedIds.size === 0}
+                    onClick={deleteTeams}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </Col>
+
             </Row>
           </CardBody>
 
@@ -153,6 +182,7 @@ const ViewTeams = () => {
             <table className="table text-nowrap mb-0">
               <thead className="bg-light">
                 <tr>
+                  <th>Select</th>
                   <th>Team Name</th>
                   <th>Organization</th>
                   <th>Manager</th>
@@ -163,15 +193,22 @@ const ViewTeams = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-4">Loading...</td>
+                    <td colSpan="5" className="text-center py-4">Loading...</td>
                   </tr>
                 ) : teams.length === 0 ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-4">No records found</td>
+                    <td colSpan="5" className="text-center py-4">No records found</td>
                   </tr>
                 ) : (
                   teams.map((team) => (
                     <tr key={team._id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(team._id)}
+                          onChange={(e) => handleSelect(team._id, e.target.checked)}
+                        />
+                      </td>
                       <td>{team.teamName || '--'}</td>
                       <td>{getOrganizationName(team.organizationId)}</td>
                       <td>
@@ -191,68 +228,46 @@ const ViewTeams = () => {
             </table>
           </div>
 
-          {/* Pagination */}
-          <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
-            <div className="col-12 col-sm">
-              <div className="text-muted">
-                Showing {start} to {end} of {totalRecords} records
-              </div>
-            </div>
-
-            <Col xs={12} sm="auto">
-              <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
-
+          <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
+            <div className="text-muted small">Showing {start} to {end} of {totalRecords} records</div>
+            <div className="d-flex flex-wrap align-items-center gap-2">
+              <ul className="pagination pagination-rounded m-0">
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage > 1)
-                        setCurrentPage(currentPage - 1)
-                    }}
-                  >
-                    ‹
+                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}>
+                    <IconifyIcon icon="bx:left-arrow-alt" />
                   </Link>
                 </li>
-
                 {getPages().map((p, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''
-                      } ${p === '...' ? 'disabled' : ''}`}
-                  >
-                    <Link
-                      to="#"
-                      className="page-link"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        if (typeof p === 'number')
-                          setCurrentPage(p)
-                      }}
-                    >
-                      {p}
-                    </Link>
+                  <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === 'number') setCurrentPage(p) }}>{p}</Link>
                   </li>
                 ))}
-
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage < totalPages)
-                        setCurrentPage(currentPage + 1)
-                    }}
-                  >
-                    ›
+                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}>
+                    <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
                 </li>
-
               </ul>
-            </Col>
+              {totalPages > 1 && (
+                <div className="d-flex align-items-center gap-1">
+                  <span className="text-muted small text-nowrap">Go to</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={totalPages}
+                    value={jumpPage}
+                    onChange={(e) => setJumpPage(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
+                    className="form-control form-control-sm text-center"
+                    style={{ width: 60 }}
+                    placeholder={`/${totalPages}`}
+                  />
+                  <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
+                </div>
+              )}
+            </div>
           </div>
+
         </Card>
       </Col>
     </Row>
