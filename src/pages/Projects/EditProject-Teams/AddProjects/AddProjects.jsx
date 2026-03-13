@@ -81,7 +81,7 @@ const AddProjects = () => {
       )
 
       const formatted = (res.data?.data?.data || []).map((emp) => ({
-        name: emp.name,
+        label: emp.employeeId ? `${emp.employeeId} (${emp.name})` : emp.name,
         employeeId: emp._id
       }))
 
@@ -276,18 +276,18 @@ const AddProjects = () => {
 
               {projectManagers
                 .filter(p =>
-                  p.name.toLowerCase().includes(pmSearch.toLowerCase())
+                  p.label.toLowerCase().includes(pmSearch.toLowerCase())
                 )
                 .map((p) => (
                   <Dropdown.Item
                     key={p.employeeId}
                     onClick={() => {
-                      setSelectedPM(p.name)
+                      setSelectedPM(p.label)
                       setValue('projectManager', p.employeeId)
                       setPmSearch('')
                     }}
                   >
-                    {p.name}
+                    {p.label}
                   </Dropdown.Item>
                 ))}
 

@@ -180,6 +180,7 @@ const Viewprojects = () => {
                   <th>Assigned Date</th>
                   <th>Due Date</th>
                   <th>Contracted By</th>
+                  <th>Project Manager</th>
                   <th>Organization Name</th>
                 </tr>
               </thead>
@@ -187,7 +188,7 @@ const Viewprojects = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="10" className="text-center py-4">
+                    <td colSpan="11" className="text-center py-4">
                       Loading...
                     </td>
                   </tr>
@@ -195,7 +196,7 @@ const Viewprojects = () => {
                 ) : projects.length === 0 ? (
 
                   <tr>
-                    <td colSpan="10" className="text-center py-4">
+                    <td colSpan="11" className="text-center py-4">
                       No records found
                     </td>
                   </tr>
@@ -215,6 +216,7 @@ const Viewprojects = () => {
                       <td>{project.assignedDate || '--'}</td>
                       <td>{project.dueDate || '--'}</td>
                       <td>{project.contractedBy || '--'}</td>
+                      <td>{project.manager?.[0]?.employeeId ? `${project.manager[0].employeeId} (${project.projectManagerName})` : project.projectManagerName || '--'}</td>
                       <td>{project.organizationName || '--'}</td>
                     </tr>
 

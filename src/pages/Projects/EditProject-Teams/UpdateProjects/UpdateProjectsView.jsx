@@ -285,7 +285,7 @@ const Viewprojects = () => {
                       <td>{project.assignedDate || '--'}</td>
                       <td>{project.dueDate || '--'}</td>
                       <td>{project.contractedBy || '--'}</td>
-                      <td>{project.projectManagerName || '--'}</td>
+                      <td>{project.manager?.[0]?.employeeId ? `${project.manager[0].employeeId} (${project.projectManagerName})` : project.projectManagerName || '--'}</td>
                       <td>{project.organizationName || '--'}</td>
                     </tr>
                   ))
