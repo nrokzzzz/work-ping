@@ -23,9 +23,10 @@ const Viewprojects = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
-        setOrgData(res.data || {})
+        setOrgData(res.data?.data || {})
       } catch (err) {
         // Error handled by interceptor
       }
@@ -72,9 +73,9 @@ const Viewprojects = () => {
         `/api/admin/project/get-projects?${params.toString()}`
       )
 
-      setProjects(result.data.projects || [])
-      setTotalPages(result.data.totalPages || 0)
-      setTotalRecords(result.data.totalRecords || 0)
+      setProjects(result.data?.data?.projects || [])
+      setTotalPages(result.data?.data?.totalPages || 0)
+      setTotalRecords(result.data?.data?.totalRecords || 0)
 
     } catch (e) {
       // Error handled by interceptor
