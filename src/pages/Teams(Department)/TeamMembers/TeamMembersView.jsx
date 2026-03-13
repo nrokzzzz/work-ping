@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 import toast from 'react-hot-toast'
 import { use2FA } from '@/context/TwoFAContext'
 
-const ViewTeams = () => {
+const TeamMembersView = () => {
+  const { teamId } = useParams()
   const itemsPerPage = 10
 
-  const [teams, setTeams] = useState([])
-  const [organizations, setOrganizations] = useState([])
+  const [employees, setEmployees] = useState([])
   const [selectedIds, setSelectedIds] = useState(new Set())
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -19,42 +19,22 @@ const ViewTeams = () => {
 
   const [search, setSearch] = useState('')
   const [appliedSearch, setAppliedSearch] = useState('')
-  const [organization, setOrganization] = useState('')
-  const [appliedOrganization, setAppliedOrganization] = useState('')
-
   const [loading, setLoading] = useState(false)
 
   const { require2FA } = use2FA()
 
-  useEffect(() => {
-    const fetchOrganizations = async () => {
-      try {
-        const res = await axiosClient.get(
-          'api/admin/organization/get-all-organization-ids',
-          { silent: true }
-        )
-        setOrganizations(res.data?.data || [])
-      } catch (err) {
-        // Error handled by interceptor
-      }
-    }
-
-    fetchOrganizations()
-  }, [])
-
-  const fetchTeams = async (page) => {
+  const fetchEmployees = async (page) => {
     setLoading(true)
     try {
-      const params = new URLSearchParams({ page, limit: itemsPerPage })
-
+      const params = new URLSearchParams({ page, limit: itemsPerPage, teamId })
       if (appliedSearch) params.append('search', appliedSearch)
-      if (appliedOrganization) params.append('organizationId', appliedOrganization)
 
       const res = await axiosClient.get(
-        `api/admin/team/get-teams-filter?${params.toString()}`,
+        `/api/admin/team/get-team-members?${params.toString()}`,
         { silent: true }
       )
-      setTeams(res.data?.data?.teamList || [])
+
+      setEmployees(res.data?.data?.members || res.data?.data?.data || [])
       setTotalPages(res.data?.data?.totalPages || 0)
       setTotalRecords(res.data?.data?.totalRecords || 0)
     } catch (err) {
@@ -65,18 +45,12 @@ const ViewTeams = () => {
   }
 
   useEffect(() => {
-    fetchTeams(currentPage)
-  }, [currentPage, appliedSearch, appliedOrganization])
+    if (teamId) fetchEmployees(currentPage)
+  }, [currentPage, appliedSearch, teamId])
 
   const handleApply = () => {
     setAppliedSearch(search.trim())
-    setAppliedOrganization(organization)
     setCurrentPage(1)
-  }
-
-  const getOrganizationName = (orgId) => {
-    const org = organizations.find((o) => o.organizationId === orgId)
-    return org?.name || '--'
   }
 
   const handleSelect = (id, checked) => {
@@ -88,19 +62,19 @@ const ViewTeams = () => {
     })
   }
 
-  const deleteTeams = () => {
+  const deleteEmployees = () => {
     require2FA(async () => {
       try {
         await axiosClient.post(
-          '/api/admin/team/delete-team',
+          '/api/admin/employees/delete-employees',
           { data: [...selectedIds] },
           { silent: true }
         )
-        toast.success('Team(s) deleted successfully!')
+        toast.success('Employee(s) deleted successfully!')
         setSelectedIds(new Set())
-        fetchTeams(currentPage)
+        fetchEmployees(currentPage)
       } catch (error) {
-        throw new Error(error?.response?.data?.message || 'Failed to delete teams')
+        throw new Error(error?.response?.data?.message || 'Failed to delete employees')
       }
     })
   }
@@ -108,12 +82,9 @@ const ViewTeams = () => {
   const getPages = () => {
     if (totalPages <= 5)
       return Array.from({ length: totalPages }, (_, i) => i + 1)
-
     if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
-
     if (currentPage >= totalPages - 1)
       return [1, '...', totalPages - 2, totalPages - 1, totalPages]
-
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
@@ -132,43 +103,32 @@ const ViewTeams = () => {
       <Col>
         <Card>
           <CardBody>
-            <Row className="g-2">
+            <Row className="g-2 align-items-center">
 
-              <Col xs={12} md={4}>
-                <input
-                  type="search"
-                  className="form-control"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
+              <Col xs={12} md={5}>
+                <div className="position-relative">
+                  <IconifyIcon
+                    icon="bx:search-alt"
+                    className="position-absolute"
+                    style={{ left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 18 }}
+                  />
+                  <input
+                    type="search"
+                    className="form-control ps-5"
+                    placeholder="Search members..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
               </Col>
 
-              <Col xs={12} md={4}>
-                <select
-                  className="form-select"
-                  value={organization}
-                  onChange={(e) => setOrganization(e.target.value)}
-                >
-                  <option value="">Select Organization</option>
-                  {organizations.map((org) => (
-                    <option key={org.organizationId} value={org.organizationId}>
-                      {org.name}
-                    </option>
-                  ))}
-                </select>
-              </Col>
-
-              <Col xs={12} md={4}>
-                <div className="d-flex gap-2">
-                  <Button className="flex-fill" onClick={handleApply}>
-                    Apply
-                  </Button>
+              <Col xs={12} md={7}>
+                <div className="d-flex gap-2 justify-content-md-end">
+                  <Button onClick={handleApply}>Apply</Button>
                   <Button
                     variant="danger"
-                    className="flex-fill"
                     disabled={selectedIds.size === 0}
-                    onClick={deleteTeams}
+                    onClick={deleteEmployees}
                   >
                     Delete
                   </Button>
@@ -183,44 +143,38 @@ const ViewTeams = () => {
               <thead className="bg-light">
                 <tr>
                   <th>Select</th>
-                  <th>Team Name</th>
+                  <th>User ID</th>
+                  <th>User Name</th>
+                  <th>Email</th>
                   <th>Organization</th>
-                  <th>Manager</th>
-                  <th>Team Leader</th>
+                  <th>Work Type</th>
                 </tr>
               </thead>
 
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-4">Loading...</td>
+                    <td colSpan="6" className="text-center py-4">Loading...</td>
                   </tr>
-                ) : teams.length === 0 ? (
+                ) : employees.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-4">No records found</td>
+                    <td colSpan="6" className="text-center py-4">No members found</td>
                   </tr>
                 ) : (
-                  teams.map((team) => (
-                    <tr key={team._id}>
+                  employees.map((emp) => (
+                    <tr key={emp._id}>
                       <td>
                         <input
                           type="checkbox"
-                          checked={selectedIds.has(team._id)}
-                          onChange={(e) => handleSelect(team._id, e.target.checked)}
+                          checked={selectedIds.has(emp._id)}
+                          onChange={(e) => handleSelect(emp._id, e.target.checked)}
                         />
                       </td>
-                      <td>{team.teamName || '--'}</td>
-                      <td>{getOrganizationName(team.organizationId)}</td>
-                      <td>
-                        {team.manager
-                          ? `${team.manager.employeeId} (${team.manager.name})`
-                          : '--'}
-                      </td>
-                      <td>
-                        {team.leaders?.[0]
-                          ? `${team.leaders[0].employeeId} (${team.leaders[0].name})`
-                          : '--'}
-                      </td>
+                      <td>{emp.employeeId || '--'}</td>
+                      <td>{emp.name || '--'}</td>
+                      <td>{emp.email || '--'}</td>
+                      <td>{emp.organizationName || '--'}</td>
+                      <td>{emp.workType || '--'}</td>
                     </tr>
                   ))
                 )}
@@ -252,15 +206,11 @@ const ViewTeams = () => {
                 <div className="d-flex align-items-center gap-1">
                   <span className="text-muted small text-nowrap">Go to</span>
                   <input
-                    type="number"
-                    min={1}
-                    max={totalPages}
-                    value={jumpPage}
+                    type="number" min={1} max={totalPages} value={jumpPage}
                     onChange={(e) => setJumpPage(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
                     className="form-control form-control-sm text-center"
-                    style={{ width: 60 }}
-                    placeholder={`/${totalPages}`}
+                    style={{ width: 60 }} placeholder={`/${totalPages}`}
                   />
                   <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
                 </div>
@@ -274,4 +224,4 @@ const ViewTeams = () => {
   )
 }
 
-export default ViewTeams
+export default TeamMembersView

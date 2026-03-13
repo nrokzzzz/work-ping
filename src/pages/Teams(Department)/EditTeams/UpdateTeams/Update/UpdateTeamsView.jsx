@@ -262,12 +262,19 @@ const ViewTeams = () => {
                           size="sm"
                           className="me-2"
                           onClick={() =>
-                            navigate(
-                              `/teams/edit-teams/update-teams/${team._id}`
-                            )
+                            navigate(`/teams/edit-teams/update-teams/${team._id}`)
                           }
                         >
                           <IconifyIcon icon="bx:edit" />
+                        </Button>
+                        <Button
+                          variant="soft-info"
+                          size="sm"
+                          onClick={() =>
+                            navigate(`/teams/team-members/team-members-view/${team._id}`)
+                          }
+                        >
+                          <IconifyIcon icon="bx:group" />
                         </Button>
                       </td>
 
