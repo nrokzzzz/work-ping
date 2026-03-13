@@ -90,10 +90,11 @@ const UpdateTeam = () => {
       try {
 
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -117,10 +118,11 @@ const UpdateTeam = () => {
     try {
 
       const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`,
+        { silent: true }
       )
 
-      setEmployees(res.data?.data || [])
+      setEmployees(res.data?.data?.data || [])
 
     } catch (error) {
 
