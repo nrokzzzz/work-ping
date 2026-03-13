@@ -81,8 +81,7 @@ const BulkUpload = () => {
               },
             }
           )
-          console.log(res.data)
-          setAllTasks(res.data)
+          setAllTasks(res.data?.data)
           setShowTable(true)
 
           setFile(null)
@@ -111,8 +110,7 @@ const BulkUpload = () => {
                 },
               }
             )
-            console.log(res.data)
-            setAllTasks(res.data)
+            setAllTasks(res.data?.data)
             setShowTable(true)
 
             setFile(null)
@@ -243,13 +241,13 @@ const BulkUpload = () => {
                       <table className="table table-bordered table-hover text-nowrap">
                         <thead className="table-light">
                           <tr>
-
-                            <th>Index</th>
+                            <th>Row</th>
                             <th>Error</th>
-                            <th>UserId</th>
+                            <th>User ID</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Phone</th>
+                            <th>Contact</th>
+                            <th>Organization</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -257,12 +255,11 @@ const BulkUpload = () => {
                             <tr key={idx}>
                               <td>{task.rowNumber || '--'}</td>
                               <td>{task.error || '--'}</td>
-                              <td>{task.rowData.employeeId || '--'}</td>
-                              <td>{task.rowData.name || '--'}</td>
-                              <td>{task.rowData.email || '--'}</td>
-                              <td>{task.rowData.phone || '--'}</td>
-
-
+                              <td>{task.rowData?.['User ID'] || '--'}</td>
+                              <td>{task.rowData?.['User Name'] || '--'}</td>
+                              <td>{task.rowData?.['Email'] || '--'}</td>
+                              <td>{task.rowData?.['Contact Number'] || '--'}</td>
+                              <td>{task.rowData?.['Organization Name'] || '--'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -289,20 +286,21 @@ const BulkUpload = () => {
                   </thead>
                   <tbody>
 
-                    <tr><td>1</td><td>employeeId</td><td>1</td></tr>
-                    <tr><td>2</td><td>name</td><td>DragoN28</td></tr>
-                    <tr><td>3</td><td>email</td><td>example@gmail.com</td></tr>
-                    <tr><td>4</td><td>phone</td><td>07013874687</td></tr>
-                    <tr><td>4</td><td>date Of Birth</td><td>dd-mm-yyyy</td></tr>
-                    <tr><td>4</td><td>organizationName</td><td>ORG-27</td></tr>
-                    <tr><td>10</td><td>gender</td><td>Male / Female</td></tr>
-                    <tr><td>4</td><td>date Of Joining</td><td>dd-mm-yyyy</td></tr>
-                    <tr><td>5</td><td>address</td><td>5-45,GEDDANAPALLI</td></tr>
-                    <tr><td>6</td><td>aadhaar</td><td>123412341234</td></tr>
-                    <tr><td>7</td><td>passport</td><td>P1234567</td></tr>
-                    <tr><td>8</td><td>salary</td><td>50000</td></tr>
-                    <tr><td>8</td><td>pan</td><td>ABCDE1234F</td></tr>
-                    <tr><td>9</td><td>bankId</td><td>1234567890</td></tr>
+                    <tr><td>1</td><td>User ID</td><td>23A91A5000</td></tr>
+                    <tr><td>2</td><td>User Name</td><td>Rahul Singh</td></tr>
+                    <tr><td>3</td><td>Email</td><td>example@gmail.com</td></tr>
+                    <tr><td>4</td><td>Organization Name</td><td>Vishnu_priya_1212's Organization</td></tr>
+                    <tr><td>5</td><td>Contact Number</td><td>3690249011</td></tr>
+                    <tr><td>6</td><td>Date of Birth</td><td>28/03/2008</td></tr>
+                    <tr><td>7</td><td>Gender</td><td>Male / Female</td></tr>
+                    <tr><td>8</td><td>Work Type</td><td>Remote / Onsite / Hybrid</td></tr>
+                    <tr><td>9</td><td>Address</td><td>Street 0, City</td></tr>
+                    <tr><td>10</td><td>Date of Joining</td><td>14/04/2025</td></tr>
+                    <tr><td>11</td><td>Aadhaar</td><td>478166794292</td></tr>
+                    <tr><td>12</td><td>Salary</td><td>50000</td></tr>
+                    <tr><td>13</td><td>Passport</td><td>C4047249</td></tr>
+                    <tr><td>14</td><td>PAN</td><td>YVQCB8999N</td></tr>
+                    <tr><td>15</td><td>Bank ID</td><td>35788501242</td></tr>
                   </tbody>
                 </table>
               </div>
