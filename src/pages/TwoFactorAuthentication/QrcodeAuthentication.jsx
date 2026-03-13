@@ -69,9 +69,11 @@ const QRAuthModal = () => {
         }
       } else {
         setError('Invalid verification code')
+        setCode('')
       }
     } catch (err) {
-      setError('Verification failed. Please try again.')
+      setError('Invalid code. Please try again.')
+      setCode('')
     } finally {
       setVerifying(false)
     }
