@@ -26,9 +26,10 @@ const ViewTeams = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          'api/admin/organization/get-all-organization-ids'
+          'api/admin/organization/get-all-organization-ids',
+          { silent: true }
         )
-        setOrganizations(res.data || [])
+        setOrganizations(res.data?.data || [])
       } catch (err) {
         // Error handled by interceptor
       }
@@ -56,7 +57,8 @@ const ViewTeams = () => {
       }
 
       const res = await axiosClient.get(
-        `api/admin/team/get-teams-filter?${params.toString()}`
+        `api/admin/team/get-teams-filter?${params.toString()}`,
+        { silent: true }
       )
       setTeams(res.data?.teamList || [])
       setTotalPages(res.data?.totalPages || 0)
