@@ -112,7 +112,7 @@ const ViewTeams = () => {
 
           await axiosClient.post('/api/admin/team/delete-team', {
             data: [...selectedIds],
-          })
+          }, { silent: true })
 
           toast.success('Team(s) deleted successfully!')
           setSelectedIds(new Set())

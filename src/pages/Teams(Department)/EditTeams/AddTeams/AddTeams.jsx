@@ -139,7 +139,8 @@ const CreateTeam = () => {
 
     await axiosClient.post(
       '/api/admin/team/create-team',
-      data
+      data,
+      { silent: true }
     )
 
     toast.success('Team created successfully!')

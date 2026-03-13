@@ -158,7 +158,8 @@ const UpdateOrganizationDetailsForm = () => {
 
           const response = await axiosClient.post(
             '/api/admin/organization/update-organization',
-            newData
+            newData,
+            { silent: true }
           )
 
           if (response?.data) {

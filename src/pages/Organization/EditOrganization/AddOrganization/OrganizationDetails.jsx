@@ -116,7 +116,8 @@ const OrganizationDetailsForm = () => {
       try {
         await axiosClient.post(
           '/api/admin/organization/add-organization',
-          newData
+          newData,
+          { silent: true }
         )
 
         toast.success('Organization added successfully!')

@@ -98,7 +98,7 @@ const AddProjects = () => {
 
       try {
 
-        await axiosClient.post('/api/admin/project/create-project', data)
+        await axiosClient.post('/api/admin/project/create-project', data, { silent: true })
         toast.success('Project created successfully!')
         reset()
         navigate('/projects/update-projects')
@@ -114,7 +114,7 @@ const AddProjects = () => {
 
         try {
 
-          await axiosClient.post('/api/admin/project/create-project', data)
+          await axiosClient.post('/api/admin/project/create-project', data, { silent: true })
           toast.success('Project created successfully!')
           reset()
           navigate('/projects/view-projects')

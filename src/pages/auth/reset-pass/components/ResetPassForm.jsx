@@ -116,7 +116,8 @@ const ResetPassForm = () => {
             email: data.email,
             otp: data.otp,
             newPassword: data.newPassword,
-          }
+          },
+          { silent: true }
         );
 
         toast.success("Password changed successfully!");
@@ -142,8 +143,9 @@ const ResetPassForm = () => {
     try {
       setIsResending(true);
       await axiosClient.post(
-        "/api/admin/forgot-password/send-otp", // Fixed endpoint to match original send
-        { email: getValues("email") }
+        "/api/admin/forgot-password/send-otp",
+        { email: getValues("email") },
+        { silent: true }
       );
       toast.success("OTP resent successfully!");
       setOtpTimer(60);

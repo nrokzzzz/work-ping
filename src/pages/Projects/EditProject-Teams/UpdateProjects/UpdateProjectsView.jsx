@@ -106,7 +106,7 @@ const Viewprojects = () => {
     try {
       await axiosClient.post('/api/admin/project/delete-projects', {
         data: [...selectedIds],
-      })
+      }, { silent: true })
 
       toast.success('Project(s) deleted successfully!')
       setSelectedIds(new Set())

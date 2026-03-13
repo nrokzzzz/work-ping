@@ -58,7 +58,7 @@ const SignUpForm = () => {
         password: values.password
       };
 
-      const res = await axiosClient.post('/api/admin/auth/register', payload);
+      const res = await axiosClient.post('/api/admin/auth/register', payload, { silent: true });
 
       if (res.status !== 201) {
         throw new Error(res.data?.error || 'Signup failed');

@@ -126,7 +126,7 @@ const ViewEmployees = () => {
 
           await axiosClient.post('/api/admin/employees/delete-employees', {
             data: [...selectedIds],
-          })
+          }, { silent: true })
           toast.success('Employee(s) deleted successfully!')
           setSelectedIds(new Set())
           fetchEmployees(currentPage)

@@ -78,7 +78,7 @@ const ViewOrganization = () => {
 
           await axiosClient.post('/api/admin/organization/delete-organizations', {
             data: [...selectedIds],
-          })
+          }, { silent: true })
 
           toast.success('Organization(s) deleted successfully!')
           setSelectedIds(new Set())

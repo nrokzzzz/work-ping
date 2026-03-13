@@ -184,7 +184,8 @@ const UpdateTeam = () => {
 
     await axiosClient.post(
       "/api/admin/team/update-team",
-      payload
+      payload,
+      { silent: true }
     )
 
     toast.success("Team updated successfully!")
