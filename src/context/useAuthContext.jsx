@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
   const verifySession = async () => {
     try {
       const res = await axiosClient.get('/verify-cookie', { silent: true });
-      if (res.data.twoFactorEnabled) {
+      if (res.data?.data?.twoFactorEnabled) {
         setIs2FAAuthnticator(false);
       }
       setIsAuthenticated(true);

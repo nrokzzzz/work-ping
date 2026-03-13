@@ -56,7 +56,7 @@ const QRAuthModal = () => {
 
         const cookieResponse = await axiosClient.get('/verify-cookie', { silent: true })
 
-        if (cookieResponse.data.twoFactorEnabled) {
+        if (cookieResponse.data?.data?.twoFactorEnabled) {
           setIs2FAAuthnticator(false)
         }
 
