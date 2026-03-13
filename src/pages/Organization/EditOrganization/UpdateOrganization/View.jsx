@@ -39,12 +39,13 @@ const ViewOrganization = () => {
       }
 
       const response = await axiosClient.get(
-        `/api/admin/organization/get-organizations?${params.toString()}`
+        `/api/admin/organization/get-organizations?${params.toString()}`,
+        { silent: true }
       )
 
-      setorganizations(response.data.organizations)
-      setTotalPages(response.data.totalPages)
-      setTotalRecords(response.data.totalRecords)
+      setorganizations(response.data?.data?.organizations || [])
+      setTotalPages(response.data?.data?.totalPages || 0)
+      setTotalRecords(response.data?.data?.totalRecords || 0)
     } catch (error) {
       // Error handled by interceptor
     } finally {
