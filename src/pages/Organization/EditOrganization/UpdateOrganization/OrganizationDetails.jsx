@@ -83,16 +83,26 @@ const UpdateOrganizationDetailsForm = () => {
       try {
 
         const res = await axiosClient.get(
-          `/api/admin/organization/get-organization-by-id/${organizationId}`
+          `/api/admin/organization/get-organization-by-id/${organizationId}`,
+          { silent: true }
         )
 
-        const data = res.data
+        const data = res.data?.data
 
         let foundedAt = ''
 
         if (data?.foundedAt) {
-          const d = new Date(data.foundedAt)
-          foundedAt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+          // API returns DD-MM-YYYY string
+          const parts = data.foundedAt.split('-')
+          if (parts.length === 3) {
+            const [day, month, year] = parts
+            foundedAt = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+          } else {
+            const d = new Date(data.foundedAt)
+            if (!isNaN(d)) {
+              foundedAt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+            }
+          }
         }
 
         reset({
