@@ -20,51 +20,42 @@ const ViewTeams = () => {
 
   const [loading, setLoading] = useState(false)
 
-  // ✅ Fetch Organizations (YOUR ROUTE)
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          'api/admin/organization/get-all-organization-ids'
+          'api/admin/organization/get-all-organization-ids',
+          { silent: true }
         )
-        console.log(res.data)
-        // backend returns { data: [...] }
-        setOrganizations(res.data || [])
+        setOrganizations(res.data?.data || [])
       } catch (err) {
-        console.error(err)
+        // Error handled by interceptor
       }
     }
 
     fetchOrganizations()
   }, [])
 
-  // ✅ Fetch Teams (YOUR ROUTE)
   const fetchTeams = async (page) => {
     setLoading(true)
-    console.log("calling teams")
     try {
       const params = new URLSearchParams({
         page,
         limit: itemsPerPage,
       })
 
-      if (appliedSearch) {
-        params.append('search', appliedSearch)
-      }
-
-      if (appliedOrganization) {
-        params.append('organizationId', appliedOrganization)
-      }
+      if (appliedSearch) params.append('search', appliedSearch)
+      if (appliedOrganization) params.append('organizationId', appliedOrganization)
 
       const res = await axiosClient.get(
-        `api/admin/team/get-teams-filter?${params.toString()}`
+        `api/admin/team/get-teams-filter?${params.toString()}`,
+        { silent: true }
       )
-      console.log(res)
-      setTeams(res.data?.teamList || [])
-      setTotalPages(res.data?.totalPages || 0)
-      setTotalRecords(res.data?.totalRecords || 0)
+      setTeams(res.data?.data?.teamList || [])
+      setTotalPages(res.data?.data?.totalPages || 0)
+      setTotalRecords(res.data?.data?.totalRecords || 0)
     } catch (err) {
-      console.error(err)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }
@@ -158,44 +149,47 @@ const ViewTeams = () => {
             </Row>
           </CardBody>
 
-          {/* Table */ console.log("teams: " + teams)}
           <div className="table-responsive">
-  <table className="table text-nowrap mb-0">
-    <thead className="bg-light">
-      <tr>
-        <th>User ID</th>
-        <th>User Name</th>
-        <th>Organization Name</th>
-        <th>Work Type</th>
-      </tr>
-    </thead>
+            <table className="table text-nowrap mb-0">
+              <thead className="bg-light">
+                <tr>
+                  <th>Team Name</th>
+                  <th>Organization</th>
+                  <th>Manager</th>
+                  <th>Team Leader</th>
+                </tr>
+              </thead>
 
-    <tbody>
-      {loading ? (
-        <tr>
-          <td colSpan="4" className="text-center py-4">
-            Loading...
-          </td>
-        </tr>
-      ) : teams.length === 0 ? (
-        <tr>
-          <td colSpan="4" className="text-center py-4">
-            No records found
-          </td>
-        </tr>
-      ) : (
-        teams.map((team, index) => (
-          <tr key={index}>
-            <td>{team.userId || '--'}</td>
-            <td>{team.userName || '--'}</td>
-            <td>{getOrganizationName(team.organizationId) || '--'}</td>
-            <td>{team.workType || '--'}</td>
-          </tr>
-        ))
-      )}
-    </tbody>
-  </table>
-</div>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="4" className="text-center py-4">Loading...</td>
+                  </tr>
+                ) : teams.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="text-center py-4">No records found</td>
+                  </tr>
+                ) : (
+                  teams.map((team) => (
+                    <tr key={team._id}>
+                      <td>{team.teamName || '--'}</td>
+                      <td>{getOrganizationName(team.organizationId)}</td>
+                      <td>
+                        {team.manager
+                          ? `${team.manager.employeeId} (${team.manager.name})`
+                          : '--'}
+                      </td>
+                      <td>
+                        {team.leaders?.[0]
+                          ? `${team.leaders[0].employeeId} (${team.leaders[0].name})`
+                          : '--'}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
           {/* Pagination */}
           <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
