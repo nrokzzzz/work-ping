@@ -60,9 +60,9 @@ const ViewTeams = () => {
         `api/admin/team/get-teams-filter?${params.toString()}`,
         { silent: true }
       )
-      setTeams(res.data?.teamList || [])
-      setTotalPages(res.data?.totalPages || 0)
-      setTotalRecords(res.data?.totalRecords || 0)
+      setTeams(res.data?.data?.teamList || [])
+      setTotalPages(res.data?.data?.totalPages || 0)
+      setTotalRecords(res.data?.data?.totalRecords || 0)
     } catch (err) {
       // Error handled by interceptor
     } finally {
@@ -195,11 +195,11 @@ const ViewTeams = () => {
                       onClick={() => navigate(`/teams/team-members/team-members-view/${team._id}`)}
                     >
                       <td>{team.teamName || '--'}</td>
-                      <td>{team.managerId || '--'}</td>
+                      <td>{team.manager ? `${team.manager.employeeId} (${team.manager.name})` : '--'}</td>
                       <td>
                         {getOrganizationName(team.organizationId) || '--'}
                       </td>
-                      <td>{team.leaderIds[0] || '--'}</td>
+                      <td>{team.leaders?.[0] ? `${team.leaders[0].employeeId} (${team.leaders[0].name})` : '--'}</td>
                     </tr>
                   ))
                 )}
