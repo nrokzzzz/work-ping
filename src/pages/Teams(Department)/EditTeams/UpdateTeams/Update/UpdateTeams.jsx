@@ -145,8 +145,8 @@ const UpdateTeam = () => {
         reset({
           teamName: team.teamName,
           organizationId: team.organizationId,
-          teamManagerId: team.managerId?._id || '',
-          teamLeaderId: team.leaderIds?.[0]?._id || '',
+          teamManagerId: team.managerId || '',
+          teamLeaderId: team.leaderIds?.[0] || '',
           description: team.description || '',
         })
 
@@ -158,18 +158,14 @@ const UpdateTeam = () => {
 
         fetchEmployees(team.organizationId)
 
-        if (team.managerId) {
-
-          setSelectedManager(team.managerId.employeeId)
-          setValue('teamManagerId', team.managerId._id)
-
+        if (team.manager) {
+          setSelectedManager(`${team.manager.employeeId} (${team.manager.name})`)
+          setValue('teamManagerId', team.managerId)
         }
 
-        if (team.leaderIds?.length) {
-
-          setSelectedLeader(team.leaderIds[0].employeeId)
-          setValue('teamLeaderId', team.leaderIds[0]._id)
-
+        if (team.leaders?.length) {
+          setSelectedLeader(`${team.leaders[0].employeeId} (${team.leaders[0].name})`)
+          setValue('teamLeaderId', team.leaderIds[0])
         }
 
       } catch (error) {
