@@ -187,7 +187,7 @@ const UpdateEmployee = () => {
           '/api/admin/get-all-employees/get-organization-info'
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -210,7 +210,7 @@ const UpdateEmployee = () => {
           `/api/admin/employee/get-employee/${employeeId}`
         )
 
-        const emp = res.data
+        const emp = res.data?.data
         setId(emp._id)
         setValue("userId", emp.employeeId)
         setValue("userName", emp.name)
