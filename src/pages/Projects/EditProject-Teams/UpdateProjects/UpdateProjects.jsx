@@ -53,10 +53,11 @@ const UpdateProjects = () => {
       try {
 
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -80,8 +81,8 @@ const UpdateProjects = () => {
         `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
       )
 
-      const formatted = (res.data.data || []).map((emp) => ({
-        name: emp.name,
+      const formatted = (res.data?.data?.data || []).map((emp) => ({
+        label: emp.employeeId ? `${emp.employeeId} (${emp.name})` : emp.name,
         employeeId: emp._id
       }))
 
@@ -103,7 +104,7 @@ const UpdateProjects = () => {
           `/api/admin/project/get-project?projectId=${projectId}`
         )
 
-        const data = res.data._doc
+        const data = res.data?.data
 
         setValue('name', data.name)
         setValue('assignedDate', data.assignedDate?.slice(0,10))
@@ -328,18 +329,18 @@ const UpdateProjects = () => {
 
               {projectManagers
                 .filter(p =>
-                  p.name.toLowerCase().includes(pmSearch.toLowerCase())
+                  p.label.toLowerCase().includes(pmSearch.toLowerCase())
                 )
                 .map((p) => (
                   <Dropdown.Item
                     key={p.employeeId}
                     onClick={() => {
-                      setSelectedPM(p.name)
+                      setSelectedPM(p.label)
                       setValue('projectManager', p.employeeId)
                       setPmSearch('')
                     }}
                   >
-                    {p.name}
+                    {p.label}
                   </Dropdown.Item>
                 ))}
 
