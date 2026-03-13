@@ -195,7 +195,7 @@ const ViewEmployees = () => {
                   <tr><td colSpan="16" className="text-center py-4">No records found</td></tr>
                 ) : (
                   employees.map((emp) => (
-                    <tr key={emp.USER_ID}>
+                    <tr key={emp._id}>
                       <td>{show(emp.employeeId)}</td>
                       <td>{show(emp.name)}</td>
                       <td>{show(emp.email)}</td>

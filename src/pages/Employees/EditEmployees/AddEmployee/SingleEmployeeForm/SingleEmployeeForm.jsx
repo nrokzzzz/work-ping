@@ -171,7 +171,7 @@ const AddEmployee = () => {
           '/api/admin/get-all-employees/get-organization-info'
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
