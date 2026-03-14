@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
+import { Link, useParams, useLocation } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
+import { toast } from 'react-toastify'
+import { use2FA } from '@/context/TwoFAContext'
+import EmployeesWindow from '@/pages/teamMember/EmployeesWindow'
+import UploadUsersFromExcel from '@/pages/teamMember/UploadUsersFromExcel'
 
-const ViewTeams = () => {
+const ProjectTeamMembers = () => {
+  const { projectId } = useParams()
+  const { state } = useLocation()
+  const orgId = state?.orgId
   const itemsPerPage = 10
 
-  const [teams, setTeams] = useState([])
-  const [organizations, setOrganizations] = useState([])
+  const [employees, setEmployees] = useState([])
+  const [selectedIds, setSelectedIds] = useState(new Set())
 
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
@@ -17,258 +23,231 @@ const ViewTeams = () => {
 
   const [search, setSearch] = useState('')
   const [appliedSearch, setAppliedSearch] = useState('')
-  const [organization, setOrganization] = useState('')
-  const [appliedOrganization, setAppliedOrganization] = useState('')
-
   const [loading, setLoading] = useState(false)
 
-  const { projectId } = useParams()
+  const { require2FA } = use2FA()
 
-  useEffect(() => {
-    const fetchOrganizations = async () => {
-      try {
-        const res = await axiosClient.get(
-          'api/admin/organization/get-all-organization-ids'
-        )
-        console.log(res.data)
-        setOrganizations(res.data || [])
-      } catch (err) {
-        console.error(err)
-      }
-    }
+  const [activeModal, setActiveModal] = useState(null)
+  const openEmployees = () => setActiveModal('employees')
+  const openExcel = () => setActiveModal('excel')
+  const closeModal = () => setActiveModal(null)
 
-    fetchOrganizations()
-  }, [])
-
-  const fetchTeams = async (page) => {
-    if (!projectId) return
-
+  const fetchEmployees = async (page) => {
     setLoading(true)
-
     try {
-      const params = new URLSearchParams({
-        page,
-        limit: itemsPerPage,
-        projectId
-      })
-
-      if (appliedSearch) {
-        params.append('search', appliedSearch)
-      }
-
-      if (appliedOrganization) {
-        params.append('organizationId', appliedOrganization)
-      }
+      const params = new URLSearchParams({ page, limit: itemsPerPage, projectId })
+      if (appliedSearch) params.append('search', appliedSearch)
 
       const res = await axiosClient.get(
-        `/api/admin/team/get-team-members?${params.toString()}`
+        `/api/admin/project/get-project-members?${params.toString()}`,
+        { silent: true }
       )
 
-      console.log(res)
-
-      setTeams(res.data?.teamList || res.data?.members || [])
-      setTotalPages(res.data?.totalPages || 0)
-      setTotalRecords(res.data?.totalRecords || 0)
+      setEmployees(res.data?.data?.members || [])
+      setTotalPages(res.data?.data?.totalPages || 0)
+      setTotalRecords(res.data?.data?.totalRecords || 0)
     } catch (err) {
-      console.error(err)
+      // Error handled by interceptor
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchTeams(currentPage)
-  }, [currentPage, appliedSearch, appliedOrganization, projectId])
+    if (projectId) fetchEmployees(currentPage)
+  }, [currentPage, appliedSearch, projectId])
 
   const handleApply = () => {
     setAppliedSearch(search.trim())
-    setAppliedOrganization(organization)
     setCurrentPage(1)
   }
 
-  const getOrganizationName = (orgId) => {
-    const org = organizations.find((o) => o.organizationId === orgId)
-    return org?.name || '--'
+  const handleSelect = (id, checked) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (checked) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
+
+  const deleteEmployees = () => {
+    require2FA(async () => {
+      try {
+        await axiosClient.post(
+          '/api/admin/project/delete-project-members',
+          { data: [...selectedIds] },
+          { silent: true }
+        )
+        toast.success('Member(s) removed successfully!')
+        setSelectedIds(new Set())
+        fetchEmployees(currentPage)
+      } catch (error) {
+        throw new Error(error?.response?.data?.message || 'Failed to remove members')
+      }
+    })
   }
 
   const getPages = () => {
     if (totalPages <= 5)
       return Array.from({ length: totalPages }, (_, i) => i + 1)
-
-    if (currentPage <= 2)
-      return [1, 2, 3, '...', totalPages]
-
+    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
     if (currentPage >= totalPages - 1)
       return [1, '...', totalPages - 2, totalPages - 1, totalPages]
-
-    return [
-      1,
-      '...',
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      '...',
-      totalPages,
-    ]
+    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
-  const start =
-    totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
+  const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
-  console.log("teams:", teams)
+  const [jumpPage, setJumpPage] = useState('')
+  const handleJumpGo = () => {
+    const n = parseInt(jumpPage, 10)
+    if (!isNaN(n) && n >= 1 && n <= totalPages) setCurrentPage(n)
+    setJumpPage('')
+  }
 
   return (
     <Row>
       <Col>
         <Card>
-
-          <CardBody className="d-flex justify-content-end">
-            <Button variant="primary" as={Link} to="/teams/create">
-              + Add Member
-            </Button>
-          </CardBody>
-
           <CardBody>
-            <Row className="g-2">
+            <Row className="g-2 align-items-center">
 
-              <Col xs={12} md={4}>
-                <input
-                  type="search"
-                  className="form-control"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
+              <Col xs={12} md={5}>
+                <div className="position-relative">
+                  <IconifyIcon
+                    icon="bx:search-alt"
+                    className="position-absolute"
+                    style={{ left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 18 }}
+                  />
+                  <input
+                    type="search"
+                    className="form-control ps-5"
+                    placeholder="Search members..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
               </Col>
 
-              <Col xs={12} md={4}>
-                <select
-                  className="form-select"
-                  value={organization}
-                  onChange={(e) => setOrganization(e.target.value)}
-                >
-                  <option value="">Select Organization</option>
+              <Col xs={12} md={7}>
+                <div className="d-flex gap-2 justify-content-md-end">
+                  <Button onClick={handleApply}>Apply</Button>
+                  <Button onClick={openEmployees}>Add</Button>
+                  <Button
+                    variant="danger"
+                    disabled={selectedIds.size === 0}
+                    onClick={deleteEmployees}
+                  >
+                    Delete
+                  </Button>
+                </div>
 
-                  {organizations.map((org) => (
-                    <option
-                      key={org.organizationId}
-                      value={org.organizationId}
-                    >
-                      {org.name}
-                    </option>
-                  ))}
-                </select>
-              </Col>
+                {activeModal === 'employees' && (
+                  <EmployeesWindow
+                    show={true}
+                    handleClose={closeModal}
+                    openExcel={openExcel}
+                    teamId={projectId}
+                    orgId={orgId}
+                    onSuccess={() => fetchEmployees(currentPage)}
+                  />
+                )}
 
-              <Col xs={12} md={4}>
-                <Button className="w-100" onClick={handleApply}>
-                  Apply
-                </Button>
+                {activeModal === 'excel' && (
+                  <UploadUsersFromExcel
+                    show={true}
+                    handleClose={closeModal}
+                    openEmployees={openEmployees}
+                    teamId={projectId}
+                    orgId={orgId}
+                    onSuccess={() => fetchEmployees(currentPage)}
+                  />
+                )}
               </Col>
 
             </Row>
           </CardBody>
 
-          <div className="table-responsive">
+          <div className="table-responsive table-centered">
             <table className="table text-nowrap mb-0">
-
-              <thead className="bg-light">
+              <thead className="bg-light bg-opacity-50">
                 <tr>
-                  <th>Employee ID</th>
-                  <th>Employee Name</th>
+                  <th>Select</th>
+                  <th>User ID</th>
+                  <th>User Name</th>
+                  <th>Email</th>
+                  <th>Organization</th>
                   <th>Work Type</th>
                 </tr>
               </thead>
 
               <tbody>
-
                 {loading ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-4">
-                      Loading...
-                    </td>
+                    <td colSpan="6" className="text-center py-4">Loading...</td>
                   </tr>
-                ) : teams.length === 0 ? (
+                ) : employees.length === 0 ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-4">
-                      No records found
-                    </td>
+                    <td colSpan="6" className="text-center py-4">No members found</td>
                   </tr>
                 ) : (
-                  teams.map((team) => (
-                    <tr key={team._id}>
-                      <td>{team.teamName || '--'}</td>
-                      <td>{team.teamManagerId || '--'}</td>
-                      <td>{team.workType || '--'}</td>
+                  employees.map((emp) => (
+                    <tr key={emp._id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(emp.userId)}
+                          onChange={(e) => handleSelect(emp.userId, e.target.checked)}
+                        />
+                      </td>
+                      <td>{emp.user?.employeeId || '--'}</td>
+                      <td>{emp.user?.name || '--'}</td>
+                      <td>{emp.user?.email || '--'}</td>
+                      <td>{emp.organizationId || '--'}</td>
+                      <td>{emp.user?.workType || '--'}</td>
                     </tr>
                   ))
                 )}
-
               </tbody>
             </table>
           </div>
 
-          <div className="align-items-center justify-content-between row g-2 text-center text-sm-start p-3 border-top">
-
-            <div className="col-12 col-sm">
-              <div className="text-muted">
-                Showing {start} to {end} of {totalRecords} records
-              </div>
-            </div>
-
-            <Col xs={12} sm="auto">
-
-              <ul className="pagination pagination-rounded m-0 justify-content-center justify-content-sm-end">
-
+          <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
+            <div className="text-muted small">Showing {start} to {end} of {totalRecords} records</div>
+            <div className="d-flex flex-wrap align-items-center gap-2">
+              <ul className="pagination pagination-rounded m-0">
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage > 1)
-                        setCurrentPage(currentPage - 1)
-                    }}>
+                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}>
                     <IconifyIcon icon="bx:left-arrow-alt" />
                   </Link>
                 </li>
-
                 {getPages().map((p, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
-
-                    <Link
-                      to="#"
-                      className="page-link"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        if (typeof p === 'number')
-                          setCurrentPage(p)
-                      }}>
-                      {p}
-                    </Link>
-
+                  <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === 'number') setCurrentPage(p) }}>{p}</Link>
                   </li>
                 ))}
-
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage < totalPages)
-                        setCurrentPage(currentPage + 1)
-                    }}>
+                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}>
                     <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
                 </li>
-
               </ul>
-
-            </Col>
+              {totalPages > 1 && (
+                <div className="d-flex align-items-center gap-1">
+                  <span className="text-muted small text-nowrap">Go to</span>
+                  <input
+                    type="number" min={1} max={totalPages} value={jumpPage}
+                    onChange={(e) => setJumpPage(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
+                    className="form-control form-control-sm text-center"
+                    style={{ width: 60 }} placeholder={`/${totalPages}`}
+                  />
+                  <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
+                </div>
+              )}
+            </div>
           </div>
 
         </Card>
@@ -277,4 +256,4 @@ const ViewTeams = () => {
   )
 }
 
-export default ViewTeams
+export default ProjectTeamMembers

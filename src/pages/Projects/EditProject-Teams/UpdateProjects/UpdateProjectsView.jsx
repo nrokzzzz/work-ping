@@ -279,6 +279,18 @@ const Viewprojects = () => {
                         >
                           <IconifyIcon icon="bx:edit" />
                         </Button>
+                        <Button
+                          variant="soft-info"
+                          size="sm"
+                          onClick={() =>
+                            navigate(
+                              `/projects/view-project-teams/project-team-members/${project._id}`,
+                              { state: { orgId: project.organizationId } }
+                            )
+                          }
+                        >
+                          <IconifyIcon icon="bx:group" />
+                        </Button>
                       </td>
 
                       <td>{project.name || '--'}</td>
