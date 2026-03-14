@@ -202,11 +202,11 @@ const ProjectTeamMembers = () => {
                           onChange={(e) => handleSelect(emp.userId, e.target.checked)}
                         />
                       </td>
-                      <td>{emp.user?.employeeId || '--'}</td>
-                      <td>{emp.user?.name || '--'}</td>
-                      <td>{emp.user?.email || '--'}</td>
+                      <td>{emp.employeeId || '--'}</td>
+                      <td>{emp.userName || '--'}</td>
+                      <td>{emp.userEmail || '--'}</td>
                       <td>{emp.organizationId || '--'}</td>
-                      <td>{emp.user?.workType || '--'}</td>
+                      <td>--</td>
                     </tr>
                   ))
                 )}
