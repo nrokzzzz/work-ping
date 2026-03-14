@@ -39,7 +39,7 @@ const ProjectTeamMembers = () => {
       if (appliedSearch) params.append('search', appliedSearch)
 
       const res = await axiosClient.get(
-        `/api/admin/project/get-project-members?${params.toString()}`,
+        `/api/admin/project/get-members?${params.toString()}`,
         { silent: true }
       )
 
