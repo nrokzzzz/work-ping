@@ -255,11 +255,11 @@ const BulkUpload = () => {
                             <tr key={idx}>
                               <td>{task.rowNumber || '--'}</td>
                               <td>{task.error || '--'}</td>
-                              <td>{task.rowData?.employeeId || '--'}</td>
-                              <td>{task.rowData?.name || '--'}</td>
-                              <td>{task.rowData?.email || '--'}</td>
-                              <td>{task.rowData?.phone || '--'}</td>
-                              <td>{task.rowData?.organizationName || '--'}</td>
+                              <td>{task.rowData?.['employeeId*'] || task.rowData?.employeeId || '--'}</td>
+                              <td>{task.rowData?.['name*'] || task.rowData?.name || '--'}</td>
+                              <td>{task.rowData?.['email*'] || task.rowData?.email || '--'}</td>
+                              <td>{task.rowData?.['phone*'] || task.rowData?.phone || '--'}</td>
+                              <td>{task.rowData?.['organizationName*'] || task.rowData?.organizationName || '--'}</td>
                             </tr>
                           ))}
                         </tbody>
