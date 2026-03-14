@@ -5,7 +5,7 @@ import IconifyIcon from "@/components/wrappers/IconifyIcon"
 import axiosClient from "@/helpers/httpClient"
 import { toast } from "react-toastify"
 
-const EmployeesWindow = ({ show, handleClose, openExcel, teamId, onSuccess }) => {
+const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSuccess }) => {
 
   const itemsPerPage = 10
 
@@ -76,7 +76,7 @@ const EmployeesWindow = ({ show, handleClose, openExcel, teamId, onSuccess }) =>
     try {
       await axiosClient.post(
         '/api/admin/team/add-team-member',
-        { teamId, members: [...selectedIds] },
+        { teamId, orgId, members: [...selectedIds] },
         { silent: true }
       )
       toast.success('Member(s) added to team successfully!')

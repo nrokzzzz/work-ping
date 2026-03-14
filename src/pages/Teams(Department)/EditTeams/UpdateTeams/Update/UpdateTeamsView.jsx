@@ -271,7 +271,7 @@ const ViewTeams = () => {
                           variant="soft-info"
                           size="sm"
                           onClick={() =>
-                            navigate(`/teams/team-members/team-members-view/${team._id}`)
+                            navigate(`/teams/team-members/team-members-view/${team._id}?orgId=${team.organizationId || ''}`)
                           }
                         >
                           <IconifyIcon icon="bx:group" />

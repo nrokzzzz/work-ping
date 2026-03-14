@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 import { toast } from 'react-toastify'
@@ -10,6 +10,8 @@ import UploadUsersFromExcel from '@/pages/teamMember/UploadUsersFromExcel'
 
 const TeamMembersView = () => {
   const { teamId } = useParams()
+  const [searchParams] = useSearchParams()
+  const orgId = searchParams.get('orgId')
   const itemsPerPage = 10
 
   const [employees, setEmployees] = useState([])
@@ -148,6 +150,7 @@ const TeamMembersView = () => {
                     handleClose={closeModal}
                     openExcel={openExcel}
                     teamId={teamId}
+                    orgId={orgId}
                     onSuccess={() => fetchEmployees(currentPage)}
                   />
                 )}
