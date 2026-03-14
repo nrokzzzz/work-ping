@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
@@ -113,24 +113,27 @@ const AdminViewModal = ({ organization, onClose }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'rgba(0,0,0,0.45)',
+        background: 'rgba(var(--bs-dark-rgb), 0.5)',
       }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
+      {/* Window box — uses theme card colors so it works in dark mode */}
       <div
+        className="card mb-0"
         style={{
-          background: '#fff',
-          borderRadius: 12,
           width: '100%',
-          maxWidth: 640,
-          maxHeight: '85vh',
+          maxWidth: 660,
+          maxHeight: '88vh',
           overflowY: 'auto',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-          padding: '28px 28px 24px',
+          borderRadius: 'var(--bs-card-border-radius)',
+          boxShadow: '0 10px 40px rgba(var(--bs-dark-rgb), 0.2)',
         }}
       >
         {/* Header */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <div
+          className="d-flex justify-content-between align-items-center px-4 py-3"
+          style={{ borderBottom: '1px solid var(--bs-border-color)' }}
+        >
           <div>
             <h5 className="mb-0 fw-semibold">Admin View</h5>
             <small className="text-muted">{organization.name}</small>
@@ -143,108 +146,110 @@ const AdminViewModal = ({ organization, onClose }) => {
           />
         </div>
 
-        {/* Current admins table */}
-        <div className="table-responsive mb-4">
-          <table className="table table-sm text-nowrap mb-0">
-            <thead className="bg-light bg-opacity-50">
-              <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th style={{ width: 40 }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {loadingAdmins ? (
+        <div className="px-4 py-3">
+          {/* Current admins table */}
+          <div className="table-responsive mb-4">
+            <table className="table table-sm text-nowrap mb-0">
+              <thead className="bg-light bg-opacity-50">
                 <tr>
-                  <td colSpan="4" className="text-center py-3">Loading...</td>
+                  <th>User ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th style={{ width: 40 }}></th>
                 </tr>
-              ) : admins.length === 0 ? (
-                <tr>
-                  <td colSpan="4" className="text-center py-3 text-muted">No admins found</td>
-                </tr>
-              ) : (
-                admins.map((admin) => (
-                  <tr key={admin.userId || admin._id}>
-                    <td className="text-muted" style={{ fontSize: 12 }}>{admin.userId || admin._id || '--'}</td>
-                    <td>{admin.name || admin.userName || '--'}</td>
-                    <td>{admin.email || '--'}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-soft-danger p-1"
-                        style={{ lineHeight: 1 }}
-                        title="Remove admin"
-                        onClick={() => handleDelete(admin.userId || admin._id)}
-                      >
-                        <IconifyIcon icon="bx:trash" style={{ fontSize: 15 }} />
-                      </button>
-                    </td>
+              </thead>
+              <tbody>
+                {loadingAdmins ? (
+                  <tr>
+                    <td colSpan="4" className="text-center py-3">Loading...</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Invite new admin */}
-        <div style={{ borderTop: '1px solid #e9ecef', paddingTop: 20 }}>
-          <h6 className="fw-semibold mb-3">Invite New Admin</h6>
-
-          {/* Email row */}
-          <div className="d-flex gap-2 mb-2">
-            <input
-              type="email"
-              className="form-control form-control-sm"
-              placeholder="Enter email"
-              value={inviteEmail}
-              onChange={(e) => {
-                setInviteEmail(e.target.value)
-                if (userFound) {
-                  setUserFound(false)
-                  setInviteUserId('')
-                  setInviteName('')
-                }
-              }}
-            />
-            <Button
-              size="sm"
-              variant="outline-primary"
-              style={{ whiteSpace: 'nowrap' }}
-              onClick={handleLookup}
-              disabled={lookingUp || !inviteEmail.trim()}
-            >
-              {lookingUp ? 'Searching...' : 'Find User'}
-            </Button>
+                ) : admins.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="text-center py-3 text-muted">No admins found</td>
+                  </tr>
+                ) : (
+                  admins.map((admin) => (
+                    <tr key={admin.userId || admin._id}>
+                      <td className="text-muted" style={{ fontSize: 12 }}>{admin.userId || admin._id || '--'}</td>
+                      <td>{admin.name || admin.userName || '--'}</td>
+                      <td>{admin.email || '--'}</td>
+                      <td>
+                        <Button
+                          size="sm"
+                          variant="soft-danger"
+                          className="p-1"
+                          title="Remove admin"
+                          onClick={() => handleDelete(admin.userId || admin._id)}
+                        >
+                          <IconifyIcon icon="bx:trash" style={{ fontSize: 15 }} />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
 
-          {/* User ID & Name (auto-filled) */}
-          <div className="d-flex gap-2 mb-3">
-            <input
-              type="text"
-              className="form-control form-control-sm"
-              placeholder="User ID"
-              value={inviteUserId}
-              readOnly
-            />
-            <input
-              type="text"
-              className="form-control form-control-sm"
-              placeholder="Name"
-              value={inviteName}
-              readOnly
-            />
-          </div>
+          {/* Invite new admin */}
+          <div style={{ borderTop: '1px solid var(--bs-border-color)', paddingTop: 20 }}>
+            <h6 className="fw-semibold mb-3">Invite New Admin</h6>
 
-          <div className="d-flex justify-content-end">
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={handleInvite}
-              disabled={!userFound || inviting}
-            >
-              {inviting ? 'Inviting...' : 'Invite'}
-            </Button>
+            {/* Email + Find User */}
+            <div className="d-flex gap-2 mb-2">
+              <input
+                type="email"
+                className="form-control form-control-sm"
+                placeholder="Enter email"
+                value={inviteEmail}
+                onChange={(e) => {
+                  setInviteEmail(e.target.value)
+                  if (userFound) {
+                    setUserFound(false)
+                    setInviteUserId('')
+                    setInviteName('')
+                  }
+                }}
+              />
+              <Button
+                size="sm"
+                variant="soft-secondary"
+                style={{ whiteSpace: 'nowrap' }}
+                onClick={handleLookup}
+                disabled={lookingUp || !inviteEmail.trim()}
+              >
+                {lookingUp ? 'Searching...' : 'Find User'}
+              </Button>
+            </div>
+
+            {/* Auto-filled User ID & Name */}
+            <div className="d-flex gap-2 mb-3">
+              <input
+                type="text"
+                className="form-control form-control-sm"
+                placeholder="User ID"
+                value={inviteUserId}
+                readOnly
+              />
+              <input
+                type="text"
+                className="form-control form-control-sm"
+                placeholder="Name"
+                value={inviteName}
+                readOnly
+              />
+            </div>
+
+            <div className="d-flex justify-content-end">
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={handleInvite}
+                disabled={!userFound || inviting}
+              >
+                {inviting ? 'Inviting...' : 'Invite'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -411,7 +416,7 @@ const ViewOrganization = () => {
                         <td>{organization.foundedAt || '--'}</td>
                         <td>
                           <Button
-                            variant="soft-info"
+                            variant="soft-secondary"
                             size="sm"
                             onClick={() => setAdminModalOrg(organization)}
                           >
