@@ -147,6 +147,8 @@ const TeamMembersView = () => {
                     show={true}
                     handleClose={closeModal}
                     openExcel={openExcel}
+                    teamId={teamId}
+                    onSuccess={() => fetchEmployees(currentPage)}
                   />
                 )}
 
