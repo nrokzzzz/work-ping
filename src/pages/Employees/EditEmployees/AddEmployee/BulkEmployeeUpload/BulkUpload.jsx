@@ -285,18 +285,18 @@ const BulkUpload = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td>1</td><td>employeeId</td><td>23A91A7000</td></tr>
-                    <tr><td>2</td><td>name</td><td>Rahul Singh</td></tr>
-                    <tr><td>3</td><td>email</td><td>example@gmail.com</td></tr>
-                    <tr><td>4</td><td>phone</td><td>4515764671</td></tr>
-                    <tr><td>5</td><td>organizationName</td><td>Vishnu_priya_1212's Organization</td></tr>
-                    <tr><td>6</td><td>dob</td><td>27/08/2001</td></tr>
-                    <tr><td>7</td><td>gender</td><td>Male / Female</td></tr>
-                    <tr><td>8</td><td>workType</td><td>OnSite / Remote / Hybrid</td></tr>
-                    <tr><td>9</td><td>address</td><td>Street 0, City</td></tr>
-                    <tr><td>10</td><td>dateOfJoining</td><td>12/08/2025</td></tr>
-                    <tr><td>11</td><td>aadhaar</td><td>821233616648</td></tr>
-                    <tr><td>12</td><td>salary</td><td>50000</td></tr>
+                    <tr><td>1</td><td>employeeId<span className="text-danger">*</span></td><td>23A91A7000</td></tr>
+                    <tr><td>2</td><td>name<span className="text-danger">*</span></td><td>Rahul Singh</td></tr>
+                    <tr><td>3</td><td>email<span className="text-danger">*</span></td><td>example@gmail.com</td></tr>
+                    <tr><td>4</td><td>phone<span className="text-danger">*</span></td><td>4515764671</td></tr>
+                    <tr><td>5</td><td>organizationName<span className="text-danger">*</span></td><td>nrokzzzz</td></tr>
+                    <tr><td>6</td><td>dob<span className="text-danger">*</span></td><td>27/08/2001</td></tr>
+                    <tr><td>7</td><td>gender<span className="text-danger">*</span></td><td>Male / Female</td></tr>
+                    <tr><td>8</td><td>workType<span className="text-danger">*</span></td><td>OnSite / Remote / Hybrid</td></tr>
+                    <tr><td>9</td><td>address<span className="text-danger">*</span></td><td>Street 0, City</td></tr>
+                    <tr><td>10</td><td>dateOfJoining<span className="text-danger">*</span></td><td>12/08/2025</td></tr>
+                    <tr><td>11</td><td>aadhaar<span className="text-danger">*</span></td><td>821233616648</td></tr>
+                    <tr><td>12</td><td>salary<span className="text-danger">*</span></td><td>50000</td></tr>
                     <tr><td>13</td><td>passport</td><td>P4632659</td></tr>
                     <tr><td>14</td><td>pan</td><td>BCTYZ8145T</td></tr>
                     <tr><td>15</td><td>bankId</td><td>37328857958</td></tr>
