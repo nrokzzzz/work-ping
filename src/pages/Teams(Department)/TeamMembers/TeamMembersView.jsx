@@ -5,6 +5,8 @@ import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 import { toast } from 'react-toastify'
 import { use2FA } from '@/context/TwoFAContext'
+import EmployeesWindow from '@/pages/teamMember/EmployeesWindow'
+import UploadUsersFromExcel from '@/pages/teamMember/UploadUsersFromExcel'
 
 const TeamMembersView = () => {
   const { teamId } = useParams()
@@ -22,6 +24,11 @@ const TeamMembersView = () => {
   const [loading, setLoading] = useState(false)
 
   const { require2FA } = use2FA()
+
+  const [activeModal, setActiveModal] = useState(null)
+  const openEmployees = () => setActiveModal('employees')
+  const openExcel = () => setActiveModal('excel')
+  const closeModal = () => setActiveModal(null)
 
   const fetchEmployees = async (page) => {
     setLoading(true)
@@ -125,6 +132,7 @@ const TeamMembersView = () => {
               <Col xs={12} md={7}>
                 <div className="d-flex gap-2 justify-content-md-end">
                   <Button onClick={handleApply}>Apply</Button>
+                  <Button onClick={openEmployees}>Add</Button>
                   <Button
                     variant="danger"
                     disabled={selectedIds.size === 0}
@@ -133,6 +141,22 @@ const TeamMembersView = () => {
                     Delete
                   </Button>
                 </div>
+
+                {activeModal === 'employees' && (
+                  <EmployeesWindow
+                    show={true}
+                    handleClose={closeModal}
+                    openExcel={openExcel}
+                  />
+                )}
+
+                {activeModal === 'excel' && (
+                  <UploadUsersFromExcel
+                    show={true}
+                    handleClose={closeModal}
+                    openEmployees={openEmployees}
+                  />
+                )}
               </Col>
 
             </Row>
