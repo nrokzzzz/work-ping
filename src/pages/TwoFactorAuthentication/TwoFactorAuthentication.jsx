@@ -16,12 +16,19 @@ const TwoFactorAuthModal = () => {
   const [error, setError] = useState('')
 
   const isMounted = useRef(true)
+  const inputRef = useRef(null)
 
   useEffect(() => {
     return () => {
       isMounted.current = false
     }
   }, [])
+
+  useEffect(() => {
+    if (showModal) {
+      setTimeout(() => inputRef.current?.focus(), 50)
+    }
+  }, [showModal])
 
   const handleVerify = useCallback(async () => {
 
@@ -137,13 +144,13 @@ const TwoFactorAuthModal = () => {
             </p>
 
             <Form.Control
+              ref={inputRef}
               value={code}
               onChange={(e) =>
                 setCode(e.target.value.replace(/\D/g, '').slice(0, 6))
               }
               onKeyDown={handleKeyDown}
               placeholder="XXXXXX"
-              autoFocus
               className="text-center mb-3"
               style={{
                 height: 48,
