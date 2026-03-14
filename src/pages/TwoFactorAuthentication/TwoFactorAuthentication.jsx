@@ -26,7 +26,11 @@ const TwoFactorAuthModal = () => {
 
   useEffect(() => {
     if (showModal) {
-      setTimeout(() => inputRef.current?.focus(), 50)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          inputRef.current?.focus()
+        })
+      })
     }
   }, [showModal])
 
@@ -119,6 +123,7 @@ const TwoFactorAuthModal = () => {
       <div
         className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
         style={{ zIndex: MODAL_CONTENT_Z_INDEX }}
+        tabIndex={-1}
       >
 
         <Card
