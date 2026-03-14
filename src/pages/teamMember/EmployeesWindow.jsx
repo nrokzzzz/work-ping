@@ -4,8 +4,11 @@ import { Link } from "react-router-dom"
 import IconifyIcon from "@/components/wrappers/IconifyIcon"
 import axiosClient from "@/helpers/httpClient"
 import { toast } from "react-toastify"
+import { use2FA } from "@/context/TwoFAContext"
 
 const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSuccess }) => {
+
+  const { require2FA } = use2FA()
 
   const itemsPerPage = 10
 
@@ -70,24 +73,26 @@ const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSucces
     })
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (selectedIds.size === 0) return
-    setSubmitting(true)
-    try {
-      await axiosClient.post(
-        '/api/admin/team/add-team-member',
-        { teamId, orgId, members: [...selectedIds] },
-        { silent: true }
-      )
-      toast.success('Member(s) added to team successfully!')
-      setSelectedIds(new Set())
-      if (onSuccess) onSuccess()
-      handleClose()
-    } catch (err) {
-      toast.error(err?.response?.data?.message || 'Failed to add members')
-    } finally {
-      setSubmitting(false)
-    }
+    require2FA(async () => {
+      setSubmitting(true)
+      try {
+        await axiosClient.post(
+          '/api/admin/team/add-team-member',
+          { teamId, orgId, members: [...selectedIds] },
+          { silent: true }
+        )
+        toast.success('Member(s) added to team successfully!')
+        setSelectedIds(new Set())
+        if (onSuccess) onSuccess()
+        handleClose()
+      } catch (err) {
+        throw new Error(err?.response?.data?.message || 'Failed to add members')
+      } finally {
+        setSubmitting(false)
+      }
+    })
   }
 
   const getPages = () => {

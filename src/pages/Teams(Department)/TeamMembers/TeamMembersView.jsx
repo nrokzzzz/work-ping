@@ -43,7 +43,7 @@ const TeamMembersView = () => {
         { silent: true }
       )
 
-      setEmployees(res.data?.data?.members || res.data?.data?.data || [])
+      setEmployees(res.data?.data?.members || [])
       setTotalPages(res.data?.data?.totalPages || 0)
       setTotalRecords(res.data?.data?.totalRecords || 0)
     } catch (err) {
@@ -160,6 +160,9 @@ const TeamMembersView = () => {
                     show={true}
                     handleClose={closeModal}
                     openEmployees={openEmployees}
+                    teamId={teamId}
+                    orgId={orgId}
+                    onSuccess={() => fetchEmployees(currentPage)}
                   />
                 )}
               </Col>
@@ -195,15 +198,15 @@ const TeamMembersView = () => {
                       <td>
                         <input
                           type="checkbox"
-                          checked={selectedIds.has(emp._id)}
-                          onChange={(e) => handleSelect(emp._id, e.target.checked)}
+                          checked={selectedIds.has(emp.userId)}
+                          onChange={(e) => handleSelect(emp.userId, e.target.checked)}
                         />
                       </td>
-                      <td>{emp.employeeId || '--'}</td>
-                      <td>{emp.name || '--'}</td>
-                      <td>{emp.email || '--'}</td>
-                      <td>{emp.organizationName || '--'}</td>
-                      <td>{emp.workType || '--'}</td>
+                      <td>{emp.user?.employeeId || '--'}</td>
+                      <td>{emp.user?.name || '--'}</td>
+                      <td>{emp.user?.email || '--'}</td>
+                      <td>{emp.organizationId || '--'}</td>
+                      <td>{emp.user?.workType || '--'}</td>
                     </tr>
                   ))
                 )}
