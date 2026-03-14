@@ -5,8 +5,8 @@ import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
 import { toast } from 'react-toastify'
 import { use2FA } from '@/context/TwoFAContext'
-import EmployeesWindow from './../ProjectMember/EmployeesWindow'
-import UploadUsersFromExcel from './../ProjectMember/UploadUsersFromExcel'
+import EmployeesWindow from './../../ProjectMember/EmployeesWindow'
+import UploadUsersFromExcel from './../../ProjectMember/UploadUsersFromExcel'
 
 const ProjectTeamMembers = () => {
   const { projectId } = useParams()
