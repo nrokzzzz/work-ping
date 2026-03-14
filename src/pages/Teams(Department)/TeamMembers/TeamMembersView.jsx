@@ -3,7 +3,7 @@ import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
-import toast from 'react-hot-toast'
+import { toast } from 'react-toastify'
 import { use2FA } from '@/context/TwoFAContext'
 
 const TeamMembersView = () => {
@@ -138,9 +138,9 @@ const TeamMembersView = () => {
             </Row>
           </CardBody>
 
-          <div className="table-responsive">
+          <div className="table-responsive table-centered">
             <table className="table text-nowrap mb-0">
-              <thead className="bg-light">
+              <thead className="bg-light bg-opacity-50">
                 <tr>
                   <th>Select</th>
                   <th>User ID</th>
