@@ -6,7 +6,7 @@ import axiosClient from "@/helpers/httpClient"
 import { toast } from "react-toastify"
 import { use2FA } from "@/context/TwoFAContext"
 
-const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSuccess }) => {
+const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organizationId, onSuccess }) => {
 
   const { require2FA } = use2FA()
 
@@ -80,7 +80,7 @@ const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSucces
       try {
         await axiosClient.post(
           '/api/admin/project/add-member',
-          { teamId, orgId, members: [...selectedIds] },
+          { projectId, organizationId, employeeIds: [...selectedIds] },
           { silent: true }
         )
         toast.success('Member(s) added to team successfully!')

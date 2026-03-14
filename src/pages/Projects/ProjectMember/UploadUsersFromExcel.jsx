@@ -5,7 +5,7 @@ import axiosClient from "@/helpers/httpClient"
 import { toast } from "react-toastify"
 import { use2FA } from "@/context/TwoFAContext"
 
-const UploadUsersFromExcel = ({ show, handleClose, openEmployees, teamId, orgId, onSuccess }) => {
+const UploadUsersFromExcel = ({ show, handleClose, openEmployees, projectId, orgId, onSuccess }) => {
 
     const { require2FA } = use2FA()
 
@@ -66,9 +66,9 @@ const UploadUsersFromExcel = ({ show, handleClose, openEmployees, teamId, orgId,
         require2FA(async () => {
             try {
                 await axiosClient.post('/api/admin/project/add-member', {
-                    teamId,
-                    orgId,
-                    members: selectedIds,
+                    projectId,
+                    organizationId,
+                    employeeIds: selectedIds,
                 }, { silent: true })
 
                 toast.success('Member(s) added to team successfully!')

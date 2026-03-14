@@ -149,8 +149,8 @@ const ProjectTeamMembers = () => {
                     show={true}
                     handleClose={closeModal}
                     openExcel={openExcel}
-                    teamId={projectId}
-                    orgId={orgId}
+                    projectId={projectId}
+                    organizationId={orgId}
                     onSuccess={() => fetchEmployees(currentPage)}
                   />
                 )}
@@ -160,8 +160,8 @@ const ProjectTeamMembers = () => {
                     show={true}
                     handleClose={closeModal}
                     openEmployees={openEmployees}
-                    teamId={projectId}
-                    orgId={orgId}
+                    projectId={projectId}
+                    organizationId={orgId}
                     onSuccess={() => fetchEmployees(currentPage)}
                   />
                 )}
