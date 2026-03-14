@@ -89,7 +89,7 @@ const UploadUsersFromExcel = ({ show, handleClose, openEmployees, teamId, orgId,
 
     return (
 
-       <Modal show={show} onHide={handleClose} size="lg" centered scrollable>
+       <Modal show={show} onHide={handleClose} size="lg" centered scrollable enforceFocus={false}>
 
                 <Modal.Header closeButton>
 

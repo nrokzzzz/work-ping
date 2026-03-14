@@ -120,6 +120,7 @@ const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSucces
       size="xl"
       centered
       scrollable
+      enforceFocus={false}
     >
 
       {/* Header */}
