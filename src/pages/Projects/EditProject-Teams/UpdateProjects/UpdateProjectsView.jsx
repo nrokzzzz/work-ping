@@ -285,7 +285,7 @@ const Viewprojects = () => {
                           onClick={() =>
                             navigate(
                               `/projects/view-project-teams/project-team-members/${project._id}`,
-                              { state: { orgId: project.organizationId } }
+                              { state: { orgId: project.organizationId || orgData[project.organizationName]?.organizationId } }
                             )
                           }
                         >

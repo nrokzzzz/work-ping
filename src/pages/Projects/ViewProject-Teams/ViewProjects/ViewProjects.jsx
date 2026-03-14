@@ -209,7 +209,10 @@ const Viewprojects = () => {
                       key={project._id}
                       style={{ cursor: 'pointer' }}
                       onClick={() =>
-                        navigate(`/projects/view-project-teams/project-team-members/${project._id}`)
+                        navigate(
+                          `/projects/view-project-teams/project-team-members/${project._id}`,
+                          { state: { orgId: project.organizationId || orgData[project.organizationName]?.organizationId } }
+                        )
                       }
                     >
                       <td>{project.name || '--'}</td>
