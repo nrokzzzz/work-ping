@@ -79,7 +79,7 @@ const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSucces
       setSubmitting(true)
       try {
         await axiosClient.post(
-          '/api/admin/team/add-team-member',
+          '/api/admin/project/add-member',
           { teamId, orgId, members: [...selectedIds] },
           { silent: true }
         )
@@ -147,29 +147,31 @@ const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSucces
           <CardBody>
 
             {/* Search */}
-          <Row className="g-2 mb-3">
-            <Col xs={12} md={9}>
-            <div className="position-relative"  style={{ maxWidth: "400px" }}>
-               <IconifyIcon
-               icon="bx:search-alt"
-               className="position-absolute"
-               style={{ left: 12,
-               top: "50%",
-                transform: "translateY(-50%)",
-                fontSize: 18 }} />
+            <Row className="g-2 mb-3">
+              <Col xs={12} md={9}>
+                <div className="position-relative" style={{ maxWidth: "400px" }}>
+                  <IconifyIcon
+                    icon="bx:search-alt"
+                    className="position-absolute"
+                    style={{
+                      left: 12,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: 18
+                    }} />
 
-                <input type="search"
-                className="form-control ps-5"
-                placeholder="Search employees..."
-                value={search} onChange={(e) => setSearch(e.target.value)}
-                />
+                  <input type="search"
+                    className="form-control ps-5"
+                    placeholder="Search employees..."
+                    value={search} onChange={(e) => setSearch(e.target.value)}
+                  />
                 </div>
-                </Col>
-                <Col xs={12} md={3}>
+              </Col>
+              <Col xs={12} md={3}>
                 <Button className="w-100" onClick={handleApply}>
                   Search </Button>
-                  </Col>
-                  </Row>
+              </Col>
+            </Row>
 
             {/* Table */}
 

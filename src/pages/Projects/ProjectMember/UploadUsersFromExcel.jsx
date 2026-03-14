@@ -7,7 +7,7 @@ import { use2FA } from "@/context/TwoFAContext"
 
 const UploadUsersFromExcel = ({ show, handleClose, openEmployees, teamId, orgId, onSuccess }) => {
 
-  const { require2FA } = use2FA()
+    const { require2FA } = use2FA()
 
     const [rollNumbers, setRollNumbers] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
@@ -65,7 +65,7 @@ const UploadUsersFromExcel = ({ show, handleClose, openEmployees, teamId, orgId,
         if (selectedIds.length === 0) return
         require2FA(async () => {
             try {
-                await axiosClient.post('/api/admin/team/add-team-member', {
+                await axiosClient.post('/api/admin/project/add-member', {
                     teamId,
                     orgId,
                     members: selectedIds,
@@ -89,11 +89,11 @@ const UploadUsersFromExcel = ({ show, handleClose, openEmployees, teamId, orgId,
 
     return (
 
-       <Modal show={show} onHide={handleClose} size="lg" centered scrollable enforceFocus={false}>
+        <Modal show={show} onHide={handleClose} size="lg" centered scrollable enforceFocus={false}>
 
-                <Modal.Header closeButton>
+            <Modal.Header closeButton>
 
-                    <div className="d-flex align-items-center justify-content-between w-100">
+                <div className="d-flex align-items-center justify-content-between w-100">
 
                     <Modal.Title>Upload Roll Numbers</Modal.Title>
 
@@ -104,9 +104,9 @@ const UploadUsersFromExcel = ({ show, handleClose, openEmployees, teamId, orgId,
                         Open Employees Window
                     </Button>
 
-                    </div>
+                </div>
 
-                </Modal.Header>
+            </Modal.Header>
 
             <Modal.Body>
 
