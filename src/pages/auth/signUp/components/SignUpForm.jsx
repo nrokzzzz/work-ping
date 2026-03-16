@@ -135,7 +135,7 @@ const SignUpForm = () => {
       }
 
       await axiosClient.post(
-        '/api/admin/auth/send-signup-otp',
+        '/api/admin/otp/send-email-otp',
         { email: values.userEmail },
         { silent: true }
       )
@@ -153,7 +153,7 @@ const SignUpForm = () => {
   }
 
   /* Step 2 — verify OTP then register */
-  const handleVerifyOtp = async () => {
+  const handleVerifyOtp = async (values) => {
     if (otp.length !== 6) {
       setOtpError('Please enter the 6-digit OTP')
       return
@@ -164,13 +164,15 @@ const SignUpForm = () => {
 
     try {
       const res = await axiosClient.post(
-        '/api/admin/auth/register',
-        { ...pendingPayload, otp },
+        '/api/admin/otp/verify-email-otp',
+        { email:values.userEmail, otp },
         { silent: true }
       )
 
       if (res.status !== 201) {
-        throw new Error(res.data?.error || 'Signup failed')
+         await  axiosClient.post('/api/admin/auth/register',{ ...pendingPayload },
+        { silent: true }
+      )
       }
 
       await signUp()
@@ -231,7 +233,7 @@ const SignUpForm = () => {
         <div className="mb-3 text-center d-grid">
           <Button
             variant="primary"
-            onClick={handleVerifyOtp}
+            onClick={handleVerifyOtp(values)}
             disabled={isVerifying || otp.length !== 6}
           >
             {isVerifying ? (
