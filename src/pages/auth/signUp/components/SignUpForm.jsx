@@ -153,7 +153,7 @@ const SignUpForm = () => {
   }
 
   /* Step 2 — verify OTP then register */
-  const handleVerifyOtp = async (values) => {
+  const handleVerifyOtp = async () => {
     if (otp.length !== 6) {
       setOtpError('Please enter the 6-digit OTP')
       return
@@ -163,19 +163,21 @@ const SignUpForm = () => {
     setOtpError('')
 
     try {
-      const res = await axiosClient.post(
+      // Verify OTP first
+      await axiosClient.post(
         '/api/admin/otp/verify-email-otp',
-        { email:values.userEmail, otp },
+        { email: pendingEmail, otp },
         { silent: true }
       )
 
-      if (res.status !== 201) {
-         await  axiosClient.post('/api/admin/auth/register',{ ...pendingPayload },
+      // OTP verified — now register with full payload
+      const res = await axiosClient.post(
+        '/api/admin/auth/register',
+        { ...pendingPayload, otp },
         { silent: true }
       )
-      }
 
-      await signUp()
+      await signUp(res.data)
       toast.success('Signup successful!')
       reset()
       navigate('/2fa-authnticator', {
@@ -196,7 +198,7 @@ const SignUpForm = () => {
     setOtpError('')
     try {
       await axiosClient.post(
-        '/api/admin/auth/send-email-otp',
+        '/api/admin/auth/send-signup-otp',
         { email: pendingEmail },
         { silent: true }
       )
@@ -233,7 +235,7 @@ const SignUpForm = () => {
         <div className="mb-3 text-center d-grid">
           <Button
             variant="primary"
-            onClick={handleVerifyOtp(values)}
+            onClick={handleVerifyOtp}
             disabled={isVerifying || otp.length !== 6}
           >
             {isVerifying ? (
