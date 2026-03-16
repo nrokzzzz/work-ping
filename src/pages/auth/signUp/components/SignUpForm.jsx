@@ -173,7 +173,7 @@ const SignUpForm = () => {
       // OTP verified — now register with full payload
       const res = await axiosClient.post(
         '/api/admin/auth/register',
-        { ...pendingPayload, otp },
+        { ...pendingPayload },
         { silent: true }
       )
 
