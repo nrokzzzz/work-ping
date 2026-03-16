@@ -196,7 +196,7 @@ const SignUpForm = () => {
     setOtpError('')
     try {
       await axiosClient.post(
-        '/api/admin/auth/send-signup-otp',
+        '/api/admin/auth/send-email-otp',
         { email: pendingEmail },
         { silent: true }
       )
