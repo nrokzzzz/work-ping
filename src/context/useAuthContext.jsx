@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [is2FAAuthnticator, setIs2FAAuthnticator] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const verifySession = async () => {
     try {
@@ -26,6 +27,8 @@ export function AuthProvider({ children }) {
       setIsAuthenticated(true);
     } catch (error) {
       setIsAuthenticated(false);
+    } finally {
+      setAuthLoading(false);
     }
   };
 
@@ -49,6 +52,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        authLoading,
         login,
         signUp,
         logout,
