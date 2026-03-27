@@ -17,15 +17,19 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [is2FAAuthnticator, setIs2FAAuthnticator] = useState(true);
   const [authLoading, setAuthLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   const verifySession = async () => {
     try {
       const res = await axiosClient.get('/verify-cookie', { silent: true });
-      if (res.data?.data?.twoFactorEnabled) {
+      const data = res.data?.data ?? {};
+      if (data.twoFactorEnabled) {
         setIs2FAAuthnticator(false);
       }
+      setUser(data);
       setIsAuthenticated(true);
     } catch (error) {
+      setUser(null);
       setIsAuthenticated(false);
     } finally {
       setAuthLoading(false);
@@ -41,6 +45,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
+    setUser(null);
     setIsAuthenticated(false);
   };
 
@@ -53,6 +58,9 @@ export function AuthProvider({ children }) {
       value={{
         isAuthenticated,
         authLoading,
+        user,
+        userId: user?._id ?? null,
+        role: user?.role ?? null,
         login,
         signUp,
         logout,

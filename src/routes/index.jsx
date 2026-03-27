@@ -560,6 +560,9 @@ const ButtonPage = lazy(()=>import('@/pages/teamMember/ButtonPage'))
 const ViewHolidays = lazy(()=>import('@/pages/Holidays/ViewHolidays'))
 const ManageHolidays = lazy(()=>import('@/pages/Holidays/ManageHolidays'))
 
+// test
+const PhonePeTest = lazy(()=>import('@/pages/test/PhonePeTest'))
+
 export const authRoutes = [{
   path: '/auth/sign-in',
   name: 'Sign In',
@@ -749,4 +752,10 @@ const holidaysRoutes = [
   }
 ]
 
-export const appRoutes = [...initialRoutes, ...generalRoutes, ...appsRoutes, ...customRoutes, ...baseUIRoutes, ...advancedUIRoutes, ...chartsNMapsRoutes, ...formsRoutes, ...tableRoutes, ...iconRoutes, ...authRoutes,...teamsRoutes,...organizationRoutes,...employeesRoutes,...projectsRoutes,...TwoFactorAuthentication,...holidaysRoutes];
+const testRoutes = [{
+  path: '/test/phonepe',
+  name: 'PhonePe Test',
+  element: <PhonePeTest />
+}];
+
+export const appRoutes = [...initialRoutes, ...generalRoutes, ...appsRoutes, ...customRoutes, ...baseUIRoutes, ...advancedUIRoutes, ...chartsNMapsRoutes, ...formsRoutes, ...tableRoutes, ...iconRoutes, ...authRoutes,...teamsRoutes,...organizationRoutes,...employeesRoutes,...projectsRoutes,...TwoFactorAuthentication,...holidaysRoutes,...testRoutes];
