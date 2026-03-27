@@ -1,21 +1,32 @@
 import { Link } from 'react-router-dom';
-import logoDark from '@/assets/images/logo-dark.png';
-import logoLight from '@/assets/images/logo-light.png';
 import logoSm from '@/assets/images/logo-sm.png';
-const LogoBox = ({
-  containerClassName,
-  squareLogo,
-  textLogo
-}) => {
-  return <div className={containerClassName ?? ''}>
-      <Link to="/" className="logo-dark">
-        <img src={logoSm} className={squareLogo?.className} height={squareLogo?.height ?? 30} width={squareLogo?.width ?? 19} alt="logo sm" />
-        <img src={logoDark} className={textLogo?.className} height={textLogo?.height ?? 20} width={textLogo?.width ?? 60} alt="logo dark" />
-      </Link>
-      <Link to="/" className="logo-light">
-        <img src={logoSm} className={squareLogo?.className} height={squareLogo?.height ?? 30} width={squareLogo?.width ?? 19} alt="logo sm" />
-        <img src={logoLight} className={textLogo?.className} height={textLogo?.height ?? 20} width={textLogo?.width ?? 60} alt="logo light" />
-      </Link>
-    </div>;
+import { developedBy } from '@/context/constants';
+
+const LogoBox = ({ containerClassName, squareLogo }) => {
+  const inner = (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+      <img
+        src={logoSm}
+        className={squareLogo?.className}
+        height={squareLogo?.height ?? 30}
+        width={squareLogo?.width ?? 19}
+        alt="logo"
+      />
+      <span
+        className="logo-text"
+        style={{ fontWeight: 700, fontSize: 16, letterSpacing: '-0.2px', color: 'inherit' }}
+      >
+        {developedBy}
+      </span>
+    </span>
+  );
+
+  return (
+    <div className={containerClassName ?? ''}>
+      <Link to="/" className="logo-dark" style={{ textDecoration: 'none' }}>{inner}</Link>
+      <Link to="/" className="logo-light" style={{ textDecoration: 'none' }}>{inner}</Link>
+    </div>
+  );
 };
+
 export default LogoBox;

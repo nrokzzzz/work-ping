@@ -15,7 +15,6 @@ const VerticalNavigationBar = () => {
     }} />
 
       <HoverMenuToggle />
-
       <SimplebarReactClient className="scrollbar">
         <Suspense fallback={<FallbackLoading />}>
           <AppMenu menuItems={menuItems} />

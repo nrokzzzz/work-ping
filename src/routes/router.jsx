@@ -1,7 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AuthLayout from '@/layouts/AuthLayout';
+import PublicLayout from '@/layouts/PublicLayout';
 import { useAuthContext } from '@/context/useAuthContext';
-import { appRoutes, authRoutes } from '@/routes/index';
+import { appRoutes, authRoutes, publicRoutes } from '@/routes/index';
 import AdminLayout from '@/layouts/AdminLayout';
 
 const PrivateRoute = ({ children }) => {
@@ -32,6 +33,14 @@ const AppRouter = (props) => {
               <AdminLayout {...props}>{route.element}</AdminLayout>
             </PrivateRoute>
           }
+        />
+      ))}
+
+      {(publicRoutes || []).map((route, idx) => (
+        <Route
+          key={idx + route.name}
+          path={route.path}
+          element={<PublicLayout {...props}>{route.element}</PublicLayout>}
         />
       ))}
 

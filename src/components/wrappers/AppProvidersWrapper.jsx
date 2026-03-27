@@ -8,6 +8,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { TwoFAProvider } from '@/context/TwoFAContext';
 import TwoFactorAuthentication from '@/pages/TwoFactorAuthentication/TwoFactorAuthentication';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { LockProvider } from '@/context/useLockContext';
 
 const handleChangeTitle = () => {
   if (document.visibilityState == 'hidden') document.title = 'Please come back 🥺'; else document.title = DEFAULT_PAGE_TITLE;
@@ -23,14 +24,15 @@ const AppProvidersWrapper = ({
   }, []);
   return <HelmetProvider>
     <AuthProvider>
-      <TwoFAProvider>
-        <LayoutProvider>
-          <NotificationProvider>
-            <ErrorBoundary>
-              {children}
-            </ErrorBoundary>
-            <TwoFactorAuthentication />
-            <Toaster
+      <LockProvider>
+        <TwoFAProvider>
+          <LayoutProvider>
+            <NotificationProvider>
+              <ErrorBoundary>
+                {children}
+              </ErrorBoundary>
+              <TwoFactorAuthentication />
+              <Toaster
               position="top-center"
               toastOptions={{
                 duration: 3000,
@@ -40,9 +42,10 @@ const AppProvidersWrapper = ({
                 },
               }}
             />
-          </NotificationProvider>
-        </LayoutProvider>
-      </TwoFAProvider>
+            </NotificationProvider>
+          </LayoutProvider>
+        </TwoFAProvider>
+      </LockProvider>
     </AuthProvider>
   </HelmetProvider>;
 };

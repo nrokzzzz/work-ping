@@ -5,10 +5,12 @@ import avatar1 from '@/assets/images/users/avatar-1.jpg';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '@/helpers/httpClient';
 import { useAuthContext } from '@/context/useAuthContext';
+import { useLockContext } from '@/context/useLockContext';
 
 const ProfileDropdown = () => {
   const navigate = useNavigate();
-  const { logout } = useAuthContext();
+  const { logout, user } = useAuthContext();
+  const { lock } = useLockContext();
 
   const handleLogout = async () => {
     try {
@@ -30,13 +32,16 @@ const ProfileDropdown = () => {
       </span>
     </DropdownToggle>
     <DropdownMenu>
-      <DropdownHeader as="h6">Welcome!</DropdownHeader>
+      <DropdownHeader as="h6">
+        <div>{user?.name ?? 'Welcome!'}</div>
+        {user?.email && <div style={{ fontSize: 11, fontWeight: 400, opacity: .65 }}>{user.email}</div>}
+      </DropdownHeader>
       <DropdownItem as={Link} to="/pages/profile">
         <IconifyIcon icon="bx:user-circle" className="text-muted fs-18 align-middle me-1" />
         <span className="align-middle">Profile</span>
       </DropdownItem>
 
-      <DropdownItem as={Link} to="/auth/lock-screen">
+      <DropdownItem onClick={lock}>
         <IconifyIcon icon="bx:lock" className="text-muted fs-18 align-middle me-1" />
         <span className="align-middle">Lock screen</span>
       </DropdownItem>
