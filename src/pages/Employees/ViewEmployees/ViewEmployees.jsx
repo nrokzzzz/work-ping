@@ -29,9 +29,10 @@ const ViewEmployees = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
-        setOrgData(res.data || {})
+        setOrgData(res.data?.data || {})
       } catch (err) {
         // Error handled by interceptor
       }
@@ -62,12 +63,13 @@ const ViewEmployees = () => {
       if (appliedSearch) params.append('search', appliedSearch)
 
       const result = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`,
+        { silent: true }
       )
 
-      setEmployees(result.data.data || [])
-      setTotalPages(result.data.totalPages || 0)
-      setTotalRecords(result.data.totalRecords || 0)
+      setEmployees(result.data?.data?.data || [])
+      setTotalPages(result.data?.data?.totalPages || 0)
+      setTotalRecords(result.data?.data?.totalRecords || 0)
     } catch (e) {
       // Error handled by interceptor
     } finally {
@@ -195,7 +197,7 @@ const ViewEmployees = () => {
                   <tr><td colSpan="16" className="text-center py-4">No records found</td></tr>
                 ) : (
                   employees.map((emp) => (
-                    <tr key={emp.USER_ID}>
+                    <tr key={emp._id}>
                       <td>{show(emp.employeeId)}</td>
                       <td>{show(emp.name)}</td>
                       <td>{show(emp.email)}</td>

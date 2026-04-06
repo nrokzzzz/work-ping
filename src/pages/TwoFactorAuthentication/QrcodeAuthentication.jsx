@@ -54,9 +54,9 @@ const QRAuthModal = () => {
       if (verifyResponse?.data?.verified) {
         setStatus("✅ Authentication successful")
 
-        const cookieResponse = await axiosClient.get('/verify-cookie')
+        const cookieResponse = await axiosClient.get('/verify-cookie', { silent: true })
 
-        if (cookieResponse.data.twoFactorEnabled) {
+        if (cookieResponse.data?.data?.twoFactorEnabled) {
           setIs2FAAuthnticator(false)
         }
 
@@ -69,9 +69,11 @@ const QRAuthModal = () => {
         }
       } else {
         setError('Invalid verification code')
+        setCode('')
       }
     } catch (err) {
-      setError('Verification failed. Please try again.')
+      setError('Invalid code. Please try again.')
+      setCode('')
     } finally {
       setVerifying(false)
     }
@@ -93,6 +95,7 @@ const QRAuthModal = () => {
 
   // Handle skip — mark 2FA as not completed so org flow redirects back to QR
   const handleSkip = () => {
+    
     setIs2FAAuthnticator(true)
     if (navigationState?.path) {
       navigate(navigationState.path, {

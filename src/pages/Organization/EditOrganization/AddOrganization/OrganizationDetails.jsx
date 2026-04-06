@@ -116,12 +116,13 @@ const OrganizationDetailsForm = () => {
       try {
         await axiosClient.post(
           '/api/admin/organization/add-organization',
-          newData
+          newData,
+          { silent: true }
         )
 
         toast.success('Organization added successfully!')
         reset()
-        navigate('/organization/view-organization')
+        navigate('/organization/view-organizations')
       } catch (error) {
         throw new Error(
           error?.response?.data?.message || 'Failed to add organization'

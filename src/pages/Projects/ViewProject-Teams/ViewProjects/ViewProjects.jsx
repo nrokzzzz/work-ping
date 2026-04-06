@@ -23,9 +23,10 @@ const Viewprojects = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
-        setOrgData(res.data || {})
+        setOrgData(res.data?.data || {})
       } catch (err) {
         // Error handled by interceptor
       }
@@ -72,9 +73,9 @@ const Viewprojects = () => {
         `/api/admin/project/get-projects?${params.toString()}`
       )
 
-      setProjects(result.data.projects || [])
-      setTotalPages(result.data.totalPages || 0)
-      setTotalRecords(result.data.totalRecords || 0)
+      setProjects(result.data?.data?.projects || [])
+      setTotalPages(result.data?.data?.totalPages || 0)
+      setTotalRecords(result.data?.data?.totalRecords || 0)
 
     } catch (e) {
       // Error handled by interceptor
@@ -179,6 +180,7 @@ const Viewprojects = () => {
                   <th>Assigned Date</th>
                   <th>Due Date</th>
                   <th>Contracted By</th>
+                  <th>Project Manager</th>
                   <th>Organization Name</th>
                 </tr>
               </thead>
@@ -186,7 +188,7 @@ const Viewprojects = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="10" className="text-center py-4">
+                    <td colSpan="11" className="text-center py-4">
                       Loading...
                     </td>
                   </tr>
@@ -194,7 +196,7 @@ const Viewprojects = () => {
                 ) : projects.length === 0 ? (
 
                   <tr>
-                    <td colSpan="10" className="text-center py-4">
+                    <td colSpan="11" className="text-center py-4">
                       No records found
                     </td>
                   </tr>
@@ -207,14 +209,18 @@ const Viewprojects = () => {
                       key={project._id}
                       style={{ cursor: 'pointer' }}
                       onClick={() =>
-                        navigate(`/projects/view-project-teams/project-team-members/${project._id}`)
+                        navigate(
+                          `/projects/view-project-teams/project-team-members/${project._id}`,
+                          { state: { orgId: project.organizationId || orgData[project.organizationName]?.organizationId } }
+                        )
                       }
                     >
-                      <td>{project.name}</td>
-                      <td>{project.assignedDate}</td>
-                      <td>{project.dueDate}</td>
-                      <td>{project.contractedBy}</td>
-                      <td>{project.organizationName}</td>
+                      <td>{project.name || '--'}</td>
+                      <td>{project.assignedDate || '--'}</td>
+                      <td>{project.dueDate || '--'}</td>
+                      <td>{project.contractedBy || '--'}</td>
+                      <td>{project.manager?.[0]?.employeeId ? `${project.manager[0].employeeId} (${project.projectManagerName})` : project.projectManagerName || '--'}</td>
+                      <td>{project.organizationName || '--'}</td>
                     </tr>
 
                   ))

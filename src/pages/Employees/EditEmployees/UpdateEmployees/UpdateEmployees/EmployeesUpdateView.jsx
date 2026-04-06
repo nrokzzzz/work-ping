@@ -36,9 +36,10 @@ const ViewEmployees = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
-        setOrgData(res.data || {})
+        setOrgData(res.data?.data || {})
 
       } catch (err) {
         // Error handled by interceptor
@@ -87,12 +88,13 @@ const ViewEmployees = () => {
       }
 
       const result = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`,
+        { silent: true }
       )
 
-      setEmployees(result.data.data || [])
-      setTotalPages(result.data.totalPages || 0)
-      setTotalRecords(result.data.totalRecords || 0)
+      setEmployees(result.data?.data?.data || [])
+      setTotalPages(result.data?.data?.totalPages || 0)
+      setTotalRecords(result.data?.data?.totalRecords || 0)
     } catch (e) {
       // Error handled by interceptor
     } finally {
@@ -124,7 +126,7 @@ const ViewEmployees = () => {
 
           await axiosClient.post('/api/admin/employees/delete-employees', {
             data: [...selectedIds],
-          })
+          }, { silent: true })
           toast.success('Employee(s) deleted successfully!')
           setSelectedIds(new Set())
           fetchEmployees(currentPage)

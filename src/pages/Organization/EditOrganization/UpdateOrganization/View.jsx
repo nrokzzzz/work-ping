@@ -39,12 +39,13 @@ const ViewOrganization = () => {
       }
 
       const response = await axiosClient.get(
-        `/api/admin/organization/get-organizations?${params.toString()}`
+        `/api/admin/organization/get-organizations?${params.toString()}`,
+        { silent: true }
       )
 
-      setorganizations(response.data.organizations)
-      setTotalPages(response.data.totalPages)
-      setTotalRecords(response.data.totalRecords)
+      setorganizations(response.data?.data?.organizations || [])
+      setTotalPages(response.data?.data?.totalPages || 0)
+      setTotalRecords(response.data?.data?.totalRecords || 0)
     } catch (error) {
       // Error handled by interceptor
     } finally {
@@ -77,7 +78,7 @@ const ViewOrganization = () => {
 
           await axiosClient.post('/api/admin/organization/delete-organizations', {
             data: [...selectedIds],
-          })
+          }, { silent: true })
 
           toast.success('Organization(s) deleted successfully!')
           setSelectedIds(new Set())
@@ -242,11 +243,11 @@ const ViewOrganization = () => {
                         </Button>
                       </td>
 
-                      <td>{organization.name || '-'}</td>
-                      <td>{organization.clDays || '-'}</td>
-                      <td>{organization.type || '-'}</td>
-                      <td>{organization.IPWhitelist?.[0] || '-'}</td>
-                      <td>{organization.foundedAt || '-'}</td>
+                      <td>{organization.name || '--'}</td>
+                      <td>{organization.clDays || '--'}</td>
+                      <td>{organization.type || '--'}</td>
+                      <td>{organization.IPWhitelist?.[0] || '--'}</td>
+                      <td>{organization.foundedAt || '--'}</td>
 
                     </tr>
                   ))

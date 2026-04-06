@@ -109,10 +109,17 @@ const LayoutProvider = ({
 
 
   useEffect(() => {
+    const html = document.documentElement;
+    html.classList.add('theme-switching');
     toggleDocumentAttribute('data-bs-theme', settings.theme);
     toggleDocumentAttribute('data-topbar-color', settings.topbarTheme);
     toggleDocumentAttribute('data-menu-color', settings.menu.theme);
     toggleDocumentAttribute('data-menu-size', settings.menu.size);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        html.classList.remove('theme-switching');
+      });
+    });
     return () => {
       toggleDocumentAttribute('data-bs-theme', settings.theme, true);
       toggleDocumentAttribute('data-topbar-color', settings.topbarTheme, true);

@@ -30,6 +30,7 @@ const schema = yup.object({
   userName: yup
     .string()
     .trim()
+    .matches(/^[A-Za-z\s]+$/, 'User Name must contain only letters and spaces')
     .required('User Name is required'),
 
   email: yup
@@ -184,10 +185,11 @@ const UpdateEmployee = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -207,15 +209,17 @@ const UpdateEmployee = () => {
       try {
 
         const res = await axiosClient.get(
-          `/api/admin/employee/get-employee/${employeeId}`
+          `/api/admin/employee/get-employee/${employeeId}`,
+          { silent: true }
         )
 
-        const emp = res.data
+        const emp = res.data?.data
         setId(emp._id)
         setValue("userId", emp.employeeId)
         setValue("userName", emp.name)
         setValue("email", emp.email)
-        setValue("workType", emp.workType)
+        const workTypeMap = { onsite: 'onSite', remote: 'Remote', hybrid: 'Hybrid' }
+        setValue("workType", workTypeMap[emp.workType?.toLowerCase()] || emp.workType)
         const phone = emp.phone?.replace(/^\+\d{1,3}/, '')
         setValue("phone", phone)
 
@@ -276,7 +280,15 @@ const UpdateEmployee = () => {
 
             <div className="col-md-4">
               <Form.Label>User Name <span className="text-danger">*</span></Form.Label>
-              <Form.Control placeholder="Enter Full Name" {...register('userName')} />
+              <Form.Control
+                placeholder="Enter Full Name"
+                {...register('userName')}
+                onKeyDown={(e) => {
+                  if (!/^[A-Za-z ]$/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'].includes(e.key)) {
+                    e.preventDefault()
+                  }
+                }}
+              />
               <small className="text-danger">{errors.userName?.message}</small>
             </div>
 
@@ -296,7 +308,7 @@ const UpdateEmployee = () => {
                   className="form-control d-flex justify-content-between align-items-center arrow-none"
                   style={{ cursor: 'pointer' }}
                 >
-                  <span>{selectedOrg || 'Select Organization'}</span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedOrg || 'Select Organization'}</span>
                   <IconifyIcon icon="bx:chevron-down" className="fs-4" />
                 </Dropdown.Toggle>
 

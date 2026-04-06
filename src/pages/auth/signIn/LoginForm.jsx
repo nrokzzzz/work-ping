@@ -35,7 +35,7 @@ const LoginForm = () => {
 
   const onSubmit = async (values) => {
     try {
-      await axiosClient.post('/api/admin/auth/login', values);
+      await axiosClient.post('/api/admin/auth/login', values, { silent: true });
       await login();
       toast.success('Login successful!');
 

@@ -142,5 +142,26 @@ export const MENU_ITEMS = [
         ],
       },
     ],
-  }
+  },
+  {
+    key: 'holidays',
+    icon: 'mdi:calendar-check-outline',
+    label: 'Holidays',
+    children: [
+      {
+        key: 'view-holidays',
+        icon: 'mdi:format-list-bulleted',
+        label: 'List',
+        url: '/holidays/view-holidays',
+        parentKey: 'holidays',
+      },
+      {
+        key: 'manage-holidays',
+        icon: 'mdi:cogs',
+        label: 'Manage',
+        url: '/holidays/manage-holidays',
+        parentKey: 'holidays',
+      },
+    ],
+  },
 ];

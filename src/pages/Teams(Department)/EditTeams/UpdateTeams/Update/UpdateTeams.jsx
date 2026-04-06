@@ -90,10 +90,11 @@ const UpdateTeam = () => {
       try {
 
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -117,10 +118,11 @@ const UpdateTeam = () => {
     try {
 
       const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`,
+        { silent: true }
       )
 
-      setEmployees(res.data?.data || [])
+      setEmployees(res.data?.data?.data || [])
 
     } catch (error) {
 
@@ -136,15 +138,15 @@ const UpdateTeam = () => {
 
       try {
 
-        const res = await axiosClient.get(`/api/admin/team/get-team/${id}`)
+        const res = await axiosClient.get(`/api/admin/team/get-team/${id}`, { silent: true })
 
-        const team = res.data
+        const team = res.data?.data
 
         reset({
           teamName: team.teamName,
           organizationId: team.organizationId,
-          teamManagerId: team.managerId?._id || '',
-          teamLeaderId: team.leaderIds?.[0]?._id || '',
+          teamManagerId: team.managerId || '',
+          teamLeaderId: team.leaderIds?.[0] || '',
           description: team.description || '',
         })
 
@@ -156,18 +158,14 @@ const UpdateTeam = () => {
 
         fetchEmployees(team.organizationId)
 
-        if (team.managerId) {
-
-          setSelectedManager(team.managerId.employeeId)
-          setValue('teamManagerId', team.managerId._id)
-
+        if (team.manager) {
+          setSelectedManager(`${team.manager.employeeId} (${team.manager.name})`)
+          setValue('teamManagerId', team.managerId)
         }
 
-        if (team.leaderIds?.length) {
-
-          setSelectedLeader(team.leaderIds[0].employeeId)
-          setValue('teamLeaderId', team.leaderIds[0]._id)
-
+        if (team.leaders?.length) {
+          setSelectedLeader(`${team.leaders[0].employeeId} (${team.leaders[0].name})`)
+          setValue('teamLeaderId', team.leaderIds[0])
         }
 
       } catch (error) {
@@ -186,7 +184,8 @@ const UpdateTeam = () => {
 
     await axiosClient.post(
       "/api/admin/team/update-team",
-      payload
+      payload,
+      { silent: true }
     )
 
     toast.success("Team updated successfully!")
@@ -268,7 +267,7 @@ const UpdateTeam = () => {
               className="form-control d-flex justify-content-between align-items-center arrow-none"
               style={{ cursor: "pointer" }}
             >
-              <span>{selectedOrg || "Select Organization"}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedOrg || "Select Organization"}</span>
               <IconifyIcon icon="bx:chevron-down" className="fs-4" />
             </Dropdown.Toggle>
 
@@ -330,7 +329,7 @@ const UpdateTeam = () => {
               as="div"
               className="form-control d-flex justify-content-between align-items-center arrow-none"
             >
-              <span>{selectedManager || "Select Manager"}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedManager || "Select Manager"}</span>
               <IconifyIcon icon="bx:chevron-down" />
             </Dropdown.Toggle>
 
@@ -393,7 +392,7 @@ const UpdateTeam = () => {
               as="div"
               className="form-control d-flex justify-content-between align-items-center arrow-none"
             >
-              <span>{selectedLeader || "Select Leader"}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedLeader || "Select Leader"}</span>
               <IconifyIcon icon="bx:chevron-down" />
             </Dropdown.Toggle>
 

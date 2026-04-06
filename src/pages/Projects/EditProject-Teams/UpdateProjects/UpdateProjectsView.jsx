@@ -32,9 +32,10 @@ const Viewprojects = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
-        setOrgData(res.data || {})
+        setOrgData(res.data?.data || {})
       } catch (err) {
         // Error handled by interceptor
       }
@@ -70,9 +71,9 @@ const Viewprojects = () => {
         `/api/admin/project/get-projects?${params.toString()}`
       )
 
-      setProjects(result.data.projects || [])
-      setTotalPages(result.data.totalPages || 0)
-      setTotalRecords(result.data.totalRecords || 0)
+      setProjects(result.data?.data?.projects || [])
+      setTotalPages(result.data?.data?.totalPages || 0)
+      setTotalRecords(result.data?.data?.totalRecords || 0)
     } catch (e) {
       // Error handled by interceptor
     } finally {
@@ -105,7 +106,7 @@ const Viewprojects = () => {
     try {
       await axiosClient.post('/api/admin/project/delete-projects', {
         data: [...selectedIds],
-      })
+      }, { silent: true })
 
       toast.success('Project(s) deleted successfully!')
       setSelectedIds(new Set())
@@ -278,14 +279,26 @@ const Viewprojects = () => {
                         >
                           <IconifyIcon icon="bx:edit" />
                         </Button>
+                        <Button
+                          variant="soft-info"
+                          size="sm"
+                          onClick={() =>
+                            navigate(
+                              `/projects/view-project-teams/project-team-members/${project._id}`,
+                              { state: { orgId: project.organizationId || orgData[project.organizationName]?.organizationId } }
+                            )
+                          }
+                        >
+                          <IconifyIcon icon="bx:group" />
+                        </Button>
                       </td>
 
-                      <td>{project.name || '-'}</td>
-                      <td>{project.assignedDate || '-'}</td>
-                      <td>{project.dueDate || '-'}</td>
-                      <td>{project.contractedBy || '-'}</td>
-                      <td>{project.projectManagerName || '-'}</td>
-                      <td>{project.organizationName || '-'}</td>
+                      <td>{project.name || '--'}</td>
+                      <td>{project.assignedDate || '--'}</td>
+                      <td>{project.dueDate || '--'}</td>
+                      <td>{project.contractedBy || '--'}</td>
+                      <td>{project.manager?.[0]?.employeeId ? `${project.manager[0].employeeId} (${project.projectManagerName})` : project.projectManagerName || '--'}</td>
+                      <td>{project.organizationName || '--'}</td>
                     </tr>
                   ))
                 )}

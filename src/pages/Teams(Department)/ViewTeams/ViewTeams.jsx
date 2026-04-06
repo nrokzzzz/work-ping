@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Row, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axiosClient from '@/helpers/httpClient'
 
 const ViewTeams = () => {
+  const navigate = useNavigate()
   const itemsPerPage = 10
 
   const [teams, setTeams] = useState([])
@@ -25,9 +26,10 @@ const ViewTeams = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          'api/admin/organization/get-all-organization-ids'
+          'api/admin/organization/get-all-organization-ids',
+          { silent: true }
         )
-        setOrganizations(res.data || [])
+        setOrganizations(res.data?.data || [])
       } catch (err) {
         // Error handled by interceptor
       }
@@ -55,11 +57,12 @@ const ViewTeams = () => {
       }
 
       const res = await axiosClient.get(
-        `api/admin/team/get-teams-filter?${params.toString()}`
+        `api/admin/team/get-teams-filter?${params.toString()}`,
+        { silent: true }
       )
-      setTeams(res.data?.teamList || [])
-      setTotalPages(res.data?.totalPages || 0)
-      setTotalRecords(res.data?.totalRecords || 0)
+      setTeams(res.data?.data?.teamList || [])
+      setTotalPages(res.data?.data?.totalPages || 0)
+      setTotalRecords(res.data?.data?.totalRecords || 0)
     } catch (err) {
       // Error handled by interceptor
     } finally {
@@ -82,7 +85,7 @@ const ViewTeams = () => {
     const org = organizations.find(
       (o) => o.organizationId === orgId
     )
-    return org?.name || '-'
+    return org?.name || '--'
   }
 
   const getPages = () => {
@@ -186,13 +189,17 @@ const ViewTeams = () => {
                   </tr>
                 ) : (
                   teams.map((team) => (
-                    <tr key={team._id}>
-                      <td>{team.teamName}</td>
-                      <td>{team.managerId}</td>
+                    <tr 
+                      key={team._id}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => navigate(`/teams/team-members/team-members-view/${team._id}`)}
+                    >
+                      <td>{team.teamName || '--'}</td>
+                      <td>{team.manager ? `${team.manager.employeeId} (${team.manager.name})` : '--'}</td>
                       <td>
-                        {getOrganizationName(team.organizationId)}
+                        {getOrganizationName(team.organizationId) || '--'}
                       </td>
-                      <td>{team.leaderIds[0]}</td>
+                      <td>{team.leaders?.[0] ? `${team.leaders[0].employeeId} (${team.leaders[0].name})` : '--'}</td>
                     </tr>
                   ))
                 )}

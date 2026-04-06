@@ -2,8 +2,12 @@ import { useState, useRef } from "react"
 import { Modal, Button, Table, Form } from "react-bootstrap"
 import * as XLSX from "xlsx"
 import axiosClient from "@/helpers/httpClient"
+import { toast } from "react-toastify"
+import { use2FA } from "@/context/TwoFAContext"
 
-const UploadUsersFromExcel = ({ show, handleClose, openEmployees }) => {
+const UploadUsersFromExcel = ({ show, handleClose, openEmployees, teamId, orgId, onSuccess }) => {
+
+  const { require2FA } = use2FA()
 
     const [rollNumbers, setRollNumbers] = useState([])
     const [selectedIds, setSelectedIds] = useState([])
@@ -57,37 +61,35 @@ const UploadUsersFromExcel = ({ show, handleClose, openEmployees }) => {
         }
     }
 
-    const sendToBackend = async () => {
+    const sendToBackend = () => {
+        if (selectedIds.length === 0) return
+        require2FA(async () => {
+            try {
+                await axiosClient.post('/api/admin/team/add-team-member', {
+                    teamId,
+                    orgId,
+                    members: selectedIds,
+                }, { silent: true })
 
-        try {
+                toast.success('Member(s) added to team successfully!')
+                if (onSuccess) onSuccess()
+                handleClose()
 
-            await axiosClient.post("/api/send-user-ids", {
-                rollNumbers: selectedIds,
-            })
-
-            alert("Users sent successfully")
-
-            handleClose()
-
-        } catch (err) {
-
-            console.error(err)
-            alert("Failed to send users")
-
-        } finally {
-
-            setRollNumbers([])
-            setSelectedIds([])
-
-            if (fileInputRef.current) {
-                fileInputRef.current.value = ""
+            } catch (err) {
+                throw new Error(err?.response?.data?.message || 'Failed to add members')
+            } finally {
+                setRollNumbers([])
+                setSelectedIds([])
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = ""
+                }
             }
-        }
+        })
     }
 
     return (
 
-       <Modal show={show} onHide={handleClose} size="lg" centered scrollable>
+       <Modal show={show} onHide={handleClose} size="lg" centered scrollable enforceFocus={false}>
 
                 <Modal.Header closeButton>
 
@@ -163,7 +165,7 @@ const UploadUsersFromExcel = ({ show, handleClose, openEmployees }) => {
 
                                         <td>{index + 1}</td>
 
-                                        <td>{roll}</td>
+                                        <td>{roll || '--'}</td>
 
                                     </tr>
 

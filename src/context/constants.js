@@ -1,9 +1,9 @@
 export const currency = '$';
 export const currentYear = new Date().getFullYear();
-export const developedByLink = 'https://techzaa.getappui.com/';
-export const developedBy = 'Work-pinG';
-export const contactUs = 'techzaastudio@gmail.com';
+export const developedByLink = 'https://workping.live';
+export const developedBy = 'WorkPing';
+export const contactUs = 'support@workping.live';
 export const buyLink = '';
 export const basePath = '';
-export const DEFAULT_PAGE_TITLE = 'Reback React | Responsive Admin Dashboard Template';
+export const DEFAULT_PAGE_TITLE = 'WorkPing | Workforce Management';
 export const colorVariants = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark', 'purple', 'pink', 'orange', 'light', 'link'];

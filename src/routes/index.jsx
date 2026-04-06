@@ -556,6 +556,22 @@ const QrCodeAuthentication = lazy(()=>import('@/pages/TwoFactorAuthentication/Qr
 //team-members
 const ButtonPage = lazy(()=>import('@/pages/teamMember/ButtonPage'))
 
+// holidays
+const ViewHolidays = lazy(()=>import('@/pages/Holidays/ViewHolidays'))
+const ManageHolidays = lazy(()=>import('@/pages/Holidays/ManageHolidays'))
+
+// test
+const PhonePeTest = lazy(()=>import('@/pages/test/PhonePeTest'))
+
+// order
+const OrderStatus = lazy(()=>import('@/pages/order/OrderStatus'))
+
+// public pages
+const PrivacyPolicy = lazy(()=>import('@/pages/public/PrivacyPolicy/page'))
+const TermsAndConditions = lazy(()=>import('@/pages/public/TermsAndConditions/page'))
+const AboutPublic = lazy(()=>import('@/pages/public/About/page'))
+const ContactPublic = lazy(()=>import('@/pages/public/Contact/page'))
+
 export const authRoutes = [{
   path: '/auth/sign-in',
   name: 'Sign In',
@@ -732,4 +748,52 @@ const TwoFactorAuthentication=[
 
 
 
-export const appRoutes = [...initialRoutes, ...generalRoutes, ...appsRoutes, ...customRoutes, ...baseUIRoutes, ...advancedUIRoutes, ...chartsNMapsRoutes, ...formsRoutes, ...tableRoutes, ...iconRoutes, ...authRoutes,...teamsRoutes,...organizationRoutes,...employeesRoutes,...projectsRoutes,...TwoFactorAuthentication];
+const holidaysRoutes = [
+  {
+    path: '/holidays/view-holidays',
+    name: 'ViewHolidays',
+    element: <ViewHolidays />
+  },
+  {
+    path: '/holidays/manage-holidays',
+    name: 'ManageHolidays',
+    element: <ManageHolidays />
+  }
+]
+
+const testRoutes = [{
+  path: '/test/phonepe',
+  name: 'PhonePe Test',
+  element: <PhonePeTest />
+}];
+
+const orderRoutes = [{
+  path: '/order/:orderId',
+  name: 'Order Status',
+  element: <OrderStatus />
+}];
+
+export const publicRoutes = [
+  {
+    path: '/privacy-policy',
+    name: 'Privacy Policy',
+    element: <PrivacyPolicy />
+  },
+  {
+    path: '/terms-and-conditions',
+    name: 'Terms and Conditions',
+    element: <TermsAndConditions />
+  },
+  {
+    path: '/about',
+    name: 'About',
+    element: <AboutPublic />
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    element: <ContactPublic />
+  }
+];
+
+export const appRoutes = [...initialRoutes, ...generalRoutes, ...appsRoutes, ...customRoutes, ...baseUIRoutes, ...advancedUIRoutes, ...chartsNMapsRoutes, ...formsRoutes, ...tableRoutes, ...iconRoutes, ...authRoutes,...teamsRoutes,...organizationRoutes,...employeesRoutes,...projectsRoutes,...TwoFactorAuthentication,...holidaysRoutes,...testRoutes,...orderRoutes];

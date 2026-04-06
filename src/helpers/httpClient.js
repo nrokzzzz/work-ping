@@ -37,9 +37,9 @@ axiosClient.interceptors.response.use(
       window.dispatchEvent(new Event('HIDE_LOADER'));
     }
 
-    // Auto-toast on { type, message } shaped responses
+    // Auto-toast on { type, message } shaped responses (skip if silent: true)
     const data = response?.data;
-    if (data?.message && data?.type) {
+    if (!response.config?.silent && data?.message && data?.type) {
       if (data.type === 'success') {
         toast.success(data.message);
       } else if (data.type === 'error') {

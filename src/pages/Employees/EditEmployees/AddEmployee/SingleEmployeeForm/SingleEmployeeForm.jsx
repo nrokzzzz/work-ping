@@ -30,6 +30,7 @@ const schema = yup.object({
   userName: yup
     .string()
     .trim()
+    .matches(/^[A-Za-z\s]+$/, 'User Name must contain only letters and spaces')
     .required('User Name is required'),
 
   email: yup
@@ -168,10 +169,11 @@ const AddEmployee = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -218,7 +220,15 @@ const AddEmployee = () => {
 
             <div className="col-md-4">
               <Form.Label>User Name <span className="text-danger">*</span></Form.Label>
-              <Form.Control placeholder="Enter Full Name" {...register('userName')} />
+              <Form.Control
+                placeholder="Enter Full Name"
+                {...register('userName')}
+                onKeyDown={(e) => {
+                  if (!/^[A-Za-z ]$/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'].includes(e.key)) {
+                    e.preventDefault()
+                  }
+                }}
+              />
               <small className="text-danger">{errors.userName?.message}</small>
             </div>
 
@@ -238,7 +248,7 @@ const AddEmployee = () => {
                   className="form-control d-flex justify-content-between align-items-center arrow-none"
                   style={{ cursor: 'pointer' }}
                 >
-                  <span>{selectedOrg || 'Select Organization'}</span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedOrg || 'Select Organization'}</span>
                   <IconifyIcon icon="bx:chevron-down" className="fs-4" />
                 </Dropdown.Toggle>
 

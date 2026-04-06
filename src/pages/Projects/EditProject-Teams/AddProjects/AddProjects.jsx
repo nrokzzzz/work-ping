@@ -53,10 +53,11 @@ const AddProjects = () => {
       try {
 
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -76,11 +77,12 @@ const AddProjects = () => {
     try {
 
       const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`,
+        { silent: true }
       )
 
-      const formatted = (res.data.data || []).map((emp) => ({
-        name: emp.name,
+      const formatted = (res.data?.data?.data || []).map((emp) => ({
+        label: emp.employeeId ? `${emp.employeeId} (${emp.name})` : emp.name,
         employeeId: emp._id
       }))
 
@@ -97,7 +99,7 @@ const AddProjects = () => {
 
       try {
 
-        await axiosClient.post('/api/admin/project/create-project', data)
+        await axiosClient.post('/api/admin/project/create-project', data, { silent: true })
         toast.success('Project created successfully!')
         reset()
         navigate('/projects/update-projects')
@@ -113,10 +115,10 @@ const AddProjects = () => {
 
         try {
 
-          await axiosClient.post('/api/admin/project/create-project', data)
+          await axiosClient.post('/api/admin/project/create-project', data, { silent: true })
           toast.success('Project created successfully!')
           reset()
-          navigate('/projects/update-projects')
+          navigate('/projects/view-projects')
 
         } catch (error) {
 
@@ -192,7 +194,7 @@ const AddProjects = () => {
               className="form-control d-flex justify-content-between align-items-center arrow-none"
               style={{ cursor: "pointer" }}
             >
-              <span>{selectedOrg || "Select Organization"}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedOrg || "Select Organization"}</span>
               <IconifyIcon icon="bx:chevron-down" className="fs-4" />
             </Dropdown.Toggle>
 
@@ -253,7 +255,7 @@ const AddProjects = () => {
               className="form-control d-flex justify-content-between align-items-center arrow-none"
               style={{ cursor: "pointer" }}
             >
-              <span>{selectedPM || "Select Project Manager"}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedPM || "Select Project Manager"}</span>
               <IconifyIcon icon="bx:chevron-down" className="fs-4" />
             </Dropdown.Toggle>
 
@@ -275,18 +277,18 @@ const AddProjects = () => {
 
               {projectManagers
                 .filter(p =>
-                  p.name.toLowerCase().includes(pmSearch.toLowerCase())
+                  p.label.toLowerCase().includes(pmSearch.toLowerCase())
                 )
                 .map((p) => (
                   <Dropdown.Item
                     key={p.employeeId}
                     onClick={() => {
-                      setSelectedPM(p.name)
+                      setSelectedPM(p.label)
                       setValue('projectManager', p.employeeId)
                       setPmSearch('')
                     }}
                   >
-                    {p.name}
+                    {p.label}
                   </Dropdown.Item>
                 ))}
 

@@ -16,12 +16,23 @@ const TwoFactorAuthModal = () => {
   const [error, setError] = useState('')
 
   const isMounted = useRef(true)
+  const inputRef = useRef(null)
 
   useEffect(() => {
     return () => {
       isMounted.current = false
     }
   }, [])
+
+  useEffect(() => {
+    if (showModal) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          inputRef.current?.focus()
+        })
+      })
+    }
+  }, [showModal])
 
   const handleVerify = useCallback(async () => {
 
@@ -36,6 +47,7 @@ const TwoFactorAuthModal = () => {
 
       if (!verifyResponse?.data?.verified) {
         setError('Invalid verification code')
+        setCode('')
         return
       }
 
@@ -62,6 +74,7 @@ const TwoFactorAuthModal = () => {
         'Verification failed. Please try again.'
 
       setError(message)
+      setCode('')
 
     } finally {
 
@@ -110,6 +123,7 @@ const TwoFactorAuthModal = () => {
       <div
         className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
         style={{ zIndex: MODAL_CONTENT_Z_INDEX }}
+        tabIndex={-1}
       >
 
         <Card
@@ -135,13 +149,13 @@ const TwoFactorAuthModal = () => {
             </p>
 
             <Form.Control
+              ref={inputRef}
               value={code}
               onChange={(e) =>
                 setCode(e.target.value.replace(/\D/g, '').slice(0, 6))
               }
               onKeyDown={handleKeyDown}
               placeholder="XXXXXX"
-              autoFocus
               className="text-center mb-3"
               style={{
                 height: 48,

@@ -95,10 +95,11 @@ const CreateTeam = () => {
       try {
 
         const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info'
+          '/api/admin/get-all-employees/get-organization-info',
+          { silent: true }
         )
 
-        const formatted = Object.entries(res.data || {}).map(([name, obj]) => ({
+        const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
           organizationId: obj.organizationId
         }))
@@ -121,10 +122,11 @@ const CreateTeam = () => {
     try {
 
       const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?organizationId=${orgId}`,
+        { silent: true }
       )
 
-      setEmployees(res.data?.data || [])
+      setEmployees(res.data?.data?.data || [])
 
     } catch (error) {
       // Error handled by interceptor
@@ -137,7 +139,8 @@ const CreateTeam = () => {
 
     await axiosClient.post(
       '/api/admin/team/create-team',
-      data
+      data,
+      { silent: true }
     )
 
     toast.success('Team created successfully!')
@@ -231,7 +234,7 @@ const CreateTeam = () => {
               className="form-control d-flex justify-content-between align-items-center arrow-none"
               style={{ cursor: "pointer" }}
             >
-              <span>{selectedOrg || "Select Organization"}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedOrg || "Select Organization"}</span>
               <IconifyIcon icon="bx:chevron-down" className="fs-4" />
             </Dropdown.Toggle>
 
@@ -295,7 +298,7 @@ const CreateTeam = () => {
               as="div"
               className="form-control d-flex justify-content-between align-items-center arrow-none"
             >
-              <span>{selectedManager || "Select Manager"}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedManager || "Select Manager"}</span>
               <IconifyIcon icon="bx:chevron-down" />
             </Dropdown.Toggle>
 
@@ -358,7 +361,7 @@ const CreateTeam = () => {
               as="div"
               className="form-control d-flex justify-content-between align-items-center arrow-none"
             >
-              <span>{selectedLeader || "Select Leader"}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedLeader || "Select Leader"}</span>
               <IconifyIcon icon="bx:chevron-down" />
             </Dropdown.Toggle>
 

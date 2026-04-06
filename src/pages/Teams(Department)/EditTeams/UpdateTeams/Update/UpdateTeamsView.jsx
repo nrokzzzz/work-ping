@@ -36,9 +36,10 @@ const ViewTeams = () => {
     const fetchOrganizations = async () => {
       try {
         const res = await axiosClient.get(
-          'api/admin/organization/get-all-organization-ids'
+          'api/admin/organization/get-all-organization-ids',
+          { silent: true }
         )
-        setOrganizations(res.data || [])
+        setOrganizations(res.data?.data || [])
       } catch (err) {
         // Error handled by interceptor
       }
@@ -62,12 +63,13 @@ const ViewTeams = () => {
         params.append('organizationId', appliedOrganization)
 
       const res = await axiosClient.get(
-        `api/admin/team/get-teams-filter?${params.toString()}`
+        `api/admin/team/get-teams-filter?${params.toString()}`,
+        { silent: true }
       )
 
-      setTeams(res.data?.teamList || [])
-      setTotalPages(res.data?.totalPages || 0)
-      setTotalRecords(res.data?.totalRecords || 0)
+      setTeams(res.data?.data?.teamList || [])
+      setTotalPages(res.data?.data?.totalPages || 0)
+      setTotalRecords(res.data?.data?.totalRecords || 0)
     } catch (err) {
       // Error handled by interceptor
     } finally {
@@ -87,7 +89,7 @@ const ViewTeams = () => {
 
   const getOrganizationName = (orgId) => {
     const org = organizations.find((o) => o.organizationId === orgId)
-    return org?.name || '-'
+    return org?.name || '--'
   }
 
   const handleSelect = (id, checked) => {
@@ -110,7 +112,7 @@ const ViewTeams = () => {
 
           await axiosClient.post('/api/admin/team/delete-team', {
             data: [...selectedIds],
-          })
+          }, { silent: true })
 
           toast.success('Team(s) deleted successfully!')
           setSelectedIds(new Set())
@@ -260,19 +262,26 @@ const ViewTeams = () => {
                           size="sm"
                           className="me-2"
                           onClick={() =>
-                            navigate(
-                              `/teams/edit-teams/update-teams/${team._id}`
-                            )
+                            navigate(`/teams/edit-teams/update-teams/${team._id}`)
                           }
                         >
                           <IconifyIcon icon="bx:edit" />
                         </Button>
+                        <Button
+                          variant="soft-info"
+                          size="sm"
+                          onClick={() =>
+                            navigate(`/teams/team-members/team-members-view/${team._id}`, { state: { orgId: team.organizationId } })
+                          }
+                        >
+                          <IconifyIcon icon="bx:group" />
+                        </Button>
                       </td>
 
-                      <td>{team.teamName}</td>
-                      <td>{team.managerId}</td>
-                      <td>{getOrganizationName(team.organizationId)}</td>
-                      <td>{team.leaderIds[0]}</td>
+                      <td>{team.teamName || '--'}</td>
+                      <td>{team.manager ? `${team.manager.employeeId} (${team.manager.name})` : '--'}</td>
+                      <td>{getOrganizationName(team.organizationId) || '--'}</td>
+                      <td>{team.leaders?.[0] ? `${team.leaders[0].employeeId} (${team.leaders[0].name})` : '--'}</td>
                     </tr>
                   ))
                 )}

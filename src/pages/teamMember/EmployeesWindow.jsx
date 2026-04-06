@@ -3,8 +3,12 @@ import { Modal, Card, CardBody, Row, Col, Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import IconifyIcon from "@/components/wrappers/IconifyIcon"
 import axiosClient from "@/helpers/httpClient"
+import { toast } from "react-toastify"
+import { use2FA } from "@/context/TwoFAContext"
 
-const EmployeesWindow = ({ show, handleClose, openExcel }) => {
+const EmployeesWindow = ({ show, handleClose, openExcel, teamId, orgId, onSuccess }) => {
+
+  const { require2FA } = use2FA()
 
   const itemsPerPage = 10
 
@@ -13,9 +17,12 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
   const [totalPages, setTotalPages] = useState(0)
   const [totalRecords, setTotalRecords] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   const [search, setSearch] = useState("")
   const [appliedSearch, setAppliedSearch] = useState("")
+
+  const [selectedIds, setSelectedIds] = useState(new Set())
 
   const fetchEmployees = async (page) => {
 
@@ -33,12 +40,13 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
       }
 
       const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params}`
+        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params}`,
+        { silent: true }
       )
 
-      setEmployees(res.data.data || [])
-      setTotalPages(res.data.totalPages || 0)
-      setTotalRecords(res.data.totalRecords || 0)
+      setEmployees(res.data?.data?.data || [])
+      setTotalPages(res.data?.data?.totalPages || 0)
+      setTotalRecords(res.data?.data?.totalRecords || 0)
 
     } catch (err) {
       console.log(err)
@@ -54,6 +62,37 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
   const handleApply = () => {
     setAppliedSearch(search)
     setCurrentPage(1)
+  }
+
+  const handleSelect = (id, checked) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (checked) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
+
+  const handleSubmit = () => {
+    if (selectedIds.size === 0) return
+    require2FA(async () => {
+      setSubmitting(true)
+      try {
+        await axiosClient.post(
+          '/api/admin/team/add-team-member',
+          { teamId, orgId, members: [...selectedIds] },
+          { silent: true }
+        )
+        toast.success('Member(s) added to team successfully!')
+        setSelectedIds(new Set())
+        if (onSuccess) onSuccess()
+        handleClose()
+      } catch (err) {
+        throw new Error(err?.response?.data?.message || 'Failed to add members')
+      } finally {
+        setSubmitting(false)
+      }
+    })
   }
 
   const getPages = () => {
@@ -81,6 +120,7 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
       size="xl"
       centered
       scrollable
+      enforceFocus={false}
     >
 
       {/* Header */}
@@ -107,28 +147,28 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
           <CardBody>
 
             {/* Search */}
-          <Row className="g-2 mb-3"> 
-            <Col xs={12} md={9}> 
+          <Row className="g-2 mb-3">
+            <Col xs={12} md={9}>
             <div className="position-relative"  style={{ maxWidth: "400px" }}>
-               <IconifyIcon 
-               icon="bx:search-alt" 
-               className="position-absolute" 
-               style={{ left: 12, 
+               <IconifyIcon
+               icon="bx:search-alt"
+               className="position-absolute"
+               style={{ left: 12,
                top: "50%",
-                transform: "translateY(-50%)", 
-                fontSize: 18 }} /> 
+                transform: "translateY(-50%)",
+                fontSize: 18 }} />
 
-                <input type="search" 
-                className="form-control ps-5" 
-                placeholder="Search employees..." 
-                value={search} onChange={(e) => setSearch(e.target.value)} 
-                /> 
-                </div> 
-                </Col> 
-                <Col xs={12} md={3}> 
-                <Button className="w-100" onClick={handleApply}> 
-                  Search </Button> 
-                  </Col> 
+                <input type="search"
+                className="form-control ps-5"
+                placeholder="Search employees..."
+                value={search} onChange={(e) => setSearch(e.target.value)}
+                />
+                </div>
+                </Col>
+                <Col xs={12} md={3}>
+                <Button className="w-100" onClick={handleApply}>
+                  Search </Button>
+                  </Col>
                   </Row>
 
             {/* Table */}
@@ -139,6 +179,7 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
 
                 <thead className="bg-light">
                   <tr>
+                    <th>Select</th>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -151,24 +192,31 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
 
                   {loading ? (
                     <tr>
-                      <td colSpan="5" className="text-center">
+                      <td colSpan="6" className="text-center">
                         Loading...
                       </td>
                     </tr>
                   ) : employees.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="text-center">
+                      <td colSpan="6" className="text-center">
                         No Records
                       </td>
                     </tr>
                   ) : (
                     employees.map((emp) => (
-                      <tr key={emp.employeeId}>
-                        <td>{emp.employeeId}</td>
-                        <td>{emp.name}</td>
-                        <td>{emp.email}</td>
-                        <td>{emp.phone}</td>
-                        <td>{emp.department}</td>
+                      <tr key={emp._id}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.has(emp._id)}
+                            onChange={(e) => handleSelect(emp._id, e.target.checked)}
+                          />
+                        </td>
+                        <td>{emp.employeeId || '--'}</td>
+                        <td>{emp.name || '--'}</td>
+                        <td>{emp.email || '--'}</td>
+                        <td>{emp.phone || '--'}</td>
+                        <td>{emp.department || '--'}</td>
                       </tr>
                     ))
                   )}
@@ -254,6 +302,20 @@ const EmployeesWindow = ({ show, handleClose, openExcel }) => {
         </Card>
 
       </Modal.Body>
+
+      <Modal.Footer>
+        <span className="text-muted small me-auto">
+          {selectedIds.size > 0 ? `${selectedIds.size} employee(s) selected` : 'No employees selected'}
+        </span>
+        <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+        <Button
+          variant="primary"
+          disabled={selectedIds.size === 0 || submitting}
+          onClick={handleSubmit}
+        >
+          {submitting ? 'Adding...' : 'Add to Team'}
+        </Button>
+      </Modal.Footer>
 
     </Modal>
   )
