@@ -43,7 +43,7 @@ const TwoFactorAuthModal = () => {
       setLoading(true)
       setError('')
 
-      const verifyResponse = await axiosClient.post('/api/auth/2fa/verify', { code })
+      const verifyResponse = await axiosClient.post('/api/auth/2fa/verify', { code }, { silent: true })
 
       if (!verifyResponse?.data?.verified) {
         setError('Invalid verification code')

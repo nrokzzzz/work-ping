@@ -158,7 +158,8 @@ const UpdateEmployee = () => {
 
             const response = await axiosClient.post(
               "/api/admin/employee/update",
-              data
+              data,
+              { silent: true }
             )
 
 

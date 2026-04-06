@@ -29,7 +29,7 @@ const QRAuthModal = () => {
       setLoading(true)
       setError('')
 
-      const setupResponse = await axiosClient.post('/api/auth/2fa/setup')
+      const setupResponse = await axiosClient.post('/api/auth/2fa/setup', {}, { silent: true })
 
       setQrCode(setupResponse.data.qrCode)
       setStatus("Scan this QR using your authenticator app")
@@ -49,7 +49,7 @@ const QRAuthModal = () => {
       setVerifying(true)
       setError('')
 
-      const verifyResponse = await axiosClient.post('/api/auth/2fa/verify', { code })
+      const verifyResponse = await axiosClient.post('/api/auth/2fa/verify', { code }, { silent: true })
 
       if (verifyResponse?.data?.verified) {
         setStatus("✅ Authentication successful")

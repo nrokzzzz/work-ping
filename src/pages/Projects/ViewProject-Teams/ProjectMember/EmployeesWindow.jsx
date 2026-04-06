@@ -3,7 +3,7 @@ import { Modal, Card, CardBody, Row, Col, Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import IconifyIcon from "@/components/wrappers/IconifyIcon"
 import axiosClient from "@/helpers/httpClient"
-import { toast } from "react-toastify"
+import toast from "react-hot-toast"
 import { use2FA } from "@/context/TwoFAContext"
 
 const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organizationId, onSuccess }) => {

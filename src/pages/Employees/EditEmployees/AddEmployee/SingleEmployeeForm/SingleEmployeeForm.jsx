@@ -151,7 +151,8 @@ const AddEmployee = () => {
         try {
           await axiosClient.post(
             "/api/admin/add-employees/by-form",
-            data
+            data,
+            { silent: true }
           )
           navigate('/employees/view-employees')
         } catch (error) {

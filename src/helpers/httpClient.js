@@ -55,13 +55,15 @@ axiosClient.interceptors.response.use(
       window.dispatchEvent(new Event('HIDE_LOADER'));
     }
 
-    // Extract and display error message
-    const errorMessage =
-      error?.response?.data?.message ||
-      error?.message ||
-      'Something went wrong. Please try again.';
+    // Extract and display error message (skip if silent: true)
+    if (!error?.config?.silent) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        'Something went wrong. Please try again.';
 
-    toast.error(errorMessage);
+      toast.error(errorMessage);
+    }
 
     return Promise.reject(error);
   }

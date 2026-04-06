@@ -91,7 +91,8 @@ const ResetPassForm = () => {
       if (step === 1) {
         await axiosClient.post(
           "/api/admin/forgot-password/send-otp",
-          { email: data.email }
+          { email: data.email },
+          { silent: true }
         );
 
         setStep(2);
@@ -103,7 +104,8 @@ const ResetPassForm = () => {
         setIsTimerActive(false);
         await axiosClient.post(
           "/api/admin/forgot-password/verify-otp",
-          { email: data.email, otp: data.otp }
+          { email: data.email, otp: data.otp },
+          { silent: true }
         );
 
         setStep(3);

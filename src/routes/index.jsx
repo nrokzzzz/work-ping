@@ -138,10 +138,6 @@ const initialRoutes = [{
   path: '/',
   name: 'root',
   element: <Navigate to="/dashboard/analytics" />
-}, {
-  path: '*',
-  name: 'not-found',
-  element: <NotFound />
 }];
 const generalRoutes = [{
   path: '/dashboard/analytics',

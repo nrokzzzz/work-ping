@@ -3,7 +3,7 @@ import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import axiosClient from '@/helpers/httpClient'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 
 // ─── Admin View Modal ────────────────────────────────────────────────────────
 

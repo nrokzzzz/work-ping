@@ -72,6 +72,7 @@ const BulkUpload = () => {
             '/api/admin/add-employees/by-excel',
             formData,
             {
+              silent: true,
               headers: { 'Content-Type': 'multipart/form-data' },
               onUploadProgress: (progressEvent) => {
                 const percent = Math.round(
@@ -101,6 +102,7 @@ const BulkUpload = () => {
               '/api/admin/add-employees/by-excel',
               formData,
               {
+                silent: true,
                 headers: { 'Content-Type': 'multipart/form-data' },
                 onUploadProgress: (progressEvent) => {
                   const percent = Math.round(

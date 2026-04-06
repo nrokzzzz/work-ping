@@ -2,7 +2,7 @@ import { useState, useRef } from "react"
 import { Modal, Button, Table, Form } from "react-bootstrap"
 import * as XLSX from "xlsx"
 import axiosClient from "@/helpers/httpClient"
-import { toast } from "react-toastify"
+import toast from "react-hot-toast"
 import { use2FA } from "@/context/TwoFAContext"
 
 const UploadUsersFromExcel = ({ show, handleClose, openEmployees, projectId, orgId, onSuccess }) => {

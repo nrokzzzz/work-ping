@@ -1,16 +1,17 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AuthLayout from '@/layouts/AuthLayout';
 import PublicLayout from '@/layouts/PublicLayout';
-import { useAuthContext } from '@/context/useAuthContext';
+// import { useAuthContext } from '@/context/useAuthContext';
 import { appRoutes, authRoutes, publicRoutes } from '@/routes/index';
 import AdminLayout from '@/layouts/AdminLayout';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated, authLoading } = useAuthContext();
+  // TODO: re-enable auth check when ready
+  return children;
 
-  if (authLoading) return null;
-
-  return isAuthenticated ? children : <Navigate to="/auth/sign-in" replace />;
+  // const { isAuthenticated, authLoading } = useAuthContext();
+  // if (authLoading) return null;
+  // return isAuthenticated ? children : <Navigate to="/auth/sign-in" replace />;
 };
 
 const AppRouter = (props) => {
@@ -24,6 +25,14 @@ const AppRouter = (props) => {
         />
       ))}
 
+      {(publicRoutes || []).map((route, idx) => (
+        <Route
+          key={idx + route.name}
+          path={route.path}
+          element={<PublicLayout {...props}>{route.element}</PublicLayout>}
+        />
+      ))}
+
       {(appRoutes || []).map((route, idx) => (
         <Route
           key={idx + route.name}
@@ -33,14 +42,6 @@ const AppRouter = (props) => {
               <AdminLayout {...props}>{route.element}</AdminLayout>
             </PrivateRoute>
           }
-        />
-      ))}
-
-      {(publicRoutes || []).map((route, idx) => (
-        <Route
-          key={idx + route.name}
-          path={route.path}
-          element={<PublicLayout {...props}>{route.element}</PublicLayout>}
         />
       ))}
 

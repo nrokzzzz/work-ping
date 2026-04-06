@@ -94,7 +94,7 @@ const About = () => {
 
   useEffect(() => {
     axiosClient
-      .get('/api/public/stats')
+      .get('/api/public/stats', { silent: true })
       .then((res) => {
         if (res.data?.data) setStats(res.data.data);
       })

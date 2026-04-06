@@ -145,7 +145,8 @@ const UpdateProjects = () => {
 
       await axiosClient.post(
         '/api/admin/project/update-project',
-        payload
+        payload,
+        { silent: true }
       )
 
       reset()

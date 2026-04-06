@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -v \"//.*toast\")",
+      "Bash(grep -iv \"//.*contact\\\\|//.*about\")"
+    ]
+  }
+}
