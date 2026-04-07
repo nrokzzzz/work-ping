@@ -1,5 +1,11 @@
 export const MENU_ITEMS = [
   {
+    key: 'dashboard',
+    icon: 'mdi:view-dashboard-outline',
+    label: 'Dashboard',
+    url: '/dashboard/analytics',
+  },
+  {
     key: 'organizations',
     icon: 'mdi:office-building',
     label: 'Organizations',

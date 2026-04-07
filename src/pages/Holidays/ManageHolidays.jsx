@@ -7,6 +7,46 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
+const toYmd = (value) => {
+  const d = new Date(value)
+  if (Number.isNaN(d.getTime())) return ''
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
+const buildDefaultSundayHolidays = (year = new Date().getFullYear()) => {
+  const list = []
+  const cursor = new Date(year, 0, 1)
+  const end = new Date(year, 11, 31)
+
+  while (cursor <= end) {
+    if (cursor.getDay() === 0) {
+      const date = toYmd(cursor)
+      list.push({
+        _id: `default-sunday-${date}`,
+        name: 'Weekly Off (Sunday)',
+        type: 'public',
+        date,
+        description: 'Default weekly holiday',
+        isDefaultSunday: true,
+      })
+    }
+    cursor.setDate(cursor.getDate() + 1)
+  }
+
+  return list
+}
+
+const mergeWithSundayDefaults = (apiHolidays) => {
+  const normalized = (apiHolidays || []).map((h) => ({ ...h, date: toYmd(h.date) || h.date }))
+  const existingDates = new Set(normalized.map((h) => h.date))
+  const defaults = buildDefaultSundayHolidays().filter((h) => !existingDates.has(h.date))
+
+  return [...normalized, ...defaults].sort((a, b) => new Date(a.date) - new Date(b.date))
+}
+
 const schema = yup.object({
   organizationId: yup.string().required('Organization is required'),
   name: yup
@@ -71,7 +111,7 @@ const ManageHolidays = () => {
         params: { organizationId },
         silent: true,
       })
-      setHolidays(res.data?.data || [])
+      setHolidays(mergeWithSundayDefaults(res.data?.data || []))
     } catch {
       // interceptor handles error toast
     } finally {
@@ -95,6 +135,11 @@ const ManageHolidays = () => {
   }
 
   const handleDelete = async (id) => {
+    if (String(id).startsWith('default-sunday-')) {
+      toast('Default Sunday holidays cannot be deleted')
+      return
+    }
+
     setDeletingId(id)
     try {
       await axiosClient.post('/api/admin/holiday/delete-holidays', { ids: [id] }, { silent: true })
@@ -244,7 +289,7 @@ const ManageHolidays = () => {
                       </tr>
                     ) : (
                       holidays.map((h, i) => (
-                        <tr key={h._id}>
+                        <tr key={h._id ?? `${h.name}-${h.date}-${i}`}>
                           <td>{i + 1}</td>
                           <td>{h.name || '--'}</td>
                           <td>
@@ -257,18 +302,22 @@ const ManageHolidays = () => {
                           <td>{h.date ? new Date(h.date).toLocaleDateString() : '--'}</td>
                           <td>{h.description || '--'}</td>
                           <td>
-                            <Button
-                              variant="outline-danger"
-                              size="sm"
-                              disabled={deletingId === h._id}
-                              onClick={() => handleDelete(h._id)}
-                            >
-                              {deletingId === h._id ? (
-                                <Spinner as="span" animation="border" size="sm" />
-                              ) : (
-                                <IconifyIcon icon="mdi:trash-can-outline" />
-                              )}
-                            </Button>
+                            {h.isDefaultSunday ? (
+                              <span className="text-muted small">Default</span>
+                            ) : (
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                disabled={deletingId === h._id}
+                                onClick={() => handleDelete(h._id)}
+                              >
+                                {deletingId === h._id ? (
+                                  <Spinner as="span" animation="border" size="sm" />
+                                ) : (
+                                  <IconifyIcon icon="mdi:trash-can-outline" />
+                                )}
+                              </Button>
+                            )}
                           </td>
                         </tr>
                       ))
