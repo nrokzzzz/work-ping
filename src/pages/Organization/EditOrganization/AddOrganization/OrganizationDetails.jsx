@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import axiosClient from '@/helpers/httpClient'
 import toast from 'react-hot-toast'
+import AreaPinPicker from '@/components/maps/AreaPinPicker'
 
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
@@ -32,6 +33,41 @@ const schema = yup.object({
       /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
       'Invalid IP Address'
     ),
+  latitude: yup
+    .number()
+    .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+    .nullable()
+    .typeError('Latitude must be a number')
+    .min(-90, 'Latitude must be between -90 and 90')
+    .max(90, 'Latitude must be between -90 and 90')
+    .test(
+      'latitude-pair',
+      'Latitude and Longitude must both be provided together',
+      function (value) {
+        const { longitude } = this.parent
+        const latitudeProvided = value !== undefined && value !== null
+        const longitudeProvided = longitude !== undefined && longitude !== null && longitude !== ''
+        return latitudeProvided === longitudeProvided
+      }
+    ),
+  longitude: yup
+    .number()
+    .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+    .nullable()
+    .typeError('Longitude must be a number')
+    .min(-180, 'Longitude must be between -180 and 180')
+    .max(180, 'Longitude must be between -180 and 180')
+    .test(
+      'longitude-pair',
+      'Latitude and Longitude must both be provided together',
+      function (value) {
+        const { latitude } = this.parent
+        const latitudeProvided = latitude !== undefined && latitude !== null && latitude !== ''
+        const longitudeProvided = value !== undefined && value !== null
+        return latitudeProvided === longitudeProvided
+      }
+    ),
+  msl: yup.string().optional(),
 })
 
 const handleIpKeyDown = (e) => {
@@ -54,8 +90,7 @@ const OrganizationDetailsForm = () => {
 
   const navigate = useNavigate()
   const location = useLocation()
-
-  const [geoCoords, setGeoCoords] = useState([])
+  const [areaPins, setAreaPins] = useState([])
 
   const { require2FA } = use2FA()
   const { is2FAAuthnticator } = useAuthContext()
@@ -64,11 +99,25 @@ const OrganizationDetailsForm = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
     shouldFocusError: false,
   })
+
+  const handleAreaPinsChange = (pins) => {
+    setAreaPins(pins)
+
+    if (pins.length > 0) {
+      setValue('latitude', pins[0].lat, { shouldDirty: true, shouldValidate: true })
+      setValue('longitude', pins[0].lng, { shouldDirty: true, shouldValidate: true })
+      return
+    }
+
+    setValue('latitude', '', { shouldDirty: true, shouldValidate: true })
+    setValue('longitude', '', { shouldDirty: true, shouldValidate: true })
+  }
 
   // Restore form data passed back via location.state (after QR redirect)
   useEffect(() => {
@@ -81,21 +130,44 @@ const OrganizationDetailsForm = () => {
           formData.foundedAt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
         }
       }
+      formData.latitude = formData.latitude ?? formData.coordinates?.[0] ?? ''
+      formData.longitude = formData.longitude ?? formData.coordinates?.[1] ?? ''
+      formData.msl = formData.msl ?? ''
+
+      const restoredPins = Array.isArray(formData.areaPins)
+        ? formData.areaPins
+        : formData.latitude !== '' && formData.longitude !== ''
+          ? [{ lat: Number(formData.latitude), lng: Number(formData.longitude) }]
+          : []
+
+      setAreaPins(restoredPins)
       reset(formData)
     }
   }, [location.state, reset])
 
   const onSubmit = async (data) => {
-    const d = new Date(data.foundedAt)
-    const foundedAt = `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`
     const newData = {
       name: data.organizationName,
       type: data.organizationType,
-      foundedAt: foundedAt,
-      clDays: data.casualLeaves,
-      description: data.description,
-      IPWhitelist: data.ipAddress,
-      coordinates: geoCoords,
+      foundedAt: data.foundedAt,
+      clDays: Number(data.casualLeaves),
+      description: data.description?.trim() || undefined,
+      IPWhitelist: data.ipAddress ? [data.ipAddress.trim()] : [],
+    }
+
+    const latitude = data.latitude === '' || data.latitude === undefined ? undefined : Number(data.latitude)
+    const longitude = data.longitude === '' || data.longitude === undefined ? undefined : Number(data.longitude)
+
+    if (latitude !== undefined && longitude !== undefined) {
+      newData.coordinates = [latitude, longitude]
+    }
+
+    if (data.msl?.trim()) {
+      newData.msl = data.msl.trim()
+    }
+
+    if (Array.isArray(areaPins) && areaPins.length > 0) {
+      newData.areaPins = areaPins.map((pin) => ({ lat: Number(pin.lat), lng: Number(pin.lng) }))
     }
 
     if (is2FAAuthnticator) {
@@ -105,7 +177,10 @@ const OrganizationDetailsForm = () => {
         state: {
           action: 'ORG',
           path: '/organization/organization-details',
-          formData: data,
+          formData: {
+            ...data,
+            areaPins,
+          },
         },
       })
       return
@@ -221,6 +296,68 @@ const OrganizationDetailsForm = () => {
                 <small className="text-danger">
                   {errors.casualLeaves?.message}
                 </small>
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Latitude <small className="text-muted">(Optional)</small>
+                </Form.Label>
+
+                <Form.Control
+                  type="number"
+                  step="any"
+                  placeholder="Enter Latitude"
+                  {...register('latitude')}
+                />
+
+                <small className="text-danger">
+                  {errors.latitude?.message}
+                </small>
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Longitude <small className="text-muted">(Optional)</small>
+                </Form.Label>
+
+                <Form.Control
+                  type="number"
+                  step="any"
+                  placeholder="Enter Longitude"
+                  {...register('longitude')}
+                />
+
+                <small className="text-danger">
+                  {errors.longitude?.message}
+                </small>
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  MSL <small className="text-muted">(Optional)</small>
+                </Form.Label>
+
+                <Form.Control
+                  type="text"
+                  placeholder="Enter MSL"
+                  {...register('msl')}
+                />
+
+                <small className="text-danger">
+                  {errors.msl?.message}
+                </small>
+              </div>
+
+              <div className="col-12 mb-3">
+                <Form.Label>
+                  Area Coverage <small className="text-muted">(Optional)</small>
+                </Form.Label>
+
+                <AreaPinPicker
+                  pins={areaPins}
+                  onPinsChange={handleAreaPinsChange}
+                  initialCenter={{ lat: 20.5937, lng: 78.9629 }}
+                />
               </div>
 
               <div className="col-12 mb-3">

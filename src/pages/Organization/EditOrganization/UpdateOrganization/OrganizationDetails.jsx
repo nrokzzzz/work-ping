@@ -9,6 +9,7 @@ import * as yup from 'yup'
 
 import axiosClient from '@/helpers/httpClient'
 import toast from 'react-hot-toast'
+import AreaPinPicker from '@/components/maps/AreaPinPicker'
 
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
@@ -37,6 +38,41 @@ const schema = yup.object({
       /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
       'Invalid IP Address'
     ),
+  latitude: yup
+    .number()
+    .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+    .nullable()
+    .typeError('Latitude must be a number')
+    .min(-90, 'Latitude must be between -90 and 90')
+    .max(90, 'Latitude must be between -90 and 90')
+    .test(
+      'latitude-pair',
+      'Latitude and Longitude must both be provided together',
+      function (value) {
+        const { longitude } = this.parent
+        const latitudeProvided = value !== undefined && value !== null
+        const longitudeProvided = longitude !== undefined && longitude !== null && longitude !== ''
+        return latitudeProvided === longitudeProvided
+      }
+    ),
+  longitude: yup
+    .number()
+    .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+    .nullable()
+    .typeError('Longitude must be a number')
+    .min(-180, 'Longitude must be between -180 and 180')
+    .max(180, 'Longitude must be between -180 and 180')
+    .test(
+      'longitude-pair',
+      'Latitude and Longitude must both be provided together',
+      function (value) {
+        const { latitude } = this.parent
+        const latitudeProvided = latitude !== undefined && latitude !== null && latitude !== ''
+        const longitudeProvided = value !== undefined && value !== null
+        return latitudeProvided === longitudeProvided
+      }
+    ),
+  msl: yup.string().optional(),
 })
 
 const handleIpKeyDown = (e) => {
@@ -55,11 +91,47 @@ const handleIpPaste = (e) => {
   }
 }
 
+const normalizeAreaPins = (data) => {
+  if (!data) return []
+
+  const fromAreaPins = Array.isArray(data.areaPins) ? data.areaPins : null
+
+  if (fromAreaPins) {
+    return fromAreaPins
+      .map((pin) => {
+        if (Array.isArray(pin) && pin.length >= 2) {
+          return { lat: Number(pin[0]), lng: Number(pin[1]) }
+        }
+        if (pin && typeof pin === 'object') {
+          return { lat: Number(pin.lat), lng: Number(pin.lng) }
+        }
+        return null
+      })
+      .filter((pin) => pin && Number.isFinite(pin.lat) && Number.isFinite(pin.lng))
+  }
+
+  if (Array.isArray(data.coordinates)) {
+    if (data.coordinates.length === 2 && Number.isFinite(Number(data.coordinates[0])) && Number.isFinite(Number(data.coordinates[1]))) {
+      return [{ lat: Number(data.coordinates[0]), lng: Number(data.coordinates[1]) }]
+    }
+
+    if (data.coordinates.length > 0 && Array.isArray(data.coordinates[0])) {
+      return data.coordinates
+        .map((pair) => {
+          if (!Array.isArray(pair) || pair.length < 2) return null
+          return { lat: Number(pair[0]), lng: Number(pair[1]) }
+        })
+        .filter((pin) => pin && Number.isFinite(pin.lat) && Number.isFinite(pin.lng))
+    }
+  }
+
+  return []
+}
+
 const UpdateOrganizationDetailsForm = () => {
 
   const navigate = useNavigate()
-
-  const [geoCoords, setGeoCoords] = useState([])
+  const [areaPins, setAreaPins] = useState([])
 
   const { organizationId } = useParams()
 
@@ -70,11 +142,25 @@ const UpdateOrganizationDetailsForm = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
     shouldFocusError: false,
   })
+
+  const handleAreaPinsChange = (pins) => {
+    setAreaPins(pins)
+
+    if (pins.length > 0) {
+      setValue('latitude', pins[0].lat, { shouldDirty: true, shouldValidate: true })
+      setValue('longitude', pins[0].lng, { shouldDirty: true, shouldValidate: true })
+      return
+    }
+
+    setValue('latitude', '', { shouldDirty: true, shouldValidate: true })
+    setValue('longitude', '', { shouldDirty: true, shouldValidate: true })
+  }
 
   useEffect(() => {
 
@@ -88,15 +174,21 @@ const UpdateOrganizationDetailsForm = () => {
         )
 
         const data = res.data?.data
+        const normalizedPins = normalizeAreaPins(data)
 
         let foundedAt = ''
 
         if (data?.foundedAt) {
-          // API returns DD-MM-YYYY string
+          // Support both YYYY-MM-DD and DD-MM-YYYY
           const parts = data.foundedAt.split('-')
           if (parts.length === 3) {
-            const [day, month, year] = parts
-            foundedAt = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+            if (parts[0].length === 4) {
+              const [year, month, day] = parts
+              foundedAt = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+            } else {
+              const [day, month, year] = parts
+              foundedAt = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+            }
           } else {
             const d = new Date(data.foundedAt)
             if (!isNaN(d)) {
@@ -112,7 +204,12 @@ const UpdateOrganizationDetailsForm = () => {
           casualLeaves: data?.clDays || '',
           ipAddress: data?.IPWhitelist?.[0] || '',
           description: data?.description || '',
+          latitude: normalizedPins[0]?.lat ?? '',
+          longitude: normalizedPins[0]?.lng ?? '',
+          msl: data?.msl || '',
         })
+
+        setAreaPins(normalizedPins)
 
       } catch (error) {
 
@@ -130,22 +227,29 @@ const UpdateOrganizationDetailsForm = () => {
 
 
   const onSubmit = async (data) => {
-
-    const d = new Date(data.foundedAt)
-
-    const foundedAt = `${String(d.getDate()).padStart(2, '0')}-${String(
-      d.getMonth() + 1
-    ).padStart(2, '0')}-${d.getFullYear()}`
-
     const newData = {
       _id: organizationId,
       name: data.organizationName,
       type: data.organizationType,
-      foundedAt: foundedAt,
+      foundedAt: data.foundedAt,
       clDays: Number(data.casualLeaves),
-      description: data.description,
-      IPWhitelist: [data.ipAddress],
-      coordinates: geoCoords,
+      description: data.description?.trim() || undefined,
+      IPWhitelist: data.ipAddress ? [data.ipAddress.trim()] : [],
+    }
+
+    const latitude = data.latitude === '' || data.latitude === undefined ? undefined : Number(data.latitude)
+    const longitude = data.longitude === '' || data.longitude === undefined ? undefined : Number(data.longitude)
+
+    if (latitude !== undefined && longitude !== undefined) {
+      newData.coordinates = [latitude, longitude]
+    }
+
+    if (data.msl?.trim()) {
+      newData.msl = data.msl.trim()
+    }
+
+    if (Array.isArray(areaPins) && areaPins.length > 0) {
+      newData.areaPins = areaPins.map((pin) => ({ lat: Number(pin.lat), lng: Number(pin.lng) }))
     }
 
 
@@ -271,6 +375,68 @@ const UpdateOrganizationDetailsForm = () => {
                 <small className="text-danger">
                   {errors.casualLeaves?.message}
                 </small>
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Latitude <small className="text-muted">(Optional)</small>
+                </Form.Label>
+
+                <Form.Control
+                  type="number"
+                  step="any"
+                  placeholder="Enter Latitude"
+                  {...register('latitude')}
+                />
+
+                <small className="text-danger">
+                  {errors.latitude?.message}
+                </small>
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  Longitude <small className="text-muted">(Optional)</small>
+                </Form.Label>
+
+                <Form.Control
+                  type="number"
+                  step="any"
+                  placeholder="Enter Longitude"
+                  {...register('longitude')}
+                />
+
+                <small className="text-danger">
+                  {errors.longitude?.message}
+                </small>
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <Form.Label>
+                  MSL <small className="text-muted">(Optional)</small>
+                </Form.Label>
+
+                <Form.Control
+                  type="text"
+                  placeholder="Enter MSL"
+                  {...register('msl')}
+                />
+
+                <small className="text-danger">
+                  {errors.msl?.message}
+                </small>
+              </div>
+
+              <div className="col-12 mb-3">
+                <Form.Label>
+                  Area Coverage <small className="text-muted">(Optional)</small>
+                </Form.Label>
+
+                <AreaPinPicker
+                  pins={areaPins}
+                  onPinsChange={handleAreaPinsChange}
+                  initialCenter={{ lat: 20.5937, lng: 78.9629 }}
+                />
               </div>
 
               <div className="col-12 mb-3">
