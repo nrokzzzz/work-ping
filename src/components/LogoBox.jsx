@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import logoSm from '@/assets/images/logo-sm.png';
 import { developedBy } from '@/context/constants';
 
-const LogoBox = ({ containerClassName, squareLogo }) => {
+const LogoBox = ({ containerClassName, squareLogo, to = '/' }) => {
   const inner = (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
       <img
@@ -23,8 +23,8 @@ const LogoBox = ({ containerClassName, squareLogo }) => {
 
   return (
     <div className={containerClassName ?? ''}>
-      <Link to="/" className="logo-dark" style={{ textDecoration: 'none' }}>{inner}</Link>
-      <Link to="/" className="logo-light" style={{ textDecoration: 'none' }}>{inner}</Link>
+      <Link to={to} className="logo-dark" style={{ textDecoration: 'none' }}>{inner}</Link>
+      <Link to={to} className="logo-light" style={{ textDecoration: 'none' }}>{inner}</Link>
     </div>
   );
 };

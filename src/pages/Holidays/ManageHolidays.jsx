@@ -33,25 +33,44 @@ const ManageHolidays = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) })
 
+  const selectedOrganizationId = watch('organizationId')
+
   useEffect(() => {
     fetchOrganizations()
-    fetchHolidays()
   }, [])
+
+  useEffect(() => {
+    if (selectedOrganizationId) {
+      fetchHolidays(selectedOrganizationId)
+    }
+  }, [selectedOrganizationId])
 
   const fetchOrganizations = async () => {
     try {
       const res = await axiosClient.get('/api/admin/organization/get-all-organization-ids', { silent: true })
-      setOrganizations(res.data?.data || [])
+      const orgs = res.data?.data || []
+      setOrganizations(orgs)
+
+      if (orgs.length > 0 && !selectedOrganizationId) {
+        setValue('organizationId', orgs[0].organizationId, { shouldValidate: true })
+      }
     } catch { }
   }
 
-  const fetchHolidays = async () => {
+  const fetchHolidays = async (organizationId) => {
+    if (!organizationId) return
+
     setLoading(true)
     try {
-      const res = await axiosClient.get('/api/admin/holiday/get-holidays', { silent: true })
+      const res = await axiosClient.get('/api/admin/holiday/get-holidays', {
+        params: { organizationId },
+        silent: true,
+      })
       setHolidays(res.data?.data || [])
     } catch {
       // interceptor handles error toast
@@ -66,7 +85,8 @@ const ManageHolidays = () => {
       await axiosClient.post('/api/admin/holiday/add-holiday', values, { silent: true })
       toast.success('Holiday added successfully')
       reset()
-      fetchHolidays()
+      setValue('organizationId', values.organizationId, { shouldValidate: true })
+      fetchHolidays(values.organizationId)
     } catch {
       // interceptor handles error toast
     } finally {

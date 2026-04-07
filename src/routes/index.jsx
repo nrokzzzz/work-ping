@@ -567,6 +567,7 @@ const PrivacyPolicy = lazy(()=>import('@/pages/public/PrivacyPolicy/page'))
 const TermsAndConditions = lazy(()=>import('@/pages/public/TermsAndConditions/page'))
 const AboutPublic = lazy(()=>import('@/pages/public/About/page'))
 const ContactPublic = lazy(()=>import('@/pages/public/Contact/page'))
+const HomePublic = lazy(() => import('@/pages/public/Home/page'))
 
 export const authRoutes = [{
   path: '/auth/sign-in',
@@ -770,6 +771,16 @@ const orderRoutes = [{
 }];
 
 export const publicRoutes = [
+  {
+    path: '/',
+    name: 'Home',
+    element: <HomePublic />
+  },
+  {
+    path: '/home',
+    name: 'Home Redirect',
+    element: <Navigate to="/" replace />
+  },
   {
     path: '/privacy-policy',
     name: 'Privacy Policy',
