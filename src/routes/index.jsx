@@ -43,6 +43,7 @@ const AboutUs = lazy(() => import('@/app/(admin)/pages/about-us/page'));
 const OurTeam = lazy(() => import('@/app/(admin)/pages/our-team/page'));
 const TimelinePage = lazy(() => import('@/app/(admin)/pages/timeline/page'));
 const Pricing = lazy(() => import('@/app/(admin)/pages/pricing/page'));
+const Billing = lazy(() => import('@/app/(admin)/pages/billing/page'));
 const Maintenance = lazy(() => import('@/app/(other)/maintenance/page'));
 const Widgets = lazy(() => import('@/app/(admin)/widgets/page'));
 
@@ -258,6 +259,10 @@ const customRoutes = [{
   name: 'Pricing',
   path: '/pages/pricing',
   element: <Pricing />
+}, {
+  name: 'Billing',
+  path: '/pages/billing',
+  element: <Billing />
 }, {
   name: 'Error 404 Alt',
   path: '/pages/error-404-alt',

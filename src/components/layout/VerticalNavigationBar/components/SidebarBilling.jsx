@@ -7,33 +7,14 @@ import axiosClient from '@/helpers/httpClient';
 const SidebarBilling = () => {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cancelling, setCancelling] = useState(false);
 
-  const fetchSubscription = () => {
-    setLoading(true);
+  useEffect(() => {
     axiosClient
       .get('/api/admin/subscriptions/active', { silent: true })
       .then((res) => setSubscription(res.data?.data ?? null))
       .catch(() => setSubscription(null))
       .finally(() => setLoading(false));
-  };
-
-  useEffect(() => {
-    fetchSubscription();
   }, []);
-
-  const handleCancel = async () => {
-    if (!window.confirm('Cancel your current subscription? You will lose access at the end of the billing period.')) return;
-    setCancelling(true);
-    try {
-      await axiosClient.patch('/api/admin/subscriptions/cancel', {}, { silent: true });
-      setSubscription(null);
-    } catch {
-      // error toast handled by interceptor
-    } finally {
-      setCancelling(false);
-    }
-  };
 
   return (
     <div style={{
@@ -68,26 +49,13 @@ const SidebarBilling = () => {
         <p className="text-muted mb-2" style={{ fontSize: 11 }}>No active plan</p>
       )}
 
-      <div className="d-flex gap-2">
-        <Link
-          to="/pages/pricing"
-          className="btn btn-primary btn-sm flex-fill"
-          style={{ fontSize: 11, padding: '3px 8px' }}
-        >
-          {subscription ? 'Upgrade' : 'View Plans'}
-        </Link>
-        {subscription && (
-          <button
-            type="button"
-            className="btn btn-outline-danger btn-sm flex-fill"
-            style={{ fontSize: 11, padding: '3px 8px' }}
-            onClick={handleCancel}
-            disabled={cancelling}
-          >
-            {cancelling ? <Spinner animation="border" size="sm" /> : 'Cancel'}
-          </button>
-        )}
-      </div>
+      <Link
+        to="/pages/billing"
+        className="btn btn-outline-primary btn-sm w-100"
+        style={{ fontSize: 11, padding: '3px 8px' }}
+      >
+        Manage
+      </Link>
     </div>
   );
 };
