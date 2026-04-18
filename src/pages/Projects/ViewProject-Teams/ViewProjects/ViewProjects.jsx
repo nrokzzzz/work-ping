@@ -94,6 +94,14 @@ const Viewprojects = () => {
     setCurrentPage(1)
   }
 
+  const handleReset = () => {
+    setSearch('')
+    setOrganization('')
+    setAppliedSearch('')
+    setAppliedOrganization('')
+    setCurrentPage(1)
+  }
+
   const getPages = () => {
     if (totalPages <= 5)
       return Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -163,10 +171,14 @@ const Viewprojects = () => {
                 ))}
               </select>
 
-              {/* Apply — pinned right */}
-              <Button size="sm" className="ms-auto px-4" onClick={handleApply}>
-                Apply
-              </Button>
+              <div className="ms-auto d-flex gap-2">
+                <Button size="sm" variant="outline-secondary" className="px-3" onClick={handleReset}>
+                  Reset
+                </Button>
+                <Button size="sm" variant="primary" className="px-4" onClick={handleApply}>
+                  Apply
+                </Button>
+              </div>
 
             </div>
           </CardBody>

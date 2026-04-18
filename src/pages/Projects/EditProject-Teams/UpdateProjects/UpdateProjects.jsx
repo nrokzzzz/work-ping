@@ -19,6 +19,10 @@ const schema = yup.object({
   organizationId: yup.string().required('Organization ID is required'),
   projectManager: yup.string().required('Project Manager ID is required'),
   description: yup.string().nullable(),
+  shiftStartTime: yup.string().required('Shift start time is required'),
+  shiftEndTime: yup.string().required('Shift end time is required'),
+  shiftSlotEnd: yup.string().nullable(),
+  shiftBreakMinutes: yup.number().min(0).max(480).nullable().transform((v, o) => (o === '' ? null : v)),
 })
 
 const UpdateProjects = () => {
@@ -88,9 +92,11 @@ const UpdateProjects = () => {
       }))
 
       setProjectManagers(formatted)
+      return formatted
 
     } catch (error) {
       console.log(error)
+      return []
     }
 
   }
@@ -108,24 +114,28 @@ const UpdateProjects = () => {
         const data = res.data?.data
 
         setValue('name', data.name)
-        setValue('assignedDate', data.assignedDate?.slice(0,10))
-        setValue('dueDate', data.dueDate?.slice(0,10))
+        setValue('assignedDate', data.assignedDate?.slice(0, 10))
+        setValue('dueDate', data.dueDate?.slice(0, 10))
         setValue('contractedBy', data.contractedBy)
         setValue('organizationId', data.organizationId)
-        setValue('projectManager', data.projectManager?._id)
+        setValue('projectManager', data.projectManager?._id ?? data.projectManager)
         setValue('description', data.description)
 
-        setSelectedPM(data.projectManager?.name || '')
+        const org = organizations.find(o => o.organizationId === data.organizationId)
+        if (org) setSelectedOrg(org.name)
 
-        const org = organizations.find(
-          o => o.organizationId === data.organizationId
-        )
+        const pmId = data.projectManager?._id ?? data.projectManager
+        const managers = await fetchProjectManagers(data.organizationId)
+        const matchingPM = managers.find(m => m.employeeId === pmId)
+        setSelectedPM(matchingPM?.label || data.projectManagerName || data.projectManager?.name || '')
 
-        if (org) {
-          setSelectedOrg(org.name)
+        // Pre-fill shift fields from populated shiftData
+        if (data.shiftData) {
+          setValue('shiftStartTime', data.shiftData.startTime ?? '')
+          setValue('shiftEndTime', data.shiftData.endTime ?? '')
+          setValue('shiftSlotEnd', data.shiftData.slotEnd ?? '')
+          setValue('shiftBreakMinutes', data.shiftData.breakMinutes ?? 60)
         }
-
-        fetchProjectManagers(data.organizationId)
 
       } catch (error) {
 
@@ -135,7 +145,7 @@ const UpdateProjects = () => {
 
     }
 
-    if(projectId) fetchProject()
+    if (projectId) fetchProject()
 
   }, [projectId, setValue, organizations])
 
@@ -169,7 +179,13 @@ const UpdateProjects = () => {
       projectManager: data.projectManager,
       organizationId: data.organizationId,
       dueDate: new Date(data.dueDate).toISOString(),
-      contractedBy: data.contractedBy
+      contractedBy: data.contractedBy,
+      shift: {
+        startTime: data.shiftStartTime,
+        endTime: data.shiftEndTime,
+        ...(data.shiftSlotEnd && { slotEnd: data.shiftSlotEnd }),
+        breakMinutes: data.shiftBreakMinutes ?? 60,
+      },
     }
 
     if (is2FAAuthnticator) {
@@ -355,6 +371,55 @@ const UpdateProjects = () => {
           <small className="text-danger">
             {errors.projectManager?.message}
           </small>
+        </div>
+
+        {/* Shift / Time Slot */}
+        <div className="col-12">
+          <div className="d-flex align-items-center gap-2 mb-3">
+            <div className="rounded-2 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 28, height: 28, background: '#0ea5e915' }}>
+              <IconifyIcon icon="mdi:clock-outline" style={{ fontSize: 16, color: '#0ea5e9' }} />
+            </div>
+            <span className="fw-semibold text-uppercase small" style={{ letterSpacing: '0.05em', color: '#64748b' }}>Shift / Time Slot</span>
+            <hr className="flex-grow-1 my-0" />
+          </div>
+        </div>
+
+        <div className="col-md-3">
+          <Form.Label>
+            Start Time <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control type="time" {...register('shiftStartTime')} />
+          <small className="text-danger">{errors.shiftStartTime?.message}</small>
+        </div>
+
+        <div className="col-md-3">
+          <Form.Label>
+            End Time <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control type="time" {...register('shiftEndTime')} />
+          <small className="text-danger">{errors.shiftEndTime?.message}</small>
+        </div>
+
+        <div className="col-md-3">
+          <Form.Label>
+            Late After <small className="text-muted">(grace cutoff)</small>
+          </Form.Label>
+          <Form.Control type="time" {...register('shiftSlotEnd')} />
+          <small className="text-muted d-block" style={{ fontSize: '0.75rem' }}>Check-in after this = late</small>
+        </div>
+
+        <div className="col-md-3">
+          <Form.Label>
+            Break <small className="text-muted">(minutes)</small>
+          </Form.Label>
+          <Form.Control
+            type="number"
+            min={0}
+            max={480}
+            placeholder="60"
+            {...register('shiftBreakMinutes')}
+          />
+          <small className="text-danger">{errors.shiftBreakMinutes?.message}</small>
         </div>
 
         <div className="col-12">

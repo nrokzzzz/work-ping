@@ -11,6 +11,13 @@ export const MENU_ITEMS = [
     label: 'Organizations',
     children: [
       {
+        key: 'organization-analytics',
+        icon: 'mdi:chart-bar',
+        label: 'Analytics',
+        url: '/organization/analytics',
+        parentKey: 'organizations',
+      },
+      {
         key: 'view-organizations',
         icon: 'mdi:format-list-bulleted',
         label: 'View All',
@@ -46,6 +53,13 @@ export const MENU_ITEMS = [
     icon: 'mdi:account-group-outline',
     label: 'Teams',
     children: [
+      {
+        key: 'teams-analytics',
+        icon: 'mdi:chart-bar',
+        label: 'Analytics',
+        url: '/teams/analytics',
+        parentKey: 'teams',
+      },
       {
         key: 'view-teams',
         icon: 'mdi:format-list-bulleted',
@@ -83,6 +97,13 @@ export const MENU_ITEMS = [
     label: 'Employees',
     children: [
       {
+        key: 'employees-analytics',
+        icon: 'mdi:chart-bar',
+        label: 'Analytics',
+        url: '/employees/analytics',
+        parentKey: 'employees',
+      },
+      {
         key: 'view-employees',
         icon: 'mdi:format-list-bulleted',
         label: 'View All',
@@ -118,6 +139,13 @@ export const MENU_ITEMS = [
     icon: 'mdi:briefcase-variant-outline',
     label: 'Projects',
     children: [
+      {
+        key: 'projects-analytics',
+        icon: 'mdi:chart-bar',
+        label: 'Analytics',
+        url: '/projects/analytics',
+        parentKey: 'projects',
+      },
       {
         key: 'view-projects',
         icon: 'mdi:format-list-bulleted',
@@ -155,6 +183,13 @@ export const MENU_ITEMS = [
     label: 'Holidays',
     children: [
       {
+        key: 'holidays-analytics',
+        icon: 'mdi:chart-bar',
+        label: 'Analytics',
+        url: '/holidays/analytics',
+        parentKey: 'holidays',
+      },
+      {
         key: 'view-holidays',
         icon: 'mdi:format-list-bulleted',
         label: 'List',
@@ -167,6 +202,41 @@ export const MENU_ITEMS = [
         label: 'Manage',
         url: '/holidays/manage-holidays',
         parentKey: 'holidays',
+      },
+    ],
+  },
+  {
+    key: 'attendance',
+    icon: 'mdi:clipboard-check-outline',
+    label: 'Attendance',
+    children: [
+      {
+        key: 'attendance-analytics',
+        icon: 'mdi:chart-bar',
+        label: 'Analytics',
+        url: '/attendance/analytics',
+        parentKey: 'attendance',
+      },
+      {
+        key: 'attendance-records',
+        icon: 'mdi:format-list-bulleted',
+        label: 'Records',
+        url: '/attendance/records',
+        parentKey: 'attendance',
+      },
+      {
+        key: 'leave-approval',
+        icon: 'mdi:check-decagram-outline',
+        label: 'Leave Approval',
+        url: '/attendance/leave-approval',
+        parentKey: 'attendance',
+      },
+      {
+        key: 'leave-overview',
+        icon: 'mdi:calendar-text-outline',
+        label: 'Leave Overview',
+        url: '/attendance/my-leave-requests',
+        parentKey: 'attendance',
       },
     ],
   },

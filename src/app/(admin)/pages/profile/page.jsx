@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, Badge, Button, Card, CardBody, CardHeader, CardTitle, Col, Form, Row, Spinner } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
 import PageMetaData from '@/components/PageTitle';
 import avatar1 from '@/assets/images/users/avatar-1.jpg';
@@ -47,6 +47,9 @@ const Profile = () => {
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [activeSubscription, setActiveSubscription] = useState(null);
+  const [billingLoading, setBillingLoading] = useState(true);
+  const [cancellingPlan, setCancellingPlan] = useState(false);
 
   const formatDate = (value) => {
     if (!value) return '--';
@@ -114,6 +117,28 @@ const Profile = () => {
   useEffect(() => {
     fetchProfileData();
   }, [fetchProfileData]);
+
+  useEffect(() => {
+    axiosClient
+      .get('/api/admin/subscriptions/active', { silent: true })
+      .then((res) => setActiveSubscription(res.data?.data ?? null))
+      .catch(() => setActiveSubscription(null))
+      .finally(() => setBillingLoading(false));
+  }, []);
+
+  const handleCancelPlan = async () => {
+    if (!window.confirm('Cancel your current subscription? You will lose access at the end of the billing period.')) return;
+    setCancellingPlan(true);
+    try {
+      await axiosClient.patch('/api/admin/subscriptions/cancel', {}, { silent: true });
+      setActiveSubscription(null);
+      setNotice('Subscription cancelled successfully.');
+    } catch {
+      // error toast handled by interceptor
+    } finally {
+      setCancellingPlan(false);
+    }
+  };
 
   useEffect(() => {
     if (otpTimer <= 0) return;
@@ -342,6 +367,44 @@ const Profile = () => {
                   ))}
                 </div>
               )}
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle as="h5" className="mb-0">Billing &amp; Plan</CardTitle>
+            </CardHeader>
+            <CardBody>
+              {billingLoading ? (
+                <div className="text-center py-2">
+                  <Spinner animation="border" size="sm" />
+                </div>
+              ) : activeSubscription ? (
+                <>
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#198754', display: 'inline-block', flexShrink: 0 }} />
+                    <span className="fw-semibold">{activeSubscription.planName}</span>
+                    <Badge bg="success" className="ms-auto">Active</Badge>
+                  </div>
+                  {activeSubscription.endDate && (
+                    <p className="text-muted small mb-3">
+                      Renews on {new Date(activeSubscription.endDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-muted small mb-3">No active subscription.</p>
+              )}
+              <div className="d-flex gap-2">
+                <Button as={Link} to="/pages/pricing" variant="primary" size="sm">
+                  {activeSubscription ? 'Upgrade Plan' : 'View Plans'}
+                </Button>
+                {activeSubscription && (
+                  <Button variant="outline-danger" size="sm" onClick={handleCancelPlan} disabled={cancellingPlan}>
+                    {cancellingPlan ? <Spinner animation="border" size="sm" /> : 'Cancel Plan'}
+                  </Button>
+                )}
+              </div>
             </CardBody>
           </Card>
 

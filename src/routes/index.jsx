@@ -556,6 +556,19 @@ const ButtonPage = lazy(()=>import('@/pages/teamMember/ButtonPage'))
 const ViewHolidays = lazy(()=>import('@/pages/Holidays/ViewHolidays'))
 const ManageHolidays = lazy(()=>import('@/pages/Holidays/ManageHolidays'))
 
+// analytics pages
+const OrganizationAnalytics = lazy(()=>import('@/pages/Organization/Analytics/OrganizationAnalytics'))
+const TeamsAnalytics = lazy(()=>import('@/pages/Teams(Department)/Analytics/TeamsAnalytics'))
+const EmployeesAnalytics = lazy(()=>import('@/pages/Employees/Analytics/EmployeesAnalytics'))
+const ProjectsAnalytics = lazy(()=>import('@/pages/Projects/Analytics/ProjectsAnalytics'))
+const HolidaysAnalytics = lazy(()=>import('@/pages/Holidays/Analytics/HolidaysAnalytics'))
+
+// attendance
+const AttendanceAnalytics = lazy(()=>import('@/pages/Attendance/Analytics/AttendanceAnalytics'))
+const LeaveApproval = lazy(()=>import('@/pages/Attendance/LeaveApproval/LeaveApproval'))
+const MyLeaveRequests = lazy(()=>import('@/pages/Attendance/MyLeaveRequests/MyLeaveRequests'))
+const AttendanceRecords = lazy(()=>import('@/pages/Attendance/Records/AttendanceRecords'))
+
 // test
 const PhonePeTest = lazy(()=>import('@/pages/test/PhonePeTest'))
 
@@ -745,6 +758,34 @@ const TwoFactorAuthentication=[
 
 
 
+const analyticsRoutes = [
+  {
+    path: '/organization/analytics',
+    name: 'OrganizationAnalytics',
+    element: <OrganizationAnalytics />
+  },
+  {
+    path: '/teams/analytics',
+    name: 'TeamsAnalytics',
+    element: <TeamsAnalytics />
+  },
+  {
+    path: '/employees/analytics',
+    name: 'EmployeesAnalytics',
+    element: <EmployeesAnalytics />
+  },
+  {
+    path: '/projects/analytics',
+    name: 'ProjectsAnalytics',
+    element: <ProjectsAnalytics />
+  },
+  {
+    path: '/holidays/analytics',
+    name: 'HolidaysAnalytics',
+    element: <HolidaysAnalytics />
+  },
+]
+
 const holidaysRoutes = [
   {
     path: '/holidays/view-holidays',
@@ -755,6 +796,29 @@ const holidaysRoutes = [
     path: '/holidays/manage-holidays',
     name: 'ManageHolidays',
     element: <ManageHolidays />
+  }
+]
+
+const attendanceRoutes = [
+  {
+    path: '/attendance/analytics',
+    name: 'AttendanceAnalytics',
+    element: <AttendanceAnalytics />
+  },
+  {
+    path: '/attendance/leave-approval',
+    name: 'LeaveApproval',
+    element: <LeaveApproval />
+  },
+  {
+    path: '/attendance/my-leave-requests',
+    name: 'MyLeaveRequests',
+    element: <MyLeaveRequests />
+  },
+  {
+    path: '/attendance/records',
+    name: 'AttendanceRecords',
+    element: <AttendanceRecords />
   }
 ]
 
@@ -803,4 +867,4 @@ export const publicRoutes = [
   }
 ];
 
-export const appRoutes = [...initialRoutes, ...generalRoutes, ...appsRoutes, ...customRoutes, ...baseUIRoutes, ...advancedUIRoutes, ...chartsNMapsRoutes, ...formsRoutes, ...tableRoutes, ...iconRoutes, ...authRoutes,...teamsRoutes,...organizationRoutes,...employeesRoutes,...projectsRoutes,...TwoFactorAuthentication,...holidaysRoutes,...testRoutes,...orderRoutes];
+export const appRoutes = [...initialRoutes, ...generalRoutes, ...appsRoutes, ...customRoutes, ...baseUIRoutes, ...advancedUIRoutes, ...chartsNMapsRoutes, ...formsRoutes, ...tableRoutes, ...iconRoutes, ...authRoutes,...teamsRoutes,...organizationRoutes,...employeesRoutes,...projectsRoutes,...TwoFactorAuthentication,...holidaysRoutes,...attendanceRoutes,...analyticsRoutes,...testRoutes,...orderRoutes];

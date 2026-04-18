@@ -20,6 +20,10 @@ const schema = yup.object({
   organizationId: yup.string().required('Organization ID is required'),
   projectManager: yup.string().required('Project Manager ID is required'),
   description: yup.string().nullable(),
+  shiftStartTime: yup.string().required('Shift start time is required'),
+  shiftEndTime: yup.string().required('Shift end time is required'),
+  shiftSlotEnd: yup.string().nullable(),
+  shiftBreakMinutes: yup.number().min(0).max(480).nullable().transform((v, o) => (o === '' ? null : v)),
 })
 
 const AddProjects = () => {
@@ -95,11 +99,27 @@ const AddProjects = () => {
 
   const onSubmit = async (data) => {
 
+    const payload = {
+      name: data.name,
+      assignedDate: data.assignedDate,
+      dueDate: data.dueDate,
+      contractedBy: data.contractedBy,
+      organizationId: data.organizationId,
+      projectManager: data.projectManager,
+      description: data.description,
+      shift: {
+        startTime: data.shiftStartTime,
+        endTime: data.shiftEndTime,
+        ...(data.shiftSlotEnd && { slotEnd: data.shiftSlotEnd }),
+        breakMinutes: data.shiftBreakMinutes ?? 60,
+      },
+    }
+
     if (is2FAAuthnticator) {
 
       try {
 
-        await axiosClient.post('/api/admin/project/create-project', data, { silent: true })
+        await axiosClient.post('/api/admin/project/create-project', payload, { silent: true })
         toast.success('Project created successfully!')
         reset()
         navigate('/projects/update-projects')
@@ -115,7 +135,7 @@ const AddProjects = () => {
 
         try {
 
-          await axiosClient.post('/api/admin/project/create-project', data, { silent: true })
+          await axiosClient.post('/api/admin/project/create-project', payload, { silent: true })
           toast.success('Project created successfully!')
           reset()
           navigate('/projects/view-projects')
@@ -301,6 +321,55 @@ const AddProjects = () => {
           <small className="text-danger">
             {errors.projectManager?.message}
           </small>
+        </div>
+
+        {/* Shift / Time Slot */}
+        <div className="col-12">
+          <div className="d-flex align-items-center gap-2 mb-3">
+            <div className="rounded-2 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 28, height: 28, background: '#0ea5e915' }}>
+              <IconifyIcon icon="mdi:clock-outline" style={{ fontSize: 16, color: '#0ea5e9' }} />
+            </div>
+            <span className="fw-semibold text-uppercase small" style={{ letterSpacing: '0.05em', color: '#64748b' }}>Shift / Time Slot</span>
+            <hr className="flex-grow-1 my-0" />
+          </div>
+        </div>
+
+        <div className="col-md-3">
+          <Form.Label>
+            Start Time <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control type="time" {...register('shiftStartTime')} />
+          <small className="text-danger">{errors.shiftStartTime?.message}</small>
+        </div>
+
+        <div className="col-md-3">
+          <Form.Label>
+            End Time <span className="text-danger">*</span>
+          </Form.Label>
+          <Form.Control type="time" {...register('shiftEndTime')} />
+          <small className="text-danger">{errors.shiftEndTime?.message}</small>
+        </div>
+
+        <div className="col-md-3">
+          <Form.Label>
+            Late After <small className="text-muted">(grace cutoff)</small>
+          </Form.Label>
+          <Form.Control type="time" {...register('shiftSlotEnd')} />
+          <small className="text-muted d-block" style={{ fontSize: '0.75rem' }}>Check-in after this = late</small>
+        </div>
+
+        <div className="col-md-3">
+          <Form.Label>
+            Break <small className="text-muted">(minutes)</small>
+          </Form.Label>
+          <Form.Control
+            type="number"
+            min={0}
+            max={480}
+            placeholder="60"
+            {...register('shiftBreakMinutes')}
+          />
+          <small className="text-danger">{errors.shiftBreakMinutes?.message}</small>
         </div>
 
         <div className="col-12">
