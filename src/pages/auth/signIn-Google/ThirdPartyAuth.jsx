@@ -2,11 +2,13 @@ import { Button } from "react-bootstrap";
 import IconifyIcon from "../../../components/wrappers/IconifyIcon";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "@/context/useAuthContext";
 
 const BACKEND_URL = import.meta.env.VITE_BASE_URL;
 
 const ThirdPartyAuth = () => {
   const navigate = useNavigate();
+  const { login } = useAuthContext();
 
   // 🔹 Function to open centered popup
   const openPopup = (url) => {
@@ -34,27 +36,17 @@ const ThirdPartyAuth = () => {
 
   // 🔹 Listen for OAuth success message
   useEffect(() => {
-    const receiveMessage = (event) => {
-      // 🔐 SECURITY: Only accept from backend
+    const receiveMessage = async (event) => {
       if (event.origin !== BACKEND_URL) return;
-
       if (event.data.message === "oauth_success") {
-        const token = event.data.token;
-
-        // Save JWT
-        localStorage.setItem("access_token", token);
-
-        // Redirect to dashboard
+        await login(event.data.token);
         navigate("/dashboard");
       }
     };
 
     window.addEventListener("message", receiveMessage);
-
-    return () => {
-      window.removeEventListener("message", receiveMessage);
-    };
-  }, [navigate]);
+    return () => window.removeEventListener("message", receiveMessage);
+  }, [navigate, login]);
 
   return (
     <>

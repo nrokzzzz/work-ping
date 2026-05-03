@@ -1,5 +1,6 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { getToken } from './tokenStore';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -18,6 +19,8 @@ axiosClient.interceptors.request.use(
     if (activeRequests === 1) {
       window.dispatchEvent(new Event('SHOW_LOADER'));
     }
+    const token = getToken();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => {

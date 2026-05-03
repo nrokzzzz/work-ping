@@ -177,7 +177,7 @@ const SignUpForm = () => {
         { silent: true }
       )
 
-      await signUp(res.data)
+      await signUp(res.data?.data?.token)
       toast.success('Signup successful!')
       reset()
       navigate('/2fa-authnticator', {

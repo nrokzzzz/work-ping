@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '@/helpers/httpClient';
+import { setToken, clearToken } from '@/helpers/tokenStore';
 
 const AuthContext = createContext(undefined);
 
@@ -40,16 +41,19 @@ export function AuthProvider({ children }) {
     verifySession();
   }, []);
 
-  const login = async () => {
+  const login = async (token) => {
+    if (token) setToken(token);
     await verifySession();
   };
 
   const logout = () => {
+    clearToken();
     setUser(null);
     setIsAuthenticated(false);
   };
 
-  const signUp = async () => {
+  const signUp = async (token) => {
+    if (token) setToken(token);
     await verifySession();
   };
 
