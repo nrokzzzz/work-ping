@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
-import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllTasks } from '@/helpers/data';
+import { useEffect, useState } from 'react'
+import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllTasks } from '@/helpers/data'
 const TODO = () => {
-  const [allTasks, setAllTasks] = useState();
+  const [allTasks, setAllTasks] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllTasks();
-      setAllTasks(data);
-    })();
-  }, []);
-  return <>
+    ;(async () => {
+      const data = await getAllTasks()
+      setAllTasks(data)
+    })()
+  }, [])
+  return (
+    <>
       <PageBreadcrumb subName="Apps" title="Todo" />
       <PageMetaData title="Todo" />
       <Row>
@@ -51,11 +52,17 @@ const TODO = () => {
                   </thead>
                   <tbody>
                     {allTasks?.map((task, idx) => {
-                    return <tr key={idx}>
+                      return (
+                        <tr key={idx}>
                           <td>
                             <div className="d-flex align-items-center gap-2">
                               <div className="form-check form-todo ps-4">
-                                <input type="checkbox" className="form-check-input rounded-circle mt-0 fs-18" id={`customCheck${idx}`} defaultChecked={task.status === 'Completed' ? true : false} />
+                                <input
+                                  type="checkbox"
+                                  className="form-check-input rounded-circle mt-0 fs-18"
+                                  id={`customCheck${idx}`}
+                                  defaultChecked={task.status === 'Completed' ? true : false}
+                                />
                                 <label className="form-check-label" htmlFor={`customCheck${idx}`}>
                                   {task.task}
                                 </label>
@@ -76,7 +83,8 @@ const TODO = () => {
                             </div>
                           </td>
                           <td>
-                            <span className={`badge badge-soft-${task.status === 'Pending' ? 'primary' : task.status === 'In-Progress' ? 'warning' : 'success'}`}>
+                            <span
+                              className={`badge badge-soft-${task.status === 'Pending' ? 'primary' : task.status === 'In-Progress' ? 'warning' : 'success'}`}>
                               {task.status}
                             </span>
                           </td>
@@ -92,8 +100,9 @@ const TODO = () => {
                               <IconifyIcon icon="bx:trash" className="fs-16" />
                             </Button>
                           </td>
-                        </tr>;
-                  })}
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -139,6 +148,7 @@ const TODO = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default TODO;
+    </>
+  )
+}
+export default TODO

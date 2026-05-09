@@ -1,15 +1,12 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllTeamMembers } from '@/helpers/data';
-import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, CardTitle, Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
-const TeamMemberCard = ({
-  teamMember
-}) => {
-  const {
-    member
-  } = teamMember;
-  return <Card>
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllTeamMembers } from '@/helpers/data'
+import { Link } from 'react-router-dom'
+import { Button, Card, CardBody, CardTitle, Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+const TeamMemberCard = ({ teamMember }) => {
+  const { member } = teamMember
+  return (
+    <Card>
       <CardBody>
         <div className="d-flex align-items-center gap-2">
           <div className="avatar-md">
@@ -45,17 +42,19 @@ const TeamMemberCard = ({
           </OverlayTrigger>
         </div>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const Team = () => {
-  const [allTeamMembers, setAllTeamMembers] = useState();
+  const [allTeamMembers, setAllTeamMembers] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllTeamMembers();
-      setAllTeamMembers(data);
-    })();
-  }, []);
-  return <Card>
+    ;(async () => {
+      const data = await getAllTeamMembers()
+      setAllTeamMembers(data)
+    })()
+  }, [])
+  return (
+    <Card>
       <CardBody>
         <CardTitle className="fw-bold text-uppercase mb-2">Our Creative Team</CardTitle>
         <p className="mb-4">
@@ -64,9 +63,12 @@ const Team = () => {
           deliver UI solutions that elevate user experiences and exceed expectations.
         </p>
         <Row>
-          {allTeamMembers && allTeamMembers.slice(0, 4).map(member => <Col xxl={3} md={6} key={member.id}>
+          {allTeamMembers &&
+            allTeamMembers.slice(0, 4).map((member) => (
+              <Col xxl={3} md={6} key={member.id}>
                 <TeamMemberCard teamMember={member} />
-              </Col>)}
+              </Col>
+            ))}
         </Row>
         <div className="mt-3 text-center">
           <Link to="/pages/our-team" className="btn btn-link link-primary text-decoration-underline">
@@ -75,6 +77,7 @@ const Team = () => {
           </Link>
         </div>
       </CardBody>
-    </Card>;
-};
-export default Team;
+    </Card>
+  )
+}
+export default Team

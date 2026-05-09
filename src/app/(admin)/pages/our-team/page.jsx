@@ -1,25 +1,38 @@
-import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, CardFooter, CardHeader, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllTeamMembers } from '@/helpers/data';
-import PageMetaData from '@/components/PageTitle';
-import profileBg from '@/assets/images/profile-bg.jpg';
-import { useEffect, useState } from 'react';
-const TeamMemberCard = ({
-  teamMember
-}) => {
-  const {
-    duration,
-    projects,
-    role,
-    tasks,
-    member
-  } = teamMember;
-  return <Card>
+import { Link } from 'react-router-dom'
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Col,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  OverlayTrigger,
+  Row,
+  Tooltip,
+} from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllTeamMembers } from '@/helpers/data'
+import PageMetaData from '@/components/PageTitle'
+import profileBg from '@/assets/images/profile-bg.jpg'
+import { useEffect, useState } from 'react'
+const TeamMemberCard = ({ teamMember }) => {
+  const { duration, projects, role, tasks, member } = teamMember
+  return (
+    <Card>
       <div className="position-relative">
         <img src={profileBg} height={104} alt="avatar-bg" className="card-img rounded-bottom-0" />
-        {member?.avatar && <img src={member?.avatar} alt="user-avatar" className="avatar-lg rounded-circle position-absolute top-100 start-50 translate-middle border border-light border-3" />}
+        {member?.avatar && (
+          <img
+            src={member?.avatar}
+            alt="user-avatar"
+            className="avatar-lg rounded-circle position-absolute top-100 start-50 translate-middle border border-light border-3"
+          />
+        )}
       </div>
       <CardBody className="text-center mt-4 mb-3 pt-3">
         <Link to="" className="text-dark fw-medium fs-18">
@@ -81,17 +94,19 @@ const TeamMemberCard = ({
           </Col>
         </Row>
       </CardFooter>
-    </Card>;
-};
+    </Card>
+  )
+}
 const OurTeam = () => {
-  const [allTeamMembers, setAllTeamMembers] = useState();
+  const [allTeamMembers, setAllTeamMembers] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllTeamMembers();
-      setAllTeamMembers(data);
-    })();
-  }, []);
-  return <>
+    ;(async () => {
+      const data = await getAllTeamMembers()
+      setAllTeamMembers(data)
+    })()
+  }, [])
+  return (
+    <>
       <PageBreadcrumb subName="Pages" title="Our Team" />
       <PageMetaData title="Our Team" />
 
@@ -145,12 +160,16 @@ const OurTeam = () => {
             </CardHeader>
           </Card>
           <Row>
-            {allTeamMembers && allTeamMembers.map(member => <Col xxl={4} md={6} key={member.id}>
+            {allTeamMembers &&
+              allTeamMembers.map((member) => (
+                <Col xxl={4} md={6} key={member.id}>
                   <TeamMemberCard teamMember={member} />
-                </Col>)}
+                </Col>
+              ))}
           </Row>
         </Col>
       </Row>
-    </>;
-};
-export default OurTeam;
+    </>
+  )
+}
+export default OurTeam

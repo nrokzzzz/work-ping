@@ -1,17 +1,11 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import { IntegrationData } from './data';
-import PageMetaData from '@/components/PageTitle';
-const IntegrationCard = ({
-  integration
-}) => {
-  const {
-    description,
-    image,
-    name,
-    enable
-  } = integration;
-  return <Card className="card-height-100">
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import { IntegrationData } from './data'
+import PageMetaData from '@/components/PageTitle'
+const IntegrationCard = ({ integration }) => {
+  const { description, image, name, enable } = integration
+  return (
+    <Card className="card-height-100">
       <CardBody>
         <div className="float-end">
           <div className="form-check form-switch">
@@ -24,18 +18,23 @@ const IntegrationCard = ({
         </CardTitle>
         <p className="mb-0">{description}</p>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const Integration = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Calendar" title="Integration" />
       <PageMetaData title="Integrations" />
 
       <Row className="row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gx-3">
-        {IntegrationData.map((integration, idx) => <Col key={idx}>
+        {IntegrationData.map((integration, idx) => (
+          <Col key={idx}>
             <IntegrationCard integration={integration} />
-          </Col>)}
+          </Col>
+        ))}
       </Row>
-    </>;
-};
-export default Integration;
+    </>
+  )
+}
+export default Integration

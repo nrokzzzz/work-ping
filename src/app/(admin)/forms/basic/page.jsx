@@ -1,13 +1,19 @@
-import { Col, FormControl, FormLabel, FormSelect, Row } from 'react-bootstrap';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import UIExamplesList from '@/components/UIExamplesList';
-import BasicExamples from './components/BasicExamples';
-import PageMetaData from '@/components/PageTitle';
+import { Col, FormControl, FormLabel, FormSelect, Row } from 'react-bootstrap'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import UIExamplesList from '@/components/UIExamplesList'
+import BasicExamples from './components/BasicExamples'
+import PageMetaData from '@/components/PageTitle'
 const InputSizing = () => {
-  return <ComponentContainerCard id="size" title="Input Sizing" description={<>
+  return (
+    <ComponentContainerCard
+      id="size"
+      title="Input Sizing"
+      description={
+        <>
           Set heights using classes like <code>.form-control-lg</code> and <code>.form-control-sm</code>.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <div className="d-flex flex-column gap-2">
@@ -17,12 +23,19 @@ const InputSizing = () => {
           </div>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DisabledInput = () => {
-  return <ComponentContainerCard id="disabled" title="Disabled Input" description={<>
+  return (
+    <ComponentContainerCard
+      id="disabled"
+      title="Disabled Input"
+      description={
+        <>
           Add the <code>disabled</code> boolean attribute on an input to give it a grayed out appearance, remove pointer events, and prevent focusing.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <div className="d-flex flex-column gap-2">
@@ -31,10 +44,16 @@ const DisabledInput = () => {
           </div>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ReadonlyInput = () => {
-  return <ComponentContainerCard id="readonly" title="Readonly Input" description={<>
+  return (
+    <ComponentContainerCard
+      id="readonly"
+      title="Readonly Input"
+      description={
+        <>
           Add the <code>readonly</code> boolean attribute on an input to prevent modification of the input’s value. <code>readonly</code> inputs can
           still be focused and selected, while <code>disabled</code> inputs cannot.
           <br />
@@ -42,7 +61,8 @@ const ReadonlyInput = () => {
           If you want to have <code>&lt;input readonly&gt;</code> elements in your form styled as plain text, replace <code>.form-control</code> with{' '}
           <code>.form-control-plaintext</code> to remove the default form field styling and preserve the correct <code>margin</code> and{' '}
           <code>padding</code>.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <div className="d-flex flex-column gap-2">
@@ -51,14 +71,21 @@ const ReadonlyInput = () => {
           </div>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DataListsInput = () => {
-  return <ComponentContainerCard id="datalists" title="Datalists input" description={<>
+  return (
+    <ComponentContainerCard
+      id="datalists"
+      title="Datalists input"
+      description={
+        <>
           If you want to have <code>&lt;input readonly&gt;</code> elements in your form styled as plain text, replace <code>.form-control</code> with{' '}
           <code>.form-control-plaintext</code> to remove the default form field styling and preserve the correct <code>margin</code> and{' '}
           <code>padding</code>.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <div>
@@ -76,14 +103,21 @@ const DataListsInput = () => {
           </div>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SelectInputs = () => {
-  return <ComponentContainerCard id="select" title="Select" description={<>
+  return (
+    <ComponentContainerCard
+      id="select"
+      title="Select"
+      description={
+        <>
           Custom <code>&lt;select&gt;</code> menus need only a custom class, <code>.form-select</code> to trigger the custom styles. Custom styles are
           limited to the <code>&lt;select&gt;</code>’s initial appearance and cannot modify the <code>&lt;option&gt;</code>s due to browser
           limitations.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <div className="mb-3">
@@ -123,10 +157,12 @@ const SelectInputs = () => {
           </select>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const BasicElements = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Form" title="Basic Element" />
       <PageMetaData title="Form Basic" />
       <Row>
@@ -139,27 +175,37 @@ const BasicElements = () => {
           <SelectInputs />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#basic',
-          label: 'Basic Example'
-        }, {
-          link: '#size',
-          label: 'Input Sizing'
-        }, {
-          link: '#disabled',
-          label: 'Disabled Input'
-        }, {
-          link: '#disabled',
-          label: 'Readonly Input'
-        }, {
-          link: '#datalists',
-          label: 'Datalists input'
-        }, {
-          link: '#select',
-          label: 'Select input'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#basic',
+                label: 'Basic Example',
+              },
+              {
+                link: '#size',
+                label: 'Input Sizing',
+              },
+              {
+                link: '#disabled',
+                label: 'Disabled Input',
+              },
+              {
+                link: '#disabled',
+                label: 'Readonly Input',
+              },
+              {
+                link: '#datalists',
+                label: 'Datalists input',
+              },
+              {
+                link: '#select',
+                label: 'Select input',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default BasicElements;
+    </>
+  )
+}
+export default BasicElements

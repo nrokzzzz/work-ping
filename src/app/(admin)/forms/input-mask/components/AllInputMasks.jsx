@@ -1,7 +1,8 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import MaskedInput from 'react-text-mask-legacy';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import MaskedInput from 'react-text-mask-legacy'
 const AllInputMasks = () => {
-  return <Card>
+  return (
+    <Card>
       <CardBody>
         <CardTitle as={'h5'} className="anchor" id="default">
           Input Masks
@@ -32,7 +33,11 @@ const AllInputMasks = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Date &amp; Hour</label>
-                  <MaskedInput mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/]} placeholder="__/__/___ __:__:__" className="form-control" />
+                  <MaskedInput
+                    mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/]}
+                    placeholder="__/__/___ __:__:__"
+                    className="form-control"
+                  />
                   <span className="fs-13 text-muted">e.g &quot;DD/MM/YYYY HH:MM:SS&quot;</span>
                   <p className="mt-1">
                     Add attribute <code>data-toggle=&quot;input-mask&quot; data-mask-format=&quot;00/00/0000 00:00:00&quot;</code>
@@ -56,7 +61,34 @@ const AllInputMasks = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Money</label>
-                  <MaskedInput mask={[/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, ',', /\d/, /\d/]} placeholder="__.___.__.__,__" className="form-control" />
+                  <MaskedInput
+                    mask={[
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      '.',
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      '.',
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      '.',
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      '.',
+                      /\d/,
+                      /\d/,
+                      /\d/,
+                      ',',
+                      /\d/,
+                      /\d/,
+                    ]}
+                    placeholder="__.___.__.__,__"
+                    className="form-control"
+                  />
                   <span className="fs-13 text-muted">e.g &quot;Your money&quot;</span>
                   <p className="mt-1">
                     Add attribute <code>data-mask-format=&quot;000.000.000.000.000,00&quot; </code>
@@ -85,7 +117,11 @@ const AllInputMasks = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Telephone with Code Area</label>
-                  <MaskedInput mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]} placeholder="(__)____-____" className="form-control" />
+                  <MaskedInput
+                    mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                    placeholder="(__)____-____"
+                    className="form-control"
+                  />
                   <span className="fs-13 text-muted">e.g &quot;(xx) xxxx-xxxx&quot;</span>
                   <p className="mt-1">
                     Add attribute <code>data-toggle=&quot;input-mask&quot;</code>
@@ -93,7 +129,11 @@ const AllInputMasks = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">US Telephone</label>
-                  <MaskedInput mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]} placeholder="(___)___-____" className="form-control" />
+                  <MaskedInput
+                    mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                    placeholder="(___)___-____"
+                    className="form-control"
+                  />
                   <span className="fs-13 text-muted">e.g &quot;(xxx) xxx-xxxx&quot;</span>
                   <p className="mt-1">
                     Add attribute <code>data-toggle=&quot;input-mask&quot;</code>
@@ -101,7 +141,11 @@ const AllInputMasks = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">São Paulo Celphones</label>
-                  <MaskedInput mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]} placeholder="(__)_____-____" className="form-control" />
+                  <MaskedInput
+                    mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                    placeholder="(__)_____-____"
+                    className="form-control"
+                  />
                   <span className="fs-13 text-muted">e.g &quot;(xx) xxxxx-xxxx&quot;</span>
                   <p className="mt-1">
                     Add attribute <code>data-toggle=&quot;input-mask&quot;</code>
@@ -109,7 +153,11 @@ const AllInputMasks = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">CPF</label>
-                  <MaskedInput mask={[/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]} placeholder="___.___.____-__" className="form-control" />
+                  <MaskedInput
+                    mask={[/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]}
+                    placeholder="___.___.____-__"
+                    className="form-control"
+                  />
                   <span className="fs-13 text-muted">e.g &quot;xxx.xxx.xxxx-xx&quot;</span>
                   <p className="mt-1">
                     Add attribute <code>data-mask-format=&quot;000.000.000-00&quot; data-reverse=&quot;true&quot;</code>
@@ -117,7 +165,11 @@ const AllInputMasks = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">CNPJ</label>
-                  <MaskedInput mask={[/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]} placeholder="__.___.___/____-__" className="form-control" />
+                  <MaskedInput
+                    mask={[/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]}
+                    placeholder="__.___.___/____-__"
+                    className="form-control"
+                  />
                   <span className="fs-13 text-muted">e.g &quot;xx.xxx.xxx/xxxx-xx&quot;</span>
                   <p className="mt-1">
                     Add attribute{' '}
@@ -126,7 +178,11 @@ const AllInputMasks = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">IP Address</label>
-                  <MaskedInput mask={[/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/]} placeholder="___.___.___.___" className="form-control" />
+                  <MaskedInput
+                    mask={[/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/]}
+                    placeholder="___.___.___.___"
+                    className="form-control"
+                  />
                   <span className="fs-13 text-muted">e.g &quot;xxx.xxx.xxx.xxx&quot;</span>
                   <p className="mt-1">
                     Add attribute{' '}
@@ -138,6 +194,7 @@ const AllInputMasks = () => {
           </Row>
         </div>
       </CardBody>
-    </Card>;
-};
-export default AllInputMasks;
+    </Card>
+  )
+}
+export default AllInputMasks

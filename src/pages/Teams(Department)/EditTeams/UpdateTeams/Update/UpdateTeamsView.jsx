@@ -35,10 +35,7 @@ const ViewTeams = () => {
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
-        const res = await axiosClient.get(
-          'api/admin/organization/get-all-organization-ids',
-          { silent: true }
-        )
+        const res = await axiosClient.get('api/admin/organization/get-all-organization-ids', { silent: true })
         setOrganizations(res.data?.data || [])
       } catch (err) {
         // Error handled by interceptor
@@ -59,13 +56,9 @@ const ViewTeams = () => {
 
       if (appliedSearch) params.append('search', appliedSearch)
 
-      if (appliedOrganization)
-        params.append('organizationId', appliedOrganization)
+      if (appliedOrganization) params.append('organizationId', appliedOrganization)
 
-      const res = await axiosClient.get(
-        `api/admin/team/get-teams-filter?${params.toString()}`,
-        { silent: true }
-      )
+      const res = await axiosClient.get(`api/admin/team/get-teams-filter?${params.toString()}`, { silent: true })
 
       setTeams(res.data?.data?.teamList || [])
       setTotalPages(res.data?.data?.totalPages || 0)
@@ -105,55 +98,37 @@ const ViewTeams = () => {
 
   const deleteTeams = async () => {
     {
-
       require2FA(async () => {
-
         try {
-
-          await axiosClient.post('/api/admin/team/delete-team', {
-            data: [...selectedIds],
-          }, { silent: true })
+          await axiosClient.post(
+            '/api/admin/team/delete-team',
+            {
+              data: [...selectedIds],
+            },
+            { silent: true },
+          )
 
           toast.success('Team(s) deleted successfully!')
           setSelectedIds(new Set())
           fetchTeams(currentPage)
-
         } catch (error) {
-
-          throw new Error(
-            error?.response?.data?.message || "Failed to delete teams"
-          )
-
+          throw new Error(error?.response?.data?.message || 'Failed to delete teams')
         }
-
       })
-
     }
-
   }
 
   const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
 
     if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
 
-    if (currentPage >= totalPages - 1)
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
 
-    return [
-      1,
-      '...',
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      '...',
-      totalPages,
-    ]
+    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
-  const start =
-    totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
+  const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
   const [jumpPage, setJumpPage] = useState('')
@@ -170,28 +145,15 @@ const ViewTeams = () => {
           <CardBody>
             <Row className="g-2">
               <Col xs={12} md={4}>
-                <input
-                  type="search"
-                  className="form-control"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
+                <input type="search" className="form-control" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
               </Col>
 
               <Col xs={12} md={4}>
-                <select
-                  className="form-select"
-                  value={organization}
-                  onChange={(e) => setOrganization(e.target.value)}
-                >
+                <select className="form-select" value={organization} onChange={(e) => setOrganization(e.target.value)}>
                   <option value="">Select Organization</option>
 
                   {organizations.map((org) => (
-                    <option
-                      key={org.organizationId}
-                      value={org.organizationId}
-                    >
+                    <option key={org.organizationId} value={org.organizationId}>
                       {org.name}
                     </option>
                   ))}
@@ -204,12 +166,7 @@ const ViewTeams = () => {
                     Apply
                   </Button>
 
-                  <Button
-                    variant="danger"
-                    className="flex-fill"
-                    disabled={selectedIds.size === 0}
-                    onClick={deleteTeams}
-                  >
+                  <Button variant="danger" className="flex-fill" disabled={selectedIds.size === 0} onClick={deleteTeams}>
                     Delete
                   </Button>
                 </div>
@@ -247,13 +204,7 @@ const ViewTeams = () => {
                   teams.map((team) => (
                     <tr key={team._id}>
                       <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedIds.has(team._id)}
-                          onChange={(e) =>
-                            handleSelect(team._id, e.target.checked)
-                          }
-                        />
+                        <input type="checkbox" checked={selectedIds.has(team._id)} onChange={(e) => handleSelect(team._id, e.target.checked)} />
                       </td>
 
                       <td>
@@ -261,19 +212,13 @@ const ViewTeams = () => {
                           variant="soft-secondary"
                           size="sm"
                           className="me-2"
-                          onClick={() =>
-                            navigate(`/teams/edit-teams/update-teams/${team._id}`)
-                          }
-                        >
+                          onClick={() => navigate(`/teams/edit-teams/update-teams/${team._id}`)}>
                           <IconifyIcon icon="bx:edit" />
                         </Button>
                         <Button
                           variant="soft-info"
                           size="sm"
-                          onClick={() =>
-                            navigate(`/teams/team-members/team-members-view/${team._id}`, { state: { orgId: team.organizationId } })
-                          }
-                        >
+                          onClick={() => navigate(`/teams/team-members/team-members-view/${team._id}`, { state: { orgId: team.organizationId } })}>
                           <IconifyIcon icon="bx:group" />
                         </Button>
                       </td>
@@ -290,26 +235,64 @@ const ViewTeams = () => {
           </div>
 
           <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
-            <div className="text-muted small">Showing {start} to {end} of {totalRecords} records</div>
+            <div className="text-muted small">
+              Showing {start} to {end} of {totalRecords} records
+            </div>
             <div className="d-flex flex-wrap align-items-center gap-2">
               <ul className="pagination pagination-rounded m-0">
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}><IconifyIcon icon="bx:left-arrow-alt" /></Link>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage > 1) setCurrentPage(currentPage - 1)
+                    }}>
+                    <IconifyIcon icon="bx:left-arrow-alt" />
+                  </Link>
                 </li>
                 {getPages().map((p, i) => (
                   <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
-                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === 'number') setCurrentPage(p) }}>{p}</Link>
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (typeof p === 'number') setCurrentPage(p)
+                      }}>
+                      {p}
+                    </Link>
                   </li>
                 ))}
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}><IconifyIcon icon="bx:right-arrow-alt" /></Link>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+                    }}>
+                    <IconifyIcon icon="bx:right-arrow-alt" />
+                  </Link>
                 </li>
               </ul>
               {totalPages > 1 && (
                 <div className="d-flex align-items-center gap-1">
                   <span className="text-muted small text-nowrap">Go to</span>
-                  <input type="number" min={1} max={totalPages} value={jumpPage} onChange={(e) => setJumpPage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()} className="form-control form-control-sm text-center" style={{ width: 60 }} placeholder={`/${totalPages}`} />
-                  <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
+                  <input
+                    type="number"
+                    min={1}
+                    max={totalPages}
+                    value={jumpPage}
+                    onChange={(e) => setJumpPage(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
+                    className="form-control form-control-sm text-center"
+                    style={{ width: 60 }}
+                    placeholder={`/${totalPages}`}
+                  />
+                  <Button size="sm" variant="primary" onClick={handleJumpGo}>
+                    Go
+                  </Button>
                 </div>
               )}
             </div>

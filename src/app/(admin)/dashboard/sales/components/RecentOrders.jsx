@@ -1,19 +1,20 @@
-import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { Button, Card, CardBody, CardTitle, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllOrders } from '@/helpers/data';
+import clsx from 'clsx'
+import { useEffect, useState } from 'react'
+import { Button, Card, CardBody, CardTitle, Col } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllOrders } from '@/helpers/data'
 const RecentOrders = () => {
-  const [orders, setOrders] = useState();
+  const [orders, setOrders] = useState()
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllOrders();
-      setOrders(data);
-    };
-    fetchData();
-  }, []);
-  return <Card>
+      const data = await getAllOrders()
+      setOrders(data)
+    }
+    fetchData()
+  }, [])
+  return (
+    <Card>
       <CardBody>
         <div className="d-flex align-items-center justify-content-between">
           <CardTitle>Recent Orders</CardTitle>
@@ -41,14 +42,17 @@ const RecentOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {orders?.slice(0, 5).map((order, idx) => <tr key={idx}>
+            {orders?.slice(0, 5).map((order, idx) => (
+              <tr key={idx}>
                 <td>
                   <Link to={`/ecommerce/orders/${order.id}`}>{order.id}</Link>
                 </td>
                 <td>{new Date(order.createdAt).toDateString()}</td>
-                {order.product && <td>
+                {order.product && (
+                  <td>
                     <img src={order.product?.images[0]} alt="product-1(1)" className="img-fluid avatar-sm" />
-                  </td>}
+                  </td>
+                )}
                 <td>
                   <Link to="">{order.customer?.name}</Link>
                 </td>
@@ -58,11 +62,18 @@ const RecentOrders = () => {
                 <td>{order.paymentMethod}</td>
                 <td>
                   <div className="icons-center">
-                    <IconifyIcon icon="bxs:circle" className={clsx('me-1', order.status === 'Cancelled' ? 'text-danger' : order.status == 'Processing' ? 'text-primary' : 'text-success')} />
+                    <IconifyIcon
+                      icon="bxs:circle"
+                      className={clsx(
+                        'me-1',
+                        order.status === 'Cancelled' ? 'text-danger' : order.status == 'Processing' ? 'text-primary' : 'text-success',
+                      )}
+                    />
                     {order.status}
                   </div>
                 </td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -104,6 +115,7 @@ const RecentOrders = () => {
           </ul>
         </Col>
       </div>
-    </Card>;
-};
-export default RecentOrders;
+    </Card>
+  )
+}
+export default RecentOrders

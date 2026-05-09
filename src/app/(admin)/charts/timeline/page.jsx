@@ -1,10 +1,11 @@
-import AllTimelineCharts from './components/AllTimelineCharts';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import { Col, Row } from 'react-bootstrap';
+import AllTimelineCharts from './components/AllTimelineCharts'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import { Col, Row } from 'react-bootstrap'
 const TimelineCharts = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Charts" title="Timeline Charts" />
       <PageMetaData title="Timeline Charts" />
 
@@ -13,24 +14,33 @@ const TimelineCharts = () => {
           <AllTimelineCharts />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#basic',
-          label: 'Basic Timeline'
-        }, {
-          link: '#distributed',
-          label: 'Distributed Timeline'
-        }, {
-          link: '#multi-series',
-          label: 'Multi Series Timeline'
-        }, {
-          link: '#advanced',
-          label: 'Advanced Timeline'
-        }, {
-          link: '#group-rows',
-          label: 'Multiple Series - Group Rows'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#basic',
+                label: 'Basic Timeline',
+              },
+              {
+                link: '#distributed',
+                label: 'Distributed Timeline',
+              },
+              {
+                link: '#multi-series',
+                label: 'Multi Series Timeline',
+              },
+              {
+                link: '#advanced',
+                label: 'Advanced Timeline',
+              },
+              {
+                link: '#group-rows',
+                label: 'Multiple Series - Group Rows',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default TimelineCharts;
+    </>
+  )
+}
+export default TimelineCharts

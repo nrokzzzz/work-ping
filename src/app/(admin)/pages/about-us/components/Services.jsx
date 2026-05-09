@@ -1,8 +1,9 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Link } from 'react-router-dom';
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Link } from 'react-router-dom'
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
 const Services = () => {
-  return <Card>
+  return (
+    <Card>
       <CardBody className="p-4">
         <CardTitle className="fw-bold text-uppercase mb-2">Our Services</CardTitle>
         <p className="mb-4">
@@ -112,6 +113,7 @@ const Services = () => {
           </span>
         </div>
       </CardBody>
-    </Card>;
-};
-export default Services;
+    </Card>
+  )
+}
+export default Services

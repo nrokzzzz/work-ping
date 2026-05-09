@@ -1,25 +1,25 @@
-import { useEffect } from 'react';
-import { useLayoutContext } from '@/context/useLayoutContext';
-import useViewPort from '@/hooks/useViewPort';
+import { useEffect } from 'react'
+import { useLayoutContext } from '@/context/useLayoutContext'
+import useViewPort from '@/hooks/useViewPort'
 
 const HoverMenuToggle = () => {
   const {
     menu: { size },
     changeMenu: { size: changeMenuSize },
-  } = useLayoutContext();
+  } = useLayoutContext()
 
-  const { width } = useViewPort();
+  const { width } = useViewPort()
 
   // Auto-hide on mobile, restore to default on desktop/tablet
   useEffect(() => {
     if (width <= 768) {
-      if (size !== 'hidden') changeMenuSize('hidden');
+      if (size !== 'hidden') changeMenuSize('hidden')
     } else {
-      if (size === 'hidden') changeMenuSize('default');
+      if (size === 'hidden') changeMenuSize('default')
     }
-  }, [width]);
+  }, [width])
 
-  return null;
-};
+  return null
+}
 
-export default HoverMenuToggle;
+export default HoverMenuToggle

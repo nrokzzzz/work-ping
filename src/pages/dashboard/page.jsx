@@ -1,31 +1,31 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Badge, Card, CardBody, CardHeader, Col, Row, Spinner } from 'react-bootstrap';
-import ReactApexChart from 'react-apexcharts';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import axiosClient from '@/helpers/httpClient';
+import { useEffect, useMemo, useState } from 'react'
+import { Badge, Card, CardBody, CardHeader, Col, Row, Spinner } from 'react-bootstrap'
+import ReactApexChart from 'react-apexcharts'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import axiosClient from '@/helpers/httpClient'
 
 const buildTrend = (finalValue) => {
-  const safeFinal = Number(finalValue) || 0;
-  const seed = Math.max(1, Math.round(safeFinal * 0.52));
+  const safeFinal = Number(finalValue) || 0
+  const seed = Math.max(1, Math.round(safeFinal * 0.52))
   return Array.from({ length: 6 }).map((_, idx) => {
-    const value = seed + ((safeFinal - seed) * (idx + 1)) / 6;
-    return Math.round(value);
-  });
-};
+    const value = seed + ((safeFinal - seed) * (idx + 1)) / 6
+    return Math.round(value)
+  })
+}
 
 const buildSundayDefaultsByMonth = (year = new Date().getFullYear()) => {
-  const result = new Array(12).fill(0);
-  const cursor = new Date(year, 0, 1);
-  const end = new Date(year, 11, 31);
+  const result = new Array(12).fill(0)
+  const cursor = new Date(year, 0, 1)
+  const end = new Date(year, 11, 31)
   while (cursor <= end) {
     if (cursor.getDay() === 0) {
-      result[cursor.getMonth()] += 1;
+      result[cursor.getMonth()] += 1
     }
-    cursor.setDate(cursor.getDate() + 1);
+    cursor.setDate(cursor.getDate() + 1)
   }
-  return result;
-};
+  return result
+}
 
 const MetricCard = ({ title, value, subtitle, colorClass }) => {
   return (
@@ -36,12 +36,12 @@ const MetricCard = ({ title, value, subtitle, colorClass }) => {
         <p className="mb-0 text-muted">{subtitle}</p>
       </CardBody>
     </Card>
-  );
-};
+  )
+}
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [payload, setPayload] = useState({
     organizations: 0,
     teams: 0,
@@ -52,62 +52,62 @@ export default function Home() {
     holidaysByMonth: new Array(12).fill(0),
     defaultSundaysByMonth: new Array(12).fill(0),
     customHolidaysByMonth: new Array(12).fill(0),
-  });
+  })
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      setLoading(true);
-      setError('');
+      setLoading(true)
+      setError('')
 
       const [orgInfoRes, employeesRes, projectsRes, orgIdsRes] = await Promise.allSettled([
         axiosClient.get('/api/admin/get-all-employees/get-organization-info', { silent: true }),
         axiosClient.get('/api/admin/get-all-employees/get-all-employees-by-page-number?page=1&limit=1', { silent: true }),
         axiosClient.get('/api/admin/project/get-projects?page=1&limit=1', { silent: true }),
         axiosClient.get('/api/admin/organization/get-all-organization-ids', { silent: true }),
-      ]);
+      ])
 
-      const orgInfo = orgInfoRes.status === 'fulfilled' ? orgInfoRes.value?.data?.data ?? {} : {};
-      const orgEntries = Object.entries(orgInfo);
+      const orgInfo = orgInfoRes.status === 'fulfilled' ? (orgInfoRes.value?.data?.data ?? {}) : {}
+      const orgEntries = Object.entries(orgInfo)
 
-      const organizationsByName = orgEntries.map(([name]) => name);
+      const organizationsByName = orgEntries.map(([name]) => name)
       const teamsByOrg = orgEntries.map(([name, details]) => ({
         name,
         teams: Array.isArray(details?.teams) ? details.teams.length : 0,
-      }));
+      }))
 
-      const organizations = orgEntries.length;
-      const teams = teamsByOrg.reduce((sum, item) => sum + item.teams, 0);
-      const employees = employeesRes.status === 'fulfilled' ? Number(employeesRes.value?.data?.data?.totalRecords ?? 0) : 0;
-      const projects = projectsRes.status === 'fulfilled' ? Number(projectsRes.value?.data?.data?.totalRecords ?? 0) : 0;
+      const organizations = orgEntries.length
+      const teams = teamsByOrg.reduce((sum, item) => sum + item.teams, 0)
+      const employees = employeesRes.status === 'fulfilled' ? Number(employeesRes.value?.data?.data?.totalRecords ?? 0) : 0
+      const projects = projectsRes.status === 'fulfilled' ? Number(projectsRes.value?.data?.data?.totalRecords ?? 0) : 0
 
-      const defaultSundaysByMonth = buildSundayDefaultsByMonth();
-      const customHolidaysByMonth = new Array(12).fill(0);
-      let holidaysByMonth = [...defaultSundaysByMonth];
+      const defaultSundaysByMonth = buildSundayDefaultsByMonth()
+      const customHolidaysByMonth = new Array(12).fill(0)
+      let holidaysByMonth = [...defaultSundaysByMonth]
       if (orgIdsRes.status === 'fulfilled') {
-        const orgIds = orgIdsRes.value?.data?.data ?? [];
+        const orgIds = orgIdsRes.value?.data?.data ?? []
         const holidayRequests = orgIds.map((org) =>
           axiosClient.get('/api/admin/holiday/get-holidays', {
             params: { organizationId: org.organizationId },
             silent: true,
-          })
-        );
+          }),
+        )
 
-        const holidayResults = await Promise.allSettled(holidayRequests);
+        const holidayResults = await Promise.allSettled(holidayRequests)
         holidayResults.forEach((res) => {
-          if (res.status !== 'fulfilled') return;
-          const items = res.value?.data?.data ?? [];
+          if (res.status !== 'fulfilled') return
+          const items = res.value?.data?.data ?? []
           items.forEach((h) => {
-            if (!h?.date) return;
-            const d = new Date(h.date);
-            if (Number.isNaN(d.getTime())) return;
-            customHolidaysByMonth[d.getMonth()] += 1;
-            holidaysByMonth[d.getMonth()] += 1;
-          });
-        });
+            if (!h?.date) return
+            const d = new Date(h.date)
+            if (Number.isNaN(d.getTime())) return
+            customHolidaysByMonth[d.getMonth()] += 1
+            holidaysByMonth[d.getMonth()] += 1
+          })
+        })
       }
 
       if (orgInfoRes.status === 'rejected' && employeesRes.status === 'rejected' && projectsRes.status === 'rejected') {
-        setError('Unable to load dashboard metrics right now.');
+        setError('Unable to load dashboard metrics right now.')
       }
 
       setPayload({
@@ -120,23 +120,23 @@ export default function Home() {
         holidaysByMonth,
         defaultSundaysByMonth,
         customHolidaysByMonth,
-      });
+      })
 
-      setLoading(false);
-    };
+      setLoading(false)
+    }
 
-    fetchDashboardData();
-  }, []);
+    fetchDashboardData()
+  }, [])
 
   const readinessScore = useMemo(() => {
-    const orgFactor = Math.min(100, payload.organizations * 12);
-    const teamFactor = Math.min(100, payload.teams * 6);
-    const employeeFactor = Math.min(100, Math.round(payload.employees / 2));
-    const projectFactor = Math.min(100, payload.projects * 8);
-    return Math.round((orgFactor + teamFactor + employeeFactor + projectFactor) / 4);
-  }, [payload]);
+    const orgFactor = Math.min(100, payload.organizations * 12)
+    const teamFactor = Math.min(100, payload.teams * 6)
+    const employeeFactor = Math.min(100, Math.round(payload.employees / 2))
+    const projectFactor = Math.min(100, payload.projects * 8)
+    return Math.round((orgFactor + teamFactor + employeeFactor + projectFactor) / 4)
+  }, [payload])
 
-  const entityMixSeries = [payload.organizations, payload.teams, payload.employees, payload.projects];
+  const entityMixSeries = [payload.organizations, payload.teams, payload.employees, payload.projects]
   const entityMixOptions = {
     labels: ['Organizations', 'Teams', 'Employees', 'Projects'],
     chart: { type: 'donut', toolbar: { show: false }, animations: { enabled: true } },
@@ -145,12 +145,12 @@ export default function Home() {
     legend: { position: 'bottom' },
     colors: ['#0ea5e9', '#14b8a6', '#f59e0b', '#6366f1'],
     plotOptions: { pie: { donut: { size: '68%' } } },
-  };
+  }
 
   const workforceSeries = [
     { name: 'Employees', data: buildTrend(payload.employees) },
     { name: 'Projects', data: buildTrend(payload.projects) },
-  ];
+  ]
   const workforceOptions = {
     chart: { type: 'area', toolbar: { show: false }, animations: { easing: 'easeinout', speed: 900 } },
     stroke: { curve: 'smooth', width: 3 },
@@ -160,7 +160,7 @@ export default function Home() {
     colors: ['#2563eb', '#22c55e'],
     grid: { strokeDashArray: 4 },
     legend: { position: 'top' },
-  };
+  }
 
   const teamsBarOptions = {
     chart: { type: 'bar', toolbar: { show: false }, animations: { speed: 850 } },
@@ -170,8 +170,8 @@ export default function Home() {
     yaxis: { min: 0 },
     colors: ['#0ea5e9'],
     grid: { strokeDashArray: 4 },
-  };
-  const teamsBarSeries = [{ name: 'Teams', data: payload.teamsByOrg.map((o) => o.teams) }];
+  }
+  const teamsBarSeries = [{ name: 'Teams', data: payload.teamsByOrg.map((o) => o.teams) }]
 
   const orgStrengthOptions = {
     chart: { type: 'radar', toolbar: { show: false }, animations: { speed: 900 } },
@@ -181,13 +181,13 @@ export default function Home() {
     fill: { opacity: 0.24 },
     markers: { size: 4 },
     colors: ['#06b6d4'],
-  };
+  }
   const orgStrengthSeries = [
     {
       name: 'Org Strength',
       data: payload.teamsByOrg.map((o) => Math.max(1, o.teams * 8)),
     },
-  ];
+  ]
 
   const holidayTrendOptions = {
     chart: { type: 'line', toolbar: { show: false }, animations: { speed: 800 } },
@@ -197,8 +197,8 @@ export default function Home() {
     colors: ['#f97316'],
     dataLabels: { enabled: false },
     grid: { strokeDashArray: 5 },
-  };
-  const holidayTrendSeries = [{ name: 'Holidays', data: payload.holidaysByMonth }];
+  }
+  const holidayTrendSeries = [{ name: 'Holidays', data: payload.holidaysByMonth }]
 
   const holidaySplitOptions = {
     chart: { type: 'bar', toolbar: { show: false }, stacked: true, animations: { speed: 850 } },
@@ -208,11 +208,11 @@ export default function Home() {
     colors: ['#64748b', '#f59e0b'],
     legend: { position: 'top' },
     grid: { strokeDashArray: 4 },
-  };
+  }
   const holidaySplitSeries = [
     { name: 'Default Sundays', data: payload.defaultSundaysByMonth },
     { name: 'Custom Holidays', data: payload.customHolidaysByMonth },
-  ];
+  ]
 
   const readinessOptions = {
     chart: { type: 'radialBar', sparkline: { enabled: true } },
@@ -227,15 +227,14 @@ export default function Home() {
         },
       },
     },
-  };
+  }
 
-  return <>
+  return (
+    <>
       <PageBreadcrumb title="Analytics" subName="Dashboards" />
       <PageMetaData title="Analytics" />
 
-      {error ? (
-        <div className="alert alert-danger">{error}</div>
-      ) : null}
+      {error ? <div className="alert alert-danger">{error}</div> : null}
 
       <Row className="g-3 mb-1">
         <Col xs={12}>
@@ -249,8 +248,16 @@ export default function Home() {
                   <p className="mb-0 text-white-50">Live operational analytics for organizations, teams, projects, and holidays.</p>
                 </div>
                 <div className="ms-auto d-flex gap-2 align-items-center">
-                  <Badge bg="light" text="dark" pill>Live Sync</Badge>
-                  {loading ? <Spinner size="sm" animation="border" /> : <Badge bg="success" pill>Updated</Badge>}
+                  <Badge bg="light" text="dark" pill>
+                    Live Sync
+                  </Badge>
+                  {loading ? (
+                    <Spinner size="sm" animation="border" />
+                  ) : (
+                    <Badge bg="success" pill>
+                      Updated
+                    </Badge>
+                  )}
                 </div>
               </div>
             </CardBody>
@@ -413,5 +420,6 @@ export default function Home() {
           }
         }
       `}</style>
-    </>;
+    </>
+  )
 }

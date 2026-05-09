@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { developedBy } from '@/context/constants';
-import axiosClient from '@/helpers/httpClient';
+import { useEffect, useRef, useState } from 'react'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { developedBy } from '@/context/constants'
+import axiosClient from '@/helpers/httpClient'
 
 const features = [
   {
@@ -37,37 +37,37 @@ const features = [
     title: 'Fast & Scalable',
     description: 'Built for businesses of all sizes — from startups to large enterprises.',
   },
-];
+]
 
 // Animates a number from 0 → target over `duration` ms using easeOut
 const useCountUp = (target, duration = 1400, active = true) => {
-  const [display, setDisplay] = useState(0);
-  const rafRef = useRef(null);
+  const [display, setDisplay] = useState(0)
+  const rafRef = useRef(null)
 
   useEffect(() => {
     if (!active || target === 0) {
-      setDisplay(target);
-      return;
+      setDisplay(target)
+      return
     }
-    const startTime = performance.now();
+    const startTime = performance.now()
     const animate = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
       // ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(eased * target));
-      if (progress < 1) rafRef.current = requestAnimationFrame(animate);
-    };
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [target, duration, active]);
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplay(Math.round(eased * target))
+      if (progress < 1) rafRef.current = requestAnimationFrame(animate)
+    }
+    rafRef.current = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [target, duration, active])
 
-  return display;
-};
+  return display
+}
 
 const StatCard = ({ target, suffix = '', decimals = 0, label, color, loading }) => {
-  const count = useCountUp(target, 1400, !loading && target > 0);
-  const formatted = decimals > 0 ? count.toFixed(decimals) : count.toLocaleString();
+  const count = useCountUp(target, 1400, !loading && target > 0)
+  const formatted = decimals > 0 ? count.toFixed(decimals) : count.toLocaleString()
 
   return (
     <div className="text-center py-2">
@@ -79,28 +79,29 @@ const StatCard = ({ target, suffix = '', decimals = 0, label, color, loading }) 
       ) : (
         <>
           <h2 key={target} className={`fw-bold text-${color} mb-0 stat-value-enter`}>
-            {formatted}{suffix}
+            {formatted}
+            {suffix}
           </h2>
           <small className="text-muted">{label}</small>
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
 const About = () => {
-  const [stats, setStats] = useState({ employeeCount: 0, organizationCount: 0 });
-  const [statsLoading, setStatsLoading] = useState(true);
+  const [stats, setStats] = useState({ employeeCount: 0, organizationCount: 0 })
+  const [statsLoading, setStatsLoading] = useState(true)
 
   useEffect(() => {
     axiosClient
       .get('/api/public/stats', { silent: true })
       .then((res) => {
-        if (res.data?.data) setStats(res.data.data);
+        if (res.data?.data) setStats(res.data.data)
       })
       .catch(() => {})
-      .finally(() => setStatsLoading(false));
-  }, []);
+      .finally(() => setStatsLoading(false))
+  }, [])
 
   return (
     <>
@@ -110,8 +111,7 @@ const About = () => {
       <div className="text-center mb-5">
         <h1 className="fw-bold">About {developedBy}</h1>
         <p className="text-muted fs-5 mt-2 mx-auto" style={{ maxWidth: 600 }}>
-          A modern workforce management platform designed to help businesses streamline operations,
-          empower teams, and drive productivity.
+          A modern workforce management platform designed to help businesses streamline operations, empower teams, and drive productivity.
         </p>
       </div>
 
@@ -122,13 +122,12 @@ const About = () => {
             <Col lg={6}>
               <h2 className="fw-bold mb-3">Our Mission</h2>
               <p className="text-muted">
-                At {developedBy}, we believe that great businesses are built by great people. Our mission is to
-                give HR teams, managers, and employees the tools they need to work smarter — not harder.
+                At {developedBy}, we believe that great businesses are built by great people. Our mission is to give HR teams, managers, and employees
+                the tools they need to work smarter — not harder.
               </p>
               <p className="text-muted">
-                We built {developedBy} to solve the real challenges that growing organizations face: scattered
-                employee data, manual attendance tracking, siloed project management, and inefficient
-                communication. Everything you need is in one place.
+                We built {developedBy} to solve the real challenges that growing organizations face: scattered employee data, manual attendance
+                tracking, siloed project management, and inefficient communication. Everything you need is in one place.
               </p>
               <Link to="/auth/sign-up" className="btn btn-primary mt-2">
                 Get Started Free
@@ -138,39 +137,16 @@ const About = () => {
               <div className="bg-light rounded-3 p-4">
                 <Row className="g-3">
                   <Col xs={6}>
-                    <StatCard
-                      target={stats.employeeCount}
-                      label="Employees"
-                      color="primary"
-                      loading={statsLoading}
-                    />
+                    <StatCard target={stats.employeeCount} label="Employees" color="primary" loading={statsLoading} />
                   </Col>
                   <Col xs={6}>
-                    <StatCard
-                      target={stats.organizationCount}
-                      label="Organizations"
-                      color="success"
-                      loading={statsLoading}
-                    />
+                    <StatCard target={stats.organizationCount} label="Organizations" color="success" loading={statsLoading} />
                   </Col>
                   <Col xs={6}>
-                    <StatCard
-                      target={99.9}
-                      suffix="%"
-                      decimals={1}
-                      label="Uptime"
-                      color="warning"
-                      loading={false}
-                    />
+                    <StatCard target={99.9} suffix="%" decimals={1} label="Uptime" color="warning" loading={false} />
                   </Col>
                   <Col xs={6}>
-                    <StatCard
-                      target={24}
-                      suffix="/7"
-                      label="Support"
-                      color="danger"
-                      loading={false}
-                    />
+                    <StatCard target={24} suffix="/7" label="Support" color="danger" loading={false} />
                   </Col>
                 </Row>
               </div>
@@ -205,9 +181,7 @@ const About = () => {
       <Card className="shadow-sm bg-primary text-white text-center border-0">
         <CardBody className="p-5">
           <h2 className="fw-bold mb-3">Ready to transform your workforce management?</h2>
-          <p className="mb-4 opacity-75">
-            Start managing your workforce smarter with {developedBy} — all your HR needs in one place.
-          </p>
+          <p className="mb-4 opacity-75">Start managing your workforce smarter with {developedBy} — all your HR needs in one place.</p>
           <div className="d-flex gap-3 justify-content-center flex-wrap">
             <Link to="/auth/sign-up" className="btn btn-light text-primary fw-semibold px-4">
               Start Free Trial
@@ -219,7 +193,7 @@ const About = () => {
         </CardBody>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default About;
+export default About

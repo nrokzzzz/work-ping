@@ -1,51 +1,56 @@
-import { useState } from 'react';
-import { Button, Spinner } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import toast from 'react-hot-toast';
-import axiosClient from '@/helpers/httpClient';
-import { useLockContext } from '@/context/useLockContext';
-import { useAuthContext } from '@/context/useAuthContext';
-import PasswordFormInput from '@/components/form/PasswordFormInput';
-import avatar1 from '@/assets/images/users/avatar-1.jpg';
-import logoDark from '@/assets/images/logo-dark.png';
-import logoLight from '@/assets/images/logo-light.png';
-import { developedBy } from '@/context/constants';
+import { useState } from 'react'
+import { Button, Spinner } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import toast from 'react-hot-toast'
+import axiosClient from '@/helpers/httpClient'
+import { useLockContext } from '@/context/useLockContext'
+import { useAuthContext } from '@/context/useAuthContext'
+import PasswordFormInput from '@/components/form/PasswordFormInput'
+import avatar1 from '@/assets/images/users/avatar-1.jpg'
+import logoDark from '@/assets/images/logo-dark.png'
+import logoLight from '@/assets/images/logo-light.png'
+import { developedBy } from '@/context/constants'
 
 const schema = yup.object({
   password: yup.string().required('Password is required'),
-});
+})
 
 const LockScreenOverlay = () => {
-  const { isLocked, unlock } = useLockContext();
-  const { user, logout } = useAuthContext();
-  const [showForgot, setShowForgot] = useState(false);
+  const { isLocked, unlock } = useLockContext()
+  const { user, logout } = useAuthContext()
+  const [showForgot, setShowForgot] = useState(false)
 
-  const { control, handleSubmit, formState: { isSubmitting }, setError } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+    setError,
+  } = useForm({
     resolver: yupResolver(schema),
-  });
+  })
 
-  if (!isLocked) return null;
+  if (!isLocked) return null
 
   const onSubmit = async ({ password }) => {
     try {
-      await axiosClient.post('/api/admin/auth/verify-password', { password }, { silent: true });
-      unlock();
+      await axiosClient.post('/api/admin/auth/verify-password', { password }, { silent: true })
+      unlock()
     } catch (err) {
-      const msg = err?.response?.data?.message ?? 'Incorrect password';
-      setError('password', { message: msg });
+      const msg = err?.response?.data?.message ?? 'Incorrect password'
+      setError('password', { message: msg })
     }
-  };
+  }
 
   const handleSwitchAccount = async () => {
     try {
-      await axiosClient.post('/api/admin/auth/logout', {}, { silent: true });
+      await axiosClient.post('/api/admin/auth/logout', {}, { silent: true })
     } catch (_) {}
-    logout();
-    unlock();
-    window.location.href = '/auth/sign-in';
-  };
+    logout()
+    unlock()
+    window.location.href = '/auth/sign-in'
+  }
 
   return (
     <div
@@ -59,8 +64,7 @@ const LockScreenOverlay = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-      }}
-    >
+      }}>
       <div
         style={{
           width: '100%',
@@ -70,8 +74,7 @@ const LockScreenOverlay = () => {
           overflow: 'hidden',
           boxShadow: '0 32px 64px rgba(0,0,0,0.4)',
         }}
-        className="bg-white"
-      >
+        className="bg-white">
         {/* Top accent bar */}
         <div style={{ height: 4, background: 'linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4)' }} />
 
@@ -127,10 +130,9 @@ const LockScreenOverlay = () => {
                 padding: '4px 14px',
                 fontSize: 12,
                 fontWeight: 600,
-              }}
-            >
+              }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
               </svg>
               Screen locked
             </span>
@@ -138,49 +140,29 @@ const LockScreenOverlay = () => {
 
           {!showForgot ? (
             <form onSubmit={handleSubmit(onSubmit)}>
-              <PasswordFormInput
-                control={control}
-                name="password"
-                containerClassName="mb-3"
-                placeholder="Enter your password"
-                id="lock-password"
-              />
+              <PasswordFormInput control={control} name="password" containerClassName="mb-3" placeholder="Enter your password" id="lock-password" />
               <div className="d-grid mb-2">
-                <Button
-                  type="submit"
-                  variant="primary"
-                  disabled={isSubmitting}
-                  style={{ borderRadius: 10, fontWeight: 600 }}
-                >
+                <Button type="submit" variant="primary" disabled={isSubmitting} style={{ borderRadius: 10, fontWeight: 600 }}>
                   {isSubmitting ? (
-                    <><Spinner animation="border" size="sm" className="me-2" />Verifying…</>
+                    <>
+                      <Spinner animation="border" size="sm" className="me-2" />
+                      Verifying…
+                    </>
                   ) : (
                     'Unlock'
                   )}
                 </Button>
               </div>
               <div className="text-center">
-                <button
-                  type="button"
-                  className="btn btn-link btn-sm text-muted p-0"
-                  onClick={() => setShowForgot(true)}
-                >
+                <button type="button" className="btn btn-link btn-sm text-muted p-0" onClick={() => setShowForgot(true)}>
                   Forgot password?
                 </button>
               </div>
             </form>
           ) : (
             <div className="text-center py-2">
-              <p className="text-muted small mb-3">
-                To reset your password you'll need to sign in again.
-              </p>
-              <Button
-                variant="outline-primary"
-                size="sm"
-                className="px-4"
-                style={{ borderRadius: 10 }}
-                onClick={() => setShowForgot(false)}
-              >
+              <p className="text-muted small mb-3">To reset your password you'll need to sign in again.</p>
+              <Button variant="outline-primary" size="sm" className="px-4" style={{ borderRadius: 10 }} onClick={() => setShowForgot(false)}>
                 Go back
               </Button>
             </div>
@@ -188,17 +170,13 @@ const LockScreenOverlay = () => {
         </div>
 
         <div className="border-top px-4 py-3 text-center" style={{ background: '#f8fafc' }}>
-          <button
-            type="button"
-            className="btn btn-link btn-sm text-muted p-0"
-            onClick={handleSwitchAccount}
-          >
+          <button type="button" className="btn btn-link btn-sm text-muted p-0" onClick={handleSwitchAccount}>
             Sign in as a different user
           </button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LockScreenOverlay;
+export default LockScreenOverlay

@@ -1,19 +1,32 @@
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import ReactApexChart from 'react-apexcharts';
-import { areaNullValueChartOpts, basicChartOpts, dateTimeChartOpts, irregularTimeSeriesOpts, negativeValuesChartOpts, spilineChart, stackedChartOpts } from '../data';
-import { Button } from 'react-bootstrap';
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import ReactApexChart from 'react-apexcharts'
+import {
+  areaNullValueChartOpts,
+  basicChartOpts,
+  dateTimeChartOpts,
+  irregularTimeSeriesOpts,
+  negativeValuesChartOpts,
+  spilineChart,
+  stackedChartOpts,
+} from '../data'
+import { Button } from 'react-bootstrap'
 const BasicAreaChart = () => {
-  return <ComponentContainerCard id="basic" title="Basic Area Chart">
+  return (
+    <ComponentContainerCard id="basic" title="Basic Area Chart">
       <ReactApexChart height={380} options={basicChartOpts} series={basicChartOpts.series} type="area" className="apex-charts" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SplineAreaChart = () => {
-  return <ComponentContainerCard id="spline" title="Spline Area">
+  return (
+    <ComponentContainerCard id="spline" title="Spline Area">
       <ReactApexChart height={380} options={spilineChart} series={spilineChart.series} type="area" className="apex-charts" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DateTimeAreaChart = () => {
-  return <ComponentContainerCard id="datetime" title="Area Chart - Datetime X-axis">
+  return (
+    <ComponentContainerCard id="datetime" title="Area Chart - Datetime X-axis">
       <div className="toolbar apex-toolbar icons-center justify-content-end w-100 gap-1">
         <Button variant="soft-secondary" size="sm" id="one_month">
           1M
@@ -32,30 +45,40 @@ const DateTimeAreaChart = () => {
         </Button>
       </div>
       <ReactApexChart height={350} options={dateTimeChartOpts} series={dateTimeChartOpts.series} type="area" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const NegativeValuesChart = () => {
-  return <ComponentContainerCard id="negative" title="Area with Negative Values">
+  return (
+    <ComponentContainerCard id="negative" title="Area with Negative Values">
       <ReactApexChart height={380} options={negativeValuesChartOpts} series={negativeValuesChartOpts.series} type="area" className="apex-charts" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const StackedChart = () => {
-  return <ComponentContainerCard id="stacked" title="Stacked Area">
+  return (
+    <ComponentContainerCard id="stacked" title="Stacked Area">
       <ReactApexChart height={422} options={stackedChartOpts} series={stackedChartOpts.series} type="area" className="apex-charts" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const IrregularTimeSeriesChart = () => {
-  return <ComponentContainerCard id="timeSeries" title="Irregular TimeSeries">
+  return (
+    <ComponentContainerCard id="timeSeries" title="Irregular TimeSeries">
       <ReactApexChart height={380} options={irregularTimeSeriesOpts} series={irregularTimeSeriesOpts.series} type="area" className="apex-charts" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const AreaChartWithNullValues = () => {
-  return <ComponentContainerCard id="chart-nullvalues" title="Area Chart with Null values">
+  return (
+    <ComponentContainerCard id="chart-nullvalues" title="Area Chart with Null values">
       <ReactApexChart height={380} options={areaNullValueChartOpts} series={areaNullValueChartOpts.series} type="area" className="apex-charts" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const AllAreaCharts = () => {
-  return <>
+  return (
+    <>
       <BasicAreaChart />
       <SplineAreaChart />
       <DateTimeAreaChart />
@@ -63,6 +86,7 @@ const AllAreaCharts = () => {
       <StackedChart />
       <IrregularTimeSeriesChart />
       <AreaChartWithNullValues />
-    </>;
-};
-export default AllAreaCharts;
+    </>
+  )
+}
+export default AllAreaCharts

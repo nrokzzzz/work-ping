@@ -1,9 +1,10 @@
-import { Card, CardBody, Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import ContactForm from './components/ContactForm';
+import { Card, CardBody, Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import ContactForm from './components/ContactForm'
 const ContactUs = () => {
-  return <>
+  return (
+    <>
       <PageMetaData title="Contact Us" />
 
       <Row className="justify-content-center text-center mt-4">
@@ -26,7 +27,15 @@ const ContactUs = () => {
                 <Col xxl={6}>
                   <div className="mapouter">
                     <div className="gmap_canvas">
-                      <iframe className="gmap_iframe" width="100%" frameBorder={0} scrolling="no" marginHeight={0} marginWidth={0} src="https://maps.google.com/maps?width=600&height=400&hl=en&q=University of Oxford&t=&z=14&ie=UTF8&iwloc=B&output=embed" />
+                      <iframe
+                        className="gmap_iframe"
+                        width="100%"
+                        frameBorder={0}
+                        scrolling="no"
+                        marginHeight={0}
+                        marginWidth={0}
+                        src="https://maps.google.com/maps?width=600&height=400&hl=en&q=University of Oxford&t=&z=14&ie=UTF8&iwloc=B&output=embed"
+                      />
                       <a href="https://strandsgame.net/">Strands</a>
                     </div>
                   </div>
@@ -115,6 +124,7 @@ const ContactUs = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default ContactUs;
+    </>
+  )
+}
+export default ContactUs

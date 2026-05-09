@@ -1,22 +1,39 @@
-import { Button, ButtonGroup, Card, Dropdown, DropdownHeader, DropdownMenu, DropdownToggle, OverlayTrigger, TabContent, Tooltip } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { useEmailContext } from '@/context/useEmailContext';
-import EmailPagination from './EmailPagination';
-import EmailViewOffcanvas from './EmailViewOffcanvas';
-import Draft from './tabs/Draft';
-import Important from './tabs/Important';
-import Inbox from './tabs/Inbox';
-import Sent from './tabs/Sent';
-import Starred from './tabs/Starred';
-import Trash from './tabs/Trash';
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  Dropdown,
+  DropdownHeader,
+  DropdownMenu,
+  DropdownToggle,
+  OverlayTrigger,
+  TabContent,
+  Tooltip,
+} from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { useEmailContext } from '@/context/useEmailContext'
+import EmailPagination from './EmailPagination'
+import EmailViewOffcanvas from './EmailViewOffcanvas'
+import Draft from './tabs/Draft'
+import Important from './tabs/Important'
+import Inbox from './tabs/Inbox'
+import Sent from './tabs/Sent'
+import Starred from './tabs/Starred'
+import Trash from './tabs/Trash'
 const EmailTopbar = () => {
   const {
-    navigationBar: {
-      toggle
-    }
-  } = useEmailContext();
-  return <div className="d-flex flex-wrap gap-2">
-      <Button onClick={toggle} variant="light" className="d-xxl-none d-flex align-items-center px-2 me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#EmailSidebaroffcanvas" aria-controls="EmailSidebaroffcanvas">
+    navigationBar: { toggle },
+  } = useEmailContext()
+  return (
+    <div className="d-flex flex-wrap gap-2">
+      <Button
+        onClick={toggle}
+        variant="light"
+        className="d-xxl-none d-flex align-items-center px-2 me-2"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#EmailSidebaroffcanvas"
+        aria-controls="EmailSidebaroffcanvas">
         <IconifyIcon icon="bx:menu" className="fs-18" />
       </Button>
       <ButtonGroup>
@@ -105,10 +122,12 @@ const EmailTopbar = () => {
           </DropdownMenu>
         </Dropdown>
       </OverlayTrigger>
-    </div>;
-};
+    </div>
+  )
+}
 const EmailTabList = () => {
-  return <Card className="position-relative overflow-hidden h-100">
+  return (
+    <Card className="position-relative overflow-hidden h-100">
       <div className="p-3">
         <EmailTopbar />
       </div>
@@ -130,6 +149,7 @@ const EmailTabList = () => {
       <EmailPagination />
 
       <EmailViewOffcanvas />
-    </Card>;
-};
-export default EmailTabList;
+    </Card>
+  )
+}
+export default EmailTabList

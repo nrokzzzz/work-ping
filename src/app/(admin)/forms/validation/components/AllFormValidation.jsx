@@ -1,12 +1,16 @@
-import clsx from 'clsx';
-import { useState } from 'react';
-import { Button, Col, Form, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, InputGroup } from 'react-bootstrap';
-import Feedback from 'react-bootstrap/esm/Feedback';
-import InputGroupText from 'react-bootstrap/esm/InputGroupText';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import { serverSideFormValidate } from '@/helpers/data';
+import clsx from 'clsx'
+import { useState } from 'react'
+import { Button, Col, Form, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, InputGroup } from 'react-bootstrap'
+import Feedback from 'react-bootstrap/esm/Feedback'
+import InputGroupText from 'react-bootstrap/esm/InputGroupText'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import { serverSideFormValidate } from '@/helpers/data'
 const BrowserDefault = () => {
-  return <ComponentContainerCard id="browser-defaults" title="Browser Default" description={<>Depending on your browser and OS, you’ll see a slightly different style of feedback.</>}>
+  return (
+    <ComponentContainerCard
+      id="browser-defaults"
+      title="Browser Default"
+      description={<>Depending on your browser and OS, you’ll see a slightly different style of feedback.</>}>
       <form className="row g-3">
         <Col md={4}>
           <FormLabel htmlFor="validationDefault01">First name</FormLabel>
@@ -49,23 +53,30 @@ const BrowserDefault = () => {
           </Button>
         </Col>
       </form>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const CustomStyles = () => {
-  const [validated, setValidated] = useState(false);
-  const handleSubmit = event => {
-    const form = event.currentTarget;
+  const [validated, setValidated] = useState(false)
+  const handleSubmit = (event) => {
+    const form = event.currentTarget
     if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+      event.preventDefault()
+      event.stopPropagation()
     }
-    setValidated(true);
-  };
-  return <ComponentContainerCard id="custom-styles" title="Custom styles" description={<>
+    setValidated(true)
+  }
+  return (
+    <ComponentContainerCard
+      id="custom-styles"
+      title="Custom styles"
+      description={
+        <>
           For custom Bootstrap form validation messages, you’ll need to add the <code>novalidate</code> boolean attribute to your{' '}
           <code>&lt;form&gt;</code>. This disables the browser default feedback tooltips, but still provides access to the form validation APIs in
           JavaScript. When attempting to submit, you’ll see the <code>:invalid</code> and <code>:valid</code> styles applied to your form controls.
-        </>}>
+        </>
+      }>
       <Form className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
         <FormGroup className="col-md-4">
           <FormLabel>First name</FormLabel>
@@ -101,7 +112,13 @@ const CustomStyles = () => {
           <Feedback type="invalid">Please provide a valid zip.</Feedback>
         </FormGroup>
         <FormGroup className="col-12">
-          <FormCheck id="invalidCheck" required label="Agree to terms and conditions" feedback="You must agree before submitting." feedbackType="invalid" />
+          <FormCheck
+            id="invalidCheck"
+            required
+            label="Agree to terms and conditions"
+            feedback="You must agree before submitting."
+            feedbackType="invalid"
+          />
         </FormGroup>
         <Col xs={12}>
           <Button variant="primary" type="submit">
@@ -109,66 +126,89 @@ const CustomStyles = () => {
           </Button>
         </Col>
       </Form>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ServerSideValidation = () => {
-  const [validated, setValidated] = useState(false);
-  const [formErrors, setFormErrors] = useState([]);
+  const [validated, setValidated] = useState(false)
+  const [formErrors, setFormErrors] = useState([])
   const [formValue, setFormValue] = useState({
     fName: 'Mark',
     lName: 'Otto',
     username: '',
     city: '',
     state: '',
-    zip: ''
-  });
-  const handleChange = e => {
+    zip: '',
+  })
+  const handleChange = (e) => {
     setFormValue({
       ...formValue,
-      [e.target.name]: e.target.value
-    });
-  };
-  const isValidInput = name => {
-    return !formErrors.find(key => key.name === name);
-  };
-  const handleSubmit = async event => {
-    event.preventDefault();
-    event.stopPropagation();
-    setValidated(true);
-    const validationReply = await serverSideFormValidate(formValue);
-    const allErrors = [];
-    validationReply?.inner?.forEach(e => {
+      [e.target.name]: e.target.value,
+    })
+  }
+  const isValidInput = (name) => {
+    return !formErrors.find((key) => key.name === name)
+  }
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setValidated(true)
+    const validationReply = await serverSideFormValidate(formValue)
+    const allErrors = []
+    validationReply?.inner?.forEach((e) => {
       allErrors.push({
         name: e.path,
-        message: e.message
-      });
-    });
-    setFormErrors(allErrors);
-  };
-  return <ComponentContainerCard id="server-side" title="Server side" description={<>
+        message: e.message,
+      })
+    })
+    setFormErrors(allErrors)
+  }
+  return (
+    <ComponentContainerCard
+      id="server-side"
+      title="Server side"
+      description={
+        <>
           We recommend using client-side validation, but in case you require server-side validation, you can indicate invalid and valid form fields
           with <code>.is-invalid</code> and <code>.is-valid</code>. Note that <code>.invalid-feedback</code> is also supported with these classes.
-        </>}>
+        </>
+      }>
       <Form className="row g-3" onSubmit={handleSubmit} noValidate>
         <FormGroup className="col-md-4" controlId="firstNameInput">
           <FormLabel>First name</FormLabel>
           <InputGroup hasValidation>
-            <FormControl type="text" placeholder="First name" name="fName" isInvalid={!isValidInput('fName')} value={formValue.fName} className={clsx({
-            'is-valid': validated && isValidInput('fName')
-          })} onChange={handleChange} />
+            <FormControl
+              type="text"
+              placeholder="First name"
+              name="fName"
+              isInvalid={!isValidInput('fName')}
+              value={formValue.fName}
+              className={clsx({
+                'is-valid': validated && isValidInput('fName'),
+              })}
+              onChange={handleChange}
+            />
             <Feedback type={isValidInput('fName') ? 'valid' : 'invalid'}>
-              {isValidInput('fName') ? 'Looks good!' : formErrors.find(err => err.name === 'fName')?.message}
+              {isValidInput('fName') ? 'Looks good!' : formErrors.find((err) => err.name === 'fName')?.message}
             </Feedback>
           </InputGroup>
         </FormGroup>
         <FormGroup className="col-md-4">
           <FormLabel>Last name</FormLabel>
           <InputGroup hasValidation>
-            <FormControl type="text" placeholder="Last name" name="lName" value={formValue.lName} onChange={handleChange} className={clsx({
-            'is-valid': validated && isValidInput('lName')
-          })} isInvalid={!isValidInput('lName')} />
+            <FormControl
+              type="text"
+              placeholder="Last name"
+              name="lName"
+              value={formValue.lName}
+              onChange={handleChange}
+              className={clsx({
+                'is-valid': validated && isValidInput('lName'),
+              })}
+              isInvalid={!isValidInput('lName')}
+            />
             <Feedback type={isValidInput('lName') ? 'valid' : 'invalid'}>
-              {isValidInput('lName') ? 'Looks good!' : formErrors.find(err => err.name === 'lName')?.message}
+              {isValidInput('lName') ? 'Looks good!' : formErrors.find((err) => err.name === 'lName')?.message}
             </Feedback>
           </InputGroup>
         </FormGroup>
@@ -177,11 +217,19 @@ const ServerSideValidation = () => {
           <InputGroup>
             <InputGroup hasValidation>
               <InputGroupText>@</InputGroupText>
-              <FormControl type="text" placeholder="Username" value={formValue.username} onChange={handleChange} name="username" className={clsx({
-              'is-valid': validated && isValidInput('username')
-            })} isInvalid={!isValidInput('username')} />
+              <FormControl
+                type="text"
+                placeholder="Username"
+                value={formValue.username}
+                onChange={handleChange}
+                name="username"
+                className={clsx({
+                  'is-valid': validated && isValidInput('username'),
+                })}
+                isInvalid={!isValidInput('username')}
+              />
               <Feedback type={isValidInput('username') ? 'valid' : 'invalid'}>
-                {isValidInput('username') ? 'Looks good!' : formErrors.find(err => err.name === 'username')?.message}
+                {isValidInput('username') ? 'Looks good!' : formErrors.find((err) => err.name === 'username')?.message}
               </Feedback>
             </InputGroup>
           </InputGroup>
@@ -189,32 +237,56 @@ const ServerSideValidation = () => {
         <FormGroup className="col-md-6">
           <FormLabel>City</FormLabel>
           <InputGroup hasValidation>
-            <FormControl type="text" placeholder="City" name="city" value={formValue.city} onChange={handleChange} className={clsx({
-            'is-valid': validated && isValidInput('city')
-          })} isInvalid={!isValidInput('city')} />
+            <FormControl
+              type="text"
+              placeholder="City"
+              name="city"
+              value={formValue.city}
+              onChange={handleChange}
+              className={clsx({
+                'is-valid': validated && isValidInput('city'),
+              })}
+              isInvalid={!isValidInput('city')}
+            />
             <Feedback type={isValidInput('city') ? 'valid' : 'invalid'}>
-              {isValidInput('city') ? 'Looks good!' : formErrors.find(err => err.name === 'city')?.message}
+              {isValidInput('city') ? 'Looks good!' : formErrors.find((err) => err.name === 'city')?.message}
             </Feedback>
           </InputGroup>
         </FormGroup>
         <FormGroup className="col-md-3">
           <FormLabel>State</FormLabel>
           <InputGroup hasValidation>
-            <FormControl type="text" name="state" placeholder="State" value={formValue.state} onChange={handleChange} className={clsx({
-            'is-valid': validated && isValidInput('state')
-          })} isInvalid={!isValidInput('state')} />
+            <FormControl
+              type="text"
+              name="state"
+              placeholder="State"
+              value={formValue.state}
+              onChange={handleChange}
+              className={clsx({
+                'is-valid': validated && isValidInput('state'),
+              })}
+              isInvalid={!isValidInput('state')}
+            />
             <Feedback type={isValidInput('state') ? 'valid' : 'invalid'}>
-              {isValidInput('state') ? 'Looks good!' : formErrors.find(err => err.name === 'state')?.message}
+              {isValidInput('state') ? 'Looks good!' : formErrors.find((err) => err.name === 'state')?.message}
             </Feedback>
           </InputGroup>
         </FormGroup>
         <FormGroup className="col-md-3">
           <FormLabel>Zip</FormLabel>
-          <FormControl type="text" placeholder="Zip" name="zip" value={formValue.zip} onChange={handleChange} className={clsx({
-          'is-valid': validated && isValidInput('zip')
-        })} isInvalid={!isValidInput('zip')} />
+          <FormControl
+            type="text"
+            placeholder="Zip"
+            name="zip"
+            value={formValue.zip}
+            onChange={handleChange}
+            className={clsx({
+              'is-valid': validated && isValidInput('zip'),
+            })}
+            isInvalid={!isValidInput('zip')}
+          />
           <Feedback type={isValidInput('zip') ? 'valid' : 'invalid'}>
-            {isValidInput('zip') ? 'Looks good!' : formErrors.find(err => err.name === 'zip')?.message}
+            {isValidInput('zip') ? 'Looks good!' : formErrors.find((err) => err.name === 'zip')?.message}
           </Feedback>
         </FormGroup>
         <FormGroup className="col-12">
@@ -226,19 +298,25 @@ const ServerSideValidation = () => {
           </Button>
         </Col>
       </Form>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const Tooltips = () => {
-  const [validated, setValidated] = useState(false);
-  const handleSubmit = event => {
-    const form = event.currentTarget;
+  const [validated, setValidated] = useState(false)
+  const handleSubmit = (event) => {
+    const form = event.currentTarget
     if (!form.checkValidity()) {
-      event.preventDefault();
-      event.stopPropagation();
+      event.preventDefault()
+      event.stopPropagation()
     }
-    setValidated(true);
-  };
-  return <ComponentContainerCard id="tooltips" title="Tooltips" description={<>
+    setValidated(true)
+  }
+  return (
+    <ComponentContainerCard
+      id="tooltips"
+      title="Tooltips"
+      description={
+        <>
           If your form layout allows it, you can swap the{' '}
           <code>
             .{'{'}valid|invalid{'}'}-feedback
@@ -249,7 +327,8 @@ const Tooltips = () => {
           </code>{' '}
           classes to display validation feedbackin a styled tooltip. Be sure to have a parent with <code>position: relative</code> on it for tooltip
           positioning. In the example below, our column classes have this already, but your project may require an alternative setup.{' '}
-        </>}>
+        </>
+      }>
       <Form className="row g-3 needs-validation" noValidate validated={validated} onSubmit={handleSubmit}>
         <FormGroup className="position-relative col-md-4">
           <FormLabel>First name</FormLabel>
@@ -304,10 +383,15 @@ const Tooltips = () => {
           </Button>
         </Col>
       </Form>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SupportedElements = () => {
-  return <ComponentContainerCard id="supported-elements" title="Supported elements" description={<>Validation styles are available for the following form controls and components:</>}>
+  return (
+    <ComponentContainerCard
+      id="supported-elements"
+      title="Supported elements"
+      description={<>Validation styles are available for the following form controls and components:</>}>
       <ul>
         <li>
           <code>&lt;input&gt;</code>s and
@@ -369,10 +453,12 @@ const SupportedElements = () => {
           </Button>
         </div>
       </form>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const AllFormValidation = () => {
-  return <>
+  return (
+    <>
       <BrowserDefault />
 
       <CustomStyles />
@@ -382,6 +468,7 @@ const AllFormValidation = () => {
       <SupportedElements />
 
       <Tooltips />
-    </>;
-};
-export default AllFormValidation;
+    </>
+  )
+}
+export default AllFormValidation

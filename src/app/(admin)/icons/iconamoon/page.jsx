@@ -1,10 +1,11 @@
-import { Card, CardBody } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
+import { Card, CardBody } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
 const IconMoon = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Icons" title="IconaMoon Icons" />
       <PageMetaData title="IconaMoon Icons" />
 
@@ -400,6 +401,7 @@ const IconMoon = () => {
           View All Icons
         </Link>
       </div>
-    </>;
-};
-export default IconMoon;
+    </>
+  )
+}
+export default IconMoon

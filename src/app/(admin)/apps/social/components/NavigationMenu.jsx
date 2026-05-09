@@ -1,36 +1,41 @@
-import { useEffect, useState } from 'react';
-import { CardBody, Nav, NavLink, Offcanvas } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient';
-import { getAllEvents } from '@/helpers/data';
-import useViewPort from '@/hooks/useViewPort';
-import { getEventIcon } from '@/utils/get-icons';
-import profileAvatar from '@/assets/images/users/avatar-1.jpg';
+import { useEffect, useState } from 'react'
+import { CardBody, Nav, NavLink, Offcanvas } from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
+import { getAllEvents } from '@/helpers/data'
+import useViewPort from '@/hooks/useViewPort'
+import { getEventIcon } from '@/utils/get-icons'
+import profileAvatar from '@/assets/images/users/avatar-1.jpg'
 const EventsList = () => {
-  const [eventsList, setEventsList] = useState();
+  const [eventsList, setEventsList] = useState()
   useEffect(() => {
     const fetchEvents = async () => {
-      const data = await getAllEvents();
-      setEventsList(data);
-    };
-    fetchEvents();
-  }, []);
-  return <div className="border-top">
+      const data = await getAllEvents()
+      setEventsList(data)
+    }
+    fetchEvents()
+  }, [])
+  return (
+    <div className="border-top">
       <h6 className="text-uppercase px-3 py-2 mb-0">Events</h6>
       <div className="list-group list-group-flush">
-        {eventsList ? eventsList.map(({
-        title,
-        type,
-        id
-      }) => <span key={id} role="button" className="list-group-item list-group-item-action border-0 icons-center">
+        {eventsList ? (
+          eventsList.map(({ title, type, id }) => (
+            <span key={id} role="button" className="list-group-item list-group-item-action border-0 icons-center">
               <IconifyIcon icon={getEventIcon(type)} className="align-middle me-1" />
               {title}
-            </span>) : <h6 className="text-center">No Upcoming Events</h6>}
+            </span>
+          ))
+        ) : (
+          <h6 className="text-center">No Upcoming Events</h6>
+        )}
       </div>
-    </div>;
-};
+    </div>
+  )
+}
 const ProfileNavbar = () => {
-  return <SimplebarReactClient className="card h-100">
+  return (
+    <SimplebarReactClient className="card h-100">
       <CardBody className="pb-2">
         <div className="d-flex flex-column text-center justify-content-center mb-3">
           <div className="mx-auto border border-2 border-primary rounded-circle">
@@ -84,19 +89,21 @@ const ProfileNavbar = () => {
       </CardBody>
 
       <EventsList />
-    </SimplebarReactClient>;
-};
-const NavigationMenu = ({
-  open,
-  toggle
-}) => {
-  const {
-    width
-  } = useViewPort();
-  return <div className="sticky-bar">
-      {width > 1400 ? <ProfileNavbar /> : <Offcanvas show={open} onHide={toggle} placement="start" className="offcanvas-xxl" tabIndex={-1}>
+    </SimplebarReactClient>
+  )
+}
+const NavigationMenu = ({ open, toggle }) => {
+  const { width } = useViewPort()
+  return (
+    <div className="sticky-bar">
+      {width > 1400 ? (
+        <ProfileNavbar />
+      ) : (
+        <Offcanvas show={open} onHide={toggle} placement="start" className="offcanvas-xxl" tabIndex={-1}>
           <ProfileNavbar />
-        </Offcanvas>}
-    </div>;
-};
-export default NavigationMenu;
+        </Offcanvas>
+      )}
+    </div>
+  )
+}
+export default NavigationMenu

@@ -1,9 +1,8 @@
-import { Card, CardBody, CardTitle } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-const ShippingInformation = ({
-  order
-}) => {
-  return <Card className="card-height-100">
+import { Card, CardBody, CardTitle } from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+const ShippingInformation = ({ order }) => {
+  return (
+    <Card className="card-height-100">
       <CardBody>
         <div className="float-end">
           <span role="button" className="text-primary">
@@ -22,6 +21,7 @@ const ShippingInformation = ({
           <abbr title="mobile">Mobile :</abbr>&nbsp; 740-302-6656
         </address>
       </CardBody>
-    </Card>;
-};
-export default ShippingInformation;
+    </Card>
+  )
+}
+export default ShippingInformation

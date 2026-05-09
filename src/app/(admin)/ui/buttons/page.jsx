@@ -1,85 +1,145 @@
-import { Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { colorVariants } from '@/context/constants';
-import { toSentenceCase } from '@/utils/change-casing';
+import { Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { colorVariants } from '@/context/constants'
+import { toSentenceCase } from '@/utils/change-casing'
 const DefaultButtons = () => {
-  return <ComponentContainerCard id="default" title="Default Buttons" description={<>
+  return (
+    <ComponentContainerCard
+      id="default"
+      title="Default Buttons"
+      description={
+        <>
           Use the button classes on an&nbsp; <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code> or <code>&lt;input&gt;</code> element.
-        </>}>
+        </>
+      }>
       <div className="button-list gap-1 icons-center flex-wrap">
-        {colorVariants.map((color, idx) => <Button variant={color} type="button" key={idx}>
+        {colorVariants.map((color, idx) => (
+          <Button variant={color} type="button" key={idx}>
             {toSentenceCase(color)}
-          </Button>)}
+          </Button>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const RoundedButtons = () => {
-  return <ComponentContainerCard id="rounded" description={<>
+  return (
+    <ComponentContainerCard
+      id="rounded"
+      description={
+        <>
           Add <code>.rounded-pill</code> to default button to get rounded corners.
-        </>} title="Rounded Buttons">
+        </>
+      }
+      title="Rounded Buttons">
       <div className="button-list">
-        {colorVariants.map((color, idx) => <Button variant={color} className="rounded-pill me-1" type="button" key={idx}>
+        {colorVariants.map((color, idx) => (
+          <Button variant={color} className="rounded-pill me-1" type="button" key={idx}>
             {toSentenceCase(color)}
-          </Button>)}
+          </Button>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const OutlineButtons = () => {
-  return <ComponentContainerCard id="outline" title="Outline Buttons" description={<>
+  return (
+    <ComponentContainerCard
+      id="outline"
+      title="Outline Buttons"
+      description={
+        <>
           {' '}
           Use a classes <code>.btn-outline-**</code> to quickly create a bordered buttons.
-        </>}>
+        </>
+      }>
       <div className="button-list">
-        {colorVariants.slice(0, 9).map((color, idx) => <Button type="button" variant={`outline-${color}`} key={idx}>
+        {colorVariants.slice(0, 9).map((color, idx) => (
+          <Button type="button" variant={`outline-${color}`} key={idx}>
             {toSentenceCase(color)}
-          </Button>)}
+          </Button>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const OutlineRoundedButtons = () => {
-  return <ComponentContainerCard id="outline-rounded" title="Outline Rounded Buttons" description={<>
+  return (
+    <ComponentContainerCard
+      id="outline-rounded"
+      title="Outline Rounded Buttons"
+      description={
+        <>
           Use a classes <code>.btn-outline-**</code> to quickly create a bordered buttons.
-        </>}>
+        </>
+      }>
       <div className="button-list">
-        {colorVariants.slice(0, 6).map((color, idx) => <Button type="button" variant={`outline-${color}`} className="rounded-pill" key={idx}>
+        {colorVariants.slice(0, 6).map((color, idx) => (
+          <Button type="button" variant={`outline-${color}`} className="rounded-pill" key={idx}>
             {toSentenceCase(color)}
-          </Button>)}
+          </Button>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SoftButtons = () => {
-  return <ComponentContainerCard id="soft" title="Soft Buttons" description={<>
+  return (
+    <ComponentContainerCard
+      id="soft"
+      title="Soft Buttons"
+      description={
+        <>
           {' '}
           Use a classes <code>.btn-soft-**</code> to quickly create buttons with soft background.
-        </>}>
+        </>
+      }>
       <div className="button-list">
-        {colorVariants.slice(0, 6).map((color, idx) => <Button type="button" variant={`soft-${color}`} key={idx}>
+        {colorVariants.slice(0, 6).map((color, idx) => (
+          <Button type="button" variant={`soft-${color}`} key={idx}>
             {toSentenceCase(color)}
-          </Button>)}
+          </Button>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SoftRoundedButtons = () => {
-  return <ComponentContainerCard id="soft-rounded" title="Soft Rounded Buttons" description={<>
+  return (
+    <ComponentContainerCard
+      id="soft-rounded"
+      title="Soft Rounded Buttons"
+      description={
+        <>
           Use a classes <code>.rounded-pill**</code> with <code>.btn-soft-**</code> to quickly create a Outline Soft buttons.
-        </>}>
+        </>
+      }>
       <div className="button-list">
-        {colorVariants.slice(0, 6).map((color, idx) => <Button type="button" variant={`soft-${color}`} className="rounded-pill" key={idx}>
+        {colorVariants.slice(0, 6).map((color, idx) => (
+          <Button type="button" variant={`soft-${color}`} className="rounded-pill" key={idx}>
             {toSentenceCase(color)}
-          </Button>)}
+          </Button>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ButtonsWidth = () => {
-  return <ComponentContainerCard id="width" title="Button Width" description={<>
+  return (
+    <ComponentContainerCard
+      id="width"
+      title="Button Width"
+      description={
+        <>
           {' '}
           Create buttons with minimum width by adding add <code>.width-xs</code>, <code>.width-sm</code>, <code>.width-md</code>,{' '}
           <code>.width-lg</code> or <code>.width-xl</code>.
-        </>}>
+        </>
+      }>
       <div className="button-list">
         <Button variant="primary" className="width-xl">
           Extra Large
@@ -97,12 +157,19 @@ const ButtonsWidth = () => {
           Xs
         </Button>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ButtonSizes = () => {
-  return <ComponentContainerCard id="sizes" title="Button Sizes" description={<>
+  return (
+    <ComponentContainerCard
+      id="sizes"
+      title="Button Sizes"
+      description={
+        <>
           Add <code>.btn-lg</code>, <code>.btn-sm</code> for additional sizes.
-        </>}>
+        </>
+      }>
       <div className="button-list">
         <button type="button" className="btn btn-primary btn-lg">
           Large
@@ -114,21 +181,32 @@ const ButtonSizes = () => {
           Small
         </button>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DisabledButton = () => {
-  return <ComponentContainerCard id="disabled" title="Disabled Button" description={<>
+  return (
+    <ComponentContainerCard
+      id="disabled"
+      title="Disabled Button"
+      description={
+        <>
           Add <code>disabled</code> attribute to buttons.
-        </>}>
+        </>
+      }>
       <div className="button-list">
-        {colorVariants.slice(0, 6).map((color, idx) => <Button type="button" variant={color} key={idx} disabled>
+        {colorVariants.slice(0, 6).map((color, idx) => (
+          <Button type="button" variant={color} key={idx} disabled>
             {toSentenceCase(color)}
-          </Button>)}
+          </Button>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const IconButtons = () => {
-  return <ComponentContainerCard id="icon" title="Icon Button" description={<>Icon only Button.</>}>
+  return (
+    <ComponentContainerCard id="icon" title="Icon Button" description={<>Icon only Button.</>}>
       <div className="button-list">
         <Button variant="primary" type="button">
           <IconifyIcon icon="bx-heart" />
@@ -148,12 +226,19 @@ const IconButtons = () => {
           Warning
         </Button>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ButtonGroup = () => {
-  return <ComponentContainerCard id="group" title="Button Group" description={<>
+  return (
+    <ComponentContainerCard
+      id="group"
+      title="Button Group"
+      description={
+        <>
           Wrap a series of buttons with <code>.btn</code> in <code>.btn-group</code>.
-        </>}>
+        </>
+      }>
       <Row>
         <Col md={6}>
           <div className="btn-group mb-1 me-1">
@@ -211,12 +296,19 @@ const ButtonGroup = () => {
           </div>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const BlockButtons = () => {
-  return <ComponentContainerCard id="block" title="Block Button" description={<>
+  return (
+    <ComponentContainerCard
+      id="block"
+      title="Block Button"
+      description={
+        <>
           Create block level buttons by adding class <code>.d-grid</code> to parent div.
-        </>}>
+        </>
+      }>
       <div className="d-grid gap-2">
         <button type="button" className="btn btn-primary btn-lg">
           Block Button
@@ -228,10 +320,12 @@ const BlockButtons = () => {
           Block Button
         </button>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const Buttons = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Base UI" title="Buttons" />
       <PageMetaData title="Buttons" />
 
@@ -251,45 +345,61 @@ const Buttons = () => {
           <BlockButtons />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          label: 'Default Example',
-          link: '#default'
-        }, {
-          label: 'Rounded Buttons',
-          link: '#rounded'
-        }, {
-          label: 'Outline Buttons',
-          link: '#outline'
-        }, {
-          label: 'Outline Rounded Buttons',
-          link: '#outline-rounded'
-        }, {
-          label: 'Soft Buttons',
-          link: '#soft'
-        }, {
-          label: 'Soft Rounded Buttons',
-          link: '#soft-rounded '
-        }, {
-          label: 'Button Width',
-          link: '#width '
-        }, {
-          label: 'Button Sizes',
-          link: '#sizes '
-        }, {
-          label: 'Disabled Button',
-          link: '#disabled '
-        }, {
-          label: 'Icon Button',
-          link: '#icon '
-        }, {
-          label: 'Button Group',
-          link: '#group '
-        }, {
-          label: 'Block Button',
-          link: '#block '
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                label: 'Default Example',
+                link: '#default',
+              },
+              {
+                label: 'Rounded Buttons',
+                link: '#rounded',
+              },
+              {
+                label: 'Outline Buttons',
+                link: '#outline',
+              },
+              {
+                label: 'Outline Rounded Buttons',
+                link: '#outline-rounded',
+              },
+              {
+                label: 'Soft Buttons',
+                link: '#soft',
+              },
+              {
+                label: 'Soft Rounded Buttons',
+                link: '#soft-rounded ',
+              },
+              {
+                label: 'Button Width',
+                link: '#width ',
+              },
+              {
+                label: 'Button Sizes',
+                link: '#sizes ',
+              },
+              {
+                label: 'Disabled Button',
+                link: '#disabled ',
+              },
+              {
+                label: 'Icon Button',
+                link: '#icon ',
+              },
+              {
+                label: 'Button Group',
+                link: '#group ',
+              },
+              {
+                label: 'Block Button',
+                link: '#block ',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Buttons;
+    </>
+  )
+}
+export default Buttons

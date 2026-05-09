@@ -1,12 +1,15 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import small7 from '@/assets/images/small/img-7.jpg';
-import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import small7 from '@/assets/images/small/img-7.jpg'
+import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
 const About = () => {
-  return <Card>
+  return (
+    <Card>
       <CardBody>
-        <div className="position-relative rounded-2 overflow-hidden" style={{
-        backgroundImage: `url(${small7})`
-      }}>
+        <div
+          className="position-relative rounded-2 overflow-hidden"
+          style={{
+            backgroundImage: `url(${small7})`,
+          }}>
           <div className="bg-overlay bg-black" />
           <div className="position-relative p-3 p-lg-4">
             <h4 className="fs-18 fw-bold text-white text-uppercase mb-2">About Us</h4>
@@ -70,6 +73,7 @@ const About = () => {
           </div>
         </div>
       </CardBody>
-    </Card>;
-};
-export default About;
+    </Card>
+  )
+}
+export default About

@@ -1,4 +1,4 @@
 const FallbackLoading = () => {
-  return <div></div>;
-};
-export default FallbackLoading;
+  return <div></div>
+}
+export default FallbackLoading

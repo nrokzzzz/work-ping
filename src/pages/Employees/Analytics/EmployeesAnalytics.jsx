@@ -11,13 +11,14 @@ const MetricCard = ({ title, value, subtitle, iconName, color }) => (
     <CardBody className="d-flex align-items-center gap-3">
       <div
         className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-        style={{ width: 52, height: 52, background: color + '20' }}
-      >
+        style={{ width: 52, height: 52, background: color + '20' }}>
         <Icon icon={iconName} style={{ fontSize: 26, color }} />
       </div>
       <div>
         <p className="mb-0 text-muted text-uppercase small fw-semibold">{title}</p>
-        <h3 className="mb-0 fw-bold" style={{ color }}>{value ?? '--'}</h3>
+        <h3 className="mb-0 fw-bold" style={{ color }}>
+          {value ?? '--'}
+        </h3>
         <p className="mb-0 text-muted small">{subtitle}</p>
       </div>
     </CardBody>
@@ -33,7 +34,9 @@ const EmployeesAnalytics = () => {
 
   const orgNames = useMemo(() => Object.keys(orgData), [orgData])
 
-  useEffect(() => { fetchInit() }, [])
+  useEffect(() => {
+    fetchInit()
+  }, [])
   useEffect(() => {
     if (orgName && orgData[orgName]) fetchOrgEmployees(orgData[orgName].organizationId)
   }, [orgName])
@@ -57,7 +60,7 @@ const EmployeesAnalytics = () => {
     try {
       const res = await axiosClient.get(
         `/api/admin/get-all-employees/get-all-employees-by-page-number?page=1&limit=1&organizationId=${organizationId}`,
-        { silent: true }
+        { silent: true },
       )
       setOrgEmployees(res.data?.data?.totalRecords ?? 0)
     } catch {
@@ -72,9 +75,8 @@ const EmployeesAnalytics = () => {
   const otherEmployees = Math.max(0, totalEmployees - orgEmployees)
 
   const donutSeries = [orgEmployees, otherEmployees].filter((v, i) => i === 0 || v > 0)
-  const donutLabels = orgEmployees > 0 && otherEmployees > 0
-    ? [orgName || 'Selected Org', 'Other Orgs']
-    : orgEmployees > 0 ? [orgName || 'Selected Org'] : ['No Data']
+  const donutLabels =
+    orgEmployees > 0 && otherEmployees > 0 ? [orgName || 'Selected Org', 'Other Orgs'] : orgEmployees > 0 ? [orgName || 'Selected Org'] : ['No Data']
 
   const donutOptions = {
     labels: donutLabels,
@@ -111,29 +113,44 @@ const EmployeesAnalytics = () => {
 
       <Row className="g-2 mb-3 align-items-center">
         <Col xs="auto">
-          <select
-            className="form-select form-select-sm"
-            value={orgName}
-            onChange={(e) => setOrgName(e.target.value)}
-            style={{ minWidth: 200 }}
-          >
+          <select className="form-select form-select-sm" value={orgName} onChange={(e) => setOrgName(e.target.value)} style={{ minWidth: 200 }}>
             {orgNames.length === 0 && <option value="">No organizations</option>}
             {orgNames.map((n) => (
-              <option key={n} value={n}>{n}</option>
+              <option key={n} value={n}>
+                {n}
+              </option>
             ))}
           </select>
         </Col>
         <Col xs="auto" className="ms-auto d-flex align-items-center gap-2">
-          {loading ? <Spinner size="sm" animation="border" /> : <Badge bg="success" pill>Live</Badge>}
+          {loading ? (
+            <Spinner size="sm" animation="border" />
+          ) : (
+            <Badge bg="success" pill>
+              Live
+            </Badge>
+          )}
         </Col>
       </Row>
 
       <Row className="g-3 mb-3">
         <Col md={6} xl={3}>
-          <MetricCard title="Total Employees" value={totalEmployees} subtitle="Across all organizations" iconName="mdi:account-multiple-outline" color="#6366f1" />
+          <MetricCard
+            title="Total Employees"
+            value={totalEmployees}
+            subtitle="Across all organizations"
+            iconName="mdi:account-multiple-outline"
+            color="#6366f1"
+          />
         </Col>
         <Col md={6} xl={3}>
-          <MetricCard title="Org Employees" value={orgEmployees} subtitle={orgName || 'Selected organization'} iconName="mdi:account-tie" color="#0ea5e9" />
+          <MetricCard
+            title="Org Employees"
+            value={orgEmployees}
+            subtitle={orgName || 'Selected organization'}
+            iconName="mdi:account-tie"
+            color="#0ea5e9"
+          />
         </Col>
         <Col md={6} xl={3}>
           <MetricCard title="Teams in Org" value={teamsInOrg} subtitle="Registered teams" iconName="mdi:account-group-outline" color="#14b8a6" />
@@ -169,7 +186,9 @@ const EmployeesAnalytics = () => {
             </CardHeader>
             <CardBody className="d-flex flex-column justify-content-center">
               <ReactApexChart options={radialOptions} series={[orgShare]} type="radialBar" height={260} />
-              <div className="text-center small text-muted mt-1">{orgEmployees} of {totalEmployees} employees</div>
+              <div className="text-center small text-muted mt-1">
+                {orgEmployees} of {totalEmployees} employees
+              </div>
             </CardBody>
           </Card>
         </Col>
@@ -188,7 +207,12 @@ const EmployeesAnalytics = () => {
                     <li key={i} className="d-flex align-items-center gap-2 py-1 border-bottom small">
                       <span
                         className="rounded-circle flex-shrink-0"
-                        style={{ width: 8, height: 8, background: ['#0ea5e9','#6366f1','#14b8a6','#f97316','#8b5cf6'][i % 5], display: 'inline-block' }}
+                        style={{
+                          width: 8,
+                          height: 8,
+                          background: ['#0ea5e9', '#6366f1', '#14b8a6', '#f97316', '#8b5cf6'][i % 5],
+                          display: 'inline-block',
+                        }}
                       />
                       {typeof t === 'string' ? t : (t.teamName ?? t.name ?? `Team ${i + 1}`)}
                     </li>

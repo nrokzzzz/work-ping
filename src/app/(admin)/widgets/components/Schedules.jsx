@@ -1,9 +1,10 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Alert, Card, CardBody, CardTitle, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap';
-import clsx from 'clsx';
-import { scheduleData } from '../data';
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Alert, Card, CardBody, CardTitle, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap'
+import clsx from 'clsx'
+import { scheduleData } from '../data'
 const Schedules = () => {
-  return <Card>
+  return (
+    <Card>
       <CardBody>
         <Dropdown className="float-end">
           <DropdownToggle as={'a'} role="button" className="arrow-none">
@@ -27,7 +28,8 @@ const Schedules = () => {
         <CardTitle as={'h5'} className="mb-3">
           Today&apos;s Schedules
         </CardTitle>
-        {scheduleData.map((schedule, idx) => <Row className="align-items-center" key={idx}>
+        {scheduleData.map((schedule, idx) => (
+          <Row className="align-items-center" key={idx}>
             <Col sm={2} xs={3}>
               <p>{schedule.time}</p>
             </Col>
@@ -37,8 +39,10 @@ const Schedules = () => {
                 <p className="mb-0">{schedule.duration}</p>
               </Alert>
             </Col>
-          </Row>)}
+          </Row>
+        ))}
       </CardBody>
-    </Card>;
-};
-export default Schedules;
+    </Card>
+  )
+}
+export default Schedules

@@ -1,12 +1,11 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { currency } from '@/context/constants';
-import { getRatingVariant } from '@/utils/other';
-import { Link } from 'react-router-dom';
-import { Button, Card, Col } from 'react-bootstrap';
-const SellersListView = ({
-  sellers
-}) => {
-  return <Card className="overflow-hidden">
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { currency } from '@/context/constants'
+import { getRatingVariant } from '@/utils/other'
+import { Link } from 'react-router-dom'
+import { Button, Card, Col } from 'react-bootstrap'
+const SellersListView = ({ sellers }) => {
+  return (
+    <Card className="overflow-hidden">
       <div className="table-responsive table-centered text-nowrap">
         <table className="table mb-0">
           <thead>
@@ -22,7 +21,8 @@ const SellersListView = ({
             </tr>
           </thead>
           <tbody>
-            {sellers.map((seller, idx) => <tr key={idx}>
+            {sellers.map((seller, idx) => (
+              <tr key={idx}>
                 <td>
                   <div className="d-flex align-items-center gap-1">
                     <img src={seller.image} alt="avatar-1" className="img-fluid avatar-sm rounded-circle avatar-border me-1" />
@@ -54,7 +54,8 @@ const SellersListView = ({
                     <IconifyIcon icon="bx:trash" className="fs-18" />
                   </Button>
                 </td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -96,6 +97,7 @@ const SellersListView = ({
           </ul>
         </Col>
       </div>
-    </Card>;
-};
-export default SellersListView;
+    </Card>
+  )
+}
+export default SellersListView

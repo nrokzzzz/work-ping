@@ -1,21 +1,22 @@
-import { Fragment, useEffect, useState } from 'react';
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import { getAllTimeline } from '@/helpers/data';
-const CenteredTimeline = ({
-  timeline
-}) => {
-  return <div className="timeline">
+import { Fragment, useEffect, useState } from 'react'
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import { getAllTimeline } from '@/helpers/data'
+const CenteredTimeline = ({ timeline }) => {
+  return (
+    <div className="timeline">
       {Object.keys(timeline).map((day, idx) => {
-      return <Fragment key={idx}>
+        return (
+          <Fragment key={idx}>
             <article className="timeline-time">
               <div className="time-show d-flex align-items-center justify-content-center mt-0">
                 <h5 className="mb-0 text-uppercase fs-14 fw-semibold">{day}</h5>
               </div>
             </article>
             {timeline[day].map((item, idx) => {
-          return idx % 2 === 0 ? <article className="timeline-item timeline-item-left" key={idx}>
+              return idx % 2 === 0 ? (
+                <article className="timeline-item timeline-item-left" key={idx}>
                   <div className="timeline-desk">
                     <div className="timeline-box clearfix">
                       <span className="timeline-icon" />
@@ -32,7 +33,9 @@ const CenteredTimeline = ({
                       </div>
                     </div>
                   </div>
-                </article> : <article className="timeline-item" key={idx}>
+                </article>
+              ) : (
+                <article className="timeline-item" key={idx}>
                   <div className="timeline-desk">
                     <div className="timeline-box clearfix">
                       <span className="timeline-icon" />
@@ -49,24 +52,28 @@ const CenteredTimeline = ({
                       </div>
                     </div>
                   </div>
-                </article>;
-        })}
-          </Fragment>;
-    })}
-    </div>;
-};
-const LeftTimeline = ({
-  timeline
-}) => {
-  return <>
+                </article>
+              )
+            })}
+          </Fragment>
+        )
+      })}
+    </div>
+  )
+}
+const LeftTimeline = ({ timeline }) => {
+  return (
+    <>
       {Object.keys(timeline).map((day, idx) => {
-      return <Fragment key={idx}>
+        return (
+          <Fragment key={idx}>
             <div className="d-flex flex-row fs-18 align-items-center mb-3">
               <h5 className="mb-0">{day}</h5>
             </div>
             <ul className="list-unstyled left-timeline">
               {timeline[day].map((item, idx) => {
-            return <li className="left-timeline-list" key={idx}>
+                return (
+                  <li className="left-timeline-list" key={idx}>
                     <Card className="d-inline-block">
                       <CardBody>
                         <h5 className="mt-0 fs-16">
@@ -76,22 +83,26 @@ const LeftTimeline = ({
                         <p className="text-muted mb-0">{item.description}</p>
                       </CardBody>
                     </Card>
-                  </li>;
-          })}
+                  </li>
+                )
+              })}
             </ul>
-          </Fragment>;
-    })}
-    </>;
-};
+          </Fragment>
+        )
+      })}
+    </>
+  )
+}
 const Timeline = () => {
-  const [timelineData, setTimelineData] = useState();
+  const [timelineData, setTimelineData] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllTimeline();
-      setTimelineData(data);
-    })();
-  }, []);
-  return <>
+    ;(async () => {
+      const data = await getAllTimeline()
+      setTimelineData(data)
+    })()
+  }, [])
+  return (
+    <>
       <PageBreadcrumb subName="Pages" title="Timeline" />
       <PageMetaData title="Timeline" />
 
@@ -106,6 +117,7 @@ const Timeline = () => {
           {timelineData && <LeftTimeline timeline={timelineData} />}
         </Col>
       </Row>
-    </>;
-};
-export default Timeline;
+    </>
+  )
+}
+export default Timeline

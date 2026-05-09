@@ -1,11 +1,10 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Button, Card, CardBody, Col, Nav, NavItem, NavLink, Row, TabContainer, TabContent, TabPane } from 'react-bootstrap';
-import SellersGrid from './SellersGrid';
-import SellersListView from './SellersListView';
-const SellersList = ({
-  sellers
-}) => {
-  return <TabContainer defaultActiveKey={'1'}>
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Button, Card, CardBody, Col, Nav, NavItem, NavLink, Row, TabContainer, TabContent, TabPane } from 'react-bootstrap'
+import SellersGrid from './SellersGrid'
+import SellersListView from './SellersListView'
+const SellersList = ({ sellers }) => {
+  return (
+    <TabContainer defaultActiveKey={'1'}>
       <Row>
         <Col xs={12}>
           <Card>
@@ -70,6 +69,7 @@ const SellersList = ({
           <SellersGrid sellers={sellers} />
         </TabPane>
       </TabContent>
-    </TabContainer>;
-};
-export default SellersList;
+    </TabContainer>
+  )
+}
+export default SellersList

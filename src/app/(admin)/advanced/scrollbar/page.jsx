@@ -1,17 +1,25 @@
-import { Col, Row } from 'react-bootstrap';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient';
+import { Col, Row } from 'react-bootstrap'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
 const DefaultScrollbar = () => {
-  return <ComponentContainerCard id="default" title="Default Scroll Example" description={<>
+  return (
+    <ComponentContainerCard
+      id="default"
+      title="Default Scroll Example"
+      description={
+        <>
           Just use data attribute <code>data-simplebar</code> and add <code>max-height: **px</code> oh fix height
-        </>}>
+        </>
+      }>
       <div className="border rounded py-3">
-        <SimplebarReactClient className="px-3" style={{
-        maxHeight: 250
-      }}>
+        <SimplebarReactClient
+          className="px-3"
+          style={{
+            maxHeight: 250,
+          }}>
           SimpleBar does only one thing: replace the browser&apos;s default scrollbar with a custom CSS-styled one without losing performances. Unlike
           some popular plugins, SimpleBar doesn&apos;t mimic scroll with Javascript, causing janks and strange scrolling behaviours... You keep the
           awesomeness of native scrolling...with a custom scrollbar!
@@ -36,17 +44,27 @@ const DefaultScrollbar = () => {
           <p>SimpleBar has been tested on the following browsers: Chrome, Firefox, Safari, Edge, IE11.</p>
         </SimplebarReactClient>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const RTLPosition = () => {
-  return <ComponentContainerCard id="rtl" title="RTL Position" description={<>
+  return (
+    <ComponentContainerCard
+      id="rtl"
+      title="RTL Position"
+      description={
+        <>
           Just use data attribute<code>data-simplebar data-simplebar-direction=&apos;rtl&apos;</code> and add <code>max-height: **px</code> oh fix
           height
-        </>}>
+        </>
+      }>
       <div className="border rounded py-3">
-        <SimplebarReactClient className="px-3" data-simplebar-direction="rtl" style={{
-        maxHeight: 250
-      }}>
+        <SimplebarReactClient
+          className="px-3"
+          data-simplebar-direction="rtl"
+          style={{
+            maxHeight: 250,
+          }}>
           SimpleBar does only one thing: replace the browser&apos;s default scrollbar with a custom CSS-styled one without losing performances. Unlike
           some popular plugins, SimpleBar doesn&apos;t mimic scroll with Javascript, causing janks and strange scrolling behaviours... You keep the
           awesomeness of native scrolling...with a custom scrollbar!
@@ -71,17 +89,27 @@ const RTLPosition = () => {
           <p>SimpleBar has been tested on the following browsers: Chrome, Firefox, Safari, Edge, IE11.</p>
         </SimplebarReactClient>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ScrollSize = () => {
-  return <ComponentContainerCard id="size" title="Scroll Size" description={<>
+  return (
+    <ComponentContainerCard
+      id="size"
+      title="Scroll Size"
+      description={
+        <>
           {' '}
           Just use data attribute <code>data-simplebar</code>, <code>data-simplebar-lg</code> and add <code>max-height: **px</code> oh fix height
-        </>}>
+        </>
+      }>
       <div className="border rounded py-3">
-        <SimplebarReactClient className="px-3" data-simplebar-lg style={{
-        maxHeight: 250
-      }}>
+        <SimplebarReactClient
+          className="px-3"
+          data-simplebar-lg
+          style={{
+            maxHeight: 250,
+          }}>
           SimpleBar does only one thing: replace the browser&apos;s default scrollbar with a custom CSS-styled one without losing performances. Unlike
           some popular plugins, SimpleBar doesn&apos;t mimic scroll with Javascript, causing janks and strange scrolling behaviours... You keep the
           awesomeness of native scrolling...with a custom scrollbar!
@@ -106,16 +134,26 @@ const ScrollSize = () => {
           <p>SimpleBar has been tested on the following browsers: Chrome, Firefox, Safari, Edge, IE11.</p>
         </SimplebarReactClient>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ScrollColor = () => {
-  return <ComponentContainerCard id="color" title="Scroll Color" description={<>
+  return (
+    <ComponentContainerCard
+      id="color"
+      title="Scroll Color"
+      description={
+        <>
           Just use data attribute <code>data-simplebar data-simplebar-*</code> and add <code>max-height: **px</code> oh fix height
-        </>}>
+        </>
+      }>
       <div className="border rounded py-3">
-        <SimplebarReactClient className="px-3" data-simplebar-primary style={{
-        maxHeight: 250
-      }}>
+        <SimplebarReactClient
+          className="px-3"
+          data-simplebar-primary
+          style={{
+            maxHeight: 250,
+          }}>
           SimpleBar does only one thing: replace the browser&apos;s default scrollbar with a custom CSS-styled one without losing performances. Unlike
           some popular plugins, SimpleBar doesn&apos;t mimic scroll with Javascript, causing janks and strange scrolling behaviours... You keep the
           awesomeness of native scrolling...with a custom scrollbar!
@@ -140,10 +178,12 @@ const ScrollColor = () => {
           <p>SimpleBar has been tested on the following browsers: Chrome, Firefox, Safari, Edge, IE11.</p>
         </SimplebarReactClient>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ScrollBars = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Advanced UI" title="Scrollbar" />
       <PageMetaData title="ScrollBar" />
       <Row>
@@ -154,21 +194,29 @@ const ScrollBars = () => {
           <ScrollColor />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#default',
-          label: 'Default Scroll Example'
-        }, {
-          link: '#rtl',
-          label: 'RTL Position'
-        }, {
-          link: '#size',
-          label: 'Scroll Size'
-        }, {
-          link: '#color',
-          label: 'Scroll Color'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#default',
+                label: 'Default Scroll Example',
+              },
+              {
+                link: '#rtl',
+                label: 'RTL Position',
+              },
+              {
+                link: '#size',
+                label: 'Scroll Size',
+              },
+              {
+                link: '#color',
+                label: 'Scroll Color',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default ScrollBars;
+    </>
+  )
+}
+export default ScrollBars

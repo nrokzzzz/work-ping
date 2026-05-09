@@ -1,15 +1,16 @@
-import { Card, CardBody, CardHeader, CardTitle, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import { colorVariants } from '@/context/constants';
-import cardImg from '@/assets/images/small/img-1.jpg';
-import cardImg2 from '@/assets/images/small/img-2.jpg';
-import cardImg3 from '@/assets/images/small/img-3.jpg';
-import cardImg4 from '@/assets/images/small/img-4.jpg';
-import cardImg5 from '@/assets/images/small/img-5.jpg';
+import { Card, CardBody, CardHeader, CardTitle, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import { colorVariants } from '@/context/constants'
+import cardImg from '@/assets/images/small/img-1.jpg'
+import cardImg2 from '@/assets/images/small/img-2.jpg'
+import cardImg3 from '@/assets/images/small/img-3.jpg'
+import cardImg4 from '@/assets/images/small/img-4.jpg'
+import cardImg5 from '@/assets/images/small/img-5.jpg'
 const CardWithImage = () => {
-  return <Card className="mb-3 mb-xl-0">
+  return (
+    <Card className="mb-3 mb-xl-0">
       <img className="card-img-top img-fluid" src={cardImg} alt="img-1" />
       <CardBody>
         <CardTitle as={'h5'} className="mb-2">
@@ -23,10 +24,12 @@ const CardWithImage = () => {
           Button
         </Link>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const CardWithImage2 = () => {
-  return <Card className="mb-3">
+  return (
+    <Card className="mb-3">
       <img className="card-img-top img-fluid" src={cardImg2} alt="img-2" />
       <CardBody>
         <CardTitle as={'h5'} className="mb-2">
@@ -45,10 +48,12 @@ const CardWithImage2 = () => {
           Another link
         </Link>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const CardWithImage3 = () => {
-  return <Card className="mb-3 mb-xl-0">
+  return (
+    <Card className="mb-3 mb-xl-0">
       <img className="card-img-top img-fluid" src={cardImg4} alt="img-4" />
       <CardBody>
         <p className="card-text text-muted">
@@ -59,10 +64,12 @@ const CardWithImage3 = () => {
           Button
         </Link>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const CardWithTitleAndImage = () => {
-  return <Card className="mb-3 mb-xl-0">
+  return (
+    <Card className="mb-3 mb-xl-0">
       <CardBody>
         <h5 className="card-title mb-0">Card title</h5>
       </CardBody>
@@ -76,10 +83,12 @@ const CardWithTitleAndImage = () => {
           Another link
         </Link>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const CardWithSpecialTitle = () => {
-  return <Card className="card-body">
+  return (
+    <Card className="card-body">
       <CardTitle as={'h5'} className="mb-1">
         Special title treatment
       </CardTitle>
@@ -87,10 +96,12 @@ const CardWithSpecialTitle = () => {
       <Link to="" className="btn btn-primary">
         Go somewhere
       </Link>
-    </Card>;
-};
+    </Card>
+  )
+}
 const CardWithHeader = () => {
-  return <Card>
+  return (
+    <Card>
       <CardHeader>Featured</CardHeader>
       <CardBody>
         <CardTitle as={'h5'} className="mb-1">
@@ -101,10 +112,12 @@ const CardWithHeader = () => {
           Go somewhere
         </Link>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const CardWithHeaderAndQuote = () => {
-  return <Card>
+  return (
+    <Card>
       <CardHeader>Quote</CardHeader>
       <CardBody>
         <blockquote>
@@ -115,10 +128,12 @@ const CardWithHeaderAndQuote = () => {
           </footer>
         </blockquote>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const CardWithHeaderAndFooter = () => {
-  return <Card>
+  return (
+    <Card>
       <CardHeader>Featured</CardHeader>
       <CardBody>
         <Link to="" className="btn btn-primary">
@@ -126,10 +141,12 @@ const CardWithHeaderAndFooter = () => {
         </Link>
       </CardBody>
       <div className="card-footer text-muted">2 days ago</div>
-    </Card>;
-};
+    </Card>
+  )
+}
 const ColorCards = () => {
-  return <Row>
+  return (
+    <Row>
       <Col md={4}>
         <div className="card text-bg-primary">
           <CardBody>
@@ -141,7 +158,8 @@ const ColorCards = () => {
           </CardBody>
         </div>
       </Col>
-      {colorVariants.slice(1, 6).map((color, idx) => <Col md={4} key={idx}>
+      {colorVariants.slice(1, 6).map((color, idx) => (
+        <Col md={4} key={idx}>
           <div className={`card bg-${color} text-white`}>
             <CardBody>
               <blockquote>
@@ -153,12 +171,16 @@ const ColorCards = () => {
               </blockquote>
             </CardBody>
           </div>
-        </Col>)}
-    </Row>;
-};
+        </Col>
+      ))}
+    </Row>
+  )
+}
 const BorderedCards = () => {
-  return <Row>
-      {colorVariants.slice(0, 3).map((color, idx) => <Col md={4} key={idx}>
+  return (
+    <Row>
+      {colorVariants.slice(0, 3).map((color, idx) => (
+        <Col md={4} key={idx}>
           <Card className={`border-${color} border`}>
             <CardBody>
               <h5 className={`card-title text-${color} mb-2`}>Special title treatment</h5>
@@ -168,11 +190,14 @@ const BorderedCards = () => {
               </Link>
             </CardBody>
           </Card>
-        </Col>)}
-    </Row>;
-};
+        </Col>
+      ))}
+    </Row>
+  )
+}
 const HorizontalCards = () => {
-  return <Row>
+  return (
+    <Row>
       <Col lg={6}>
         <Card>
           <Row className="g-0">
@@ -217,10 +242,12 @@ const HorizontalCards = () => {
           </Row>
         </Card>
       </Col>
-    </Row>;
-};
+    </Row>
+  )
+}
 const CardWithStretchedLink = () => {
-  return <>
+  return (
+    <>
       <Col md={6} lg={3}>
         <Card>
           <img src={cardImg} height={205} className="card-img-top" alt="img-1" />
@@ -273,11 +300,14 @@ const CardWithStretchedLink = () => {
           </CardBody>
         </Card>
       </Col>
-    </>;
-};
+    </>
+  )
+}
 const CardDecks = () => {
-  return <Row className="row-cols-1 row-cols-md-3 g-3">
-      {[cardImg4, cardImg3, cardImg2].map((image, idx) => <div className="col" key={idx}>
+  return (
+    <Row className="row-cols-1 row-cols-md-3 g-3">
+      {[cardImg4, cardImg3, cardImg2].map((image, idx) => (
+        <div className="col" key={idx}>
           <Card>
             <img src={image} className="card-img-top" height={278} alt="img-4" />
             <CardBody>
@@ -292,13 +322,14 @@ const CardDecks = () => {
               </p>
             </CardBody>
           </Card>
-        </div>)}
-    </Row>;
-};
-const CardWithGroup = ({
-  item
-}) => {
-  return <Card className="d-block">
+        </div>
+      ))}
+    </Row>
+  )
+}
+const CardWithGroup = ({ item }) => {
+  return (
+    <Card className="d-block">
       <img className="card-img-top" src={item.image} height={288} alt="img-1" />
       <CardBody>
         <CardTitle as={'h5'} className="mb-2">
@@ -309,29 +340,35 @@ const CardWithGroup = ({
           <small className="text-muted">{item.subtext}</small>
         </p>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const Cards = () => {
-  const CardGroupDetails = [{
-    id: 1,
-    image: cardImg,
-    title: 'Card title',
-    text: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
-    subtext: 'Last updated 3 mins ago'
-  }, {
-    id: 2,
-    image: cardImg2,
-    title: 'Card title',
-    text: 'This card has supporting text below as a natural lead-in to additional content.',
-    subtext: 'Last updated 3 mins ago'
-  }, {
-    id: 3,
-    image: cardImg3,
-    title: 'Card title',
-    text: 'This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.',
-    subtext: 'Last updated 3 mins ago'
-  }];
-  return <>
+  const CardGroupDetails = [
+    {
+      id: 1,
+      image: cardImg,
+      title: 'Card title',
+      text: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
+      subtext: 'Last updated 3 mins ago',
+    },
+    {
+      id: 2,
+      image: cardImg2,
+      title: 'Card title',
+      text: 'This card has supporting text below as a natural lead-in to additional content.',
+      subtext: 'Last updated 3 mins ago',
+    },
+    {
+      id: 3,
+      image: cardImg3,
+      title: 'Card title',
+      text: 'This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.',
+      subtext: 'Last updated 3 mins ago',
+    },
+  ]
+  return (
+    <>
       <PageBreadcrumb subName="Base UI" title="Cards" />
       <PageMetaData title="Cards" />
 
@@ -412,7 +449,9 @@ const Cards = () => {
       <Row>
         <Col xs={12}>
           <div className="card-group mb-3">
-            {CardGroupDetails.map((item, idx) => <CardWithGroup item={item} key={idx} />)}
+            {CardGroupDetails.map((item, idx) => (
+              <CardWithGroup item={item} key={idx} />
+            ))}
           </div>
         </Col>
       </Row>
@@ -428,6 +467,7 @@ const Cards = () => {
           <CardDecks />
         </Col>
       </Row>
-    </>;
-};
-export default Cards;
+    </>
+  )
+}
+export default Cards

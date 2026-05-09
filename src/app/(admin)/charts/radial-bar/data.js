@@ -1,27 +1,27 @@
-import small2 from '@/assets/images/small/img-2.jpg';
+import small2 from '@/assets/images/small/img-2.jpg'
 export const basicRadialBarOpts = {
   chart: {
     height: 320,
-    type: 'radialBar'
+    type: 'radialBar',
   },
   plotOptions: {
     radialBar: {
       hollow: {
-        size: '70%'
+        size: '70%',
       },
       track: {
-        background: 'rgba(170,184,197, 0.2)'
-      }
-    }
+        background: 'rgba(170,184,197, 0.2)',
+      },
+    },
   },
   colors: ['#7f56da'],
   series: [70],
-  labels: ['CRICKET']
-};
+  labels: ['CRICKET'],
+}
 export const multipleRadialBarsOpts = {
   chart: {
     height: 320,
-    type: 'radialBar'
+    type: 'radialBar',
   },
   plotOptions: {
     // circle: {
@@ -31,26 +31,28 @@ export const multipleRadialBarsOpts = {
     // },
     radialBar: {
       track: {
-        background: 'rgba(170,184,197, 0.2)'
-      }
-    }
+        background: 'rgba(170,184,197, 0.2)',
+      },
+    },
   },
   colors: ['#1c84ee', '#7f56da', '#ff6c2f', '#4ecac2'],
   series: [44, 55, 67, 83],
   labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
-  responsive: [{
-    breakpoint: 380,
-    options: {
-      chart: {
-        height: 260
-      }
-    }
-  }]
-};
+  responsive: [
+    {
+      breakpoint: 380,
+      options: {
+        chart: {
+          height: 260,
+        },
+      },
+    },
+  ],
+}
 export const customAngleOpts = {
   chart: {
     height: 380,
-    type: 'radialBar'
+    type: 'radialBar',
   },
   plotOptions: {
     radialBar: {
@@ -61,20 +63,20 @@ export const customAngleOpts = {
         margin: 5,
         size: '30%',
         background: 'transparent',
-        image: undefined
+        image: undefined,
       },
       track: {
-        background: 'rgba(170,184,197, 0.2)'
+        background: 'rgba(170,184,197, 0.2)',
       },
       dataLabels: {
         name: {
-          show: false
+          show: false,
         },
         value: {
-          show: false
-        }
-      }
-    }
+          show: false,
+        },
+      },
+    },
   },
   colors: ['#1c84ee', '#7f56da', '#ff6c2f', '#4ecac2'],
   series: [76, 67, 61, 90],
@@ -87,60 +89,64 @@ export const customAngleOpts = {
     offsetX: 10,
     offsetY: 10,
     labels: {
-      useSeriesColors: true
+      useSeriesColors: true,
     },
     formatter: function (seriesName, opts) {
-      return seriesName + ':  ' + opts.w.globals.series[opts.seriesIndex];
+      return seriesName + ':  ' + opts.w.globals.series[opts.seriesIndex]
     },
     itemMargin: {
-      horizontal: 1
-    }
+      horizontal: 1,
+    },
   },
-  responsive: [{
-    breakpoint: 480,
-    options: {
-      legend: {
-        show: false
-      }
-    }
-  }]
-};
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        legend: {
+          show: false,
+        },
+      },
+    },
+  ],
+}
 export const circleWithImageOpts = {
   chart: {
     height: 360,
-    type: 'radialBar'
+    type: 'radialBar',
   },
   fill: {
     type: 'image',
     image: {
-      src: [small2]
-    }
+      src: [small2],
+    },
   },
   plotOptions: {
     radialBar: {
       hollow: {
-        size: '70%'
-      }
-    }
+        size: '70%',
+      },
+    },
   },
   series: [70],
   stroke: {
-    lineCap: 'round'
+    lineCap: 'round',
   },
   labels: ['Volatility'],
-  responsive: [{
-    breakpoint: 380,
-    options: {
-      chart: {
-        height: 280
-      }
-    }
-  }]
-};
+  responsive: [
+    {
+      breakpoint: 380,
+      options: {
+        chart: {
+          height: 280,
+        },
+      },
+    },
+  ],
+}
 export const strokedCircularGuageOpts = {
   chart: {
     height: 380,
-    type: 'radialBar'
+    type: 'radialBar',
   },
   plotOptions: {
     radialBar: {
@@ -150,22 +156,22 @@ export const strokedCircularGuageOpts = {
         name: {
           fontSize: '16px',
           color: undefined,
-          offsetY: 120
+          offsetY: 120,
         },
         value: {
           offsetY: 76,
           fontSize: '22px',
           color: undefined,
           formatter: function (val) {
-            return val + '%';
-          }
-        }
+            return val + '%'
+          },
+        },
       },
       track: {
         background: 'rgba(170,184,197, 0.2)',
-        margin: 0
-      }
-    }
+        margin: 0,
+      },
+    },
   },
   fill: {
     gradient: {
@@ -175,31 +181,33 @@ export const strokedCircularGuageOpts = {
       inverseColors: false,
       opacityFrom: 1,
       opacityTo: 1,
-      stops: [0, 50, 65, 91]
-    }
+      stops: [0, 50, 65, 91],
+    },
   },
   stroke: {
-    dashArray: 4
+    dashArray: 4,
   },
   colors: ['#ff6c2f'],
   series: [67],
   labels: ['Median Ratio'],
-  responsive: [{
-    breakpoint: 380,
-    options: {
-      chart: {
-        height: 280
-      }
-    }
-  }]
-};
+  responsive: [
+    {
+      breakpoint: 380,
+      options: {
+        chart: {
+          height: 280,
+        },
+      },
+    },
+  ],
+}
 export const gradientCircularOpts = {
   chart: {
     height: 330,
     type: 'radialBar',
     toolbar: {
-      show: false
-    }
+      show: false,
+    },
   },
   plotOptions: {
     radialBar: {
@@ -218,13 +226,13 @@ export const gradientCircularOpts = {
           top: 3,
           left: 0,
           blur: 4,
-          opacity: 0.24
-        }
+          opacity: 0.24,
+        },
       },
       track: {
         background: 'rgba(170,184,197, 0.2)',
         strokeWidth: '67%',
-        margin: 0
+        margin: 0,
       },
       dataLabels: {
         // showOn: 'always',
@@ -232,18 +240,18 @@ export const gradientCircularOpts = {
           offsetY: -10,
           show: true,
           color: '#888',
-          fontSize: '17px'
+          fontSize: '17px',
         },
         value: {
           formatter: function (val) {
-            return val.toString();
+            return val.toString()
           },
           color: '#111',
           fontSize: '36px',
-          show: true
-        }
-      }
-    }
+          show: true,
+        },
+      },
+    },
   },
   fill: {
     type: 'gradient',
@@ -255,23 +263,23 @@ export const gradientCircularOpts = {
       inverseColors: true,
       opacityFrom: 1,
       opacityTo: 1,
-      stops: [0, 100]
-    }
+      stops: [0, 100],
+    },
   },
   series: [75],
   stroke: {
-    lineCap: 'round'
+    lineCap: 'round',
   },
-  labels: ['Percent']
-};
+  labels: ['Percent'],
+}
 export const semiCircleGaugeOpts = {
   series: [76],
   chart: {
     type: 'radialBar',
     offsetY: -20,
     sparkline: {
-      enabled: true
-    }
+      enabled: true,
+    },
   },
   plotOptions: {
     radialBar: {
@@ -287,25 +295,25 @@ export const semiCircleGaugeOpts = {
           left: 0,
           color: '#eef2f7',
           opacity: 1,
-          blur: 2
-        }
+          blur: 2,
+        },
       },
       dataLabels: {
         name: {
-          show: false
+          show: false,
         },
         value: {
           offsetY: -2,
-          fontSize: '22px'
-        }
-      }
-    }
+          fontSize: '22px',
+        },
+      },
+    },
   },
   grid: {
     padding: {
-      top: -10
-    }
+      top: -10,
+    },
   },
   colors: ['#1c84ee'],
-  labels: ['Average Results']
-};
+  labels: ['Average Results'],
+}

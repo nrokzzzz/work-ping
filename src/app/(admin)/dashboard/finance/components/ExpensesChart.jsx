@@ -1,24 +1,27 @@
-import ReactApexChart from 'react-apexcharts';
-import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap';
+import ReactApexChart from 'react-apexcharts'
+import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
 const ExpensesChart = () => {
   const chartOptions = {
-    series: [{
-      name: '2024',
-      data: [2.7, 2.2, 1.3, 2.5, 1, 2.5, 1.2, 1.2, 2.7, 1, 3.6, 2.1]
-    }, {
-      name: '2023',
-      data: [-2.3, -1.9, -1, -2.1, -1.3, -2.2, -1.1, -2.3, -2.8, -1.1, -2.5, -1.5]
-    }],
+    series: [
+      {
+        name: '2024',
+        data: [2.7, 2.2, 1.3, 2.5, 1, 2.5, 1.2, 1.2, 2.7, 1, 3.6, 2.1],
+      },
+      {
+        name: '2023',
+        data: [-2.3, -1.9, -1, -2.1, -1.3, -2.2, -1.1, -2.3, -2.8, -1.1, -2.5, -1.5],
+      },
+    ],
     chart: {
       toolbar: {
-        show: false
+        show: false,
       },
       type: 'bar',
       fontFamily: 'inherit',
       foreColor: '#ADB0BB',
       height: 280,
       stacked: true,
-      offsetX: -15
+      offsetX: -15,
     },
     colors: ['var(--bs-primary)', 'var(--bs-info)'],
     plotOptions: {
@@ -28,14 +31,14 @@ const ExpensesChart = () => {
         columnWidth: '25%',
         borderRadius: 3,
         borderRadiusApplication: 'end',
-        borderRadiusWhenStacked: 'all'
-      }
+        borderRadiusWhenStacked: 'all',
+      },
     },
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     legend: {
-      show: false
+      show: false,
     },
     grid: {
       show: true,
@@ -44,39 +47,40 @@ const ExpensesChart = () => {
         top: -10,
         right: 0,
         bottom: -10,
-        left: 0
+        left: 0,
       },
       borderColor: 'rgba(0,0,0,0.05)',
       xaxis: {
         lines: {
-          show: true
-        }
+          show: true,
+        },
       },
       yaxis: {
         lines: {
-          show: false
-        }
-      }
+          show: false,
+        },
+      },
     },
     yaxis: {
       tickAmount: 4,
       labels: {
         formatter: function (val) {
-          return val + 'k';
-        }
-      }
+          return val + 'k'
+        },
+      },
     },
     xaxis: {
       axisBorder: {
-        show: false
+        show: false,
       },
       axisTicks: {
-        show: false
+        show: false,
       },
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    }
-  };
-  return <Card>
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    },
+  }
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>Expenses</CardTitle>
         <div className="flex-centered gap-1">
@@ -99,6 +103,7 @@ const ExpensesChart = () => {
           <ReactApexChart options={chartOptions} series={chartOptions.series} height={280} type="bar" className="apex-charts" />
         </div>
       </CardBody>
-    </Card>;
-};
-export default ExpensesChart;
+    </Card>
+  )
+}
+export default ExpensesChart

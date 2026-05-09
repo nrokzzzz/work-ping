@@ -1,10 +1,11 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllClipboards from './components/AllClipboards';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllClipboards from './components/AllClipboards'
 const Clipboard = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Form" title="Clipboard" />
       <PageMetaData title="Clipboard" />
 
@@ -13,18 +14,25 @@ const Clipboard = () => {
           <AllClipboards />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#copy-from-element',
-          label: 'Copy text from another element'
-        }, {
-          link: '#cut-from-element',
-          label: 'Cut text from another element'
-        }, {
-          link: '#copy-from-attribute',
-          label: 'Copy text from attribute'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#copy-from-element',
+                label: 'Copy text from another element',
+              },
+              {
+                link: '#cut-from-element',
+                label: 'Cut text from another element',
+              },
+              {
+                link: '#copy-from-attribute',
+                label: 'Copy text from attribute',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Clipboard;
+    </>
+  )
+}
+export default Clipboard

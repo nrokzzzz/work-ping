@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react';
-import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap';
-import { currency } from '@/context/constants';
-import { getAllTransactions } from '@/helpers/data';
+import { useEffect, useState } from 'react'
+import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
+import { currency } from '@/context/constants'
+import { getAllTransactions } from '@/helpers/data'
 const Transactions = () => {
-  const [transactionsData, setTransactionsData] = useState();
+  const [transactionsData, setTransactionsData] = useState()
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllTransactions();
-      setTransactionsData(data);
-    };
-    fetchData();
-  }, []);
-  return <Card>
+      const data = await getAllTransactions()
+      setTransactionsData(data)
+    }
+    fetchData()
+  }, [])
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>Recent Transactions</CardTitle>
         <Button variant="light" size="sm">
@@ -31,7 +32,8 @@ const Transactions = () => {
               </tr>
             </thead>
             <tbody>
-              {transactionsData?.slice(0, 5).map((transaction, idx) => <tr key={idx}>
+              {transactionsData?.slice(0, 5).map((transaction, idx) => (
+                <tr key={idx}>
                   <td>#{transaction.id}</td>
                   <td>{new Date(transaction.date).toDateString()}</td>
                   <td>
@@ -42,11 +44,13 @@ const Transactions = () => {
                     <span className={`badge bg-${transaction.status === 'Dr.' ? 'danger' : 'success'}`}>{transaction.status}</span>
                   </td>
                   <td>{transaction.description}</td>
-                </tr>)}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </CardBody>
-    </Card>;
-};
-export default Transactions;
+    </Card>
+  )
+}
+export default Transactions

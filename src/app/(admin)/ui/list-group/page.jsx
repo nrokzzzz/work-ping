@@ -1,14 +1,20 @@
-import { ListGroup as BSListGroup, Badge, Col, ListGroupItem, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
+import { ListGroup as BSListGroup, Badge, Col, ListGroupItem, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
 const Basic = () => {
-  return <ComponentContainerCard id="basic" title="Basic" description={<>
+  return (
+    <ComponentContainerCard
+      id="basic"
+      title="Basic"
+      description={
+        <>
           The most basic list group is an unordered list with list items and the proper classes. Build upon it with the options that follow, or with
           your own CSS as needed.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <BSListGroup>
@@ -20,12 +26,19 @@ const Basic = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ActiveItems = () => {
-  return <ComponentContainerCard id="active" title="Active items" description={<>
+  return (
+    <ComponentContainerCard
+      id="active"
+      title="Active items"
+      description={
+        <>
           Add <code>.active</code> to a <code>.list-group-item</code> to indicate the current active selection.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <BSListGroup>
@@ -37,13 +50,20 @@ const ActiveItems = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DisabledItems = () => {
-  return <ComponentContainerCard id="disabled" title="Disabled items" description={<>
+  return (
+    <ComponentContainerCard
+      id="disabled"
+      title="Disabled items"
+      description={
+        <>
           Add <code>.disabled</code> to a <code>.list-group-item</code> to make it <em>appear</em> disabled. Note that some elements with{' '}
           <code>.disabled</code> will also require custom JavaScript to fully disable their click events (e.g., links).
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <BSListGroup>
@@ -55,15 +75,22 @@ const DisabledItems = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const LinksButtons = () => {
-  return <ComponentContainerCard id="links-buttons" title="Links and buttons" description={<>
+  return (
+    <ComponentContainerCard
+      id="links-buttons"
+      title="Links and buttons"
+      description={
+        <>
           {' '}
           Use <code>&lt;a&gt;</code>s or <code>&lt;button&gt;</code>s to create <em>actionable</em> list group items with hover, disabled, and active
           states by adding <code>.list-group-item-action</code>. We separate these pseudo-classes to ensure list groups made of non-interactive
           elements (like <code>&lt;li&gt;</code>s or <code>&lt;div&gt;</code>s) don’t provide a click or tap affordance.
-        </>}>
+        </>
+      }>
       <Row>
         <Col md={6}>
           <BSListGroup>
@@ -98,13 +125,20 @@ const LinksButtons = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const FlushListGroup = () => {
-  return <ComponentContainerCard id="flush" title="Flush" description={<>
+  return (
+    <ComponentContainerCard
+      id="flush"
+      title="Flush"
+      description={
+        <>
           Add <code>.list-group-flush</code> to remove some borders and rounded corners to render list group items edge-to-edge in a parent container
           (e.g., cards).
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <BSListGroup variant="flush">
@@ -116,14 +150,21 @@ const FlushListGroup = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const NumberedListGroup = () => {
-  return <ComponentContainerCard id="numbered" title="Numbered" description={<>
+  return (
+    <ComponentContainerCard
+      id="numbered"
+      title="Numbered"
+      description={
+        <>
           Add the <code>.list-group-numbered</code> modifier class (and optionally use an <code>&lt;ol&gt;</code> element) to opt into numbered list
           group items. Numbers are generated via CSS (as opposed to a <code>&lt;ol&gt;</code>s default browser styling) for better placement inside
           list group items and to allow for better customization.
-        </>}>
+        </>
+      }>
       <p className="taext-muted">
         Numbers are generated by
         <code>counter-reset</code> on the
@@ -171,10 +212,16 @@ const NumberedListGroup = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const HorizontalListGroup = () => {
-  return <ComponentContainerCard id="horizontal" title="Horizontal" description={<>
+  return (
+    <ComponentContainerCard
+      id="horizontal"
+      title="Horizontal"
+      description={
+        <>
           {' '}
           Add <code>.list-group-horizontal</code> to change the layout of list group items from vertical to horizontal across all breakpoints.
           Alternatively, choose a responsive variant{' '}
@@ -183,7 +230,8 @@ const HorizontalListGroup = () => {
           </code>{' '}
           to make a list group horizontal starting at that breakpoint’s <code>min-width</code>. Currently{' '}
           <strong>horizontal list groups cannot be combined with flush list groups.</strong>
-        </>}>
+        </>
+      }>
       <p className="text-muted">
         <strong>ProTip:</strong> Want equal-width list group items when horizontal? Add
         <code>.flex-fill</code> to each list group item.
@@ -229,10 +277,15 @@ const HorizontalListGroup = () => {
           </div>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ContextualListGroup = () => {
-  return <ComponentContainerCard id="contextual-classes" title="Contextual classes" description={<>Use contextual classes to style list items with a stateful background and color.</>}>
+  return (
+    <ComponentContainerCard
+      id="contextual-classes"
+      title="Contextual classes"
+      description={<>Use contextual classes to style list items with a stateful background and color.</>}>
       <Row>
         <Col lg={6}>
           <BSListGroup>
@@ -248,12 +301,19 @@ const ContextualListGroup = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const CustomContentListGroup = () => {
-  return <ComponentContainerCard id="custom-content" title="Custom content" description={<>
+  return (
+    <ComponentContainerCard
+      id="custom-content"
+      title="Custom content"
+      description={
+        <>
           Add nearly any HTML within, even for linked list groups like the one below, with the help of <Link to="">flexbox utilities</Link>.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <BSListGroup>
@@ -284,13 +344,20 @@ const CustomContentListGroup = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const CheckboxesAndRadiosListGroup = () => {
-  return <ComponentContainerCard id="checkboxes-radios" title="Checkboxes and radios" description={<>
+  return (
+    <ComponentContainerCard
+      id="checkboxes-radios"
+      title="Checkboxes and radios"
+      description={
+        <>
           Place Bootstrap’s checkboxes and radios within list group items and customize as needed. You can use them without <code>&lt;label&gt;</code>
           s, but please remember to include an <code>aria-label</code> attribute and value for accessibility.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <BSListGroup>
@@ -315,10 +382,12 @@ const CheckboxesAndRadiosListGroup = () => {
           </BSListGroup>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ListGroup = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Base UI" title="List Group" />
       <PageMetaData title="List Group" />
 
@@ -337,39 +406,53 @@ const ListGroup = () => {
         </Col>
 
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#basic',
-          label: 'Basic'
-        }, {
-          link: '#active',
-          label: 'Active items'
-        }, {
-          link: '#disabled',
-          label: 'Disabled items'
-        }, {
-          link: '#links-buttons',
-          label: 'Links and buttons'
-        }, {
-          link: '#flush',
-          label: 'Flush'
-        }, {
-          link: '#numbered',
-          label: 'Numbered'
-        }, {
-          link: '#horizontal',
-          label: 'Horizontal'
-        }, {
-          link: '#contextual-classes',
-          label: 'Contextual classes'
-        }, {
-          link: '#custom-content',
-          label: 'Custom content'
-        }, {
-          link: '#checkboxes-radios',
-          label: 'Checkboxes and Radios'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#basic',
+                label: 'Basic',
+              },
+              {
+                link: '#active',
+                label: 'Active items',
+              },
+              {
+                link: '#disabled',
+                label: 'Disabled items',
+              },
+              {
+                link: '#links-buttons',
+                label: 'Links and buttons',
+              },
+              {
+                link: '#flush',
+                label: 'Flush',
+              },
+              {
+                link: '#numbered',
+                label: 'Numbered',
+              },
+              {
+                link: '#horizontal',
+                label: 'Horizontal',
+              },
+              {
+                link: '#contextual-classes',
+                label: 'Contextual classes',
+              },
+              {
+                link: '#custom-content',
+                label: 'Custom content',
+              },
+              {
+                link: '#checkboxes-radios',
+                label: 'Checkboxes and Radios',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default ListGroup;
+    </>
+  )
+}
+export default ListGroup

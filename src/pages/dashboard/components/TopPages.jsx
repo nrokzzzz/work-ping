@@ -1,8 +1,9 @@
-import { Button, Card, CardHeader, CardTitle, Table } from 'react-bootstrap';
-import { pagesList } from '../data';
-import { Link } from 'react-router-dom';
+import { Button, Card, CardHeader, CardTitle, Table } from 'react-bootstrap'
+import { pagesList } from '../data'
+import { Link } from 'react-router-dom'
 const TopPages = () => {
-  return <Card>
+  return (
+    <Card>
       <CardHeader className="d-flex align-items-center justify-content-between gap-2">
         <CardTitle className="flex-grow-1">Top Pages</CardTitle>
         <div>
@@ -22,7 +23,8 @@ const TopPages = () => {
             </tr>
           </thead>
           <tbody>
-            {pagesList.map((page, idx) => <tr key={idx}>
+            {pagesList.map((page, idx) => (
+              <tr key={idx}>
                 <td>
                   <Link to="" className="text-muted">
                     {page.path}
@@ -33,10 +35,12 @@ const TopPages = () => {
                 <td>
                   <span className={`badge badge-soft-${page.variant}`}>{page.rate}%</span>
                 </td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </Card>;
-};
-export default TopPages;
+    </Card>
+  )
+}
+export default TopPages

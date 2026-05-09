@@ -1,19 +1,11 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import { currency } from '@/context/constants';
-import { statData } from '../data';
-const StateCard = ({
-  stat
-}) => {
-  const {
-    change,
-    changeColor,
-    icon,
-    iconColor,
-    name,
-    amount
-  } = stat;
-  return <Card>
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import { currency } from '@/context/constants'
+import { statData } from '../data'
+const StateCard = ({ stat }) => {
+  const { change, changeColor, icon, iconColor, name, amount } = stat
+  return (
+    <Card>
       <CardBody>
         <div className="d-flex align-items-center justify-content-between">
           <div>
@@ -33,13 +25,18 @@ const StateCard = ({
           </div>
         </div>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const Stats = () => {
-  return <Row>
-      {statData.map((stat, idx) => <Col key={idx}>
+  return (
+    <Row>
+      {statData.map((stat, idx) => (
+        <Col key={idx}>
           <StateCard stat={stat} />
-        </Col>)}
-    </Row>;
-};
-export default Stats;
+        </Col>
+      ))}
+    </Row>
+  )
+}
+export default Stats

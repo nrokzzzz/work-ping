@@ -1,8 +1,8 @@
-import { Col } from 'react-bootstrap';
-import useCalendar from '../useCalendar';
-import AddEditEvent from './AddEditEvent';
-import Calendar from './Calendar';
-import SidePanel from './SidePanel';
+import { Col } from 'react-bootstrap'
+import useCalendar from '../useCalendar'
+import AddEditEvent from './AddEditEvent'
+import Calendar from './Calendar'
+import SidePanel from './SidePanel'
 const CalendarPage = () => {
   const {
     createNewEvent,
@@ -17,9 +17,10 @@ const CalendarPage = () => {
     onEventDrop,
     onRemoveEvent,
     onUpdateEvent,
-    show
-  } = useCalendar();
-  return <>
+    show,
+  } = useCalendar()
+  return (
+    <>
       <Col xl={3}>
         <SidePanel createNewEvent={createNewEvent} />
       </Col>
@@ -28,7 +29,16 @@ const CalendarPage = () => {
         <Calendar events={events} onDateClick={onDateClick} onDrop={onDrop} onEventClick={onEventClick} onEventDrop={onEventDrop} />
       </Col>
 
-      <AddEditEvent eventData={eventData} isEditable={isEditable} onAddEvent={onAddEvent} onRemoveEvent={onRemoveEvent} onUpdateEvent={onUpdateEvent} open={show} toggle={onCloseModal} />
-    </>;
-};
-export default CalendarPage;
+      <AddEditEvent
+        eventData={eventData}
+        isEditable={isEditable}
+        onAddEvent={onAddEvent}
+        onRemoveEvent={onRemoveEvent}
+        onUpdateEvent={onUpdateEvent}
+        open={show}
+        toggle={onCloseModal}
+      />
+    </>
+  )
+}
+export default CalendarPage

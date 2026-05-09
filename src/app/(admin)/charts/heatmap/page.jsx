@@ -1,10 +1,11 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllHeatmapCharts from './components/AllHeatmapCharts';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllHeatmapCharts from './components/AllHeatmapCharts'
 const HeatmapCharts = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Charts" title="Heatmap Charts" />
       <PageMetaData title="Heatmap Charts" />
 
@@ -13,21 +14,29 @@ const HeatmapCharts = () => {
           <AllHeatmapCharts />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#basic',
-          label: 'Basic Heatmap - Single Series'
-        }, {
-          link: '#multiple-series',
-          label: 'Heatmap - Multiple Series'
-        }, {
-          link: '#color-range',
-          label: 'Heatmap - Color Range'
-        }, {
-          link: '#rounded',
-          label: 'Heatmap - Range without Shades'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#basic',
+                label: 'Basic Heatmap - Single Series',
+              },
+              {
+                link: '#multiple-series',
+                label: 'Heatmap - Multiple Series',
+              },
+              {
+                link: '#color-range',
+                label: 'Heatmap - Color Range',
+              },
+              {
+                link: '#rounded',
+                label: 'Heatmap - Range without Shades',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default HeatmapCharts;
+    </>
+  )
+}
+export default HeatmapCharts

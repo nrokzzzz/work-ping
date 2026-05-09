@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react"
-import { Modal, Card, CardBody, Row, Col, Button } from "react-bootstrap"
-import { Link } from "react-router-dom"
-import IconifyIcon from "@/components/wrappers/IconifyIcon"
-import axiosClient from "@/helpers/httpClient"
-import toast from "react-hot-toast"
-import { use2FA } from "@/context/TwoFAContext"
+import { useEffect, useState } from 'react'
+import { Modal, Card, CardBody, Row, Col, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import axiosClient from '@/helpers/httpClient'
+import toast from 'react-hot-toast'
+import { use2FA } from '@/context/TwoFAContext'
 
 const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organizationId, onSuccess }) => {
-
   const { require2FA } = use2FA()
 
   const itemsPerPage = 10
@@ -19,8 +18,8 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
-  const [search, setSearch] = useState("")
-  const [appliedSearch, setAppliedSearch] = useState("")
+  const [search, setSearch] = useState('')
+  const [appliedSearch, setAppliedSearch] = useState('')
 
   const [selectedIds, setSelectedIds] = useState(new Set())
 
@@ -28,12 +27,9 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
     setLoading(true)
     try {
       const params = new URLSearchParams({ page, limit: itemsPerPage })
-      if (appliedSearch) params.append("search", appliedSearch)
+      if (appliedSearch) params.append('search', appliedSearch)
 
-      const res = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params}`,
-        { silent: true }
-      )
+      const res = await axiosClient.get(`/api/admin/get-all-employees/get-all-employees-by-page-number?${params}`, { silent: true })
 
       setEmployees(res.data?.data?.data || [])
       setTotalPages(res.data?.data?.totalPages || 0)
@@ -68,11 +64,7 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
     require2FA(async () => {
       setSubmitting(true)
       try {
-        await axiosClient.post(
-          '/api/admin/project/add-project-member',
-          { projectId, organizationId, members: [...selectedIds] },
-          { silent: true }
-        )
+        await axiosClient.post('/api/admin/project/add-project-member', { projectId, organizationId, members: [...selectedIds] }, { silent: true })
         toast.success('Member(s) added to project successfully!')
         setSelectedIds(new Set())
         if (onSuccess) onSuccess()
@@ -86,13 +78,10 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
   }
 
   const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
-    if (currentPage <= 2)
-      return [1, 2, 3, "...", totalPages]
-    if (currentPage >= totalPages - 1)
-      return [1, "...", totalPages - 2, totalPages - 1, totalPages]
-    return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages]
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
+    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
   const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
@@ -100,7 +89,6 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
 
   return (
     <Modal show={show} onHide={handleClose} size="xl" centered scrollable enforceFocus={false}>
-
       <Modal.Header closeButton>
         <div className="d-flex align-items-center justify-content-between w-100">
           <Modal.Title>Employees List</Modal.Title>
@@ -113,11 +101,11 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
           <CardBody>
             <Row className="g-2 mb-3">
               <Col xs={12} md={9}>
-                <div className="position-relative" style={{ maxWidth: "400px" }}>
+                <div className="position-relative" style={{ maxWidth: '400px' }}>
                   <IconifyIcon
                     icon="bx:search-alt"
                     className="position-absolute"
-                    style={{ left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 18 }}
+                    style={{ left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 18 }}
                   />
                   <input
                     type="search"
@@ -129,7 +117,9 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
                 </div>
               </Col>
               <Col xs={12} md={3}>
-                <Button className="w-100" onClick={handleApply}>Search</Button>
+                <Button className="w-100" onClick={handleApply}>
+                  Search
+                </Button>
               </Col>
             </Row>
 
@@ -147,18 +137,22 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
                 </thead>
                 <tbody>
                   {loading ? (
-                    <tr><td colSpan="6" className="text-center">Loading...</td></tr>
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        Loading...
+                      </td>
+                    </tr>
                   ) : employees.length === 0 ? (
-                    <tr><td colSpan="6" className="text-center">No Records</td></tr>
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        No Records
+                      </td>
+                    </tr>
                   ) : (
                     employees.map((emp) => (
                       <tr key={emp._id}>
                         <td>
-                          <input
-                            type="checkbox"
-                            checked={selectedIds.has(emp._id)}
-                            onChange={(e) => handleSelect(emp._id, e.target.checked)}
-                          />
+                          <input type="checkbox" checked={selectedIds.has(emp._id)} onChange={(e) => handleSelect(emp._id, e.target.checked)} />
                         </td>
                         <td>{emp.employeeId || '--'}</td>
                         <td>{emp.name || '--'}</td>
@@ -173,21 +167,43 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
             </div>
 
             <Row className="align-items-center mt-3">
-              <Col>Showing {start} to {end} of {totalRecords}</Col>
+              <Col>
+                Showing {start} to {end} of {totalRecords}
+              </Col>
               <Col xs="auto">
                 <ul className="pagination m-0">
-                  <li className={`page-item ${currentPage === 1 && "disabled"}`}>
-                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}>
+                  <li className={`page-item ${currentPage === 1 && 'disabled'}`}>
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (currentPage > 1) setCurrentPage(currentPage - 1)
+                      }}>
                       <IconifyIcon icon="bx:left-arrow-alt" />
                     </Link>
                   </li>
                   {getPages().map((p, i) => (
-                    <li key={i} className={`page-item ${currentPage === p ? "active" : ""} ${p === "..." && "disabled"}`}>
-                      <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === "number") setCurrentPage(p) }}>{p}</Link>
+                    <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' && 'disabled'}`}>
+                      <Link
+                        to="#"
+                        className="page-link"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          if (typeof p === 'number') setCurrentPage(p)
+                        }}>
+                        {p}
+                      </Link>
                     </li>
                   ))}
-                  <li className={`page-item ${currentPage === totalPages && "disabled"}`}>
-                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}>
+                  <li className={`page-item ${currentPage === totalPages && 'disabled'}`}>
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+                      }}>
                       <IconifyIcon icon="bx:right-arrow-alt" />
                     </Link>
                   </li>
@@ -202,16 +218,13 @@ const EmployeesWindow = ({ show, handleClose, openExcel, projectId, organization
         <span className="text-muted small me-auto">
           {selectedIds.size > 0 ? `${selectedIds.size} employee(s) selected` : 'No employees selected'}
         </span>
-        <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-        <Button
-          variant="primary"
-          disabled={selectedIds.size === 0 || submitting}
-          onClick={handleSubmit}
-        >
+        <Button variant="secondary" onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button variant="primary" disabled={selectedIds.size === 0 || submitting} onClick={handleSubmit}>
           {submitting ? 'Adding...' : 'Add to Project'}
         </Button>
       </Modal.Footer>
-
     </Modal>
   )
 }

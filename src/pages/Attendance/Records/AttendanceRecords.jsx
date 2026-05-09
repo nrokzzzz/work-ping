@@ -5,8 +5,7 @@ import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
 import PageMetaData from '@/components/PageTitle'
 import axiosClient from '@/helpers/httpClient'
 
-const toYmd = (d = new Date()) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+const toYmd = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
 const fmtTime = (iso) => {
   if (!iso) return '--'
@@ -37,8 +36,15 @@ const AttendanceRecords = () => {
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
 
-  useEffect(() => { fetchInit() }, [])
-  useEffect(() => { if (orgId) { fetchProjects(orgId); fetchRecords() } }, [orgId, teamId, projectId, date])
+  useEffect(() => {
+    fetchInit()
+  }, [])
+  useEffect(() => {
+    if (orgId) {
+      fetchProjects(orgId)
+      fetchRecords()
+    }
+  }, [orgId, teamId, projectId, date])
 
   const fetchInit = async () => {
     try {
@@ -46,8 +52,8 @@ const AttendanceRecords = () => {
         axiosClient.get('/api/admin/organization/get-all-organization-ids', { silent: true }),
         axiosClient.get('/api/admin/get-all-employees/get-organization-info', { silent: true }),
       ])
-      const orgs = orgIdsRes.status === 'fulfilled' ? orgIdsRes.value?.data?.data ?? [] : []
-      const info = orgInfoRes.status === 'fulfilled' ? orgInfoRes.value?.data?.data ?? {} : {}
+      const orgs = orgIdsRes.status === 'fulfilled' ? (orgIdsRes.value?.data?.data ?? []) : []
+      const info = orgInfoRes.status === 'fulfilled' ? (orgInfoRes.value?.data?.data ?? {}) : {}
       setOrganizations(orgs)
       setOrgInfo(info)
       if (orgs.length > 0) setOrgId(orgs[0].organizationId)
@@ -61,7 +67,9 @@ const AttendanceRecords = () => {
         silent: true,
       })
       setProjects(res.data?.data?.projects ?? res.data?.data ?? [])
-    } catch { setProjects([]) }
+    } catch {
+      setProjects([])
+    }
   }
 
   const fetchRecords = useCallback(async () => {
@@ -91,30 +99,27 @@ const AttendanceRecords = () => {
     }
   }, [orgId, teamId, date])
 
-  const selectedOrgName = useMemo(() =>
-    organizations.find((o) => o.organizationId === orgId)?.name ?? '',
-    [organizations, orgId]
-  )
+  const selectedOrgName = useMemo(() => organizations.find((o) => o.organizationId === orgId)?.name ?? '', [organizations, orgId])
 
   const teams = useMemo(() => {
     const entry = Object.entries(orgInfo).find(([name]) => name === selectedOrgName)
-    return entry ? entry[1]?.teams ?? [] : []
+    return entry ? (entry[1]?.teams ?? []) : []
   }, [orgInfo, selectedOrgName])
 
-  const filtered = useMemo(() =>
-    statusFilter === 'all' ? records : records.filter((r) => r.status === statusFilter),
-    [records, statusFilter]
-  )
+  const filtered = useMemo(() => (statusFilter === 'all' ? records : records.filter((r) => r.status === statusFilter)), [records, statusFilter])
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
-  const summary = useMemo(() => ({
-    present: records.filter((r) => r.status === 'present').length,
-    absent: records.filter((r) => r.status === 'absent').length,
-    late: records.filter((r) => r.status === 'late').length,
-    halfDay: records.filter((r) => r.status === 'halfDay').length,
-  }), [records])
+  const summary = useMemo(
+    () => ({
+      present: records.filter((r) => r.status === 'present').length,
+      absent: records.filter((r) => r.status === 'absent').length,
+      late: records.filter((r) => r.status === 'late').length,
+      halfDay: records.filter((r) => r.status === 'halfDay').length,
+    }),
+    [records],
+  )
 
   return (
     <>
@@ -132,17 +137,27 @@ const AttendanceRecords = () => {
             <Card
               className="border-0 h-100"
               style={{ boxShadow: '0 4px 14px rgba(15,23,42,0.07)', cursor: 'pointer' }}
-              onClick={() => { setStatusFilter(statusFilter === key ? 'all' : key); setPage(1) }}
-            >
+              onClick={() => {
+                setStatusFilter(statusFilter === key ? 'all' : key)
+                setPage(1)
+              }}>
               <CardBody className="d-flex align-items-center gap-3">
-                <div className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 50, height: 50, background: color + '20' }}>
+                <div
+                  className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                  style={{ width: 50, height: 50, background: color + '20' }}>
                   <IconifyIcon icon={icon} style={{ fontSize: 26, color }} />
                 </div>
                 <div>
                   <p className="mb-0 text-muted small fw-semibold text-uppercase">{label}</p>
-                  <h3 className="mb-0 fw-bold" style={{ color }}>{summary[key]}</h3>
+                  <h3 className="mb-0 fw-bold" style={{ color }}>
+                    {summary[key]}
+                  </h3>
                 </div>
-                {statusFilter === key && <Badge bg="primary" pill className="ms-auto">Active</Badge>}
+                {statusFilter === key && (
+                  <Badge bg="primary" pill className="ms-auto">
+                    Active
+                  </Badge>
+                )}
               </CardBody>
             </Card>
           </Col>
@@ -174,10 +189,15 @@ const AttendanceRecords = () => {
               className="form-select form-select-sm"
               style={{ width: 'auto', minWidth: 190 }}
               value={orgId}
-              onChange={(e) => { setOrgId(e.target.value); setTeamId('all'); setProjectId('all') }}
-            >
+              onChange={(e) => {
+                setOrgId(e.target.value)
+                setTeamId('all')
+                setProjectId('all')
+              }}>
               {organizations.map((o) => (
-                <option key={o.organizationId} value={o.organizationId}>{o.name}</option>
+                <option key={o.organizationId} value={o.organizationId}>
+                  {o.name}
+                </option>
               ))}
             </select>
 
@@ -185,11 +205,16 @@ const AttendanceRecords = () => {
               className="form-select form-select-sm"
               style={{ width: 'auto', minWidth: 160 }}
               value={projectId}
-              onChange={(e) => { setProjectId(e.target.value); setTeamId('all'); setPage(1) }}
-            >
+              onChange={(e) => {
+                setProjectId(e.target.value)
+                setTeamId('all')
+                setPage(1)
+              }}>
               <option value="all">All Projects</option>
               {projects.map((p) => (
-                <option key={p._id} value={p._id}>{p.name}</option>
+                <option key={p._id} value={p._id}>
+                  {p.name}
+                </option>
               ))}
             </select>
 
@@ -197,11 +222,16 @@ const AttendanceRecords = () => {
               className="form-select form-select-sm"
               style={{ width: 'auto', minWidth: 160 }}
               value={teamId}
-              onChange={(e) => { setTeamId(e.target.value); setProjectId('all'); setPage(1) }}
-            >
+              onChange={(e) => {
+                setTeamId(e.target.value)
+                setProjectId('all')
+                setPage(1)
+              }}>
               <option value="all">All Teams</option>
               {teams.map((t) => (
-                <option key={t._id ?? t.teamId} value={t._id ?? t.teamId}>{t.teamName ?? t.name}</option>
+                <option key={t._id ?? t.teamId} value={t._id ?? t.teamId}>
+                  {t.teamName ?? t.name}
+                </option>
               ))}
             </select>
 
@@ -209,8 +239,10 @@ const AttendanceRecords = () => {
               className="form-select form-select-sm"
               style={{ width: 'auto', minWidth: 130 }}
               value={statusFilter}
-              onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}
-            >
+              onChange={(e) => {
+                setStatusFilter(e.target.value)
+                setPage(1)
+              }}>
               <option value="all">All Status</option>
               <option value="present">Present</option>
               <option value="absent">Absent</option>
@@ -238,7 +270,11 @@ const AttendanceRecords = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={7} className="text-center py-5"><Spinner animation="border" /></td></tr>
+                  <tr>
+                    <td colSpan={7} className="text-center py-5">
+                      <Spinner animation="border" />
+                    </td>
+                  </tr>
                 ) : paginated.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="text-center text-muted py-5">
@@ -255,9 +291,7 @@ const AttendanceRecords = () => {
                       </td>
                       <td>{rec.teamName ?? '--'}</td>
                       <td>
-                        <Badge bg={STATUS_COLOR[rec.status] ?? 'secondary'}>
-                          {rec.status === 'halfDay' ? 'Half Day' : rec.status}
-                        </Badge>
+                        <Badge bg={STATUS_COLOR[rec.status] ?? 'secondary'}>{rec.status === 'halfDay' ? 'Half Day' : rec.status}</Badge>
                       </td>
                       <td>{fmtTime(rec.checkIn)}</td>
                       <td>{fmtTime(rec.checkOut)}</td>

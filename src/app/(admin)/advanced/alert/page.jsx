@@ -1,10 +1,11 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllSweetAlerts from './Components/AllSweetAlerts';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllSweetAlerts from './Components/AllSweetAlerts'
 const SweetAlerts = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Advanced UI" title="Sweet Alert" />
       <PageMetaData title="Sweet Alert" />
       <Row>
@@ -25,27 +26,37 @@ const SweetAlerts = () => {
           <AllSweetAlerts />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#overview',
-          label: 'Overview'
-        }, {
-          link: '#basic',
-          label: 'Basic'
-        }, {
-          link: '#title',
-          label: 'A Title with a Text Under'
-        }, {
-          link: '#message',
-          label: 'Message'
-        }, {
-          link: '#longcontent',
-          label: 'long content Images Message'
-        }, {
-          link: '#parameter',
-          label: 'Parameter'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#overview',
+                label: 'Overview',
+              },
+              {
+                link: '#basic',
+                label: 'Basic',
+              },
+              {
+                link: '#title',
+                label: 'A Title with a Text Under',
+              },
+              {
+                link: '#message',
+                label: 'Message',
+              },
+              {
+                link: '#longcontent',
+                label: 'long content Images Message',
+              },
+              {
+                link: '#parameter',
+                label: 'Parameter',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default SweetAlerts;
+    </>
+  )
+}
+export default SweetAlerts

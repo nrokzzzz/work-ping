@@ -74,11 +74,8 @@ const AreaPinPicker = ({ pins = [], onPinsChange, initialCenter = DEFAULT_CENTER
   }, [pins, initialCenter])
 
   const safePins = useMemo(
-    () =>
-      (Array.isArray(pins) ? pins : []).filter(
-        (pin) => pin && Number.isFinite(pin.lat) && Number.isFinite(pin.lng)
-      ),
-    [pins]
+    () => (Array.isArray(pins) ? pins : []).filter((pin) => pin && Number.isFinite(pin.lat) && Number.isFinite(pin.lng)),
+    [pins],
   )
 
   const handleMapClick = (point) => {
@@ -135,9 +132,7 @@ const AreaPinPicker = ({ pins = [], onPinsChange, initialCenter = DEFAULT_CENTER
         } else {
           setLocationStatus({
             type: 'success',
-            message: accuracy > 0
-              ? `Centered to your location (±${accuracy}m).`
-              : 'Centered to your location.',
+            message: accuracy > 0 ? `Centered to your location (±${accuracy}m).` : 'Centered to your location.',
           })
         }
         setIsLocating(false)
@@ -161,7 +156,7 @@ const AreaPinPicker = ({ pins = [], onPinsChange, initialCenter = DEFAULT_CENTER
         enableHighAccuracy: true,
         timeout: 10000,
         maximumAge: 0,
-      }
+      },
     )
   }
 
@@ -188,12 +183,11 @@ const AreaPinPicker = ({ pins = [], onPinsChange, initialCenter = DEFAULT_CENTER
             if (pendingFocusRef.current) {
               focusMapOnLocation(pendingFocusRef.current)
             }
-          }}
-        >
+          }}>
           <LayersControl position="topright">
             <LayersControl.BaseLayer checked name="Satellite">
               <TileLayer
-                attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+                attribution="Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community"
                 url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
               />
             </LayersControl.BaseLayer>
@@ -223,14 +217,7 @@ const AreaPinPicker = ({ pins = [], onPinsChange, initialCenter = DEFAULT_CENTER
           ))}
 
           {safePins.length >= 3 && (
-            <Polygon
-              positions={safePins}
-              strokeColor="#2563eb"
-              strokeOpacity={0.9}
-              strokeWeight={2}
-              fillColor="#60a5fa"
-              fillOpacity={0.2}
-            />
+            <Polygon positions={safePins} strokeColor="#2563eb" strokeOpacity={0.9} strokeWeight={2} fillColor="#60a5fa" fillOpacity={0.2} />
           )}
         </MapContainer>
       </div>
@@ -261,8 +248,7 @@ const AreaPinPicker = ({ pins = [], onPinsChange, initialCenter = DEFAULT_CENTER
                 : locationStatus.type === 'success'
                   ? 'text-success'
                   : 'text-muted'
-          }`}
-        >
+          }`}>
           {locationStatus.message}
         </div>
       )}

@@ -1,6 +1,7 @@
-import { Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap';
+import { Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
 const PersonalInfo = () => {
-  return <Card>
+  return (
+    <Card>
       <CardHeader>
         <CardTitle as={'h5'}>Personal Info</CardTitle>
       </CardHeader>
@@ -60,6 +61,7 @@ const PersonalInfo = () => {
           </li>
         </ul>
       </CardBody>
-    </Card>;
-};
-export default PersonalInfo;
+    </Card>
+  )
+}
+export default PersonalInfo

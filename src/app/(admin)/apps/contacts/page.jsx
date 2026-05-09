@@ -1,20 +1,14 @@
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllCustomers } from '@/helpers/data';
-const ContactCard = ({
-  contact
-}) => {
-  const {
-    address,
-    name,
-    image,
-    phone
-  } = contact;
-  return <Card>
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllCustomers } from '@/helpers/data'
+const ContactCard = ({ contact }) => {
+  const { address, name, image, phone } = contact
+  return (
+    <Card>
       <CardBody>
         <div className="text-center">
           <img src={image} alt="avatar-1" className="img-fluid avatar-xl img-thumbnail rounded-circle avatar-border" />
@@ -38,25 +32,30 @@ const ContactCard = ({
           </Link>
         </div>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const Contacts = () => {
-  const [contactData, setContactData] = useState();
+  const [contactData, setContactData] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllCustomers();
-      setContactData(data);
-    })();
-  }, []);
-  return <>
+    ;(async () => {
+      const data = await getAllCustomers()
+      setContactData(data)
+    })()
+  }, [])
+  return (
+    <>
       <PageBreadcrumb subName="Apps" title="Contacts" />
       <PageMetaData title="Contacts" />
 
       <Row className="row-cols-1 row-cols-md-2 row-cols-xl-4 gx-3">
-        {contactData?.map((contact, idx) => <Col key={idx}>
+        {contactData?.map((contact, idx) => (
+          <Col key={idx}>
             <ContactCard contact={contact} />
-          </Col>)}
+          </Col>
+        ))}
       </Row>
-    </>;
-};
-export default Contacts;
+    </>
+  )
+}
+export default Contacts

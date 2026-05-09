@@ -1,27 +1,30 @@
-import ReactApexChart from 'react-apexcharts';
-import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap';
+import ReactApexChart from 'react-apexcharts'
+import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
 const OverviewChart = () => {
   const chartOptions = {
-    series: [{
-      name: 'Revenue',
-      type: 'area',
-      data: [34, 65, 46, 68, 49, 61, 42, 44, 78, 52, 63, 67]
-    }, {
-      name: 'Orders',
-      type: 'line',
-      data: [8, 12, 7, 17, 21, 11, 5, 9, 7, 29, 12, 35]
-    }],
+    series: [
+      {
+        name: 'Revenue',
+        type: 'area',
+        data: [34, 65, 46, 68, 49, 61, 42, 44, 78, 52, 63, 67],
+      },
+      {
+        name: 'Orders',
+        type: 'line',
+        data: [8, 12, 7, 17, 21, 11, 5, 9, 7, 29, 12, 35],
+      },
+    ],
     chart: {
       height: 369,
       type: 'line',
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     stroke: {
       dashArray: [0, 8],
       width: [2, 2],
-      curve: 'smooth'
+      curve: 'smooth',
     },
     fill: {
       opacity: [1, 1],
@@ -31,54 +34,54 @@ const OverviewChart = () => {
         inverseColors: false,
         opacityFrom: 0.5,
         opacityTo: 0,
-        stops: [0, 70]
-      }
+        stops: [0, 70],
+      },
     },
     markers: {
       size: [0, 0, 0],
       strokeWidth: 2,
       hover: {
-        size: 4
-      }
+        size: 4,
+      },
     },
     xaxis: {
       categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       axisTicks: {
-        show: false
+        show: false,
       },
       axisBorder: {
-        show: false
-      }
+        show: false,
+      },
     },
     yaxis: {
       min: 0,
       labels: {
         formatter: function (val) {
-          return val.toFixed(0) + 'k';
-        }
+          return val.toFixed(0) + 'k'
+        },
       },
       axisBorder: {
-        show: false
-      }
+        show: false,
+      },
     },
     grid: {
       show: true,
       xaxis: {
         lines: {
-          show: false
-        }
+          show: false,
+        },
       },
       yaxis: {
         lines: {
-          show: true
-        }
+          show: true,
+        },
       },
       padding: {
         top: 0,
         right: -2,
         bottom: 15,
-        left: 15
-      }
+        left: 15,
+      },
     },
     legend: {
       show: true,
@@ -88,41 +91,45 @@ const OverviewChart = () => {
       markers: {
         width: 9,
         height: 9,
-        radius: 6
+        radius: 6,
       },
       itemMargin: {
         horizontal: 10,
-        vertical: 0
-      }
+        vertical: 0,
+      },
     },
     plotOptions: {
       bar: {
         columnWidth: '30%',
         barHeight: '70%',
-        borderRadius: 3
-      }
+        borderRadius: 3,
+      },
     },
     colors: ['#7f56da', '#22c55e'],
     tooltip: {
       shared: true,
-      y: [{
-        formatter: function (y) {
-          if (typeof y !== 'undefined') {
-            return '$' + y.toFixed(2) + 'k';
-          }
-          return y;
-        }
-      }, {
-        formatter: function (y) {
-          if (typeof y !== 'undefined') {
-            return '$' + y.toFixed(2) + 'k';
-          }
-          return y;
-        }
-      }]
-    }
-  };
-  return <Card>
+      y: [
+        {
+          formatter: function (y) {
+            if (typeof y !== 'undefined') {
+              return '$' + y.toFixed(2) + 'k'
+            }
+            return y
+          },
+        },
+        {
+          formatter: function (y) {
+            if (typeof y !== 'undefined') {
+              return '$' + y.toFixed(2) + 'k'
+            }
+            return y
+          },
+        },
+      ],
+    },
+  }
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>Overview</CardTitle>
         <div className="icons-center gap-1">
@@ -145,6 +152,7 @@ const OverviewChart = () => {
           <ReactApexChart height={369} options={chartOptions} series={chartOptions.series} type="line" className="apex-charts" />
         </div>
       </CardBody>
-    </Card>;
-};
-export default OverviewChart;
+    </Card>
+  )
+}
+export default OverviewChart

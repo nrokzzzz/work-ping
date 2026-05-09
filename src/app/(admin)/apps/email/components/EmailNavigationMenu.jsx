@@ -1,35 +1,34 @@
-import { useEffect, useState } from 'react';
-import clsx from 'clsx';
-import { CardBody, Nav, NavLink, Offcanvas, ProgressBar } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient';
-import { useEmailContext } from '@/context/useEmailContext';
-import useViewPort from '@/hooks/useViewPort';
-import { getEmailsCategoryCount } from '@/helpers/data';
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { CardBody, Nav, NavLink, Offcanvas, ProgressBar } from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
+import { useEmailContext } from '@/context/useEmailContext'
+import useViewPort from '@/hooks/useViewPort'
+import { getEmailsCategoryCount } from '@/helpers/data'
 const NavBar = () => {
   const {
     activeLabel,
     changeActiveLabel,
-    composeEmail: {
-      toggle
-    }
-  } = useEmailContext();
+    composeEmail: { toggle },
+  } = useEmailContext()
   const [emailsCount, setEmailsCount] = useState({
     inbox: 0,
     starred: 0,
     draft: 0,
     sent: 0,
     deleted: 0,
-    important: 0
-  });
+    important: 0,
+  })
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getEmailsCategoryCount();
-      if (data) setEmailsCount(data);
-    };
-    fetchData();
-  }, []);
-  return <SimplebarReactClient className="card h-100 mb-0">
+      const data = await getEmailsCategoryCount()
+      if (data) setEmailsCount(data)
+    }
+    fetchData()
+  }, [])
+  return (
+    <SimplebarReactClient className="card h-100 mb-0">
       <CardBody className="card-body">
         <div className="d-grid">
           <button onClick={toggle} type="button" className="btn btn-danger">
@@ -69,27 +68,47 @@ const NavBar = () => {
             <span className="badge badge-soft-success float-end ms-2">{emailsCount.important}</span>
           </NavLink>
           <h6 className="text-uppercase mt-4">Labels</h6>
-          <NavLink as="span" role="button" onClick={() => changeActiveLabel('Social')} eventKey="Inbox" className={clsx('px-0 py-1 icons-center', {
-          'text-muted': activeLabel !== 'Social'
-        })}>
+          <NavLink
+            as="span"
+            role="button"
+            onClick={() => changeActiveLabel('Social')}
+            eventKey="Inbox"
+            className={clsx('px-0 py-1 icons-center', {
+              'text-muted': activeLabel !== 'Social',
+            })}>
             <IconifyIcon icon="bxs:circle" className="font-13 text-primary me-2" />
             Social
           </NavLink>
-          <NavLink as="span" role="button" onClick={() => changeActiveLabel('Promotions')} eventKey="Inbox" className={clsx('px-0 py-1 icons-center', {
-          'text-muted': activeLabel !== 'Promotions'
-        })}>
+          <NavLink
+            as="span"
+            role="button"
+            onClick={() => changeActiveLabel('Promotions')}
+            eventKey="Inbox"
+            className={clsx('px-0 py-1 icons-center', {
+              'text-muted': activeLabel !== 'Promotions',
+            })}>
             <IconifyIcon icon="bxs:circle" className="font-13 text-secondary me-2" />
             Promotions
           </NavLink>
-          <NavLink as="span" role="button" onClick={() => changeActiveLabel('Updates')} eventKey="Inbox" className={clsx('px-0 py-1 icons-center', {
-          'text-muted': activeLabel !== 'Updates'
-        })}>
+          <NavLink
+            as="span"
+            role="button"
+            onClick={() => changeActiveLabel('Updates')}
+            eventKey="Inbox"
+            className={clsx('px-0 py-1 icons-center', {
+              'text-muted': activeLabel !== 'Updates',
+            })}>
             <IconifyIcon icon="bxs:circle" className="font-13 text-info me-2" />
             Updates
           </NavLink>
-          <NavLink as="span" role="button" onClick={() => changeActiveLabel('Forums')} eventKey="Inbox" className={clsx('px-0 py-1 icons-center', {
-          'text-muted': activeLabel !== 'Forums'
-        })}>
+          <NavLink
+            as="span"
+            role="button"
+            onClick={() => changeActiveLabel('Forums')}
+            eventKey="Inbox"
+            className={clsx('px-0 py-1 icons-center', {
+              'text-muted': activeLabel !== 'Forums',
+            })}>
             <IconifyIcon icon="bxs:circle" className="font-13 text-success me-2" />
             Forums
           </NavLink>
@@ -103,20 +122,20 @@ const NavBar = () => {
           <p className="text-muted font-13 mb-0">7.02 GB (46%) of 15 GB used</p>
         </div>
       </CardBody>
-    </SimplebarReactClient>;
-};
+    </SimplebarReactClient>
+  )
+}
 const EmailNavigationMenu = () => {
+  const { width } = useViewPort()
   const {
-    width
-  } = useViewPort();
-  const {
-    navigationBar: {
-      open,
-      toggle
-    }
-  } = useEmailContext();
-  return width > 1400 ? <NavBar /> : <Offcanvas show={open} onHide={toggle} placement="start" tabIndex={-1} className="offcanvas-xxl h-100">
+    navigationBar: { open, toggle },
+  } = useEmailContext()
+  return width > 1400 ? (
+    <NavBar />
+  ) : (
+    <Offcanvas show={open} onHide={toggle} placement="start" tabIndex={-1} className="offcanvas-xxl h-100">
       <NavBar />
-    </Offcanvas>;
-};
-export default EmailNavigationMenu;
+    </Offcanvas>
+  )
+}
+export default EmailNavigationMenu

@@ -1,10 +1,11 @@
-import { Card, CardBody } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
+import { Card, CardBody } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
 const BoxIcons = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Icons" title="Boxicons" />
       <PageMetaData title="Vector Maps" />
 
@@ -400,6 +401,7 @@ const BoxIcons = () => {
           View All Icons
         </Link>
       </div>
-    </>;
-};
-export default BoxIcons;
+    </>
+  )
+}
+export default BoxIcons

@@ -1,26 +1,34 @@
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import ReactApexChart from 'react-apexcharts';
-import { dateTimeOpts, scatterWithImagesOpts, scatterXYOpts } from '../data';
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import ReactApexChart from 'react-apexcharts'
+import { dateTimeOpts, scatterWithImagesOpts, scatterXYOpts } from '../data'
 const ScatterXYChart = () => {
-  return <ComponentContainerCard id="basic" title="Scatter (XY) Chart">
+  return (
+    <ComponentContainerCard id="basic" title="Scatter (XY) Chart">
       <ReactApexChart height={380} options={scatterXYOpts} series={scatterXYOpts.series} type="scatter" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DatetimeScatterChart = () => {
-  return <ComponentContainerCard id="datetime" title="Scatter Chart - Datetime">
+  return (
+    <ComponentContainerCard id="datetime" title="Scatter Chart - Datetime">
       <ReactApexChart height={380} options={dateTimeOpts} series={dateTimeOpts.series} type="scatter" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ImagesChart = () => {
-  return <ComponentContainerCard id="images" title=" Scatter - Images">
+  return (
+    <ComponentContainerCard id="images" title=" Scatter - Images">
       <ReactApexChart height={380} options={scatterWithImagesOpts} series={scatterWithImagesOpts.series} type="scatter" />
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const AllScatterCharts = () => {
-  return <>
+  return (
+    <>
       <ScatterXYChart />
       <DatetimeScatterChart />
       <ImagesChart />
-    </>;
-};
-export default AllScatterCharts;
+    </>
+  )
+}
+export default AllScatterCharts

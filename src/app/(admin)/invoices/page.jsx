@@ -1,20 +1,21 @@
-import { useEffect, useState } from 'react';
-import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { currency } from '@/context/constants';
-import { getAllInvoices } from '@/helpers/data';
+import { useEffect, useState } from 'react'
+import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { currency } from '@/context/constants'
+import { getAllInvoices } from '@/helpers/data'
 const Invoices = () => {
-  const [allInvoices, setAllInvoices] = useState();
+  const [allInvoices, setAllInvoices] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllInvoices();
-      setAllInvoices(data);
-    })();
-  }, []);
-  return <>
+    ;(async () => {
+      const data = await getAllInvoices()
+      setAllInvoices(data)
+    })()
+  }, [])
+  return (
+    <>
       <PageBreadcrumb subName="Invoice" title="Invoices List" />
       <PageMetaData title="Invoices" />
 
@@ -53,7 +54,8 @@ const Invoices = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {allInvoices?.map((invoice, idx) => <tr key={idx}>
+                    {allInvoices?.map((invoice, idx) => (
+                      <tr key={idx}>
                         <td>
                           <Link to={`/invoices/${invoice.id}`} className="fw-medium">
                             #{invoice.id}
@@ -67,16 +69,15 @@ const Invoices = () => {
                             </div>
                           </div>
                         </td>
-                        <td>
-                          {invoice.customer && new Date(invoice.customer?.createdAt).toDateString()}&nbsp;
-                        </td>
+                        <td>{invoice.customer && new Date(invoice.customer?.createdAt).toDateString()}&nbsp;</td>
                         <td> {invoice.order && new Date(invoice.order?.createdAt).toDateString()}</td>
                         <td>
                           {currency}
                           {invoice.product?.price}
                         </td>
                         <td>
-                          <span className={`badge badge-soft-${invoice.order?.status === 'Cancelled' ? 'danger' : invoice.order?.status == 'Processing' ? 'warning' : 'success'}`}>
+                          <span
+                            className={`badge badge-soft-${invoice.order?.status === 'Cancelled' ? 'danger' : invoice.order?.status == 'Processing' ? 'warning' : 'success'}`}>
                             {invoice.order?.status}
                           </span>
                         </td>
@@ -89,7 +90,8 @@ const Invoices = () => {
                             <IconifyIcon icon="bx:trash" className="bx bx-trash fs-16" />
                           </Button>
                         </td>
-                      </tr>)}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -135,6 +137,7 @@ const Invoices = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default Invoices;
+    </>
+  )
+}
+export default Invoices

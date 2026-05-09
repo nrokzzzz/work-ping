@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState } from 'react'
 
 const TwoFAContext = createContext(undefined)
 
@@ -36,9 +36,8 @@ export const TwoFAProvider = ({ children }) => {
         showModal,
         require2FA,
         executeAction,
-        cancel
-      }}
-    >
+        cancel,
+      }}>
       {children}
     </TwoFAContext.Provider>
   )

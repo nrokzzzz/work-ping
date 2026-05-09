@@ -1,15 +1,16 @@
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import useModal from '@/hooks/useModal';
-import useToggle from '@/hooks/useToggle';
-import { useState } from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from 'react-bootstrap';
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import useModal from '@/hooks/useModal'
+import useToggle from '@/hooks/useToggle'
+import { useState } from 'react'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from 'react-bootstrap'
 const DefaultModal = () => {
-  const {
-    isTrue,
-    toggle
-  } = useToggle();
-  return <ComponentContainerCard id="default" title="Default Modals" description={<>Toggle a working modal demo by clicking the button below. It will slide down and fade in from the top of the page.</>}>
+  const { isTrue, toggle } = useToggle()
+  return (
+    <ComponentContainerCard
+      id="default"
+      title="Default Modals"
+      description={<>Toggle a working modal demo by clicking the button below. It will slide down and fade in from the top of the page.</>}>
       <Button variant="primary" type="button" onClick={toggle}>
         Launch demo modal
       </Button>
@@ -33,14 +34,16 @@ const DefaultModal = () => {
           </Button>
         </ModalFooter>
       </Modal>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const StaticBackdropModal = () => {
-  const {
-    isTrue,
-    toggle
-  } = useToggle();
-  return <ComponentContainerCard id="static-backdrop" title="Static Backdrop" description={<> When backdrop is set to static, the modal will not close when clicking outside of it. Click the button below to try it.</>}>
+  const { isTrue, toggle } = useToggle()
+  return (
+    <ComponentContainerCard
+      id="static-backdrop"
+      title="Static Backdrop"
+      description={<> When backdrop is set to static, the modal will not close when clicking outside of it. Click the button below to try it.</>}>
       <Button type="button" variant="primary" onClick={toggle}>
         Launch static backdrop modal
       </Button>
@@ -64,22 +67,23 @@ const StaticBackdropModal = () => {
           </Button>
         </ModalFooter>
       </Modal>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ScrollingModals = () => {
-  const {
-    isTrue: isModelOpenOne,
-    toggle: toggleModelOne
-  } = useToggle();
-  const {
-    isTrue: isModelOpenTwo,
-    toggle: toggleModelTwo
-  } = useToggle();
-  return <ComponentContainerCard id="scrolling-long-content" title="Scrolling Long Content" description={<>
+  const { isTrue: isModelOpenOne, toggle: toggleModelOne } = useToggle()
+  const { isTrue: isModelOpenTwo, toggle: toggleModelTwo } = useToggle()
+  return (
+    <ComponentContainerCard
+      id="scrolling-long-content"
+      title="Scrolling Long Content"
+      description={
+        <>
           {' '}
           When modals become too long for the user’s viewport or device, they scroll independent of the page itself. Try the demo below to see what we
           mean.
-        </>}>
+        </>
+      }>
       <div className="mb-3">
         <button type="button" className="btn btn-primary" onClick={toggleModelOne}>
           Launch demo modal
@@ -92,9 +96,10 @@ const ScrollingModals = () => {
             </h5>
             <button type="button" className="btn-close" onClick={toggleModelOne} />
           </ModalHeader>
-          <ModalBody style={{
-          minHeight: 1500
-        }}>
+          <ModalBody
+            style={{
+              minHeight: 1500,
+            }}>
             <p>
               This is some placeholder content to show the scrolling behavior for modals. Instead of repeating the text the modal, we use an inline
               style set a minimum height, thereby extending the length of the overall modal and demonstrating the overflow scrolling. When content
@@ -185,26 +190,22 @@ const ScrollingModals = () => {
           </Button>
         </ModalFooter>
       </Modal>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ModalPositions = () => {
-  const {
-    isTrue,
-    toggle
-  } = useToggle();
-  const {
-    isTrue: isOpenScrollableModel,
-    toggle: toggleScrollableModel
-  } = useToggle();
-  const {
-    isOpen,
-    className,
-    toggleModal,
-    openModalWithClass
-  } = useModal();
-  return <ComponentContainerCard id="modal-position" title="Modal Position" description={<>
+  const { isTrue, toggle } = useToggle()
+  const { isTrue: isOpenScrollableModel, toggle: toggleScrollableModel } = useToggle()
+  const { isOpen, className, toggleModal, openModalWithClass } = useModal()
+  return (
+    <ComponentContainerCard
+      id="modal-position"
+      title="Modal Position"
+      description={
+        <>
           Add <code>.modal-dialog-centered</code> to <code>.modal-dialog</code> to vertically center the Modal
-        </>}>
+        </>
+      }>
       <div className="mb-3">
         <div className="d-flex flex-wrap gap-2">
           <Button variant="primary" type="button" onClick={toggle}>
@@ -307,22 +308,23 @@ const ModalPositions = () => {
           </ModalFooter>
         </Modal>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ToggleBetweenModals = () => {
-  const {
-    isTrue: isOpen,
-    toggle: toggleModal
-  } = useToggle();
-  const {
-    isTrue: isNextOpen,
-    toggle: toggleNextModal
-  } = useToggle();
-  return <ComponentContainerCard id="toggle-between-modals" title="Toggle Between Modals" description={<>
+  const { isTrue: isOpen, toggle: toggleModal } = useToggle()
+  const { isTrue: isNextOpen, toggle: toggleNextModal } = useToggle()
+  return (
+    <ComponentContainerCard
+      id="toggle-between-modals"
+      title="Toggle Between Modals"
+      description={
+        <>
           Toggle between multiple modals with some clever placement of the <code>data-bs-target</code> and <code>data-bs-toggle</code> attributes. For
           example, you could toggle a password reset modal from within an already open sign in Modal{' '}
           <strong>Please note multiple modals cannot be open at the same time</strong>—this method simply toggles between two separate modals.
-        </>}>
+        </>
+      }>
       <Button variant="primary" onClick={toggleModal}>
         Open first modal
       </Button>
@@ -333,10 +335,12 @@ const ToggleBetweenModals = () => {
         </ModalHeader>
         <ModalBody className="modal-body">Show a second modal and hide this one with the button below.</ModalBody>
         <ModalFooter>
-          <Button variant="primary" onClick={() => {
-          toggleModal();
-          toggleNextModal();
-        }}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              toggleModal()
+              toggleNextModal()
+            }}>
             Open second modal
           </Button>
         </ModalFooter>
@@ -347,29 +351,32 @@ const ToggleBetweenModals = () => {
         </ModalHeader>
         <ModalBody>Hide this modal and show the first with the button below.</ModalBody>
         <ModalFooter>
-          <Button variant="primary" onClick={() => {
-          toggleModal();
-          toggleNextModal();
-        }}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              toggleModal()
+              toggleNextModal()
+            }}>
             Back to first
           </Button>
         </ModalFooter>
       </Modal>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ModalSizes = () => {
-  const {
-    isOpen,
-    size,
-    className,
-    toggleModal,
-    openModalWithSize
-  } = useModal();
-  return <ComponentContainerCard id="optional-sizes" title="Optional Sizes" description={<>
+  const { isOpen, size, className, toggleModal, openModalWithSize } = useModal()
+  return (
+    <ComponentContainerCard
+      id="optional-sizes"
+      title="Optional Sizes"
+      description={
+        <>
           {' '}
           Modals have three optional sizes, available via modifier classes to be placed on a <code>.modal-dialog</code>. These sizes kick in at
           certain breakpoints to avoid horizontal scrollbars on narrower viewports.
-        </>}>
+        </>
+      }>
       <div className="hstack gap-2">
         <Button type="button" variant="primary" onClick={() => openModalWithSize('xl')}>
           Extra large modal
@@ -390,28 +397,37 @@ const ModalSizes = () => {
         </ModalHeader>
         <ModalBody>...</ModalBody>
       </Modal>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const FullScreenModals = () => {
-  const sizes = ['sm-down', 'md-down', 'lg-down', 'xl-down', 'xxl-down'];
-  const [fullscreen, setFullscreen] = useState(undefined);
-  const [show, setShow] = useState(false);
-  const handleShow = breakpoint => {
-    setFullscreen(breakpoint);
-    setShow(true);
-  };
-  return <ComponentContainerCard id="fullscreen-modal" title="Fullscreen Modal" description={<>
+  const sizes = ['sm-down', 'md-down', 'lg-down', 'xl-down', 'xxl-down']
+  const [fullscreen, setFullscreen] = useState(undefined)
+  const [show, setShow] = useState(false)
+  const handleShow = (breakpoint) => {
+    setFullscreen(breakpoint)
+    setShow(true)
+  }
+  return (
+    <ComponentContainerCard
+      id="fullscreen-modal"
+      title="Fullscreen Modal"
+      description={
+        <>
           Modals have three optional sizes, available via modifier classes to be placed on a <code>.modal-dialog</code>. These sizes kick in at
           certain breakpoints to avoid horizontal scrollbars on narrower viewports.
-        </>}>
+        </>
+      }>
       <div className="hstack flex-wrap gap-2">
         <Button variant="primary" onClick={() => setShow(true)}>
           Full screen
         </Button>
-        {sizes.map((size, idx) => <Button key={idx} onClick={() => handleShow(size)}>
+        {sizes.map((size, idx) => (
+          <Button key={idx} onClick={() => handleShow(size)}>
             Full Screen
             {typeof size === 'string' && ` Below ${size.split('-')[0]}`}
-          </Button>)}
+          </Button>
+        ))}
       </div>
 
       <Modal show={show} className="fade" fullscreen={fullscreen ?? true} onHide={() => setShow(false)}>
@@ -425,20 +441,22 @@ const FullScreenModals = () => {
           </Button>
         </ModalFooter>
       </Modal>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ModalWithAlerts = () => {
-  const {
-    isOpen,
-    className,
-    toggleModal,
-    openModalWithClass
-  } = useModal();
-  return <ComponentContainerCard id="modal-alerts" title="Modal Based Alerts" description={<>
+  const { isOpen, className, toggleModal, openModalWithClass } = useModal()
+  return (
+    <ComponentContainerCard
+      id="modal-alerts"
+      title="Modal Based Alerts"
+      description={
+        <>
           {' '}
           Modals have three optional sizes, available via modifier classes to be placed on a <code>.modal-dialog</code>. These sizes kick in at
           certain breakpoints to avoid horizontal scrollbars on narrower viewports.
-        </>}>
+        </>
+      }>
       <div className="hstack flex-wrap gap-2">
         <Button variant="primary" onClick={() => openModalWithClass('bg-primary')}>
           Primary Alert
@@ -468,10 +486,12 @@ const ModalWithAlerts = () => {
           </ModalBody>
         </div>
       </Modal>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const AllModals = () => {
-  return <>
+  return (
+    <>
       <DefaultModal />
       <StaticBackdropModal />
       <ScrollingModals />
@@ -480,6 +500,7 @@ const AllModals = () => {
       <ModalSizes />
       <FullScreenModals />
       <ModalWithAlerts />
-    </>;
-};
-export default AllModals;
+    </>
+  )
+}
+export default AllModals

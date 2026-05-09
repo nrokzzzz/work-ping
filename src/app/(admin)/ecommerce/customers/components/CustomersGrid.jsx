@@ -1,10 +1,9 @@
-import { Card, CardBody, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-const CustomerCard = ({
-  customer
-}) => {
-  return <Card>
+import { Card, CardBody, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+const CustomerCard = ({ customer }) => {
+  return (
+    <Card>
       <CardBody>
         <div className="text-center">
           <img src={customer.image} alt="avatar-1" className="img-fluid avatar-xxl img-thumbnail rounded-circle avatar-border" />
@@ -26,15 +25,18 @@ const CustomerCard = ({
           </Link>
         </div>
       </CardBody>
-    </Card>;
-};
-const CustomerGrid = ({
-  customers
-}) => {
-  return <Row className="row-cols-1 row-cols-md-2 row-cols-xl-5 gx-3">
-      {customers.map((customer, idx) => <div className="col" key={idx}>
+    </Card>
+  )
+}
+const CustomerGrid = ({ customers }) => {
+  return (
+    <Row className="row-cols-1 row-cols-md-2 row-cols-xl-5 gx-3">
+      {customers.map((customer, idx) => (
+        <div className="col" key={idx}>
           <CustomerCard customer={customer} />
-        </div>)}
-    </Row>;
-};
-export default CustomerGrid;
+        </div>
+      ))}
+    </Row>
+  )
+}
+export default CustomerGrid

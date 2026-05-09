@@ -1,18 +1,19 @@
-import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient';
-import { currency } from '@/context/constants';
-import { getAllTransactions } from '@/helpers/data';
-import { useEffect, useState } from 'react';
+import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
+import { currency } from '@/context/constants'
+import { getAllTransactions } from '@/helpers/data'
+import { useEffect, useState } from 'react'
 const RecentTransactions = () => {
-  const [allTransactions, setAllTransactions] = useState();
+  const [allTransactions, setAllTransactions] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllTransactions();
-      setAllTransactions(data);
-    })();
-  }, []);
-  return <Card>
+    ;(async () => {
+      const data = await getAllTransactions()
+      setAllTransactions(data)
+    })()
+  }, [])
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>Recent Transactions</CardTitle>
         <div>
@@ -25,12 +26,16 @@ const RecentTransactions = () => {
         </div>
       </CardHeader>
       <CardBody className="p-0">
-        <SimplebarReactClient className="px-3" style={{
-        maxHeight: 406
-      }}>
+        <SimplebarReactClient
+          className="px-3"
+          style={{
+            maxHeight: 406,
+          }}>
           <table className="table table-hover mb-0 table-centered">
             <tbody>
-              {allTransactions && allTransactions.map((transaction, idx) => <tr key={idx}>
+              {allTransactions &&
+                allTransactions.map((transaction, idx) => (
+                  <tr key={idx}>
                     <td className="text-nowrap">{new Date(transaction.date).toDateString()}</td>
                     <td>
                       {currency}
@@ -40,11 +45,13 @@ const RecentTransactions = () => {
                       <span className={`badge bg-${transaction.status === 'Dr.' ? 'danger' : 'success'}`}>{transaction.status}</span>
                     </td>
                     <td>{transaction.description}</td>
-                  </tr>)}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </SimplebarReactClient>
       </CardBody>
-    </Card>;
-};
-export default RecentTransactions;
+    </Card>
+  )
+}
+export default RecentTransactions

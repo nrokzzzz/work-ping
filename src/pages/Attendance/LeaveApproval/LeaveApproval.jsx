@@ -22,8 +22,12 @@ const LeaveApproval = () => {
   const [rejectModal, setRejectModal] = useState(null)
   const [rejectReason, setRejectReason] = useState('')
 
-  useEffect(() => { fetchOrganizations() }, [])
-  useEffect(() => { if (orgId) fetchLeaves() }, [orgId, statusFilter, page])
+  useEffect(() => {
+    fetchOrganizations()
+  }, [])
+  useEffect(() => {
+    if (orgId) fetchLeaves()
+  }, [orgId, statusFilter, page])
 
   const fetchOrganizations = async () => {
     try {
@@ -63,7 +67,8 @@ const LeaveApproval = () => {
       await axiosClient.post(`/api/admin/leaves/approve/${leaveId}`, {}, { silent: true })
       toast.success('Leave approved')
       fetchLeaves()
-    } catch {} finally {
+    } catch {
+    } finally {
       setActionLoading(null)
     }
   }
@@ -75,7 +80,8 @@ const LeaveApproval = () => {
       await axiosClient.post(`/api/admin/leaves/reject/${rejectModal._id}`, { reason: rejectReason }, { silent: true })
       toast.success('Leave rejected')
       fetchLeaves()
-    } catch {} finally {
+    } catch {
+    } finally {
       setActionLoading(null)
       setRejectModal(null)
       setRejectReason('')
@@ -109,9 +115,13 @@ const LeaveApproval = () => {
               <CardBody className="d-flex align-items-center justify-content-between">
                 <div>
                   <p className="mb-0 text-muted small fw-semibold text-uppercase">{label} (this page)</p>
-                  <h2 className="mb-0 fw-bold" style={{ color }}>{count}</h2>
+                  <h2 className="mb-0 fw-bold" style={{ color }}>
+                    {count}
+                  </h2>
                 </div>
-                <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: 48, height: 48, background: color + '25' }}>
+                <div
+                  className="rounded-circle d-flex align-items-center justify-content-center"
+                  style={{ width: 48, height: 48, background: color + '25' }}>
                   <IconifyIcon icon={icon} style={{ fontSize: 24, color }} />
                 </div>
               </CardBody>
@@ -123,13 +133,33 @@ const LeaveApproval = () => {
       <Card className="border-0" style={{ boxShadow: '0 4px 16px rgba(15,23,42,0.07)' }}>
         <CardBody>
           <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
-            <h5 className="mb-0 me-auto">Leave Requests {totalRecords > 0 && <span className="text-muted fw-normal fs-6">({totalRecords} total)</span>}</h5>
+            <h5 className="mb-0 me-auto">
+              Leave Requests {totalRecords > 0 && <span className="text-muted fw-normal fs-6">({totalRecords} total)</span>}
+            </h5>
 
-            <select className="form-select form-select-sm" style={{ width: 'auto', minWidth: 190 }} value={orgId} onChange={(e) => { setOrgId(e.target.value); setPage(1) }}>
-              {organizations.map((o) => <option key={o.organizationId} value={o.organizationId}>{o.name}</option>)}
+            <select
+              className="form-select form-select-sm"
+              style={{ width: 'auto', minWidth: 190 }}
+              value={orgId}
+              onChange={(e) => {
+                setOrgId(e.target.value)
+                setPage(1)
+              }}>
+              {organizations.map((o) => (
+                <option key={o.organizationId} value={o.organizationId}>
+                  {o.name}
+                </option>
+              ))}
             </select>
 
-            <select className="form-select form-select-sm" style={{ width: 'auto', minWidth: 130 }} value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}>
+            <select
+              className="form-select form-select-sm"
+              style={{ width: 'auto', minWidth: 130 }}
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value)
+                setPage(1)
+              }}>
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
@@ -158,9 +188,17 @@ const LeaveApproval = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={9} className="text-center py-5"><Spinner animation="border" /></td></tr>
+                  <tr>
+                    <td colSpan={9} className="text-center py-5">
+                      <Spinner animation="border" />
+                    </td>
+                  </tr>
                 ) : leaves.length === 0 ? (
-                  <tr><td colSpan={9} className="text-center py-5 text-muted">No leave requests found</td></tr>
+                  <tr>
+                    <td colSpan={9} className="text-center py-5 text-muted">
+                      No leave requests found
+                    </td>
+                  </tr>
                 ) : (
                   leaves.map((leave, i) => (
                     <tr key={leave._id}>
@@ -170,13 +208,17 @@ const LeaveApproval = () => {
                         <div className="text-muted small">{leave.employee?.email ?? ''}</div>
                       </td>
                       <td>{leave.teamName ?? '--'}</td>
-                      <td><span className="badge bg-secondary">{leave.leaveType ?? '--'}</span></td>
+                      <td>
+                        <span className="badge bg-secondary">{leave.leaveType ?? '--'}</span>
+                      </td>
                       <td style={{ minWidth: 160 }}>{fmtDates(leave.dates)}</td>
                       <td className="text-muted small" style={{ maxWidth: 180 }}>
                         {leave.reason ? (leave.reason.length > 40 ? leave.reason.slice(0, 40) + '…' : leave.reason) : '--'}
                       </td>
                       <td>{leave.createdAt ? new Date(leave.createdAt).toLocaleDateString() : '--'}</td>
-                      <td><Badge bg={STATUS_COLOR[leave.status] ?? 'secondary'}>{leave.status}</Badge></td>
+                      <td>
+                        <Badge bg={STATUS_COLOR[leave.status] ?? 'secondary'}>{leave.status}</Badge>
+                      </td>
                       <td>
                         <div className="d-flex gap-1">
                           <Button variant="outline-info" size="sm" title="View" onClick={() => setDetailModal(leave)}>
@@ -185,18 +227,25 @@ const LeaveApproval = () => {
                           {leave.status === 'pending' && (
                             <>
                               <Button
-                                variant="outline-success" size="sm" title="Approve"
+                                variant="outline-success"
+                                size="sm"
+                                title="Approve"
                                 disabled={actionLoading === leave._id + '-approve'}
-                                onClick={() => handleApprove(leave._id)}
-                              >
-                                {actionLoading === leave._id + '-approve'
-                                  ? <Spinner as="span" size="sm" animation="border" />
-                                  : <IconifyIcon icon="mdi:check" />}
+                                onClick={() => handleApprove(leave._id)}>
+                                {actionLoading === leave._id + '-approve' ? (
+                                  <Spinner as="span" size="sm" animation="border" />
+                                ) : (
+                                  <IconifyIcon icon="mdi:check" />
+                                )}
                               </Button>
                               <Button
-                                variant="outline-danger" size="sm" title="Reject"
-                                onClick={() => { setRejectModal(leave); setRejectReason('') }}
-                              >
+                                variant="outline-danger"
+                                size="sm"
+                                title="Reject"
+                                onClick={() => {
+                                  setRejectModal(leave)
+                                  setRejectReason('')
+                                }}>
                                 <IconifyIcon icon="mdi:close" />
                               </Button>
                             </>
@@ -212,7 +261,9 @@ const LeaveApproval = () => {
 
           {totalPages > 1 && (
             <div className="d-flex justify-content-between align-items-center mt-3">
-              <span className="text-muted small">Page {page} of {totalPages}</span>
+              <span className="text-muted small">
+                Page {page} of {totalPages}
+              </span>
               <div className="d-flex gap-1">
                 <Button variant="outline-secondary" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
                   <IconifyIcon icon="mdi:chevron-left" />
@@ -220,7 +271,9 @@ const LeaveApproval = () => {
                 {Array.from({ length: Math.min(totalPages, 5) }, (_, idx) => {
                   const p = idx + 1
                   return (
-                    <Button key={p} variant={page === p ? 'primary' : 'outline-secondary'} size="sm" onClick={() => setPage(p)}>{p}</Button>
+                    <Button key={p} variant={page === p ? 'primary' : 'outline-secondary'} size="sm" onClick={() => setPage(p)}>
+                      {p}
+                    </Button>
                   )
                 })}
                 <Button variant="outline-secondary" size="sm" disabled={page === totalPages} onClick={() => setPage(page + 1)}>
@@ -266,11 +319,28 @@ const LeaveApproval = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setDetailModal(null)}>Close</Button>
+          <Button variant="secondary" onClick={() => setDetailModal(null)}>
+            Close
+          </Button>
           {detailModal?.status === 'pending' && (
             <>
-              <Button variant="success" onClick={() => { handleApprove(detailModal._id); setDetailModal(null) }}>Approve</Button>
-              <Button variant="danger" onClick={() => { setRejectModal(detailModal); setDetailModal(null); setRejectReason('') }}>Reject</Button>
+              <Button
+                variant="success"
+                onClick={() => {
+                  handleApprove(detailModal._id)
+                  setDetailModal(null)
+                }}>
+                Approve
+              </Button>
+              <Button
+                variant="danger"
+                onClick={() => {
+                  setRejectModal(detailModal)
+                  setDetailModal(null)
+                  setRejectReason('')
+                }}>
+                Reject
+              </Button>
             </>
           )}
         </Modal.Footer>
@@ -282,11 +352,16 @@ const LeaveApproval = () => {
           <Modal.Title>Reject Leave Request</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p className="mb-2">Rejecting leave for <strong>{rejectModal?.employee?.name}</strong></p>
+          <p className="mb-2">
+            Rejecting leave for <strong>{rejectModal?.employee?.name}</strong>
+          </p>
           <Form.Group>
-            <Form.Label>Reason <span className="text-danger">*</span></Form.Label>
+            <Form.Label>
+              Reason <span className="text-danger">*</span>
+            </Form.Label>
             <Form.Control
-              as="textarea" rows={3}
+              as="textarea"
+              rows={3}
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="Reason for rejection..."
@@ -294,7 +369,9 @@ const LeaveApproval = () => {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setRejectModal(null)}>Cancel</Button>
+          <Button variant="secondary" onClick={() => setRejectModal(null)}>
+            Cancel
+          </Button>
           <Button variant="danger" disabled={!rejectReason.trim() || !!actionLoading} onClick={handleRejectSubmit}>
             {actionLoading ? <Spinner as="span" size="sm" animation="border" className="me-1" /> : null}
             Confirm Reject

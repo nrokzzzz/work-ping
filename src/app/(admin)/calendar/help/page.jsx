@@ -1,10 +1,11 @@
-import { Button, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import HelpList from './components/HelpList';
+import { Button, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import HelpList from './components/HelpList'
 const Help = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Calendar" title="Help" />
       <PageMetaData title="Help" />
 
@@ -38,6 +39,7 @@ const Help = () => {
           </Button>
         </Col>
       </Row>
-    </>;
-};
-export default Help;
+    </>
+  )
+}
+export default Help

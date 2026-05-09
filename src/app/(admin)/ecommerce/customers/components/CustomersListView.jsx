@@ -1,10 +1,9 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Link } from 'react-router-dom';
-import { Button, Card, Col } from 'react-bootstrap';
-const CustomersListView = ({
-  customers
-}) => {
-  return <Card className="overflow-hidden">
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Link } from 'react-router-dom'
+import { Button, Card, Col } from 'react-bootstrap'
+const CustomersListView = ({ customers }) => {
+  return (
+    <Card className="overflow-hidden">
       <div className="table-responsive table-centered">
         <table className="table text-nowrap mb-0">
           <thead className="teble-light">
@@ -19,7 +18,8 @@ const CustomersListView = ({
             </tr>
           </thead>
           <tbody>
-            {customers.map((customer, idx) => <tr key={idx}>
+            {customers.map((customer, idx) => (
+              <tr key={idx}>
                 <td>
                   <div className="d-flex align-items-center gap-1">
                     <img src={customer.image} alt="avatar-1" className="img-fluid avatar-xs rounded-circle avatar-border me-1" />
@@ -39,7 +39,8 @@ const CustomersListView = ({
                     <IconifyIcon icon="bx:trash" className="fs-16" />
                   </Button>
                 </td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -81,6 +82,7 @@ const CustomersListView = ({
           </ul>
         </Col>
       </div>
-    </Card>;
-};
-export default CustomersListView;
+    </Card>
+  )
+}
+export default CustomersListView

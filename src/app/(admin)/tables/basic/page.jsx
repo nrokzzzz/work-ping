@@ -1,21 +1,27 @@
-import { Button, Col, FormCheck, Row, Table } from 'react-bootstrap';
-import clsx from 'clsx';
-import { Link } from 'react-router-dom';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import UIExamplesList from '@/components/UIExamplesList';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { colorVariants, currency } from '@/context/constants';
-import { toSentenceCase } from '@/utils/change-casing';
-import { extendedTableData, tableData } from './data';
-import PageMetaData from '@/components/PageTitle';
-import avatar6 from '@/assets/images/users/avatar-6.jpg';
-import avatar7 from '@/assets/images/users/avatar-7.jpg';
-import avatar8 from '@/assets/images/users/avatar-8.jpg';
+import { Button, Col, FormCheck, Row, Table } from 'react-bootstrap'
+import clsx from 'clsx'
+import { Link } from 'react-router-dom'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import UIExamplesList from '@/components/UIExamplesList'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { colorVariants, currency } from '@/context/constants'
+import { toSentenceCase } from '@/utils/change-casing'
+import { extendedTableData, tableData } from './data'
+import PageMetaData from '@/components/PageTitle'
+import avatar6 from '@/assets/images/users/avatar-6.jpg'
+import avatar7 from '@/assets/images/users/avatar-7.jpg'
+import avatar8 from '@/assets/images/users/avatar-8.jpg'
 const BasicExample = () => {
-  return <ComponentContainerCard id="basic" title="Basic Example" description={<>
+  return (
+    <ComponentContainerCard
+      id="basic"
+      title="Basic Example"
+      description={
+        <>
           For basic styling—light padding and only horizontal dividers—add the base class <code>.table</code> to any <code>&lt;table&gt;</code>.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <table className="table table-centered">
           <thead>
@@ -27,19 +33,23 @@ const BasicExample = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableVariants = () => {
-  return <ComponentContainerCard id="variant" title="Variants" description={<>Use contextual classes to color tables, table rows or individual cells.</>}>
+  return (
+    <ComponentContainerCard id="variant" title="Variants" description={<>Use contextual classes to color tables, table rows or individual cells.</>}>
       <PageMetaData title="Basic Tables" />
 
       <div className="table-responsive">
@@ -57,11 +67,13 @@ const TableVariants = () => {
               <td>Cell</td>
               <td>Cell</td>
             </tr>
-            {colorVariants.slice(0, 7).map((color, idx) => <tr className={`table-${color}`} key={idx}>
+            {colorVariants.slice(0, 7).map((color, idx) => (
+              <tr className={`table-${color}`} key={idx}>
                 <td>{toSentenceCase(color)}</td>
                 <td>Cell</td>
                 <td>Cell</td>
-              </tr>)}
+              </tr>
+            ))}
             <tr className="table-light">
               <td>Light</td>
               <td>Cell</td>
@@ -70,13 +82,20 @@ const TableVariants = () => {
           </tbody>
         </table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const StripedRowsTable = () => {
-  return <ComponentContainerCard id="striped" title="Striped Rows Table" description={<>
+  return (
+    <ComponentContainerCard
+      id="striped"
+      title="Striped Rows Table"
+      description={
+        <>
           {' '}
           Use <code>.table-striped</code> to add zebra-striping to any table row within the <code>&lt;tbody&gt;</code>.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table striped className="table-centered">
           <thead>
@@ -88,21 +107,30 @@ const StripedRowsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const StripedRowsTableDark = () => {
-  return <ComponentContainerCard id="striped-dark" title="Striped Rows Table Dark" description={<>
+  return (
+    <ComponentContainerCard
+      id="striped-dark"
+      title="Striped Rows Table Dark"
+      description={
+        <>
           Use <code>.table-dark .table-striped</code> to add zebra-striping to any table row within the <code>&lt;tbody&gt;</code>.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table striped variant="dark" align="center">
           <thead>
@@ -114,21 +142,30 @@ const StripedRowsTableDark = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const StripedRowsTableSuccess = () => {
-  return <ComponentContainerCard id="striped-success" title="Striped Rows Table Success" description={<>
+  return (
+    <ComponentContainerCard
+      id="striped-success"
+      title="Striped Rows Table Success"
+      description={
+        <>
           Use <code>.table-success .table-striped</code> to add zebra-striping to any table row within the <code>&lt;tbody&gt;</code>.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table striped variant="success" align="center">
           <thead>
@@ -140,21 +177,30 @@ const StripedRowsTableSuccess = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const StripedColumnsTable = () => {
-  return <ComponentContainerCard id="striped" title="Striped columns" description={<>
+  return (
+    <ComponentContainerCard
+      id="striped"
+      title="Striped columns"
+      description={
+        <>
           Use <code>.table-striped-columns </code>to add zebra-striping to any table column.
-        </>}>
+        </>
+      }>
       <div className="table-responsive-sm">
         <Table striped="columns" align="center">
           <thead>
@@ -166,21 +212,30 @@ const StripedColumnsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const StripedColumnsDarkTable = () => {
-  return <ComponentContainerCard id="striped-column-dark" title="Striped columns Dark" description={<>
+  return (
+    <ComponentContainerCard
+      id="striped-column-dark"
+      title="Striped columns Dark"
+      description={
+        <>
           Use <code>.table-dark .table-striped-columns </code>to add zebra-striping to any table column.
-        </>}>
+        </>
+      }>
       <div className="table-responsive-sm">
         <Table variant="dark" striped="columns" align="center">
           <thead>
@@ -192,21 +247,30 @@ const StripedColumnsDarkTable = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const StripedColumnsSuccessTable = () => {
-  return <ComponentContainerCard id="striped-column-success" title="Striped columns Success" description={<>
+  return (
+    <ComponentContainerCard
+      id="striped-column-success"
+      title="Striped columns Success"
+      description={
+        <>
           Use <code>.table-success .table-striped-columns </code>to add zebra-striping to any table column.
-        </>}>
+        </>
+      }>
       <div className="table-responsive-sm">
         <Table variant="success" striped="columns" align="center">
           <thead>
@@ -218,21 +282,30 @@ const StripedColumnsSuccessTable = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const HoverableRowsTable = () => {
-  return <ComponentContainerCard id="hoverable-row" title="Hoverable rows" description={<>
+  return (
+    <ComponentContainerCard
+      id="hoverable-row"
+      title="Hoverable rows"
+      description={
+        <>
           Add <code>.table-hover</code> to enable a hover state on table rows within a <code>&lt;tbody&gt;</code>.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table hover align="center">
           <thead>
@@ -244,21 +317,30 @@ const HoverableRowsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const HoverableRowsDarkTable = () => {
-  return <ComponentContainerCard id="hoverable-row" title="Hoverable rows" description={<>
+  return (
+    <ComponentContainerCard
+      id="hoverable-row"
+      title="Hoverable rows"
+      description={
+        <>
           Add <code>.table-dark</code> to enable a hover state on table rows within a <code>&lt;tbody&gt;</code>.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table hover variant="dark" align="center">
           <thead>
@@ -270,21 +352,30 @@ const HoverableRowsDarkTable = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ActiveTables = () => {
-  return <ComponentContainerCard id="active" title="Active Tables" description={<>
+  return (
+    <ComponentContainerCard
+      id="active"
+      title="Active Tables"
+      description={
+        <>
           Highlight a table row or cell by adding a <code>.table-active</code> class.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table align="center">
           <thead>
@@ -317,12 +408,19 @@ const ActiveTables = () => {
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ActiveTablesDark = () => {
-  return <ComponentContainerCard id="" title="Active Tables Dark" description={<>
+  return (
+    <ComponentContainerCard
+      id=""
+      title="Active Tables Dark"
+      description={
+        <>
           Highlight a table row or cell by adding a <code>.table-dark .table-active</code> class.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table align="center" variant="dark">
           <thead>
@@ -355,12 +453,19 @@ const ActiveTablesDark = () => {
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const BorderedTable = () => {
-  return <ComponentContainerCard id="bordered" title="Bordered Table" description={<>
+  return (
+    <ComponentContainerCard
+      id="bordered"
+      title="Bordered Table"
+      description={
+        <>
           Add <code>.table-bordered</code> for borders on all sides of the table and cells.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table bordered>
           <thead>
@@ -372,21 +477,30 @@ const BorderedTable = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const BorderedColorTable = () => {
-  return <ComponentContainerCard id="border-color" title="Bordered color Table" description={<>
+  return (
+    <ComponentContainerCard
+      id="border-color"
+      title="Bordered color Table"
+      description={
+        <>
           Add <code>.table-bordered</code> &amp; <code>.border-primary</code> can be added to change colors.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table bordered className="border-primary" align="center">
           <thead>
@@ -398,21 +512,30 @@ const BorderedColorTable = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableWithoutBorders = () => {
-  return <ComponentContainerCard id="borderless" title="Tables without borders" description={<>
+  return (
+    <ComponentContainerCard
+      id="borderless"
+      title="Tables without borders"
+      description={
+        <>
           Add <code>.table-borderless</code> for a table without borders..
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table borderless align="center">
           <thead>
@@ -424,21 +547,30 @@ const TableWithoutBorders = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableWithoutBordersDark = () => {
-  return <ComponentContainerCard id="borderless-dark" title="Tables without borders Dark" description={<>
+  return (
+    <ComponentContainerCard
+      id="borderless-dark"
+      title="Tables without borders Dark"
+      description={
+        <>
           Add <code>.table-borderless</code> <code>.table-dark</code> for a table without borders and dark table.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table borderless align="center" variant="dark">
           <thead>
@@ -450,21 +582,30 @@ const TableWithoutBordersDark = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SmallTables = () => {
-  return <ComponentContainerCard id="small" title="Small tables" description={<>
+  return (
+    <ComponentContainerCard
+      id="small"
+      title="Small tables"
+      description={
+        <>
           Add <code>.table-sm </code>to make any .table more compact by cutting all cell padding in half.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table size="sm">
           <thead>
@@ -476,21 +617,30 @@ const SmallTables = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SmallTableDark = () => {
-  return <ComponentContainerCard id="small-dark" title="Small tables Dark" description={<>
+  return (
+    <ComponentContainerCard
+      id="small-dark"
+      title="Small tables Dark"
+      description={
+        <>
           Add <code>.table-sm </code> <code>.table-dark </code>to make any .table more compact by cutting all cell padding in half.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table size="sm" variant="dark">
           <thead>
@@ -502,23 +652,32 @@ const SmallTableDark = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const VerticalAlignmentTable = () => {
-  return <ComponentContainerCard id="alignment" title="Vertical alignment" description={<>
+  return (
+    <ComponentContainerCard
+      id="alignment"
+      title="Vertical alignment"
+      description={
+        <>
           Table cells of <code>&lt;thead&gt;</code> are always vertical aligned to the bottom. Table cells in <code>&lt;tbody&gt;</code> inherit their
           alignment from <code>&lt;table&gt;</code> and are aligned to the top by default. Use the <Link to="">vertical align</Link> classes to
           re-align where needed.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <table className="table align-middle table-centered">
           <thead>
@@ -584,10 +743,15 @@ const VerticalAlignmentTable = () => {
           </tbody>
         </table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const NestingTable = () => {
-  return <ComponentContainerCard id="nesting" title="Nesting Table" description={<>Border styles, active styles, and table variants are not inherited by nested tables.</>}>
+  return (
+    <ComponentContainerCard
+      id="nesting"
+      title="Nesting Table"
+      description={<>Border styles, active styles, and table variants are not inherited by nested tables.</>}>
       <div className="table-responsive">
         <table className="table table-bordered table-striped table-centered">
           <thead>
@@ -644,13 +808,20 @@ const NestingTable = () => {
           </tbody>
         </table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableHead = () => {
-  return <ComponentContainerCard id="head-option" title="Table head" description={<>
+  return (
+    <ComponentContainerCard
+      id="head-option"
+      title="Table head"
+      description={
+        <>
           Similar to tables and dark tables, use the modifier classes <code>.table-light</code>to make <code>&lt;thead&gt;</code>s appear light or
           dark gray.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table align="center">
           <thead className="table-light">
@@ -662,22 +833,31 @@ const TableHead = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableHeadDark = () => {
-  return <ComponentContainerCard id="tablehead" title="Table head Dark" description={<>
+  return (
+    <ComponentContainerCard
+      id="tablehead"
+      title="Table head Dark"
+      description={
+        <>
           Similar to tables and dark tables, use the modifier classes <code>.table-dark</code> to make <code>&lt;thead&gt;</code>s appear light or
           dark gray.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table align="center">
           <thead className="table-dark">
@@ -689,19 +869,23 @@ const TableHeadDark = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableWithFooter = () => {
-  return <ComponentContainerCard id="tablefoot" title="Table foot">
+  return (
+    <ComponentContainerCard id="tablefoot" title="Table foot">
       <div className="table-responsive mt-2">
         <Table align="center">
           <thead>
@@ -713,12 +897,14 @@ const TableWithFooter = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
           <tfoot>
             <tr>
@@ -730,10 +916,12 @@ const TableWithFooter = () => {
           </tfoot>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableWithCaption = () => {
-  return <ComponentContainerCard id="captions" title="Captions">
+  return (
+    <ComponentContainerCard id="captions" title="Captions">
       <div className="table-responsive">
         <Table align="center">
           <caption>List of users</caption>
@@ -746,12 +934,14 @@ const TableWithCaption = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
           <tfoot>
             <tr>
@@ -763,12 +953,19 @@ const TableWithCaption = () => {
           </tfoot>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableWithCaptionTop = () => {
-  return <ComponentContainerCard id="captions-top" title="Captions" description={<>
+  return (
+    <ComponentContainerCard
+      id="captions-top"
+      title="Captions"
+      description={
+        <>
           You can also put the <code>&lt;caption&gt;</code> on the top of the table with <code>.caption-top</code>
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table align="center" className="caption-top">
           <caption>List of users</caption>
@@ -781,12 +978,14 @@ const TableWithCaptionTop = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
           <tfoot>
             <tr>
@@ -798,14 +997,21 @@ const TableWithCaptionTop = () => {
           </tfoot>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableGroupDividers = () => {
-  return <ComponentContainerCard id="dividers" title="Table group dividers" description={<>
+  return (
+    <ComponentContainerCard
+      id="dividers"
+      title="Table group dividers"
+      description={
+        <>
           Add a thicker border, darker between table groups—<code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, and <code>&lt;tfoot&gt;</code>
           —with <code>.table-group-divider</code>. Customize the color by changing the <code>border-top-color</code> (which we don’t currently provide
           a utility class for at this time).
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <Table>
           <thead>
@@ -817,21 +1023,30 @@ const TableGroupDividers = () => {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {tableData.map(item => <tr key={item.id}>
+            {tableData.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.handle}</td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const AlwaysResponsiveTable = () => {
-  return <ComponentContainerCard id="responsive" title="Always responsive" description={<>
+  return (
+    <ComponentContainerCard
+      id="responsive"
+      title="Always responsive"
+      description={
+        <>
           Across every breakpoint, use <code>.table-responsive</code> for horizontally scrolling tables.
-        </>}>
+        </>
+      }>
       <div className="table-responsive">
         <table className="table">
           <thead>
@@ -888,10 +1103,15 @@ const AlwaysResponsiveTable = () => {
           </tbody>
         </table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableWithAvatars = () => {
-  return <ComponentContainerCard id="avatar" title="With avatars" description={<>A list of all the users in your account including their name, title, email and role.</>}>
+  return (
+    <ComponentContainerCard
+      id="avatar"
+      title="With avatars"
+      description={<>A list of all the users in your account including their name, title, email and role.</>}>
       <div className="table-responsive">
         <Table hover align="center">
           <thead className="table-light">
@@ -904,9 +1124,12 @@ const TableWithAvatars = () => {
             </tr>
           </thead>
           <tbody>
-            {extendedTableData.map(item => <tr className={clsx({
-            'table-active': item.verified
-          })} key={item.id}>
+            {extendedTableData.map((item) => (
+              <tr
+                className={clsx({
+                  'table-active': item.verified,
+                })}
+                key={item.id}>
                 <td>
                   <div className="d-flex align-items-center gap-1">
                     {item.avatar && <img src={item.avatar} alt="avatar" className="avatar-sm rounded-circle" />}
@@ -926,14 +1149,20 @@ const TableWithAvatars = () => {
                     Edit
                   </Button>
                 </td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TableWithCheckboxes = () => {
-  return <ComponentContainerCard id="with-checkbox" title="With checkboxes" description={<>A list of all the users in your account including their name, title, email and role.</>}>
+  return (
+    <ComponentContainerCard
+      id="with-checkbox"
+      title="With checkboxes"
+      description={<>A list of all the users in your account including their name, title, email and role.</>}>
       <div className="table-responsive">
         <Table striped borderless align="center">
           <thead className="table-light">
@@ -951,7 +1180,8 @@ const TableWithCheckboxes = () => {
             </tr>
           </thead>
           <tbody>
-            {extendedTableData.map(item => <tr key={item.id}>
+            {extendedTableData.map((item) => (
+              <tr key={item.id}>
                 <td>
                   <FormCheck id={`flexCheckDefault${item.id}`} />
                 </td>
@@ -964,14 +1194,20 @@ const TableWithCheckboxes = () => {
                     Edit
                   </Button>
                 </td>
-              </tr>)}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const NestingTable2 = () => {
-  return <ComponentContainerCard id="nesting1" title="Nesting Table" description={<>Border styles, active styles, and table variants are not inherited by nested tables.</>}>
+  return (
+    <ComponentContainerCard
+      id="nesting1"
+      title="Nesting Table"
+      description={<>Border styles, active styles, and table variants are not inherited by nested tables.</>}>
       <div className="table-responsive">
         <table className="table table-bordered table-striped table-centered">
           <thead>
@@ -1059,10 +1295,12 @@ const NestingTable2 = () => {
           </tbody>
         </table>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const BasicTables = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Tables" title="Basic Tables" />
       <Row>
         <Col xl={9}>
@@ -1098,51 +1336,69 @@ const BasicTables = () => {
           <NestingTable2 />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#basic',
-          label: 'Basic Example'
-        }, {
-          link: '#variant',
-          label: 'Variant Table'
-        }, {
-          link: '#striped',
-          label: 'Striped Rows Table'
-        }, {
-          link: '#hoverable-row',
-          label: 'Hoverable rows'
-        }, {
-          link: '#active',
-          label: 'Active Table'
-        }, {
-          link: '#bordered',
-          label: 'Bordered Table'
-        }, {
-          link: '#border-color',
-          label: 'Bordered color Table'
-        }, {
-          link: '#small',
-          label: 'Small Table'
-        }, {
-          link: '#alignment',
-          label: 'Alignment Table'
-        }, {
-          link: '#nesting',
-          label: 'Nesting Table'
-        }, {
-          link: '#head-option',
-          label: 'Table head options'
-        }, {
-          link: '#tablefoot',
-          label: 'Tablefoot'
-        }, {
-          link: '#captions',
-          label: 'Captions'
-        }, {
-          link: '#responsive',
-          label: 'Always Responsive Table'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#basic',
+                label: 'Basic Example',
+              },
+              {
+                link: '#variant',
+                label: 'Variant Table',
+              },
+              {
+                link: '#striped',
+                label: 'Striped Rows Table',
+              },
+              {
+                link: '#hoverable-row',
+                label: 'Hoverable rows',
+              },
+              {
+                link: '#active',
+                label: 'Active Table',
+              },
+              {
+                link: '#bordered',
+                label: 'Bordered Table',
+              },
+              {
+                link: '#border-color',
+                label: 'Bordered color Table',
+              },
+              {
+                link: '#small',
+                label: 'Small Table',
+              },
+              {
+                link: '#alignment',
+                label: 'Alignment Table',
+              },
+              {
+                link: '#nesting',
+                label: 'Nesting Table',
+              },
+              {
+                link: '#head-option',
+                label: 'Table head options',
+              },
+              {
+                link: '#tablefoot',
+                label: 'Tablefoot',
+              },
+              {
+                link: '#captions',
+                label: 'Captions',
+              },
+              {
+                link: '#responsive',
+                label: 'Always Responsive Table',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default BasicTables;
+    </>
+  )
+}
+export default BasicTables

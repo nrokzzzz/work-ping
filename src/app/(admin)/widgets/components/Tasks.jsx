@@ -1,18 +1,19 @@
-import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap';
-import clsx from 'clsx';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient';
-import { getAllTasks } from '@/helpers/data';
-import { useEffect, useState } from 'react';
+import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
+import clsx from 'clsx'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
+import { getAllTasks } from '@/helpers/data'
+import { useEffect, useState } from 'react'
 const Tasks = () => {
-  const [allTasks, setAllTasks] = useState();
+  const [allTasks, setAllTasks] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllTasks();
-      setAllTasks(data);
-    })();
-  }, []);
-  return <Card>
+    ;(async () => {
+      const data = await getAllTasks()
+      setAllTasks(data)
+    })()
+  }, [])
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>My Tasks</CardTitle>
         <div>
@@ -25,19 +26,32 @@ const Tasks = () => {
         </div>
       </CardHeader>
       <CardBody className="p-0 pb-3">
-        <SimplebarReactClient className="p-3" style={{
-        maxHeight: 386
-      }}>
-          {allTasks && allTasks.map((task, idx) => <div className={clsx('form-check form-todo ps-4', {
-          'py-1 my-2': idx != 0
-        })} key={idx}>
-                <input type="checkbox" className="form-check-input rounded-circle mt-0 fs-18" id={`customCheck${idx}`} defaultChecked={task.status === 'Completed' ? true : false} />
+        <SimplebarReactClient
+          className="p-3"
+          style={{
+            maxHeight: 386,
+          }}>
+          {allTasks &&
+            allTasks.map((task, idx) => (
+              <div
+                className={clsx('form-check form-todo ps-4', {
+                  'py-1 my-2': idx != 0,
+                })}
+                key={idx}>
+                <input
+                  type="checkbox"
+                  className="form-check-input rounded-circle mt-0 fs-18"
+                  id={`customCheck${idx}`}
+                  defaultChecked={task.status === 'Completed' ? true : false}
+                />
                 <label className="form-check-label" htmlFor={`customCheck${idx}`}>
                   {task.task}
                 </label>
-              </div>)}
+              </div>
+            ))}
         </SimplebarReactClient>
       </CardBody>
-    </Card>;
-};
-export default Tasks;
+    </Card>
+  )
+}
+export default Tasks

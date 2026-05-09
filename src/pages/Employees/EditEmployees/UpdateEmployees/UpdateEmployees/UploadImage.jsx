@@ -21,20 +21,18 @@ const UploadImage = ({ onCapture }) => {
       canvas.height = img.height
       ctx.drawImage(img, 0, 0)
 
-      const pixels = new Uint8Array(
-        ctx.getImageData(0, 0, canvas.width, canvas.height).data
-      )
+      const pixels = new Uint8Array(ctx.getImageData(0, 0, canvas.width, canvas.height).data)
 
       const hashBuffer = await crypto.subtle.digest('SHA-256', pixels)
       const hash = Array.from(new Uint8Array(hashBuffer))
-        .map(b => b.toString(16).padStart(2, '0'))
+        .map((b) => b.toString(16).padStart(2, '0'))
         .join('')
 
       console.log('ENCRYPTED PIXEL HASH (UPLOAD):', hash)
 
       onCapture?.({
         source: 'upload',
-        hash
+        hash,
       })
     }
   }
@@ -46,7 +44,7 @@ const UploadImage = ({ onCapture }) => {
         iconProps={{
           icon: 'bx:cloud-upload',
           height: 36,
-          width: 36
+          width: 36,
         }}
         text="Drop face image here or click to upload."
         helpText={

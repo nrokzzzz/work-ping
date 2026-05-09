@@ -1,10 +1,11 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllPieCharts from './components/AllPieCharts';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllPieCharts from './components/AllPieCharts'
 const PieCharts = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Charts" title="Pie Charts" />
       <PageMetaData title="Pie Charts" />
       <Row>
@@ -12,30 +13,41 @@ const PieCharts = () => {
           <AllPieCharts />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#simple_pie',
-          label: 'Simple Pie Chart'
-        }, {
-          link: '#simple_donut',
-          label: 'Simple Donut Chart'
-        }, {
-          link: '#monochrome',
-          label: 'Monochrome Pie Area'
-        }, {
-          link: '#gradient',
-          label: 'Gradient Donut Chart'
-        }, {
-          link: '#patterned',
-          label: 'Patterned Donut Chart'
-        }, {
-          link: '#image',
-          label: 'Pie Chart with Image fill'
-        }, {
-          link: '#update',
-          label: 'Donut Update'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#simple_pie',
+                label: 'Simple Pie Chart',
+              },
+              {
+                link: '#simple_donut',
+                label: 'Simple Donut Chart',
+              },
+              {
+                link: '#monochrome',
+                label: 'Monochrome Pie Area',
+              },
+              {
+                link: '#gradient',
+                label: 'Gradient Donut Chart',
+              },
+              {
+                link: '#patterned',
+                label: 'Patterned Donut Chart',
+              },
+              {
+                link: '#image',
+                label: 'Pie Chart with Image fill',
+              },
+              {
+                link: '#update',
+                label: 'Donut Update',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default PieCharts;
+    </>
+  )
+}
+export default PieCharts

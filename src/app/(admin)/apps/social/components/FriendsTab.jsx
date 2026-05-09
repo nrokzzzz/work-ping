@@ -1,13 +1,23 @@
-import { useEffect, useState } from 'react';
-import { Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, TabContainer, TabContent, TabPane } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllFriends, getAllPendingRequests } from '@/helpers/data';
-const FriendListCard = ({
-  avatar,
-  mutualCount,
-  name
-}) => {
-  return <Card>
+import { useEffect, useState } from 'react'
+import {
+  Card,
+  CardBody,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContainer,
+  TabContent,
+  TabPane,
+} from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllFriends, getAllPendingRequests } from '@/helpers/data'
+const FriendListCard = ({ avatar, mutualCount, name }) => {
+  return (
+    <Card>
       <CardBody>
         <div className="d-flex align-items-center">
           <div className="flex-shrink-0">
@@ -46,36 +56,50 @@ const FriendListCard = ({
           </div>
         </div>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const AllFriendsList = () => {
-  const [friendsList, setFriendsList] = useState();
+  const [friendsList, setFriendsList] = useState()
   useEffect(() => {
     const fetchFriends = async () => {
-      const list = await getAllFriends();
-      if (list) setFriendsList(list);
-    };
-    fetchFriends();
-  }, []);
-  return <TabPane eventKey="friends-list">
-      {friendsList ? friendsList.map(friend => <FriendListCard key={friend.id} {...friend} />) : <h4 className="text-center ">Guess who has no friends</h4>}
-    </TabPane>;
-};
+      const list = await getAllFriends()
+      if (list) setFriendsList(list)
+    }
+    fetchFriends()
+  }, [])
+  return (
+    <TabPane eventKey="friends-list">
+      {friendsList ? (
+        friendsList.map((friend) => <FriendListCard key={friend.id} {...friend} />)
+      ) : (
+        <h4 className="text-center ">Guess who has no friends</h4>
+      )}
+    </TabPane>
+  )
+}
 const PendingFriendRequests = () => {
-  const [pendingRequests, setPendingRequests] = useState();
+  const [pendingRequests, setPendingRequests] = useState()
   useEffect(() => {
     const fetchRequests = async () => {
-      const list = await getAllPendingRequests();
-      if (list) setPendingRequests(list);
-    };
-    fetchRequests();
-  }, []);
-  return <TabPane eventKey="pending-requests">
-      {pendingRequests ? pendingRequests.map(friend => <FriendListCard key={friend.id} {...friend} />) : <h4 className="text-center ">No Pending requests</h4>}
-    </TabPane>;
-};
+      const list = await getAllPendingRequests()
+      if (list) setPendingRequests(list)
+    }
+    fetchRequests()
+  }, [])
+  return (
+    <TabPane eventKey="pending-requests">
+      {pendingRequests ? (
+        pendingRequests.map((friend) => <FriendListCard key={friend.id} {...friend} />)
+      ) : (
+        <h4 className="text-center ">No Pending requests</h4>
+      )}
+    </TabPane>
+  )
+}
 const FriendsTab = () => {
-  return <TabPane eventKey="Friends" className="fade" id="social-friends" role="tabpanel" aria-labelledby="social-friends-tab">
+  return (
+    <TabPane eventKey="Friends" className="fade" id="social-friends" role="tabpanel" aria-labelledby="social-friends-tab">
       <TabContainer defaultActiveKey="friends-list" mountOnEnter>
         <Nav variant="pills">
           <NavItem>
@@ -95,6 +119,7 @@ const FriendsTab = () => {
           <PendingFriendRequests />
         </TabContent>
       </TabContainer>
-    </TabPane>;
-};
-export default FriendsTab;
+    </TabPane>
+  )
+}
+export default FriendsTab

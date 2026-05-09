@@ -1,16 +1,20 @@
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PasswordFormInput from '@/components/form/PasswordFormInput';
-import TextAreaFormInput from '@/components/form/TextAreaFormInput';
-import TextFormInput from '@/components/form/TextFormInput';
-import { useForm } from 'react-hook-form';
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PasswordFormInput from '@/components/form/PasswordFormInput'
+import TextAreaFormInput from '@/components/form/TextAreaFormInput'
+import TextFormInput from '@/components/form/TextFormInput'
+import { useForm } from 'react-hook-form'
 const BasicExamples = () => {
-  const {
-    control
-  } = useForm();
-  return <ComponentContainerCard id="basic" title="Basic Example" description={<>
+  const { control } = useForm()
+  return (
+    <ComponentContainerCard
+      id="basic"
+      title="Basic Example"
+      description={
+        <>
           Give textual form controls like <code>&lt;input&gt;</code>s and <code>&lt;textarea&gt;</code>s an upgrade with custom styles, sizing, focus
           states, and more.
-        </>}>
+        </>
+      }>
       <div>
         <TextFormInput name="text" label="Text" control={control} containerClassName="mb-3" />
         <TextFormInput name="email" type="email" label="Email" control={control} placeholder="Email" containerClassName="mb-3" />
@@ -23,6 +27,7 @@ const BasicExamples = () => {
         </div>
         <TextAreaFormInput name="textarea" label="Text area" control={control} rows={5} />
       </div>
-    </ComponentContainerCard>;
-};
-export default BasicExamples;
+    </ComponentContainerCard>
+  )
+}
+export default BasicExamples

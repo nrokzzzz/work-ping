@@ -1,11 +1,12 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import ChoicesFormInput from '@/components/form/ChoicesFormInput';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import UIExamplesList from '@/components/UIExamplesList';
-import PageMetaData from '@/components/PageTitle';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import ChoicesFormInput from '@/components/form/ChoicesFormInput'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import UIExamplesList from '@/components/UIExamplesList'
+import PageMetaData from '@/components/PageTitle'
 const BasicExample = () => {
-  return <ComponentContainerCard id="basic" title="Basic Example" titleClass="mb-3">
+  return (
+    <ComponentContainerCard id="basic" title="Basic Example" titleClass="mb-3">
       <Row>
         <Col lg={6}>
           <ChoicesFormInput>
@@ -16,10 +17,12 @@ const BasicExample = () => {
           </ChoicesFormInput>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const OptionGroups = () => {
-  return <ComponentContainerCard id="options-group" title="Option Groups Example" titleClass="mb-3">
+  return (
+    <ComponentContainerCard id="options-group" title="Option Groups Example" titleClass="mb-3">
       <Row>
         <Col lg={6}>
           <ChoicesFormInput>
@@ -59,16 +62,19 @@ const OptionGroups = () => {
           </ChoicesFormInput>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const OptionWithNoSearch = () => {
-  return <ComponentContainerCard id="options-add-no-search" title="Options added via config with no search" titleClass="mb-3">
+  return (
+    <ComponentContainerCard id="options-add-no-search" title="Options added via config with no search" titleClass="mb-3">
       <Row>
         <Col lg={6}>
-          <ChoicesFormInput options={{
-          removeItemButton: true,
-          searchEnabled: false
-        }}>
+          <ChoicesFormInput
+            options={{
+              removeItemButton: true,
+              searchEnabled: false,
+            }}>
             <option value="Zero">Zero</option>
             <option value="One">One</option>
             <option value="Two">Two</option>
@@ -79,15 +85,18 @@ const OptionWithNoSearch = () => {
           </ChoicesFormInput>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const OptionWithNoSorting = () => {
-  return <ComponentContainerCard id="options-add-no-sorting" title=" Options added via config with no sorting" titleClass="mb-3">
+  return (
+    <ComponentContainerCard id="options-add-no-sorting" title=" Options added via config with no sorting" titleClass="mb-3">
       <Row>
         <Col lg={6}>
-          <ChoicesFormInput options={{
-          shouldSort: false
-        }}>
+          <ChoicesFormInput
+            options={{
+              shouldSort: false,
+            }}>
             <option value="Madrid">Madrid</option>
             <option value="Toronto">Toronto</option>
             <option value="Vancouver">Vancouver</option>
@@ -111,10 +120,12 @@ const OptionWithNoSorting = () => {
           </ChoicesFormInput>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const MultipleSelect = () => {
-  return <ComponentContainerCard id="multiple-select" title="Multiple select input" titleClass="mb-3">
+  return (
+    <ComponentContainerCard id="multiple-select" title="Multiple select input" titleClass="mb-3">
       <Row>
         <Col lg={6}>
           <ChoicesFormInput className="form-control" multiple>
@@ -129,15 +140,19 @@ const MultipleSelect = () => {
           </ChoicesFormInput>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const MultipleSelectWithRemoveButton = () => {
-  return <ComponentContainerCard id="multiple-select-remove" title="Multiple select With remove button input" titleClass="mb-3">
+  return (
+    <ComponentContainerCard id="multiple-select-remove" title="Multiple select With remove button input" titleClass="mb-3">
       <Row>
         <Col lg={6}>
-          <ChoicesFormInput options={{
-          removeItemButton: true
-        }} multiple>
+          <ChoicesFormInput
+            options={{
+              removeItemButton: true,
+            }}
+            multiple>
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -145,15 +160,19 @@ const MultipleSelectWithRemoveButton = () => {
           </ChoicesFormInput>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const MultipleSelectOptionGroups = () => {
-  return <ComponentContainerCard id="multiple-groups" title="Multiple select With Option groups" titleClass="mb-3">
+  return (
+    <ComponentContainerCard id="multiple-groups" title="Multiple select With Option groups" titleClass="mb-3">
       <Row>
         <Col lg={6}>
-          <ChoicesFormInput options={{
-          placeholderValue: 'choose a city'
-        }} multiple>
+          <ChoicesFormInput
+            options={{
+              placeholderValue: 'choose a city',
+            }}
+            multiple>
             <option>Choose a city</option>
             <optgroup label="UK">
               <option value="London">London</option>
@@ -190,44 +209,76 @@ const MultipleSelectOptionGroups = () => {
           </ChoicesFormInput>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TextInputs = () => {
-  return <ComponentContainerCard id="text-input" title="Text Inputs" description={<>
+  return (
+    <ComponentContainerCard
+      id="text-input"
+      title="Text Inputs"
+      description={
+        <>
           Set <code>data-choices data-choices-limit=&quot;Required Limit&quot; data-choices-removeItem</code> attribute.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <label htmlFor="choices-text-remove-button" className="form-label text-muted">
             Set limit values with remove button
           </label>
-          <ChoicesFormInput options={{
-          removeItemButton: true,
-          maxItemCount: 3
-        }} allowInput className="form-control" data-choices data-choices-limit={3} data-choices-removeitem defaultValue="Task-1" />
+          <ChoicesFormInput
+            options={{
+              removeItemButton: true,
+              maxItemCount: 3,
+            }}
+            allowInput
+            className="form-control"
+            data-choices
+            data-choices-limit={3}
+            data-choices-removeitem
+            defaultValue="Task-1"
+          />
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const TextInputsWithUniqueValue = () => {
-  return <ComponentContainerCard id="unique-values" title=" Text inputs in Unique values only, no pasting" description={<>
+  return (
+    <ComponentContainerCard
+      id="unique-values"
+      title=" Text inputs in Unique values only, no pasting"
+      description={
+        <>
           Set <code>data-choices data-choices-text-unique-true</code> attribute.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <label htmlFor="choices-text-unique-values" className="form-label text-muted">
             Unique values only, no pasting
           </label>
-          <ChoicesFormInput options={{
-          duplicateItemsAllowed: false,
-          paste: false
-        }} allowInput className="form-control" id="choices-text-unique-values" data-choices data-choices-text-unique-true defaultValue="Project-A, Project-B" />
+          <ChoicesFormInput
+            options={{
+              duplicateItemsAllowed: false,
+              paste: false,
+            }}
+            allowInput
+            className="form-control"
+            id="choices-text-unique-values"
+            data-choices
+            data-choices-text-unique-true
+            defaultValue="Project-A, Project-B"
+          />
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const Select = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Form" title="Form Select" />
       <PageMetaData title="Form Select" />
 
@@ -258,36 +309,49 @@ const Select = () => {
           <TextInputsWithUniqueValue />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#basic',
-          label: 'Basic Example'
-        }, {
-          link: '#options-group',
-          label: 'Option Groups Example'
-        }, {
-          link: '#options-add-no-search',
-          label: 'Options added via config with no search'
-        }, {
-          link: '#options-add-no-sorting',
-          label: 'Options added via config with no sorting'
-        }, {
-          link: '#multiple-select',
-          label: 'Multiple select input'
-        }, {
-          link: '#multiple-select-remove',
-          label: 'Multiple select With remove button input'
-        }, {
-          link: '#multiple-groups',
-          label: 'Multiple select With Option groups'
-        }, {
-          link: '#text-input',
-          label: 'Text inputs'
-        }, {
-          link: '#unique-values',
-          label: 'Text inputs in Unique values only,no pasting'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#basic',
+                label: 'Basic Example',
+              },
+              {
+                link: '#options-group',
+                label: 'Option Groups Example',
+              },
+              {
+                link: '#options-add-no-search',
+                label: 'Options added via config with no search',
+              },
+              {
+                link: '#options-add-no-sorting',
+                label: 'Options added via config with no sorting',
+              },
+              {
+                link: '#multiple-select',
+                label: 'Multiple select input',
+              },
+              {
+                link: '#multiple-select-remove',
+                label: 'Multiple select With remove button input',
+              },
+              {
+                link: '#multiple-groups',
+                label: 'Multiple select With Option groups',
+              },
+              {
+                link: '#text-input',
+                label: 'Text inputs',
+              },
+              {
+                link: '#unique-values',
+                label: 'Text inputs in Unique values only,no pasting',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Select;
+    </>
+  )
+}
+export default Select

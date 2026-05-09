@@ -1,26 +1,26 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import { getProductById } from '@/helpers/data';
-import ProductDetailView from './components/ProductDetailView';
-import ProductImages from './components/ProductImages';
-import PageMetaData from '@/components/PageTitle';
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import { getProductById } from '@/helpers/data'
+import ProductDetailView from './components/ProductDetailView'
+import ProductImages from './components/ProductImages'
+import PageMetaData from '@/components/PageTitle'
 const ProductDetail = () => {
-  const [product, setProduct] = useState();
-  const {
-    productId
-  } = useParams();
-  const navigate = useNavigate();
+  const [product, setProduct] = useState()
+  const { productId } = useParams()
+  const navigate = useNavigate()
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (productId) {
-        const data = await getProductById(productId);
-        if (data) setProduct(data);else navigate('/pages/error-404-alt');
+        const data = await getProductById(productId)
+        if (data) setProduct(data)
+        else navigate('/pages/error-404-alt')
       }
-    })();
-  }, [productId]);
-  return <>
+    })()
+  }, [productId])
+  return (
+    <>
       <PageBreadcrumb title="Product Details" subName="Ecommerce" />
       <PageMetaData title={product?.name ?? 'Product Details'} />
       <Row>
@@ -35,6 +35,7 @@ const ProductDetail = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default ProductDetail;
+    </>
+  )
+}
+export default ProductDetail

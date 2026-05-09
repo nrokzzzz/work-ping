@@ -1,12 +1,17 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import small6 from '@/assets/images/small/img-6.jpg';
-import avatar1 from '@/assets/images/users/avatar-1.jpg';
-import { Button, Card, CardBody, CardFooter, CardTitle, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap';
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import small6 from '@/assets/images/small/img-6.jpg'
+import avatar1 from '@/assets/images/users/avatar-1.jpg'
+import { Button, Card, CardBody, CardFooter, CardTitle, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap'
 const AboutCard = () => {
-  return <Card>
+  return (
+    <Card>
       <div className="position-relative">
         <img src={small6} alt="avatar" className="card-img rounded-bottom-0" height={200} />
-        <img src={avatar1} alt="avatar" className="avatar-lg rounded-circle position-absolute top-100 start-0 translate-middle-y ms-3 border border-light border-3" />
+        <img
+          src={avatar1}
+          alt="avatar"
+          className="avatar-lg rounded-circle position-absolute top-100 start-0 translate-middle-y ms-3 border border-light border-3"
+        />
       </div>
       <CardBody className="mt-4">
         <div>
@@ -96,6 +101,7 @@ const AboutCard = () => {
           </Col>
         </Row>
       </CardFooter>
-    </Card>;
-};
-export default AboutCard;
+    </Card>
+  )
+}
+export default AboutCard

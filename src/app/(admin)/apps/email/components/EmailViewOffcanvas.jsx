@@ -1,30 +1,36 @@
-import { useEffect, useState } from 'react';
-import ReactQuill from 'react-quill';
-import { Button, ButtonGroup, Col, Offcanvas, OffcanvasHeader, OffcanvasTitle, Row } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient';
-import { useEmailContext } from '@/context/useEmailContext';
-import { getEmailDetails } from '@/helpers/data';
-import 'react-quill/dist/quill.snow.css';
-const FilePreview = ({
-  file
-}) => {
-  return <div className="card p-2 mb-0 shadow-none border position-relative h-100">
-      {file.preview ? <img src={file.preview} height={90} width={140} className="rounded bg-light" alt={file.name ?? ''} /> : <div className="rounded bg-light text-center flex-centered fs-1" style={{
-      height: 90,
-      width: 140
-    }}>
+import { useEffect, useState } from 'react'
+import ReactQuill from 'react-quill'
+import { Button, ButtonGroup, Col, Offcanvas, OffcanvasHeader, OffcanvasTitle, Row } from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
+import { useEmailContext } from '@/context/useEmailContext'
+import { getEmailDetails } from '@/helpers/data'
+import 'react-quill/dist/quill.snow.css'
+const FilePreview = ({ file }) => {
+  return (
+    <div className="card p-2 mb-0 shadow-none border position-relative h-100">
+      {file.preview ? (
+        <img src={file.preview} height={90} width={140} className="rounded bg-light" alt={file.name ?? ''} />
+      ) : (
+        <div
+          className="rounded bg-light text-center flex-centered fs-1"
+          style={{
+            height: 90,
+            width: 140,
+          }}>
           {file.name?.split('.')[file.name?.split('.').length - 1]?.toUpperCase()}
-        </div>}
+        </div>
+      )}
       <div className="mt-2">
         <p role="button" className="text-body-secondary fw-bold">
           {file.name}
         </p>
       </div>
-    </div>;
-};
+    </div>
+  )
+}
 const EmailViewOffcanvas = () => {
-  const [mail, setMail] = useState();
+  const [mail, setMail] = useState()
   const [quillEditorContent, setQuillEditorContent] = useState(`
 <h3>This is an Air-mode editable area.</h3>
 <p><br /></p>
@@ -34,22 +40,20 @@ const EmailViewOffcanvas = () => {
 </ul>
 <p><br /></p>
 <p>End of air-mode area</p>
-  `);
+  `)
   const {
-    emailDetails: {
-      open,
-      toggle
-    },
-    activeMail
-  } = useEmailContext();
+    emailDetails: { open, toggle },
+    activeMail,
+  } = useEmailContext()
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getEmailDetails(activeMail);
-      if (data) setMail(data);
-    };
-    fetchData();
-  }, [activeMail]);
-  return <Offcanvas show={open} onHide={toggle} placement="end" className="email-offcanvas">
+      const data = await getEmailDetails(activeMail)
+      if (data) setMail(data)
+    }
+    fetchData()
+  }, [activeMail])
+  return (
+    <Offcanvas show={open} onHide={toggle} placement="end" className="email-offcanvas">
       <OffcanvasHeader>
         <div className="d-flex gap-2 align-items-center w-50">
           <button onClick={toggle} className="btn btn-link p-0 icons-center">
@@ -105,17 +109,21 @@ const EmailViewOffcanvas = () => {
               </p>
             </div>
             <hr />
-            {mail?.attachments && <>
+            {mail?.attachments && (
+              <>
                 <h6 className="icons-center">
                   {' '}
                   <IconifyIcon icon="fa:paperclip" className="me-1" /> Attachments&nbsp;<span>({mail.attachments.length})</span>
                 </h6>
                 <Row className="row-gap-3">
-                  {mail.attachments.map((file, idx) => <Col xl={3} md={4} sm={6} key={file.name}>
+                  {mail.attachments.map((file, idx) => (
+                    <Col xl={3} md={4} sm={6} key={file.name}>
                       <FilePreview key={idx} file={file} />
-                    </Col>)}
+                    </Col>
+                  ))}
                 </Row>
-              </>}
+              </>
+            )}
           </div>
         </div>
       </SimplebarReactClient>
@@ -124,9 +132,15 @@ const EmailViewOffcanvas = () => {
           {mail?.to?.avatar && <img className="me-2 rounded-circle avatar-sm" src={mail.to.avatar} alt={mail.to.name + 'avatar'} />}
           <div className="flex-grow-1">
             <div className="mb-5">
-              <ReactQuill className="pb-2 pb-sm-0" theme="snow" style={{
-              height: 150
-            }} value={quillEditorContent} onChange={setQuillEditorContent} />
+              <ReactQuill
+                className="pb-2 pb-sm-0"
+                theme="snow"
+                style={{
+                  height: 150,
+                }}
+                value={quillEditorContent}
+                onChange={setQuillEditorContent}
+              />
             </div>
           </div>
         </div>
@@ -136,6 +150,7 @@ const EmailViewOffcanvas = () => {
           </Button>
         </div>
       </div>
-    </Offcanvas>;
-};
-export default EmailViewOffcanvas;
+    </Offcanvas>
+  )
+}
+export default EmailViewOffcanvas

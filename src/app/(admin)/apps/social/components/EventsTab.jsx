@@ -1,14 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Button, Card, CardBody, CardTitle, Col, Row, TabPane } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllEvents } from '@/helpers/data';
-const EventCard = ({
-  image,
-  startsAt,
-  title,
-  venue
-}) => {
-  return <Card>
+import { useEffect, useState } from 'react'
+import { Button, Card, CardBody, CardTitle, Col, Row, TabPane } from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllEvents } from '@/helpers/data'
+const EventCard = ({ image, startsAt, title, venue }) => {
+  return (
+    <Card>
       <img src={image} alt={title + '-event'} className="card-img-top img-fluid" />
       <CardBody>
         <h6>{new Date(startsAt).toLocaleString()}</h6>
@@ -26,23 +22,32 @@ const EventCard = ({
           </Button>
         </div>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const EventsTab = () => {
-  const [eventsList, setEventsList] = useState();
+  const [eventsList, setEventsList] = useState()
   useEffect(() => {
     const fetchEvents = async () => {
-      const fetchedEvents = await getAllEvents();
-      if (fetchedEvents) setEventsList(fetchedEvents);
-    };
-    fetchEvents();
-  }, []);
-  return <TabPane eventKey="Events" className="fade">
+      const fetchedEvents = await getAllEvents()
+      if (fetchedEvents) setEventsList(fetchedEvents)
+    }
+    fetchEvents()
+  }, [])
+  return (
+    <TabPane eventKey="Events" className="fade">
       <Row>
-        {eventsList ? eventsList.map(event => <Col lg={6} key={event.id}>
+        {eventsList ? (
+          eventsList.map((event) => (
+            <Col lg={6} key={event.id}>
               <EventCard {...event} />
-            </Col>) : <h4 className="text-center">No Events coming soon</h4>}
+            </Col>
+          ))
+        ) : (
+          <h4 className="text-center">No Events coming soon</h4>
+        )}
       </Row>
-    </TabPane>;
-};
-export default EventsTab;
+    </TabPane>
+  )
+}
+export default EventsTab

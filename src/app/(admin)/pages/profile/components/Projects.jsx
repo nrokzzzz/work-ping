@@ -1,22 +1,24 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Card, CardBody, CardHeader, CardTitle, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, OverlayTrigger, ProgressBar, Row, Tooltip } from 'react-bootstrap';
-import { projectData } from '../data';
-const ProjectCard = ({
-  project
-}) => {
-  const {
-    days,
-    file,
-    icon,
-    iconColor,
-    progressVariant,
-    progressValue,
-    team,
-    teamMembers,
-    title,
-    task
-  } = project;
-  return <Card className="shadow-none mb-0">
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  OverlayTrigger,
+  ProgressBar,
+  Row,
+  Tooltip,
+} from 'react-bootstrap'
+import { projectData } from '../data'
+const ProjectCard = ({ project }) => {
+  const { days, file, icon, iconColor, progressVariant, progressValue, team, teamMembers, title, task } = project
+  return (
+    <Card className="shadow-none mb-0">
       <CardBody className="p-lg-3 p-2">
         <div className="d-flex align-items-center gap-3 mb-3">
           <div className="avatar-md flex-shrink-0">
@@ -52,17 +54,21 @@ const ProjectCard = ({
         </div>
         <div className="d-flex align-items-center gap-3">
           <div className="avatar-group">
-            {teamMembers.map((member, idx) => <div className="avatar-group-item" key={idx}>
+            {teamMembers.map((member, idx) => (
+              <div className="avatar-group-item" key={idx}>
                 <img src={member} alt="avatar" className="rounded-circle avatar-sm" />
-              </div>)}
+              </div>
+            ))}
           </div>
           <h5 className="mb-0">{team}+ Team Work</h5>
         </div>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const Projects = () => {
-  return <Card>
+  return (
+    <Card>
       <CardHeader className="d-flex align-items-center">
         <CardTitle as={'h5'}>Projects</CardTitle>
         <div className="ms-auto">
@@ -89,11 +95,14 @@ const Projects = () => {
       </CardHeader>
       <CardBody>
         <Row className="g-3">
-          {projectData.map((project, idx) => <Col lg={6} key={idx}>
+          {projectData.map((project, idx) => (
+            <Col lg={6} key={idx}>
               <ProjectCard project={project} />
-            </Col>)}
+            </Col>
+          ))}
         </Row>
       </CardBody>
-    </Card>;
-};
-export default Projects;
+    </Card>
+  )
+}
+export default Projects

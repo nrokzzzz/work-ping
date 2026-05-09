@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Form,
-} from 'react-bootstrap'
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form } from 'react-bootstrap'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -21,11 +14,7 @@ import axiosClient from '@/helpers/httpClient'
 import { use2FA } from '@/context/TwoFAContext'
 import { useAuthContext } from '@/context/useAuthContext'
 const schema = yup.object({
-
-  userId: yup
-    .string()
-    .trim()
-    .required('User Id is required'),
+  userId: yup.string().trim().required('User Id is required'),
 
   userName: yup
     .string()
@@ -33,10 +22,7 @@ const schema = yup.object({
     .matches(/^[A-Za-z\s]+$/, 'User Name must contain only letters and spaces')
     .required('User Name is required'),
 
-  email: yup
-    .string()
-    .email('Invalid email')
-    .required('Email is required'),
+  email: yup.string().email('Invalid email').required('Email is required'),
 
   phone: yup
     .string()
@@ -45,26 +31,16 @@ const schema = yup.object({
 
   dob: yup
     .string()
-    .matches(
-      /^\d{4}-\d{2}-\d{2}$/,
-      'Date of Birth must be in dd-mm-yyyy format'
-    )
+    .matches(/^\d{4}-\d{2}-\d{2}$/, 'Date of Birth must be in dd-mm-yyyy format')
     .required('Date of Birth is required'),
 
-  gender: yup
-    .string()
-    .required('Gender is required'),
+  gender: yup.string().required('Gender is required'),
 
-  workType: yup
-    .string()
-    .required('Work Type is required'),
+  workType: yup.string().required('Work Type is required'),
 
   doj: yup
     .string()
-    .matches(
-      /^\d{4}-\d{2}-\d{2}$/,
-      'Date of Joining must be in yyyy-mm-dd format'
-    )
+    .matches(/^\d{4}-\d{2}-\d{2}$/, 'Date of Joining must be in yyyy-mm-dd format')
     .required('Date of Joining is required'),
 
   aadhaar: yup
@@ -72,28 +48,19 @@ const schema = yup.object({
     .matches(/^[0-9]{12}$/, 'Aadhaar must be exactly 12 digits')
     .required('Aadhaar is required'),
 
-  organizationName: yup
-    .string()
-    .required('Organization Name is required'),
+  organizationName: yup.string().required('Organization Name is required'),
 
-  address: yup
-    .string()
-    .required('Address is required'),
+  address: yup.string().required('Address is required'),
 
-  passport: yup
-    .string()
-    .nullable(),
+  passport: yup.string().nullable(),
 
-  bankId: yup
-    .string()
-    .nullable(),
+  bankId: yup.string().nullable(),
 
   pan: yup
     .string()
     .nullable()
-    .transform(v => (v === '' ? null : v))
+    .transform((v) => (v === '' ? null : v))
     .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format'),
-
 })
 
 const AddEmployee = () => {
@@ -104,7 +71,7 @@ const AddEmployee = () => {
   const [step, setStep] = useState(0)
   const [countryCode, setCountryCode] = useState('+91')
   const [search, setSearch] = useState('')
-  const [currency, setCurrency] = useState("₹")
+  const [currency, setCurrency] = useState('₹')
   const { require2FA } = use2FA()
   const { is2FAAuthnticator } = useAuthContext()
   const {
@@ -143,22 +110,16 @@ const AddEmployee = () => {
       aadhaar: v.aadhaar,
       pan: v.pan,
       passport: v.passport,
-      bankId: v.bankId
+      bankId: v.bankId,
     }
 
     try {
       require2FA(async () => {
         try {
-          await axiosClient.post(
-            "/api/admin/add-employees/by-form",
-            data,
-            { silent: true }
-          )
+          await axiosClient.post('/api/admin/add-employees/by-form', data, { silent: true })
           navigate('/employees/view-employees')
         } catch (error) {
-          throw new Error(
-            error?.response?.data?.message || "Failed to add Employee"
-          )
+          throw new Error(error?.response?.data?.message || 'Failed to add Employee')
         }
       })
     } catch (error) {
@@ -169,18 +130,14 @@ const AddEmployee = () => {
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
-        const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info',
-          { silent: true }
-        )
+        const res = await axiosClient.get('/api/admin/get-all-employees/get-organization-info', { silent: true })
 
         const formatted = Object.entries(res.data?.data || {}).map(([name, obj]) => ({
           name,
-          organizationId: obj.organizationId
+          organizationId: obj.organizationId,
         }))
 
         setOrganizations(formatted)
-
       } catch (error) {
         // Error handled by interceptor
       }
@@ -190,37 +147,32 @@ const AddEmployee = () => {
   }, [])
   return (
     <>
-
       {step === 0 && (
         <ComponentContainerCard
           title={
             <div className="d-flex justify-content-between align-items-center">
               <span>Add Basic Employee Details</span>
 
-              <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={() =>
-                  navigate('/employees/add-employees/bulk-upload')
-                }
-              >
+              <Button variant="outline-primary" size="sm" onClick={() => navigate('/employees/add-employees/bulk-upload')}>
                 <IconifyIcon icon="bx:upload" className="me-1" />
                 Spread-Sheet
               </Button>
             </div>
-          }
-        >
+          }>
           <Form className="row g-3">
-
             {/* Row 1 */}
             <div className="col-md-4">
-              <Form.Label>User ID <span className="text-danger">*</span></Form.Label>
+              <Form.Label>
+                User ID <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control placeholder="Enter User Id" {...register('userId')} />
               <small className="text-danger">{errors.userId?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>User Name <span className="text-danger">*</span></Form.Label>
+              <Form.Label>
+                User Name <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
                 placeholder="Enter Full Name"
                 {...register('userName')}
@@ -234,38 +186,35 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Email <span className="text-danger">*</span></Form.Label>
+              <Form.Label>
+                Email <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control placeholder="Enter Email" {...register('email')} />
               <small className="text-danger">{errors.email?.message}</small>
             </div>
 
             {/* Row 2 */}
             <div className="col-md-4">
-              <Form.Label>Organization Name <span className="text-danger">*</span></Form.Label>
+              <Form.Label>
+                Organization Name <span className="text-danger">*</span>
+              </Form.Label>
 
               <Dropdown className="w-100">
                 <Dropdown.Toggle
                   as="div"
                   className="form-control d-flex justify-content-between align-items-center arrow-none"
-                  style={{ cursor: 'pointer' }}
-                >
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>{selectedOrg || 'Select Organization'}</span>
+                  style={{ cursor: 'pointer' }}>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>
+                    {selectedOrg || 'Select Organization'}
+                  </span>
                   <IconifyIcon icon="bx:chevron-down" className="fs-4" />
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu
-                  className="w-100 p-2"
-                  style={{ maxHeight: '220px', overflowY: 'auto' }}
-                >
-                  <Form.Control
-                    placeholder="Search organization"
-                    className="mb-2"
-                    value={orgSearch}
-                    onChange={(e) => setOrgSearch(e.target.value)}
-                  />
+                <Dropdown.Menu className="w-100 p-2" style={{ maxHeight: '220px', overflowY: 'auto' }}>
+                  <Form.Control placeholder="Search organization" className="mb-2" value={orgSearch} onChange={(e) => setOrgSearch(e.target.value)} />
 
                   {organizations
-                    .filter(o => o.name.toLowerCase().includes(orgSearch.toLowerCase()))
+                    .filter((o) => o.name.toLowerCase().includes(orgSearch.toLowerCase()))
                     .map((o) => (
                       <Dropdown.Item
                         key={o.organizationId}
@@ -273,8 +222,7 @@ const AddEmployee = () => {
                           setSelectedOrg(o.name)
                           setValue('organizationName', o.name)
                           setOrgSearch('')
-                        }}
-                      >
+                        }}>
                         {o.name}
                       </Dropdown.Item>
                     ))}
@@ -286,36 +234,29 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Contact Number <span className="text-danger">*</span></Form.Label>
+              <Form.Label>
+                Contact Number <span className="text-danger">*</span>
+              </Form.Label>
 
               <div className="d-flex gap-2">
                 <Dropdown>
-                  <DropdownToggle
-                    className="btn btn-light border arrow-none"
-                    style={{ minWidth: 90 }}
-                  >
+                  <DropdownToggle className="btn btn-light border arrow-none" style={{ minWidth: 90 }}>
                     {countryCode}
                     <IconifyIcon icon="bx:chevron-down" className="ms-2" />
                   </DropdownToggle>
 
                   <DropdownMenu style={{ maxHeight: 200, overflowY: 'auto' }}>
-                    <Form.Control
-                      placeholder="Search country"
-                      className="m-2"
-                      value={search}
-                      onChange={e => setSearch(e.target.value)}
-                    />
+                    <Form.Control placeholder="Search country" className="m-2" value={search} onChange={(e) => setSearch(e.target.value)} />
 
                     {countryCodes
-                      .filter(c => c.country.toLowerCase().includes(search.toLowerCase()))
-                      .map(c => (
+                      .filter((c) => c.country.toLowerCase().includes(search.toLowerCase()))
+                      .map((c) => (
                         <DropdownItem
                           key={c.isoCode2}
                           onClick={() => {
                             setCountryCode('+' + c.countryCodes[0])
                             setSearch('')
-                          }}
-                        >
+                          }}>
                           {c.country} (+{c.countryCodes[0]})
                         </DropdownItem>
                       ))}
@@ -336,20 +277,19 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Date of Birth <span className="text-danger">*</span></Form.Label>
-              <Form.Control
-                type="date"
-                max={new Date().toISOString().split('T')[0]}
-                {...register('dob')}
-              />
+              <Form.Label>
+                Date of Birth <span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control type="date" max={new Date().toISOString().split('T')[0]} {...register('dob')} />
               <small className="text-danger">{errors.dob?.message}</small>
             </div>
 
             {/* Row 3 : Gender + WorkType | Address */}
 
             <div className="col-md-4">
-
-              <Form.Label>Gender <span className="text-danger">*</span></Form.Label>
+              <Form.Label>
+                Gender <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Select {...register('gender')}>
                 <option value="">Select Gender</option>
                 <option>Male</option>
@@ -358,41 +298,39 @@ const AddEmployee = () => {
               </Form.Select>
               <small className="text-danger">{errors.gender?.message}</small>
 
-              <Form.Label className="mt-3">Work Type <span className="text-danger">*</span></Form.Label>
+              <Form.Label className="mt-3">
+                Work Type <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Select {...register('workType')}>
                 <option value="onSite">OnSite</option>
                 <option value="Remote">Remote</option>
                 <option value="Hybrid">Hybrid</option>
               </Form.Select>
               <small className="text-danger">{errors.workType?.message}</small>
-
             </div>
 
             <div className="col-md-8">
-              <Form.Label>Address <span className="text-danger">*</span></Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={5}
-                placeholder="Enter the user address here..."
-                {...register('address')}
-              />
+              <Form.Label>
+                Address <span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control as="textarea" rows={5} placeholder="Enter the user address here..." {...register('address')} />
               <small className="text-danger">{errors.address?.message}</small>
             </div>
 
             {/* Row 4 */}
 
             <div className="col-md-4">
-              <Form.Label>Date of Joining <span className="text-danger">*</span></Form.Label>
-              <Form.Control
-                type="date"
-                max={new Date().toISOString().split('T')[0]}
-                {...register('doj')}
-              />
+              <Form.Label>
+                Date of Joining <span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control type="date" max={new Date().toISOString().split('T')[0]} {...register('doj')} />
               <small className="text-danger">{errors.doj?.message}</small>
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Aadhaar <span className="text-danger">*</span></Form.Label>
+              <Form.Label>
+                Aadhaar <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
                 placeholder="12-digit Aadhaar number"
                 maxLength={12}
@@ -408,12 +346,8 @@ const AddEmployee = () => {
               <Form.Label>Salary</Form.Label>
 
               <div className="d-flex gap-2">
-
                 <Dropdown>
-                  <DropdownToggle
-                    className="btn btn-light border arrow-none"
-                    style={{ minWidth: 90 }}
-                  >
+                  <DropdownToggle className="btn btn-light border arrow-none" style={{ minWidth: 90 }}>
                     {currency}
                     <IconifyIcon icon="bx:chevron-down" className="ms-2" />
                   </DropdownToggle>
@@ -434,7 +368,6 @@ const AddEmployee = () => {
                   }}
                   {...register('salary')}
                 />
-
               </div>
 
               <small className="text-danger">{errors.salary?.message}</small>
@@ -443,12 +376,16 @@ const AddEmployee = () => {
             {/* Row 5 */}
 
             <div className="col-md-4">
-              <Form.Label>Passport <small className="text-muted">(Optional)</small></Form.Label>
+              <Form.Label>
+                Passport <small className="text-muted">(Optional)</small>
+              </Form.Label>
               <Form.Control placeholder="Enter passport number" {...register('passport')} />
             </div>
 
             <div className="col-md-4">
-              <Form.Label>PAN <small className="text-muted">(Optional)</small></Form.Label>
+              <Form.Label>
+                PAN <small className="text-muted">(Optional)</small>
+              </Form.Label>
               <Form.Control
                 placeholder="ABCDE1234F"
                 maxLength={10}
@@ -461,22 +398,20 @@ const AddEmployee = () => {
             </div>
 
             <div className="col-md-4">
-              <Form.Label>Bank ID <small className="text-muted">(Optional)</small></Form.Label>
+              <Form.Label>
+                Bank ID <small className="text-muted">(Optional)</small>
+              </Form.Label>
               <Form.Control placeholder="Enter bank account number" {...register('bankId')} />
             </div>
 
             {/* Submit */}
 
             <div className="col-12 d-flex justify-content-center mt-3">
-              <Button onClick={handleSubmit(submitForm)}>
-                Submit
-              </Button>
+              <Button onClick={handleSubmit(submitForm)}>Submit</Button>
             </div>
-
           </Form>
         </ComponentContainerCard>
       )}
-
     </>
   )
 }

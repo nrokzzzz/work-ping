@@ -38,10 +38,7 @@ const ViewOrganization = () => {
         params.append('search', q.trim())
       }
 
-      const response = await axiosClient.get(
-        `/api/admin/organization/get-organizations?${params.toString()}`,
-        { silent: true }
-      )
+      const response = await axiosClient.get(`/api/admin/organization/get-organizations?${params.toString()}`, { silent: true })
 
       setorganizations(response.data?.data?.organizations || [])
       setTotalPages(response.data?.data?.totalPages || 0)
@@ -58,7 +55,7 @@ const ViewOrganization = () => {
   }, [currentPage, search])
 
   const handleSelect = (id, checked) => {
-    setSelectedIds(prev => {
+    setSelectedIds((prev) => {
       const newSet = new Set(prev)
 
       if (checked) newSet.add(id)
@@ -69,44 +66,33 @@ const ViewOrganization = () => {
   }
 
   const deleteOrganizations = async () => {
-
     {
-
       require2FA(async () => {
-
         try {
-
-          await axiosClient.post('/api/admin/organization/delete-organizations', {
-            data: [...selectedIds],
-          }, { silent: true })
+          await axiosClient.post(
+            '/api/admin/organization/delete-organizations',
+            {
+              data: [...selectedIds],
+            },
+            { silent: true },
+          )
 
           toast.success('Organization(s) deleted successfully!')
           setSelectedIds(new Set())
           fetchorganizations(currentPage, search)
-
         } catch (error) {
-
-          throw new Error(
-            error?.response?.data?.message || "Failed to delete organizations"
-          )
-
+          throw new Error(error?.response?.data?.message || 'Failed to delete organizations')
         }
-
       })
-
     }
-
   }
 
   const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
 
-    if (currentPage <= 2)
-      return [1, 2, 3, '...', totalPages]
+    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
 
-    if (currentPage >= totalPages - 1)
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
 
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
@@ -125,11 +111,8 @@ const ViewOrganization = () => {
     <Row>
       <Col>
         <Card>
-
           <CardBody>
-
             <Row className="align-items-center g-2">
-
               {/* Search */}
               <Col xs={12} md={6} lg={4}>
                 <div className="position-relative">
@@ -155,39 +138,23 @@ const ViewOrganization = () => {
               </Col>
 
               {/* Buttons */}
-              <Col
-                xs={12}
-                md={6}
-                lg={8}
-                className="d-flex gap-2 justify-content-md-end flex-wrap"
-              >
-
+              <Col xs={12} md={6} lg={8} className="d-flex gap-2 justify-content-md-end flex-wrap">
                 <Button
                   variant="primary"
                   className="flex-grow-1 flex-md-grow-0 px-4"
                   onClick={() => {
                     setCurrentPage(1)
                     setSearch(searchInput)
-                  }}
-                >
+                  }}>
                   Apply
                 </Button>
 
-                <Button
-                  variant="danger"
-                  className="flex-grow-1 flex-md-grow-0 px-4"
-                  disabled={selectedIds.size === 0}
-                  onClick={deleteOrganizations}
-                >
+                <Button variant="danger" className="flex-grow-1 flex-md-grow-0 px-4" disabled={selectedIds.size === 0} onClick={deleteOrganizations}>
                   Delete
                 </Button>
-
               </Col>
-
             </Row>
-
           </CardBody>
-
 
           <div className="table-responsive table-centered">
             <table className="table text-nowrap mb-0">
@@ -219,14 +186,11 @@ const ViewOrganization = () => {
                 ) : (
                   organizations.map((organization) => (
                     <tr key={organization._id}>
-
                       <td>
                         <input
                           type="checkbox"
                           checked={selectedIds.has(organization._id)}
-                          onChange={(e) =>
-                            handleSelect(organization._id, e.target.checked)
-                          }
+                          onChange={(e) => handleSelect(organization._id, e.target.checked)}
                         />
                       </td>
 
@@ -235,10 +199,7 @@ const ViewOrganization = () => {
                           variant="soft-secondary"
                           size="sm"
                           className="me-2"
-                          onClick={() =>
-                            navigate(`/organization/update-organization/${organization._id}`)
-                          }
-                        >
+                          onClick={() => navigate(`/organization/update-organization/${organization._id}`)}>
                           <IconifyIcon icon="bx:edit" />
                         </Button>
                       </td>
@@ -248,7 +209,6 @@ const ViewOrganization = () => {
                       <td>{organization.type || '--'}</td>
                       <td>{organization.IPWhitelist?.[0] || '--'}</td>
                       <td>{organization.foundedAt || '--'}</td>
-
                     </tr>
                   ))
                 )}
@@ -257,31 +217,68 @@ const ViewOrganization = () => {
           </div>
 
           <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
-            <div className="text-muted small">Showing {start} to {end} of {totalRecords} records</div>
+            <div className="text-muted small">
+              Showing {start} to {end} of {totalRecords} records
+            </div>
             <div className="d-flex flex-wrap align-items-center gap-2">
               <ul className="pagination pagination-rounded m-0">
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}><IconifyIcon icon="bx:left-arrow-alt" /></Link>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage > 1) setCurrentPage(currentPage - 1)
+                    }}>
+                    <IconifyIcon icon="bx:left-arrow-alt" />
+                  </Link>
                 </li>
                 {getPages().map((p, i) => (
                   <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
-                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === 'number') setCurrentPage(p) }}>{p}</Link>
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (typeof p === 'number') setCurrentPage(p)
+                      }}>
+                      {p}
+                    </Link>
                   </li>
                 ))}
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}><IconifyIcon icon="bx:right-arrow-alt" /></Link>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+                    }}>
+                    <IconifyIcon icon="bx:right-arrow-alt" />
+                  </Link>
                 </li>
               </ul>
               {totalPages > 1 && (
                 <div className="d-flex align-items-center gap-1">
                   <span className="text-muted small text-nowrap">Go to</span>
-                  <input type="number" min={1} max={totalPages} value={jumpPage} onChange={(e) => setJumpPage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()} className="form-control form-control-sm text-center" style={{ width: 60 }} placeholder={`/${totalPages}`} />
-                  <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
+                  <input
+                    type="number"
+                    min={1}
+                    max={totalPages}
+                    value={jumpPage}
+                    onChange={(e) => setJumpPage(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
+                    className="form-control form-control-sm text-center"
+                    style={{ width: 60 }}
+                    placeholder={`/${totalPages}`}
+                  />
+                  <Button size="sm" variant="primary" onClick={handleJumpGo}>
+                    Go
+                  </Button>
                 </div>
               )}
             </div>
           </div>
-
         </Card>
       </Col>
     </Row>

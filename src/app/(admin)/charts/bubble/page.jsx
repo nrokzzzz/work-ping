@@ -1,10 +1,11 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllBubbleCharts from './components/AllBubbleCharts';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllBubbleCharts from './components/AllBubbleCharts'
 const BubbleCharts = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb title="Bubble Charts" subName="Charts" />
       <PageMetaData title="Bubble Charts" />
 
@@ -13,15 +14,21 @@ const BubbleCharts = () => {
           <AllBubbleCharts />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#simple',
-          label: 'Simple Bubble Chart'
-        }, {
-          link: '#3d-bubble',
-          label: '3D Bubble Chart'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#simple',
+                label: 'Simple Bubble Chart',
+              },
+              {
+                link: '#3d-bubble',
+                label: '3D Bubble Chart',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default BubbleCharts;
+    </>
+  )
+}
+export default BubbleCharts

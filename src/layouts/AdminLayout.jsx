@@ -1,14 +1,13 @@
-import { lazy, Suspense } from 'react';
-import FallbackLoading from '@/components/FallbackLoading';
-import Footer from '@/components/layout/Footer';
-import Preloader from '@/components/Preloader';
-import Loader from '@/pages/loader/Loader';
-const TopNavigationBar = lazy(() => import('@/components/layout/TopNavigationBar'));
-const VerticalNavigationBar = lazy(() => import('@/components/layout/VerticalNavigationBar'));
-const AdminLayout = ({
-  children
-}) => {
-  return <div className="wrapper">
+import { lazy, Suspense } from 'react'
+import FallbackLoading from '@/components/FallbackLoading'
+import Footer from '@/components/layout/Footer'
+import Preloader from '@/components/Preloader'
+import Loader from '@/pages/loader/Loader'
+const TopNavigationBar = lazy(() => import('@/components/layout/TopNavigationBar'))
+const VerticalNavigationBar = lazy(() => import('@/components/layout/VerticalNavigationBar'))
+const AdminLayout = ({ children }) => {
+  return (
+    <div className="wrapper">
       <Suspense fallback={<FallbackLoading />}>
         <TopNavigationBar />
       </Suspense>
@@ -25,6 +24,7 @@ const AdminLayout = ({
 
         <Footer />
       </div>
-    </div>;
-};
-export default AdminLayout;
+    </div>
+  )
+}
+export default AdminLayout

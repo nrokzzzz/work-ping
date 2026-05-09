@@ -1,20 +1,20 @@
-import { Suspense } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import LogoBox from '@/components/LogoBox';
-import ThemeModeToggle from '@/components/layout/TopNavigationBar/components/ThemeModeToggle';
-import Footer from '@/components/layout/Footer';
-import Preloader from '@/components/Preloader';
-import { useAuthContext } from '@/context/useAuthContext';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import axiosClient from '@/helpers/httpClient';
+import { Suspense } from 'react'
+import { Link } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import LogoBox from '@/components/LogoBox'
+import ThemeModeToggle from '@/components/layout/TopNavigationBar/components/ThemeModeToggle'
+import Footer from '@/components/layout/Footer'
+import Preloader from '@/components/Preloader'
+import { useAuthContext } from '@/context/useAuthContext'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import axiosClient from '@/helpers/httpClient'
 
 const PublicLayout = ({ children }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { isAuthenticated, logout } = useAuthContext();
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { isAuthenticated, logout } = useAuthContext()
 
   const navItems = [
     { label: 'Home', to: '/' },
@@ -22,17 +22,17 @@ const PublicLayout = ({ children }) => {
     { label: 'Privacy', to: '/privacy-policy' },
     { label: 'Terms', to: '/terms-and-conditions' },
     { label: 'Dashboard', to: '/dashboard/analytics' },
-  ];
+  ]
 
   const handleLogout = async () => {
     try {
-      await axiosClient.post('/api/admin/auth/logout', {}, { silent: true });
+      await axiosClient.post('/api/admin/auth/logout', {}, { silent: true })
     } catch (_) {
       // Keep UX consistent even if API logout fails.
     }
-    logout();
-    navigate('/');
-  };
+    logout()
+    navigate('/')
+  }
 
   return (
     <div className="wrapper">
@@ -43,16 +43,12 @@ const PublicLayout = ({ children }) => {
             <div className="d-flex align-items-center gap-2 flex-wrap justify-content-end ms-auto public-navbar-actions">
               <nav className="d-flex align-items-center flex-wrap me-1 public-nav-pills">
                 {navItems.map((item) => {
-                  const isActive = location.pathname === item.to;
+                  const isActive = location.pathname === item.to
                   return (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      className={`public-nav-link ${isActive ? 'public-nav-link-active' : ''}`}
-                    >
+                    <Link key={item.to} to={item.to} className={`public-nav-link ${isActive ? 'public-nav-link-active' : ''}`}>
                       {item.label}
                     </Link>
-                  );
+                  )
                 })}
               </nav>
               <div className="topbar-item">
@@ -63,19 +59,14 @@ const PublicLayout = ({ children }) => {
                   variant="outline-danger"
                   size="sm"
                   className="px-3 d-inline-flex align-items-center gap-1 public-auth-btn"
-                  onClick={handleLogout}
-                >
+                  onClick={handleLogout}>
                   <IconifyIcon icon="bx:log-out" />
                   Logout
                 </Button>
               ) : (
-                <Button
-                  size="sm"
-                  className="px-3 d-inline-flex align-items-center gap-1 public-auth-btn"
-                  onClick={() => navigate('/auth/sign-in')}
-                >
+                <Button size="sm" className="px-3 d-inline-flex align-items-center gap-1 public-auth-btn" onClick={() => navigate('/auth/sign-in')}>
                   <IconifyIcon icon="bx:log-in" />
-                    Sign In
+                  Sign In
                 </Button>
               )}
             </div>
@@ -173,7 +164,7 @@ const PublicLayout = ({ children }) => {
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
 
-export default PublicLayout;
+export default PublicLayout

@@ -6,21 +6,21 @@ import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
 import PageMetaData from '@/components/PageTitle'
 import axiosClient from '@/helpers/httpClient'
 
-const toYmd = (d = new Date()) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+const toYmd = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
 const MetricCard = ({ title, value, subtitle, iconName, color }) => (
   <Card className="h-100 border-0" style={{ boxShadow: '0 4px 16px rgba(15,23,42,0.07)' }}>
     <CardBody className="d-flex align-items-center gap-3">
       <div
         className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-        style={{ width: 52, height: 52, background: color + '20' }}
-      >
+        style={{ width: 52, height: 52, background: color + '20' }}>
         <Icon icon={iconName} style={{ fontSize: 26, color }} />
       </div>
       <div>
         <p className="mb-0 text-muted text-uppercase small fw-semibold">{title}</p>
-        <h3 className="mb-0 fw-bold" style={{ color }}>{value ?? '--'}</h3>
+        <h3 className="mb-0 fw-bold" style={{ color }}>
+          {value ?? '--'}
+        </h3>
         <p className="mb-0 text-muted small">{subtitle}</p>
       </div>
     </CardBody>
@@ -33,8 +33,12 @@ const AttendanceAnalytics = () => {
   const [loading, setLoading] = useState(false)
   const [summary, setSummary] = useState(null)
 
-  useEffect(() => { fetchInit() }, [])
-  useEffect(() => { if (orgId) fetchSummary(orgId) }, [orgId])
+  useEffect(() => {
+    fetchInit()
+  }, [])
+  useEffect(() => {
+    if (orgId) fetchSummary(orgId)
+  }, [orgId])
 
   const fetchInit = async () => {
     try {
@@ -147,26 +151,37 @@ const AttendanceAnalytics = () => {
 
       <Row className="g-2 mb-3 align-items-center">
         <Col xs="auto">
-          <select
-            className="form-select form-select-sm"
-            value={orgId}
-            onChange={(e) => setOrgId(e.target.value)}
-            style={{ minWidth: 200 }}
-          >
+          <select className="form-select form-select-sm" value={orgId} onChange={(e) => setOrgId(e.target.value)} style={{ minWidth: 200 }}>
             {organizations.length === 0 && <option value="">No organizations</option>}
             {organizations.map((o) => (
-              <option key={o.organizationId} value={o.organizationId}>{o.name}</option>
+              <option key={o.organizationId} value={o.organizationId}>
+                {o.name}
+              </option>
             ))}
           </select>
         </Col>
         <Col xs="auto" className="ms-auto d-flex align-items-center gap-2">
-          {loading ? <Spinner size="sm" animation="border" /> : summary && <Badge bg="success" pill>Loaded</Badge>}
+          {loading ? (
+            <Spinner size="sm" animation="border" />
+          ) : (
+            summary && (
+              <Badge bg="success" pill>
+                Loaded
+              </Badge>
+            )
+          )}
         </Col>
       </Row>
 
       <Row className="g-3 mb-3">
         <Col md={6} xl={3}>
-          <MetricCard title="Present Today" value={presentCount} subtitle={`of ${totalEmployees} employees`} iconName="mdi:account-check-outline" color="#22c55e" />
+          <MetricCard
+            title="Present Today"
+            value={presentCount}
+            subtitle={`of ${totalEmployees} employees`}
+            iconName="mdi:account-check-outline"
+            color="#22c55e"
+          />
         </Col>
         <Col md={6} xl={3}>
           <MetricCard title="Absent Today" value={absentCount} subtitle="Not checked in" iconName="mdi:account-remove-outline" color="#ef4444" />
@@ -205,7 +220,9 @@ const AttendanceAnalytics = () => {
             </CardHeader>
             <CardBody className="d-flex flex-column justify-content-center">
               <ReactApexChart options={radialOptions} series={[attendanceRate]} type="radialBar" height={260} />
-              <div className="text-center small text-muted mt-1">{presentCount} of {totalEmployees} present</div>
+              <div className="text-center small text-muted mt-1">
+                {presentCount} of {totalEmployees} present
+              </div>
             </CardBody>
           </Card>
         </Col>

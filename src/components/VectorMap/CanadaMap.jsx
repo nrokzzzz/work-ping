@@ -1,15 +1,13 @@
-import 'jsvectormap';
-import 'jsvectormap/dist/maps/canada.js';
+import 'jsvectormap'
+import 'jsvectormap/dist/maps/canada.js'
 
 //components
-import BaseVectorMap from './BaseVectorMap';
-const CanadaVectorMap = ({
-  width,
-  height,
-  options
-}) => {
-  return <>
+import BaseVectorMap from './BaseVectorMap'
+const CanadaVectorMap = ({ width, height, options }) => {
+  return (
+    <>
       <BaseVectorMap width={width} height={height} options={options} type="canada" />
-    </>;
-};
-export default CanadaVectorMap;
+    </>
+  )
+}
+export default CanadaVectorMap

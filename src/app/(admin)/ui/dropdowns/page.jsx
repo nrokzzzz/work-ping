@@ -1,16 +1,36 @@
-import { Button, ButtonGroup, Col, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, DropdownMenu, DropdownToggle, FormCheck, FormControl, FormLabel, Row } from 'react-bootstrap';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import UIExamplesList from '@/components/UIExamplesList';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { colorVariants } from '@/context/constants';
-import { toSentenceCase } from '@/utils/change-casing';
-import PageMetaData from '@/components/PageTitle';
+import {
+  Button,
+  ButtonGroup,
+  Col,
+  Dropdown,
+  DropdownDivider,
+  DropdownHeader,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  FormCheck,
+  FormControl,
+  FormLabel,
+  Row,
+} from 'react-bootstrap'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import UIExamplesList from '@/components/UIExamplesList'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { colorVariants } from '@/context/constants'
+import { toSentenceCase } from '@/utils/change-casing'
+import PageMetaData from '@/components/PageTitle'
 const SingleButtonDropdown = () => {
-  return <ComponentContainerCard id="single-button" title="Single button dropdowns" description={<>
+  return (
+    <ComponentContainerCard
+      id="single-button"
+      title="Single button dropdowns"
+      description={
+        <>
           Any single <code>.btn</code> can be turned into a dropdown toggle with some markup changes. Here&apos;s how you can put them to work with
           either <code>&lt;button&gt;</code> elements:
-        </>}>
+        </>
+      }>
       <Row>
         <Col xs="auto" className="mb-2 mb-sm-0">
           <Dropdown>
@@ -39,15 +59,23 @@ const SingleButtonDropdown = () => {
           </Dropdown>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DropdownVariant = () => {
-  return <ComponentContainerCard id="single-button-variant" title="Single Button Variant Dropdowns" description={<>
+  return (
+    <ComponentContainerCard
+      id="single-button-variant"
+      title="Single Button Variant Dropdowns"
+      description={
+        <>
           Any single <code>.btn</code> can be turned into a dropdown toggle with some markup changes. Here&apos;s how you can put them to work with
           either <code>&lt;button&gt;</code> elements.
-        </>}>
+        </>
+      }>
       <div className="d-flex flex-wrap gap-2">
-        {colorVariants.slice(0, 4).map((color, idx) => <Dropdown key={idx} as={ButtonGroup} className="mb-2 me-1">
+        {colorVariants.slice(0, 4).map((color, idx) => (
+          <Dropdown key={idx} as={ButtonGroup} className="mb-2 me-1">
             <DropdownToggle variant={color} className="arrow-none icons-center gap-1">
               {toSentenceCase(color)} <IconifyIcon icon="bx:bx-chevron-down" />
             </DropdownToggle>
@@ -58,17 +86,26 @@ const DropdownVariant = () => {
               <DropdownDivider />
               <DropdownItem href="#">Separated link</DropdownItem>
             </DropdownMenu>
-          </Dropdown>)}
+          </Dropdown>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SplitButtonDropdown = () => {
-  return <ComponentContainerCard id="split-button" title="Split Button Dropdowns" description={<>
+  return (
+    <ComponentContainerCard
+      id="split-button"
+      title="Split Button Dropdowns"
+      description={
+        <>
           Similarly, create split button dropdowns with virtually the same markup as single button dropdowns, but with the addition of{' '}
           <code>.dropdown-toggle-split</code> for proper spacing around the dropdown caret.
-        </>}>
+        </>
+      }>
       <div className="d-flex flex-wrap gap-2">
-        {colorVariants.slice(0, 4).map((color, idx) => <Dropdown key={idx} as={ButtonGroup} className="mb-2 me-1">
+        {colorVariants.slice(0, 4).map((color, idx) => (
+          <Dropdown key={idx} as={ButtonGroup} className="mb-2 me-1">
             <Button variant={color}>{toSentenceCase(color)}</Button>
             <DropdownToggle variant={color} className="dropdown-toggle-split arrow-none">
               <IconifyIcon icon="bx:bx-chevron-down" />
@@ -80,16 +117,24 @@ const SplitButtonDropdown = () => {
               <DropdownDivider></DropdownDivider>
               <DropdownItem href="#">Separated link</DropdownItem>
             </DropdownMenu>
-          </Dropdown>)}
+          </Dropdown>
+        ))}
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DarkDropdown = () => {
-  return <ComponentContainerCard id="dark-dropdown" title="Dark Dropdowns" description={<>
+  return (
+    <ComponentContainerCard
+      id="dark-dropdown"
+      title="Dark Dropdowns"
+      description={
+        <>
           {' '}
           Opt into darker dropdowns to match a dark navbar or custom style by adding <code>.dropdown-menu-dark</code> onto an existing{' '}
           <code>.dropdown-menu</code>. No changes are required to the dropdown items.
-        </>}>
+        </>
+      }>
       <Dropdown>
         <DropdownToggle variant="secondary" className="arrow-none icons-center gap-1">
           Dropdown button <IconifyIcon icon="bx:bx-chevron-down" />
@@ -112,13 +157,20 @@ const DarkDropdown = () => {
           </li>
         </DropdownMenu>
       </Dropdown>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DropdownDirection = () => {
-  return <ComponentContainerCard id="direction" title="Dropdown Direction" description={<>
+  return (
+    <ComponentContainerCard
+      id="direction"
+      title="Dropdown Direction"
+      description={
+        <>
           Trigger dropdown menus above elements by adding <code>.dropup</code>, dropdown menus at the left of the elements by adding{' '}
           <code>.dropstart</code> or dropdown menus at the right of the elements by adding <code>.dropend</code>.
-        </>}>
+        </>
+      }>
       <div className="d-flex flex-wrap gap-2">
         <Dropdown as={ButtonGroup}>
           <DropdownToggle variant="primary" className="arrow-none icons-center gap-1">
@@ -173,14 +225,21 @@ const DropdownDirection = () => {
           </DropdownMenu>
         </Dropdown>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DropdownMenuItems = () => {
-  return <ComponentContainerCard id="menu-items" title="Dropdown Menu Items" description={<>
+  return (
+    <ComponentContainerCard
+      id="menu-items"
+      title="Dropdown Menu Items"
+      description={
+        <>
           Add <code>.active</code> to items in the dropdown to <strong>style them as active</strong>. To convey the active state to assistive
           technologies, use the <code>aria-current</code> attribute — using the <code>page</code> value for the current page, or <code>true</code> for
           the current item in a set.
-        </>}>
+        </>
+      }>
       <p className="text-muted">
         Add <code>.disabled</code> to items in the dropdown to
         <strong>style them as disabled</strong>.
@@ -213,13 +272,20 @@ const DropdownMenuItems = () => {
           </li>
         </ul>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const AutoCloseBehaviorDropdown = () => {
-  return <ComponentContainerCard id="auto-close-behavior" title="Auto close behavior" description={<>
+  return (
+    <ComponentContainerCard
+      id="auto-close-behavior"
+      title="Auto close behavior"
+      description={
+        <>
           By default, the dropdown menu is closed when clicking inside or outside the dropdown menu. You can use the <code>autoClose</code> option to
           change this behavior of the Dropdown
-        </>}>
+        </>
+      }>
       <div className="d-flex flex-wrap gap-2">
         <Dropdown autoClose as={ButtonGroup}>
           <DropdownToggle variant="secondary" className="arrow-none icons-center gap-1">
@@ -289,10 +355,12 @@ const AutoCloseBehaviorDropdown = () => {
           </DropdownMenu>
         </Dropdown>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DropdownMenuContent = () => {
-  return <ComponentContainerCard id="menu-content" title="Menu Content">
+  return (
+    <ComponentContainerCard id="menu-content" title="Menu Content">
       <p>Add a header to label sections of actions in any dropdown menu.</p>
       <p>Separate groups of related menu items with a divider.</p>
       <p>
@@ -373,10 +441,12 @@ const DropdownMenuContent = () => {
           </DropdownMenu>
         </Dropdown>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const Dropdowns = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Base UI" title="Dropdown" />
       <PageMetaData title="Dropdowns" />
 
@@ -392,36 +462,49 @@ const Dropdowns = () => {
           <DropdownMenuContent />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#single-button',
-          label: 'Single Button Dropdowns'
-        }, {
-          link: '#single-button-variant',
-          label: 'Single Button Variant Dropdowns'
-        }, {
-          link: '#split-button',
-          label: 'Split Button Dropdowns'
-        }, {
-          link: '#dark-dropdown',
-          label: 'Dark Dropdown'
-        }, {
-          link: '#direction',
-          label: 'Dropdown Direction'
-        }, {
-          link: '#menu-items',
-          label: 'Dropdown Menu Items'
-        }, {
-          link: '#dropdown-options',
-          label: 'Dropdown Options'
-        }, {
-          link: '#auto-close-behavior',
-          label: 'Auto Close Behavior'
-        }, {
-          link: '#menu-content',
-          label: 'Menu content'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#single-button',
+                label: 'Single Button Dropdowns',
+              },
+              {
+                link: '#single-button-variant',
+                label: 'Single Button Variant Dropdowns',
+              },
+              {
+                link: '#split-button',
+                label: 'Split Button Dropdowns',
+              },
+              {
+                link: '#dark-dropdown',
+                label: 'Dark Dropdown',
+              },
+              {
+                link: '#direction',
+                label: 'Dropdown Direction',
+              },
+              {
+                link: '#menu-items',
+                label: 'Dropdown Menu Items',
+              },
+              {
+                link: '#dropdown-options',
+                label: 'Dropdown Options',
+              },
+              {
+                link: '#auto-close-behavior',
+                label: 'Auto Close Behavior',
+              },
+              {
+                link: '#menu-content',
+                label: 'Menu content',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Dropdowns;
+    </>
+  )
+}
+export default Dropdowns

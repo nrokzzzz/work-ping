@@ -1,11 +1,26 @@
-import { Button, Card, CardBody, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Row, TabContainer, TabContent, TabPane } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import CustomersListView from './CustomersListView';
-import CustomersGrid from './CustomersGrid';
-const CustomersList = ({
-  customers
-}) => {
-  return <TabContainer defaultActiveKey={'1'}>
+import {
+  Button,
+  Card,
+  CardBody,
+  Col,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Nav,
+  NavItem,
+  NavLink,
+  Row,
+  TabContainer,
+  TabContent,
+  TabPane,
+} from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import CustomersListView from './CustomersListView'
+import CustomersGrid from './CustomersGrid'
+const CustomersList = ({ customers }) => {
+  return (
+    <TabContainer defaultActiveKey={'1'}>
       <Row>
         <Col xs={12}>
           <Card>
@@ -81,6 +96,7 @@ const CustomersList = ({
           <CustomersGrid customers={customers} />
         </TabPane>
       </TabContent>
-    </TabContainer>;
-};
-export default CustomersList;
+    </TabContainer>
+  )
+}
+export default CustomersList

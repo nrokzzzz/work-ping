@@ -28,10 +28,7 @@ const ViewEmployees = () => {
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
-        const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info',
-          { silent: true }
-        )
+        const res = await axiosClient.get('/api/admin/get-all-employees/get-organization-info', { silent: true })
         setOrgData(res.data?.data || {})
       } catch (err) {
         // Error handled by interceptor
@@ -42,13 +39,7 @@ const ViewEmployees = () => {
 
   const organizationList = useMemo(() => Object.keys(orgData), [orgData])
 
-  const departmentList = useMemo(
-    () =>
-      organization && orgData[organization]
-        ? orgData[organization].teams || []
-        : [],
-    [organization, orgData]
-  )
+  const departmentList = useMemo(() => (organization && orgData[organization] ? orgData[organization].teams || [] : []), [organization, orgData])
 
   const fetchEmployees = async (page) => {
     setLoading(true)
@@ -62,10 +53,7 @@ const ViewEmployees = () => {
       if (appliedDepartment) params.append('teamId', appliedDepartment)
       if (appliedSearch) params.append('search', appliedSearch)
 
-      const result = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`,
-        { silent: true }
-      )
+      const result = await axiosClient.get(`/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`, { silent: true })
 
       setEmployees(result.data?.data?.data || [])
       setTotalPages(result.data?.data?.totalPages || 0)
@@ -97,11 +85,9 @@ const ViewEmployees = () => {
   }
 
   const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
     if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
-    if (currentPage >= totalPages - 1)
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
@@ -139,30 +125,31 @@ const ViewEmployees = () => {
                   onChange={(e) => {
                     setOrganization(e.target.value)
                     setDepartment('')
-                  }}
-                >
+                  }}>
                   <option value="">Select Organization</option>
                   {organizationList.map((org) => (
-                    <option key={org} value={org}>{org}</option>
+                    <option key={org} value={org}>
+                      {org}
+                    </option>
                   ))}
                 </select>
               </Col>
 
               <Col xs={12} md={3}>
-                <select
-                  className="form-select"
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                >
+                <select className="form-select" value={department} onChange={(e) => setDepartment(e.target.value)}>
                   <option value="">Select Department</option>
                   {departmentList.map((team) => (
-                    <option key={team._id} value={team._id}>{team.teamName}</option>
+                    <option key={team._id} value={team._id}>
+                      {team.teamName}
+                    </option>
                   ))}
                 </select>
               </Col>
 
               <Col xs={12} md={2}>
-                <Button className="w-100" onClick={handleApply}>Apply</Button>
+                <Button className="w-100" onClick={handleApply}>
+                  Apply
+                </Button>
               </Col>
             </Row>
           </CardBody>
@@ -192,9 +179,17 @@ const ViewEmployees = () => {
 
               <tbody>
                 {loading ? (
-                  <tr><td colSpan="16" className="text-center py-4">Loading...</td></tr>
+                  <tr>
+                    <td colSpan="16" className="text-center py-4">
+                      Loading...
+                    </td>
+                  </tr>
                 ) : employees.length === 0 ? (
-                  <tr><td colSpan="16" className="text-center py-4">No records found</td></tr>
+                  <tr>
+                    <td colSpan="16" className="text-center py-4">
+                      No records found
+                    </td>
+                  </tr>
                 ) : (
                   employees.map((emp) => (
                     <tr key={emp._id}>
@@ -223,7 +218,6 @@ const ViewEmployees = () => {
 
           {/* ── Pagination footer ── */}
           <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
-
             {/* Records info */}
             <div className="text-muted small">
               Showing {start} to {end} of {totalRecords} records
@@ -231,7 +225,6 @@ const ViewEmployees = () => {
 
             {/* Page buttons + jump-to-page */}
             <div className="d-flex flex-wrap align-items-center gap-2">
-
               <ul className="pagination pagination-rounded m-0">
                 {/* Prev */}
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
@@ -241,26 +234,21 @@ const ViewEmployees = () => {
                     onClick={(e) => {
                       e.preventDefault()
                       if (currentPage > 1) setCurrentPage(currentPage - 1)
-                    }}
-                  >
+                    }}>
                     <IconifyIcon icon="bx:left-arrow-alt" />
                   </Link>
                 </li>
 
                 {/* Page numbers */}
                 {getPages().map((p, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}
-                  >
+                  <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
                     <Link
                       to="#"
                       className="page-link"
                       onClick={(e) => {
                         e.preventDefault()
                         if (typeof p === 'number') setCurrentPage(p)
-                      }}
-                    >
+                      }}>
                       {p}
                     </Link>
                   </li>
@@ -274,8 +262,7 @@ const ViewEmployees = () => {
                     onClick={(e) => {
                       e.preventDefault()
                       if (currentPage < totalPages) setCurrentPage(currentPage + 1)
-                    }}
-                  >
+                    }}>
                     <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
                 </li>
@@ -301,10 +288,8 @@ const ViewEmployees = () => {
                   </Button>
                 </div>
               )}
-
             </div>
           </div>
-
         </Card>
       </Col>
     </Row>

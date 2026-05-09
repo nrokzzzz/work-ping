@@ -1,62 +1,79 @@
-import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Card, CardBody, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { faqData } from './data';
+import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Card, CardBody, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { faqData } from './data'
 const GeneralFaq = () => {
-  return <>
+  return (
+    <>
       <h4 className="mb-3 fw-semibold fs-16">General</h4>
       <Accordion alwaysOpen defaultActiveKey={'0'}>
-        {faqData.General.map((faq, idx) => <AccordionItem eventKey={`${idx}`} key={idx}>
+        {faqData.General.map((faq, idx) => (
+          <AccordionItem eventKey={`${idx}`} key={idx}>
             <AccordionHeader>
               <div className="fw-medium">{faq.question}</div>
             </AccordionHeader>
             <AccordionBody>{faq.answer}</AccordionBody>
-          </AccordionItem>)}
+          </AccordionItem>
+        ))}
       </Accordion>
-    </>;
-};
+    </>
+  )
+}
 const RefundFaqs = () => {
-  return <>
+  return (
+    <>
       <h4 className="mb-3 mt-4 fw-semibold fs-16">Refunds</h4>
       <Accordion alwaysOpen defaultActiveKey={'0'}>
-        {faqData.Refunds.map((faq, idx) => <AccordionItem eventKey={`${idx}`} key={idx}>
+        {faqData.Refunds.map((faq, idx) => (
+          <AccordionItem eventKey={`${idx}`} key={idx}>
             <AccordionHeader>
               <div className="fw-medium">{faq.question}</div>
             </AccordionHeader>
             <AccordionBody>{faq.answer}</AccordionBody>
-          </AccordionItem>)}
+          </AccordionItem>
+        ))}
       </Accordion>
-    </>;
-};
+    </>
+  )
+}
 const PaymentsFaqs = () => {
-  return <>
+  return (
+    <>
       <h4 className="mb-3 fw-semibold fs-16">Payments</h4>
       <Accordion alwaysOpen defaultActiveKey={'0'}>
-        {faqData.Payments.map((faq, idx) => <AccordionItem eventKey={`${idx}`} key={idx}>
+        {faqData.Payments.map((faq, idx) => (
+          <AccordionItem eventKey={`${idx}`} key={idx}>
             <AccordionHeader>
               <div className="fw-medium">{faq.question}</div>
             </AccordionHeader>
             <AccordionBody>{faq.answer}</AccordionBody>
-          </AccordionItem>)}
+          </AccordionItem>
+        ))}
       </Accordion>
-    </>;
-};
+    </>
+  )
+}
 const SupportFaqs = () => {
-  return <>
+  return (
+    <>
       <h4 className="mb-3 mt-4 fw-semibold fs-16">Support</h4>
       <Accordion alwaysOpen defaultActiveKey={'0'}>
-        {faqData.Support.map((faq, idx) => <AccordionItem eventKey={`${idx}`} key={idx}>
+        {faqData.Support.map((faq, idx) => (
+          <AccordionItem eventKey={`${idx}`} key={idx}>
             <AccordionHeader>
               <div className="fw-medium">{faq.question}</div>
             </AccordionHeader>
             <AccordionBody>{faq.answer}</AccordionBody>
-          </AccordionItem>)}
+          </AccordionItem>
+        ))}
       </Accordion>
-    </>;
-};
+    </>
+  )
+}
 const FAQs = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Pages" title="FAQs" />
       <PageMetaData title="FAQs" />
 
@@ -93,6 +110,7 @@ const FAQs = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default FAQs;
+    </>
+  )
+}
+export default FAQs

@@ -1,9 +1,10 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import AllInputMasks from './components/AllInputMasks';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import AllInputMasks from './components/AllInputMasks'
 const InputMasks = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Form" title="Input Mask" />
       <PageMetaData title="Input Mask" />
 
@@ -24,6 +25,7 @@ const InputMasks = () => {
           <AllInputMasks />
         </Col>
       </Row>
-    </>;
-};
-export default InputMasks;
+    </>
+  )
+}
+export default InputMasks

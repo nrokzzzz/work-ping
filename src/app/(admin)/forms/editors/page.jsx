@@ -1,9 +1,10 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import AllEditors from './components/AllEditors';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import AllEditors from './components/AllEditors'
 const Editors = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Form" title="Editors" />
       <PageMetaData title="Editors" />
       <Row>
@@ -22,6 +23,7 @@ const Editors = () => {
           <AllEditors />
         </Col>
       </Row>
-    </>;
-};
-export default Editors;
+    </>
+  )
+}
+export default Editors

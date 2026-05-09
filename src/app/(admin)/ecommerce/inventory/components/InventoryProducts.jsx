@@ -1,17 +1,18 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllInventoryProducts } from '@/helpers/data';
-import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllInventoryProducts } from '@/helpers/data'
+import { Link } from 'react-router-dom'
+import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
 const InventoryProducts = () => {
-  const [inventoryProducts, setInventoryProducts] = useState();
+  const [inventoryProducts, setInventoryProducts] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllInventoryProducts();
-      setInventoryProducts(data);
-    })();
-  }, []);
-  return <Card>
+    ;(async () => {
+      const data = await getAllInventoryProducts()
+      setInventoryProducts(data)
+    })()
+  }, [])
+  return (
+    <Card>
       <CardBody>
         <Row>
           <Col xs={12}>
@@ -46,16 +47,20 @@ const InventoryProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {inventoryProducts && inventoryProducts.map((item, idx) => {
-              return <tr key={idx}>
+              {inventoryProducts &&
+                inventoryProducts.map((item, idx) => {
+                  return (
+                    <tr key={idx}>
                       <td>#{item.id}</td>
                       <td>
                         <div className="d-flex align-items-center">
-                          {item.product && <div className="flex-shrink-0 me-3">
+                          {item.product && (
+                            <div className="flex-shrink-0 me-3">
                               <Link to="/ecommerce/orders">
                                 <img src={item.product?.images[0]} alt="product-1(1)" className="img-fluid avatar-sm" />
                               </Link>
-                            </div>}
+                            </div>
+                          )}
                           <div className="flex-grow-1">
                             <h5 className="mt-0 mb-1">{item.product?.name}</h5>
                             <span className="fs-13">Added: {new Date(item.lastModifiedAt).toDateString()}</span>
@@ -63,7 +68,8 @@ const InventoryProducts = () => {
                         </div>
                       </td>
                       <td>
-                        <span className={`badge badge-soft-${item.condition === 'Damaged' ? 'danger' : item.condition === 'Returned' ? 'warning' : 'success'}`}>
+                        <span
+                          className={`badge badge-soft-${item.condition === 'Damaged' ? 'danger' : item.condition === 'Returned' ? 'warning' : 'success'}`}>
                           New
                         </span>
                       </td>
@@ -72,12 +78,14 @@ const InventoryProducts = () => {
                       <td>{item.reserved}</td>
                       <td>{item.onHand}</td>
                       <td>{new Date(item.lastModifiedAt).toLocaleDateString()}</td>
-                    </tr>;
-            })}
+                    </tr>
+                  )
+                })}
             </tbody>
           </table>
         </div>
       </CardBody>
-    </Card>;
-};
-export default InventoryProducts;
+    </Card>
+  )
+}
+export default InventoryProducts

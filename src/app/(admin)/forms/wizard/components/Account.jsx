@@ -1,12 +1,11 @@
-import PasswordFormInput from '@/components/form/PasswordFormInput';
-import TextFormInput from '@/components/form/TextFormInput';
-import { Col, Row } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import PasswordFormInput from '@/components/form/PasswordFormInput'
+import TextFormInput from '@/components/form/TextFormInput'
+import { Col, Row } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
 const Account = () => {
-  const {
-    control
-  } = useForm();
-  return <>
+  const { control } = useForm()
+  return (
+    <>
       <h4 className="fs-16 fw-semibold mb-1">Account Information</h4>
       <p className="text-muted">Setup your account information</p>
       <Row>
@@ -20,9 +19,16 @@ const Account = () => {
           <PasswordFormInput name="password" label="Password" control={control} containerClassName="mb-3" placeholder="Enter Password" />
         </Col>
         <Col lg={6}>
-          <PasswordFormInput name="confirmPassword" label="Confirm Password" control={control} containerClassName="mb-3" placeholder="Confirm a Password" />
+          <PasswordFormInput
+            name="confirmPassword"
+            label="Confirm Password"
+            control={control}
+            containerClassName="mb-3"
+            placeholder="Confirm a Password"
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Account;
+    </>
+  )
+}
+export default Account

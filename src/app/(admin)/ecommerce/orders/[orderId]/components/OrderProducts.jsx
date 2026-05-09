@@ -1,9 +1,8 @@
-import { Card, CardBody, CardTitle, Table } from 'react-bootstrap';
-import { currency } from '@/context/constants';
-const OrderProducts = ({
-  order
-}) => {
-  return <Card>
+import { Card, CardBody, CardTitle, Table } from 'react-bootstrap'
+import { currency } from '@/context/constants'
+const OrderProducts = ({ order }) => {
+  return (
+    <Card>
       <CardBody>
         <CardTitle as={'h5'} className="mb-3">
           Products From Order #{order.id}
@@ -47,6 +46,7 @@ const OrderProducts = ({
           </Table>
         </div>
       </CardBody>
-    </Card>;
-};
-export default OrderProducts;
+    </Card>
+  )
+}
+export default OrderProducts

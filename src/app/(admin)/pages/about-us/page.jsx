@@ -1,11 +1,12 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import About from './components/About';
-import Services from './components/Services';
-import Team from './components/Team';
-import PageMetaData from '@/components/PageTitle';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import About from './components/About'
+import Services from './components/Services'
+import Team from './components/Team'
+import PageMetaData from '@/components/PageTitle'
 const AboutUs = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Pages" title="About Us" />
       <PageMetaData title="About Us" />
 
@@ -16,6 +17,7 @@ const AboutUs = () => {
           <Team />
         </Col>
       </Row>
-    </>;
-};
-export default AboutUs;
+    </>
+  )
+}
+export default AboutUs

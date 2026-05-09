@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom';
-import { currentYear, developedBy, developedByLink } from '@/context/constants';
-import IconifyIcon from '../wrappers/IconifyIcon';
+import { Link } from 'react-router-dom'
+import { currentYear, developedBy, developedByLink } from '@/context/constants'
+import IconifyIcon from '../wrappers/IconifyIcon'
 
 const footerLinks = [
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },
   { label: 'Privacy Policy', to: '/privacy-policy' },
   { label: 'Terms & Conditions', to: '/terms-and-conditions' },
-];
+]
 
 const Footer = () => {
   return (
@@ -33,7 +33,7 @@ const Footer = () => {
         </nav>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

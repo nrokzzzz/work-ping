@@ -1,13 +1,14 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import ExpensesChart from './components/ExpensesChart';
-import RevenueChart from './components/RevenueChart';
-import RevenueSources from './components/RevenueSources';
-import Stats from './components/Stats';
-import Transactions from './components/Transactions';
-import PageMetaData from '@/components/PageTitle';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import ExpensesChart from './components/ExpensesChart'
+import RevenueChart from './components/RevenueChart'
+import RevenueSources from './components/RevenueSources'
+import Stats from './components/Stats'
+import Transactions from './components/Transactions'
+import PageMetaData from '@/components/PageTitle'
 const FinancePage = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb title="Finance" subName="Dashboards" />
       <PageMetaData title="Finance" />
 
@@ -28,6 +29,7 @@ const FinancePage = () => {
           <RevenueSources />
         </Col>
       </Row>
-    </>;
-};
-export default FinancePage;
+    </>
+  )
+}
+export default FinancePage

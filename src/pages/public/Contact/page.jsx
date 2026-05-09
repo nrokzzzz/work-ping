@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Button, Card, CardBody, Col, Form, Row } from 'react-bootstrap';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { contactUs, developedBy } from '@/context/constants';
+import { useState } from 'react'
+import { Button, Card, CardBody, Col, Form, Row } from 'react-bootstrap'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { contactUs, developedBy } from '@/context/constants'
 
 const contactItems = [
   {
@@ -23,21 +23,21 @@ const contactItems = [
     value: 'Mon – Fri, 9 AM – 6 PM IST',
     href: null,
   },
-];
+]
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+  const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     // Placeholder: wire up to your backend/mailer microservice
-    setSubmitted(true);
-  };
+    setSubmitted(true)
+  }
 
   return (
     <>
@@ -108,9 +108,7 @@ const Contact = () => {
                     </span>
                   </div>
                   <h4 className="fw-semibold mb-2">Message Sent!</h4>
-                  <p className="text-muted">
-                    Thanks for reaching out. The {developedBy} team will get back to you shortly.
-                  </p>
+                  <p className="text-muted">Thanks for reaching out. The {developedBy} team will get back to you shortly.</p>
                   <Button variant="primary" onClick={() => setSubmitted(false)}>
                     Send Another Message
                   </Button>
@@ -123,14 +121,7 @@ const Contact = () => {
                       <Col sm={6}>
                         <Form.Group>
                           <Form.Label>Full Name</Form.Label>
-                          <Form.Control
-                            type="text"
-                            name="name"
-                            placeholder="John Doe"
-                            value={form.name}
-                            onChange={handleChange}
-                            required
-                          />
+                          <Form.Control type="text" name="name" placeholder="John Doe" value={form.name} onChange={handleChange} required />
                         </Form.Group>
                       </Col>
                       <Col sm={6}>
@@ -188,7 +179,7 @@ const Contact = () => {
         </Col>
       </Row>
     </>
-  );
-};
+  )
+}
 
-export default Contact;
+export default Contact

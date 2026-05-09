@@ -1,13 +1,19 @@
-import { Badge, Button, Col, Row } from 'react-bootstrap';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
+import { Badge, Button, Col, Row } from 'react-bootstrap'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
 const HeadingBadge = () => {
-  return <ComponentContainerCard id="heading" title="Heading" description={<>
+  return (
+    <ComponentContainerCard
+      id="heading"
+      title="Heading"
+      description={
+        <>
           Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages. Alerts are
           available for any length of text, as well as an optional dismiss button.
-        </>}>
+        </>
+      }>
       <h1>
         h1.Example heading
         <Badge bg="primary" className="ms-1">
@@ -44,14 +50,21 @@ const HeadingBadge = () => {
           New
         </Badge>
       </h6>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DefaultAndPillBadges = () => {
-  return <ComponentContainerCard id="default_pill_badges" title="Default & Pill Badges" description={<>
+  return (
+    <ComponentContainerCard
+      id="default_pill_badges"
+      title="Default & Pill Badges"
+      description={
+        <>
           {' '}
           Use our background utility classes to quickly change the appearance of a badge. And use the <code>.rounded-pill</code> class to make badges
           more rounded.
-        </>}>
+        </>
+      }>
       <div className="mb-2">
         <Badge bg="primary" className="me-1">
           Primary
@@ -116,13 +129,20 @@ const DefaultAndPillBadges = () => {
           Orange
         </Badge>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const OutlineBadges = () => {
-  return <ComponentContainerCard id="outline_badges" title="Outline & Outline Pill Badges" description={<>
+  return (
+    <ComponentContainerCard
+      id="outline_badges"
+      title="Outline & Outline Pill Badges"
+      description={
+        <>
           {' '}
           Using the <code>.badge-outline-**</code> to quickly create a bordered badges.
-        </>}>
+        </>
+      }>
       <div className="mb-2">
         <span className="badge badge-outline-primary me-1">Primary</span>
         <span className="badge badge-outline-secondary me-1">Secondary</span>
@@ -147,13 +167,20 @@ const OutlineBadges = () => {
         <span className="badge badge-outline-pink rounded-pill me-1">Pink</span>
         <span className="badge badge-outline-orange rounded-pill me-1">Orange</span>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SoftBadges = () => {
-  return <ComponentContainerCard id="soft_badges" title="Soft & Soft Pill Badges" description={<>
+  return (
+    <ComponentContainerCard
+      id="soft_badges"
+      title="Soft & Soft Pill Badges"
+      description={
+        <>
           {' '}
           Using the <code>.badge-soft-**</code> modifier class, you can have more soften variation.
-        </>}>
+        </>
+      }>
       <div className="mb-2">
         <span className="badge badge-soft-primary me-1">Primary</span>
         <span className="badge badge-soft-secondary me-1">Secondary</span>
@@ -178,10 +205,15 @@ const SoftBadges = () => {
         <span className="badge badge-soft-pink rounded-pill me-1">Pink</span>
         <span className="badge badge-soft-orange rounded-pill me-1">Orange</span>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const ButtonAndPosition = () => {
-  return <ComponentContainerCard id="component_badges" title="Buttons & Position" description={<>Alerts can also contain additional HTML elements like headings, paragraphs and dividers.</>}>
+  return (
+    <ComponentContainerCard
+      id="component_badges"
+      title="Buttons & Position"
+      description={<>Alerts can also contain additional HTML elements like headings, paragraphs and dividers.</>}>
       <div className="mb-2">
         <Button variant="primary" type="button" className="me-1 mb-1">
           Notifications
@@ -210,10 +242,12 @@ const ButtonAndPosition = () => {
           <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" />
         </Button>
       </div>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const Badges = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Base UI" title="Badge" />
       <PageMetaData title="Badges" />
 
@@ -226,24 +260,33 @@ const Badges = () => {
           <ButtonAndPosition />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#heading',
-          label: 'Heading'
-        }, {
-          link: '#default_pill_badges',
-          label: 'Default & Pill Badges'
-        }, {
-          link: '#outline_badges',
-          label: 'Outline & Outline Pill Badges'
-        }, {
-          link: '#soft_badges',
-          label: 'Soft & Soft Pill Badges'
-        }, {
-          link: '#component_badges',
-          label: 'Buttons & Position'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#heading',
+                label: 'Heading',
+              },
+              {
+                link: '#default_pill_badges',
+                label: 'Default & Pill Badges',
+              },
+              {
+                link: '#outline_badges',
+                label: 'Outline & Outline Pill Badges',
+              },
+              {
+                link: '#soft_badges',
+                label: 'Soft & Soft Pill Badges',
+              },
+              {
+                link: '#component_badges',
+                label: 'Buttons & Position',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Badges;
+    </>
+  )
+}
+export default Badges

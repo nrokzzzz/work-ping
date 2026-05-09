@@ -31,10 +31,7 @@ const Viewprojects = () => {
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
-        const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info',
-          { silent: true }
-        )
+        const res = await axiosClient.get('/api/admin/get-all-employees/get-organization-info', { silent: true })
         setOrgData(res.data?.data || {})
       } catch (err) {
         // Error handled by interceptor
@@ -55,8 +52,7 @@ const Viewprojects = () => {
       })
 
       if (appliedOrganization) {
-        const organizationId =
-          orgData[appliedOrganization]?.organizationId
+        const organizationId = orgData[appliedOrganization]?.organizationId
 
         if (organizationId) {
           params.append('organizationId', organizationId)
@@ -67,9 +63,7 @@ const Viewprojects = () => {
         params.append('search', appliedSearch)
       }
 
-      const result = await axiosClient.get(
-        `/api/admin/project/get-projects?${params.toString()}`
-      )
+      const result = await axiosClient.get(`/api/admin/project/get-projects?${params.toString()}`)
 
       setProjects(result.data?.data?.projects || [])
       setTotalPages(result.data?.data?.totalPages || 0)
@@ -104,9 +98,13 @@ const Viewprojects = () => {
 
   const performDelete = async () => {
     try {
-      await axiosClient.post('/api/admin/project/delete-projects', {
-        data: [...selectedIds],
-      }, { silent: true })
+      await axiosClient.post(
+        '/api/admin/project/delete-projects',
+        {
+          data: [...selectedIds],
+        },
+        { silent: true },
+      )
 
       toast.success('Project(s) deleted successfully!')
       setSelectedIds(new Set())
@@ -127,27 +125,16 @@ const Viewprojects = () => {
   }
 
   const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
 
     if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
 
-    if (currentPage >= totalPages - 1)
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
 
-    return [
-      1,
-      '...',
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      '...',
-      totalPages,
-    ]
+    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
-  const start =
-    totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
+  const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
   const [jumpPage, setJumpPage] = useState('')
@@ -191,8 +178,7 @@ const Viewprojects = () => {
                   value={organization}
                   onChange={(e) => {
                     setOrganization(e.target.value)
-                  }}
-                >
+                  }}>
                   <option value="">Select Organization</option>
 
                   {organizationList.map((org) => (
@@ -209,12 +195,7 @@ const Viewprojects = () => {
                     Apply
                   </Button>
 
-                  <Button
-                    variant="danger"
-                    className="flex-fill"
-                    disabled={selectedIds.size === 0}
-                    onClick={deleteProjects}
-                  >
+                  <Button variant="danger" className="flex-fill" disabled={selectedIds.size === 0} onClick={deleteProjects}>
                     Delete
                   </Button>
                 </div>
@@ -254,16 +235,7 @@ const Viewprojects = () => {
                   projects.map((project) => (
                     <tr key={project._id}>
                       <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedIds.has(project._id)}
-                          onChange={(e) =>
-                            handleSelect(
-                              project._id,
-                              e.target.checked
-                            )
-                          }
-                        />
+                        <input type="checkbox" checked={selectedIds.has(project._id)} onChange={(e) => handleSelect(project._id, e.target.checked)} />
                       </td>
 
                       <td>
@@ -271,24 +243,17 @@ const Viewprojects = () => {
                           variant="soft-secondary"
                           size="sm"
                           className="me-2"
-                          onClick={() =>
-                            navigate(
-                              `/projects/update-projects-form/${project._id}`
-                            )
-                          }
-                        >
+                          onClick={() => navigate(`/projects/update-projects-form/${project._id}`)}>
                           <IconifyIcon icon="bx:edit" />
                         </Button>
                         <Button
                           variant="soft-info"
                           size="sm"
                           onClick={() =>
-                            navigate(
-                              `/projects/view-project-teams/project-team-members/${project._id}`,
-                              { state: { orgId: project.organizationId || orgData[project.organizationName]?.organizationId } }
-                            )
-                          }
-                        >
+                            navigate(`/projects/view-project-teams/project-team-members/${project._id}`, {
+                              state: { orgId: project.organizationId || orgData[project.organizationName]?.organizationId },
+                            })
+                          }>
                           <IconifyIcon icon="bx:group" />
                         </Button>
                       </td>
@@ -297,7 +262,11 @@ const Viewprojects = () => {
                       <td>{project.assignedDate || '--'}</td>
                       <td>{project.dueDate || '--'}</td>
                       <td>{project.contractedBy || '--'}</td>
-                      <td>{project.manager?.[0]?.employeeId ? `${project.manager[0].employeeId} (${project.projectManagerName})` : project.projectManagerName || '--'}</td>
+                      <td>
+                        {project.manager?.[0]?.employeeId
+                          ? `${project.manager[0].employeeId} (${project.projectManagerName})`
+                          : project.projectManagerName || '--'}
+                      </td>
                       <td>{project.organizationName || '--'}</td>
                     </tr>
                   ))
@@ -307,26 +276,64 @@ const Viewprojects = () => {
           </div>
 
           <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
-            <div className="text-muted small">Showing {start} to {end} of {totalRecords} records</div>
+            <div className="text-muted small">
+              Showing {start} to {end} of {totalRecords} records
+            </div>
             <div className="d-flex flex-wrap align-items-center gap-2">
               <ul className="pagination pagination-rounded m-0">
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}><IconifyIcon icon="bx:left-arrow-alt" /></Link>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage > 1) setCurrentPage(currentPage - 1)
+                    }}>
+                    <IconifyIcon icon="bx:left-arrow-alt" />
+                  </Link>
                 </li>
                 {getPages().map((p, i) => (
                   <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
-                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === 'number') setCurrentPage(p) }}>{p}</Link>
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (typeof p === 'number') setCurrentPage(p)
+                      }}>
+                      {p}
+                    </Link>
                   </li>
                 ))}
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}><IconifyIcon icon="bx:right-arrow-alt" /></Link>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+                    }}>
+                    <IconifyIcon icon="bx:right-arrow-alt" />
+                  </Link>
                 </li>
               </ul>
               {totalPages > 1 && (
                 <div className="d-flex align-items-center gap-1">
                   <span className="text-muted small text-nowrap">Go to</span>
-                  <input type="number" min={1} max={totalPages} value={jumpPage} onChange={(e) => setJumpPage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()} className="form-control form-control-sm text-center" style={{ width: 60 }} placeholder={`/${totalPages}`} />
-                  <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
+                  <input
+                    type="number"
+                    min={1}
+                    max={totalPages}
+                    value={jumpPage}
+                    onChange={(e) => setJumpPage(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
+                    className="form-control form-control-sm text-center"
+                    style={{ width: 60 }}
+                    placeholder={`/${totalPages}`}
+                  />
+                  <Button size="sm" variant="primary" onClick={handleJumpGo}>
+                    Go
+                  </Button>
                 </div>
               )}
             </div>

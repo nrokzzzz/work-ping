@@ -1,7 +1,8 @@
-import { accountData } from '../data';
-import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap';
+import { accountData } from '../data'
+import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
 const Accounts = () => {
-  return <Card>
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>New Accounts</CardTitle>
         <Button variant="light" size="sm">
@@ -22,7 +23,8 @@ const Accounts = () => {
             </thead>
             <tbody>
               {accountData.map((account, idx) => {
-              return <tr key={idx}>
+                return (
+                  <tr key={idx}>
                     <td>{account.id}</td>
                     <td>{account.date}</td>
                     <td>
@@ -30,17 +32,20 @@ const Accounts = () => {
                       <span className="align-middle ms-1">{account.user.name}</span>
                     </td>
                     <td>
-                      <span className={`badge badge-soft-${account.status === 'Blocked' ? 'danger' : account.status === 'Pending' ? 'warning' : 'success'}`}>
+                      <span
+                        className={`badge badge-soft-${account.status === 'Blocked' ? 'danger' : account.status === 'Pending' ? 'warning' : 'success'}`}>
                         {account.status}
                       </span>
                     </td>
                     <td>{account.username}</td>
-                  </tr>;
-            })}
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
       </CardBody>
-    </Card>;
-};
-export default Accounts;
+    </Card>
+  )
+}
+export default Accounts

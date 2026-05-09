@@ -1,17 +1,18 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import Stats from './components/Stats';
-import ProjectSummary from './components/ProjectSummary';
-import Schedules from './components/Schedules';
-import Statistics from './components/Statistics';
-import Conversions from './components/Conversions';
-import Statistic2 from './components/Statistic2';
-import Tasks from './components/Tasks';
-import FriendsRequest from './components/FriendsRequest';
-import RecentTransactions from './components/RecentTransactions';
-import PageMetaData from '@/components/PageTitle';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import Stats from './components/Stats'
+import ProjectSummary from './components/ProjectSummary'
+import Schedules from './components/Schedules'
+import Statistics from './components/Statistics'
+import Conversions from './components/Conversions'
+import Statistic2 from './components/Statistic2'
+import Tasks from './components/Tasks'
+import FriendsRequest from './components/FriendsRequest'
+import RecentTransactions from './components/RecentTransactions'
+import PageMetaData from '@/components/PageTitle'
 const Widgets = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Reback" title="Widgets" />
       <PageMetaData title="Widgets" />
 
@@ -42,6 +43,7 @@ const Widgets = () => {
           <RecentTransactions />
         </Col>
       </Row>
-    </>;
-};
-export default Widgets;
+    </>
+  )
+}
+export default Widgets

@@ -18,8 +18,12 @@ const LeaveOverview = () => {
   const [loading, setLoading] = useState(false)
   const [detailModal, setDetailModal] = useState(null)
 
-  useEffect(() => { fetchOrganizations() }, [])
-  useEffect(() => { if (orgId) fetchLeaves() }, [orgId, statusFilter, page])
+  useEffect(() => {
+    fetchOrganizations()
+  }, [])
+  useEffect(() => {
+    if (orgId) fetchLeaves()
+  }, [orgId, statusFilter, page])
 
   const fetchOrganizations = async () => {
     try {
@@ -81,12 +85,16 @@ const LeaveOverview = () => {
           <Col sm={6} xl={3} key={label}>
             <Card className="border-0 h-100" style={{ boxShadow: '0 4px 14px rgba(15,23,42,0.07)' }}>
               <CardBody className="d-flex align-items-center gap-3">
-                <div className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 48, height: 48, background: color + '18' }}>
+                <div
+                  className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                  style={{ width: 48, height: 48, background: color + '18' }}>
                   <IconifyIcon icon={icon} style={{ fontSize: 24, color }} />
                 </div>
                 <div>
                   <p className="mb-0 text-muted small fw-semibold text-uppercase">{label}</p>
-                  <h3 className="mb-0 fw-bold" style={{ color }}>{count}</h3>
+                  <h3 className="mb-0 fw-bold" style={{ color }}>
+                    {count}
+                  </h3>
                 </div>
               </CardBody>
             </Card>
@@ -99,11 +107,29 @@ const LeaveOverview = () => {
           <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
             <h5 className="mb-0 me-auto">All Leave Requests</h5>
 
-            <select className="form-select form-select-sm" style={{ width: 'auto', minWidth: 190 }} value={orgId} onChange={(e) => { setOrgId(e.target.value); setPage(1) }}>
-              {organizations.map((o) => <option key={o.organizationId} value={o.organizationId}>{o.name}</option>)}
+            <select
+              className="form-select form-select-sm"
+              style={{ width: 'auto', minWidth: 190 }}
+              value={orgId}
+              onChange={(e) => {
+                setOrgId(e.target.value)
+                setPage(1)
+              }}>
+              {organizations.map((o) => (
+                <option key={o.organizationId} value={o.organizationId}>
+                  {o.name}
+                </option>
+              ))}
             </select>
 
-            <select className="form-select form-select-sm" style={{ width: 'auto', minWidth: 130 }} value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}>
+            <select
+              className="form-select form-select-sm"
+              style={{ width: 'auto', minWidth: 130 }}
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value)
+                setPage(1)
+              }}>
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
@@ -133,9 +159,17 @@ const LeaveOverview = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={10} className="text-center py-5"><Spinner animation="border" /></td></tr>
+                  <tr>
+                    <td colSpan={10} className="text-center py-5">
+                      <Spinner animation="border" />
+                    </td>
+                  </tr>
                 ) : leaves.length === 0 ? (
-                  <tr><td colSpan={10} className="text-center py-5 text-muted">No leave requests found</td></tr>
+                  <tr>
+                    <td colSpan={10} className="text-center py-5 text-muted">
+                      No leave requests found
+                    </td>
+                  </tr>
                 ) : (
                   leaves.map((leave, i) => (
                     <tr key={leave._id}>
@@ -145,11 +179,15 @@ const LeaveOverview = () => {
                         <div className="text-muted small">{leave.employee?.email ?? ''}</div>
                       </td>
                       <td>{leave.teamName ?? '--'}</td>
-                      <td><span className="badge bg-secondary">{leave.leaveType ?? '--'}</span></td>
+                      <td>
+                        <span className="badge bg-secondary">{leave.leaveType ?? '--'}</span>
+                      </td>
                       <td style={{ minWidth: 160 }}>{fmtDates(leave.dates)}</td>
                       <td>{leave.dates?.length ?? '--'}</td>
                       <td>{leave.createdAt ? new Date(leave.createdAt).toLocaleDateString() : '--'}</td>
-                      <td><Badge bg={STATUS_COLOR[leave.status] ?? 'secondary'}>{leave.status}</Badge></td>
+                      <td>
+                        <Badge bg={STATUS_COLOR[leave.status] ?? 'secondary'}>{leave.status}</Badge>
+                      </td>
                       <td className="text-muted small">{leave.approvedByUser?.name ?? '--'}</td>
                       <td>
                         <Button variant="outline-secondary" size="sm" onClick={() => setDetailModal(leave)}>
@@ -165,14 +203,20 @@ const LeaveOverview = () => {
 
           {totalPages > 1 && (
             <div className="d-flex justify-content-between align-items-center mt-3">
-              <span className="text-muted small">Page {page} of {totalPages} ({totalRecords} records)</span>
+              <span className="text-muted small">
+                Page {page} of {totalPages} ({totalRecords} records)
+              </span>
               <div className="d-flex gap-1">
                 <Button variant="outline-secondary" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
                   <IconifyIcon icon="mdi:chevron-left" />
                 </Button>
                 {Array.from({ length: Math.min(totalPages, 5) }, (_, idx) => {
                   const p = idx + 1
-                  return <Button key={p} variant={page === p ? 'primary' : 'outline-secondary'} size="sm" onClick={() => setPage(p)}>{p}</Button>
+                  return (
+                    <Button key={p} variant={page === p ? 'primary' : 'outline-secondary'} size="sm" onClick={() => setPage(p)}>
+                      {p}
+                    </Button>
+                  )
                 })}
                 <Button variant="outline-secondary" size="sm" disabled={page === totalPages} onClick={() => setPage(page + 1)}>
                   <IconifyIcon icon="mdi:chevron-right" />
@@ -216,7 +260,9 @@ const LeaveOverview = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setDetailModal(null)}>Close</Button>
+          <Button variant="secondary" onClick={() => setDetailModal(null)}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

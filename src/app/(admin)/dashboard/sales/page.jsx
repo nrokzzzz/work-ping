@@ -1,14 +1,15 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import Accounts from './components/Accounts';
-import OverviewChart from './components/OverviewChart';
-import RecentOrders from './components/RecentOrders';
-import SalesByCategory from './components/SalesByCategory';
-import Stats from './components/Stats';
-import Transactions from './components/Transactions';
-import PageMetaData from '@/components/PageTitle';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import Accounts from './components/Accounts'
+import OverviewChart from './components/OverviewChart'
+import RecentOrders from './components/RecentOrders'
+import SalesByCategory from './components/SalesByCategory'
+import Stats from './components/Stats'
+import Transactions from './components/Transactions'
+import PageMetaData from '@/components/PageTitle'
 const SalesPage = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Dashboards" title="Sales" />
       <PageMetaData title="Sales" />
 
@@ -34,6 +35,7 @@ const SalesPage = () => {
           <RecentOrders />
         </Col>
       </Row>
-    </>;
-};
-export default SalesPage;
+    </>
+  )
+}
+export default SalesPage

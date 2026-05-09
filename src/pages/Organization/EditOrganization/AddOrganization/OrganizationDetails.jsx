@@ -16,10 +16,7 @@ import { useAuthContext } from '@/context/useAuthContext'
 const schema = yup.object({
   organizationName: yup.string().required('Organization Name is required'),
   organizationType: yup.string().required('Organization Type is required'),
-  foundedAt: yup
-    .date()
-    .max(new Date(), 'Founded Date cannot be in the future')
-    .required('Founded Date is required'),
+  foundedAt: yup.date().max(new Date(), 'Founded Date cannot be in the future').required('Founded Date is required'),
   casualLeaves: yup
     .number()
     .typeError('Casual Leaves must be a number')
@@ -29,10 +26,7 @@ const schema = yup.object({
   ipAddress: yup
     .string()
     .required('IP Address is required')
-    .matches(
-      /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
-      'Invalid IP Address'
-    ),
+    .matches(/^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/, 'Invalid IP Address'),
   latitude: yup
     .number()
     .transform((value, originalValue) => (originalValue === '' ? undefined : value))
@@ -40,16 +34,12 @@ const schema = yup.object({
     .typeError('Latitude must be a number')
     .min(-90, 'Latitude must be between -90 and 90')
     .max(90, 'Latitude must be between -90 and 90')
-    .test(
-      'latitude-pair',
-      'Latitude and Longitude must both be provided together',
-      function (value) {
-        const { longitude } = this.parent
-        const latitudeProvided = value !== undefined && value !== null
-        const longitudeProvided = longitude !== undefined && longitude !== null && longitude !== ''
-        return latitudeProvided === longitudeProvided
-      }
-    ),
+    .test('latitude-pair', 'Latitude and Longitude must both be provided together', function (value) {
+      const { longitude } = this.parent
+      const latitudeProvided = value !== undefined && value !== null
+      const longitudeProvided = longitude !== undefined && longitude !== null && longitude !== ''
+      return latitudeProvided === longitudeProvided
+    }),
   longitude: yup
     .number()
     .transform((value, originalValue) => (originalValue === '' ? undefined : value))
@@ -57,16 +47,12 @@ const schema = yup.object({
     .typeError('Longitude must be a number')
     .min(-180, 'Longitude must be between -180 and 180')
     .max(180, 'Longitude must be between -180 and 180')
-    .test(
-      'longitude-pair',
-      'Latitude and Longitude must both be provided together',
-      function (value) {
-        const { latitude } = this.parent
-        const latitudeProvided = latitude !== undefined && latitude !== null && latitude !== ''
-        const longitudeProvided = value !== undefined && value !== null
-        return latitudeProvided === longitudeProvided
-      }
-    ),
+    .test('longitude-pair', 'Latitude and Longitude must both be provided together', function (value) {
+      const { latitude } = this.parent
+      const latitudeProvided = latitude !== undefined && latitude !== null && latitude !== ''
+      const longitudeProvided = value !== undefined && value !== null
+      return latitudeProvided === longitudeProvided
+    }),
   msl: yup.string().optional(),
 })
 
@@ -87,7 +73,6 @@ const handleIpPaste = (e) => {
 }
 
 const OrganizationDetailsForm = () => {
-
   const navigate = useNavigate()
   const location = useLocation()
   const [areaPins, setAreaPins] = useState([])
@@ -189,47 +174,31 @@ const OrganizationDetailsForm = () => {
     // 2FA is set up — use verification modal and create org
     require2FA(async () => {
       try {
-        await axiosClient.post(
-          '/api/admin/organization/add-organization',
-          newData,
-          { silent: true }
-        )
+        await axiosClient.post('/api/admin/organization/add-organization', newData, { silent: true })
 
         toast.success('Organization added successfully!')
         reset()
         navigate('/organization/view-organizations')
       } catch (error) {
-        throw new Error(
-          error?.response?.data?.message || 'Failed to add organization'
-        )
+        throw new Error(error?.response?.data?.message || 'Failed to add organization')
       }
     })
   }
 
   return (
     <Row className="justify-content-center mt-4">
-
       <Col xs={12} md={10} lg={8} xl={7}>
-
         <ComponentContainerCard id="basic" title="Organization Details">
-
           <Form noValidate onSubmit={handleSubmit(onSubmit)}>
-
             <div className="row">
-
               <div className="col-md-6 mb-3">
                 <Form.Label>
                   Organization Name <span className="text-danger">*</span>
                 </Form.Label>
 
-                <Form.Control
-                  placeholder="Enter Organization Name"
-                  {...register('organizationName')}
-                />
+                <Form.Control placeholder="Enter Organization Name" {...register('organizationName')} />
 
-                <small className="text-danger">
-                  {errors.organizationName?.message}
-                </small>
+                <small className="text-danger">{errors.organizationName?.message}</small>
               </div>
 
               <div className="col-md-6 mb-3">
@@ -237,14 +206,9 @@ const OrganizationDetailsForm = () => {
                   Organization Type <span className="text-danger">*</span>
                 </Form.Label>
 
-                <Form.Control
-                  placeholder="Enter Organization Type"
-                  {...register('organizationType')}
-                />
+                <Form.Control placeholder="Enter Organization Type" {...register('organizationType')} />
 
-                <small className="text-danger">
-                  {errors.organizationType?.message}
-                </small>
+                <small className="text-danger">{errors.organizationType?.message}</small>
               </div>
 
               <div className="col-md-6 mb-3">
@@ -252,15 +216,9 @@ const OrganizationDetailsForm = () => {
                   Founded At <span className="text-danger">*</span>
                 </Form.Label>
 
-                <Form.Control
-                  type="date"
-                  max={new Date().toISOString().split('T')[0]}
-                  {...register('foundedAt')}
-                />
+                <Form.Control type="date" max={new Date().toISOString().split('T')[0]} {...register('foundedAt')} />
 
-                <small className="text-danger">
-                  {errors.foundedAt?.message}
-                </small>
+                <small className="text-danger">{errors.foundedAt?.message}</small>
               </div>
 
               <div className="col-md-6 mb-3">
@@ -277,9 +235,7 @@ const OrganizationDetailsForm = () => {
                   onPaste={handleIpPaste}
                 />
 
-                <small className="text-danger">
-                  {errors.ipAddress?.message}
-                </small>
+                <small className="text-danger">{errors.ipAddress?.message}</small>
               </div>
 
               <div className="col-md-6 mb-3">
@@ -287,15 +243,9 @@ const OrganizationDetailsForm = () => {
                   Casual Leaves <span className="text-danger">*</span>
                 </Form.Label>
 
-                <Form.Control
-                  type="number"
-                  placeholder="Enter Casual Leaves"
-                  {...register('casualLeaves')}
-                />
+                <Form.Control type="number" placeholder="Enter Casual Leaves" {...register('casualLeaves')} />
 
-                <small className="text-danger">
-                  {errors.casualLeaves?.message}
-                </small>
+                <small className="text-danger">{errors.casualLeaves?.message}</small>
               </div>
 
               <div className="col-md-6 mb-3">
@@ -303,16 +253,9 @@ const OrganizationDetailsForm = () => {
                   Latitude <small className="text-muted">(Optional)</small>
                 </Form.Label>
 
-                <Form.Control
-                  type="number"
-                  step="any"
-                  placeholder="Enter Latitude"
-                  {...register('latitude')}
-                />
+                <Form.Control type="number" step="any" placeholder="Enter Latitude" {...register('latitude')} />
 
-                <small className="text-danger">
-                  {errors.latitude?.message}
-                </small>
+                <small className="text-danger">{errors.latitude?.message}</small>
               </div>
 
               <div className="col-md-6 mb-3">
@@ -320,16 +263,9 @@ const OrganizationDetailsForm = () => {
                   Longitude <small className="text-muted">(Optional)</small>
                 </Form.Label>
 
-                <Form.Control
-                  type="number"
-                  step="any"
-                  placeholder="Enter Longitude"
-                  {...register('longitude')}
-                />
+                <Form.Control type="number" step="any" placeholder="Enter Longitude" {...register('longitude')} />
 
-                <small className="text-danger">
-                  {errors.longitude?.message}
-                </small>
+                <small className="text-danger">{errors.longitude?.message}</small>
               </div>
 
               <div className="col-md-6 mb-3">
@@ -337,15 +273,9 @@ const OrganizationDetailsForm = () => {
                   MSL <small className="text-muted">(Optional)</small>
                 </Form.Label>
 
-                <Form.Control
-                  type="text"
-                  placeholder="Enter MSL"
-                  {...register('msl')}
-                />
+                <Form.Control type="text" placeholder="Enter MSL" {...register('msl')} />
 
-                <small className="text-danger">
-                  {errors.msl?.message}
-                </small>
+                <small className="text-danger">{errors.msl?.message}</small>
               </div>
 
               <div className="col-12 mb-3">
@@ -353,11 +283,7 @@ const OrganizationDetailsForm = () => {
                   Area Coverage <small className="text-muted">(Optional)</small>
                 </Form.Label>
 
-                <AreaPinPicker
-                  pins={areaPins}
-                  onPinsChange={handleAreaPinsChange}
-                  initialCenter={{ lat: 20.5937, lng: 78.9629 }}
-                />
+                <AreaPinPicker pins={areaPins} onPinsChange={handleAreaPinsChange} initialCenter={{ lat: 20.5937, lng: 78.9629 }} />
               </div>
 
               <div className="col-12 mb-3">
@@ -365,11 +291,7 @@ const OrganizationDetailsForm = () => {
                   Description <small className="text-muted">(Optional)</small>
                 </Form.Label>
 
-                <Form.Control
-                  as="textarea"
-                  rows={4}
-                  {...register('description')}
-                />
+                <Form.Control as="textarea" rows={4} {...register('description')} />
               </div>
 
               <div className="col-12 text-center mt-3">
@@ -377,15 +299,10 @@ const OrganizationDetailsForm = () => {
                   Submit
                 </Button>
               </div>
-
             </div>
-
           </Form>
-
         </ComponentContainerCard>
-
       </Col>
-
     </Row>
   )
 }

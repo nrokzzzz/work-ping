@@ -1,10 +1,11 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllSliders from './components/AllSliders';
-import PageMetaData from '@/components/PageTitle';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllSliders from './components/AllSliders'
+import PageMetaData from '@/components/PageTitle'
 const Slider = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Form" title="Range Slider" />
       <PageMetaData title="Range Slider" />
 
@@ -14,7 +15,10 @@ const Slider = () => {
             <CardBody>
               <CardTitle as={'h5'} className="mb-1 anchor" id="overview">
                 Overview
-                <a className="btn btn-sm btn-outline-success rounded-2 float-end" href="https://github.com/leongersen/noUiSlider#readme" target="_blank">
+                <a
+                  className="btn btn-sm btn-outline-success rounded-2 float-end"
+                  href="https://github.com/leongersen/noUiSlider#readme"
+                  target="_blank">
                   Official Website
                 </a>
               </CardTitle>
@@ -24,33 +28,45 @@ const Slider = () => {
           <AllSliders />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#overview',
-          label: 'Overview'
-        }, {
-          link: '#basic-range',
-          label: 'Basic Range Slider'
-        }, {
-          link: '#vertical-range',
-          label: 'Vertical Range Slider'
-        }, {
-          link: '#multi-range',
-          label: 'Multi Elements Range'
-        }, {
-          link: '#colorpicker-range',
-          label: 'Colorpicker'
-        }, {
-          link: '#value-range',
-          label: 'Value Range Slider'
-        }, {
-          link: '#tooltip',
-          label: 'Tooltip'
-        }, {
-          link: '#soft-limits',
-          label: 'Soft Limits'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#overview',
+                label: 'Overview',
+              },
+              {
+                link: '#basic-range',
+                label: 'Basic Range Slider',
+              },
+              {
+                link: '#vertical-range',
+                label: 'Vertical Range Slider',
+              },
+              {
+                link: '#multi-range',
+                label: 'Multi Elements Range',
+              },
+              {
+                link: '#colorpicker-range',
+                label: 'Colorpicker',
+              },
+              {
+                link: '#value-range',
+                label: 'Value Range Slider',
+              },
+              {
+                link: '#tooltip',
+                label: 'Tooltip',
+              },
+              {
+                link: '#soft-limits',
+                label: 'Soft Limits',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Slider;
+    </>
+  )
+}
+export default Slider

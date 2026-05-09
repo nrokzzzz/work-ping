@@ -1,30 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 const Preloader = () => {
-  const [showLoader, setShowLoader] = useState(false);
+  const [showLoader, setShowLoader] = useState(false)
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setShowLoader(true), 1500);
-    return () => window.clearTimeout(timer);
-  }, []);
+    const timer = window.setTimeout(() => setShowLoader(true), 1500)
+    return () => window.clearTimeout(timer)
+  }, [])
 
-  if (!showLoader) return null;
+  if (!showLoader) return null
 
-  return <>
-    <div className="wp-page-loader-overlay" role="status" aria-live="polite" aria-label="Loading page">
-      <div className="wp-page-loader-aurora wp-page-loader-aurora-left" />
-      <div className="wp-page-loader-aurora wp-page-loader-aurora-right" />
+  return (
+    <>
+      <div className="wp-page-loader-overlay" role="status" aria-live="polite" aria-label="Loading page">
+        <div className="wp-page-loader-aurora wp-page-loader-aurora-left" />
+        <div className="wp-page-loader-aurora wp-page-loader-aurora-right" />
 
-      <div className="wp-page-loader-stage" aria-hidden="true">
-        <span className="wp-page-loader-ring wp-page-loader-ring-a" />
-        <span className="wp-page-loader-ring wp-page-loader-ring-b" />
-        <span className="wp-page-loader-ring wp-page-loader-ring-c" />
+        <div className="wp-page-loader-stage" aria-hidden="true">
+          <span className="wp-page-loader-ring wp-page-loader-ring-a" />
+          <span className="wp-page-loader-ring wp-page-loader-ring-b" />
+          <span className="wp-page-loader-ring wp-page-loader-ring-c" />
+        </div>
+
+        <span className="visually-hidden">Loading...</span>
       </div>
 
-      <span className="visually-hidden">Loading...</span>
-    </div>
-
-    <style>{`
+      <style>{`
       .wp-page-loader-overlay {
         position: fixed;
         inset: 0;
@@ -120,6 +121,7 @@ const Preloader = () => {
         50% { transform: translate(-24px, -18px) scale(1.07); opacity: 1; }
       }
     `}</style>
-  </>;
-};
-export default Preloader;
+    </>
+  )
+}
+export default Preloader

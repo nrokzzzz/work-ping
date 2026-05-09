@@ -1,9 +1,8 @@
-import { Card, CardBody, CardTitle, Table } from 'react-bootstrap';
-import { currency } from '@/context/constants';
-const OrderSummery = ({
-  order
-}) => {
-  return <Card>
+import { Card, CardBody, CardTitle, Table } from 'react-bootstrap'
+import { currency } from '@/context/constants'
+const OrderSummery = ({ order }) => {
+  return (
+    <Card>
       <CardBody>
         <CardTitle as={'h5'} className="mb-3">
           Products From Order #{order.id}
@@ -37,6 +36,7 @@ const OrderSummery = ({
           </Table>
         </div>
       </CardBody>
-    </Card>;
-};
-export default OrderSummery;
+    </Card>
+  )
+}
+export default OrderSummery

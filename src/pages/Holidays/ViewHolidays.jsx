@@ -79,7 +79,8 @@ const ViewHolidays = () => {
         silent: true,
       })
       setHolidays(mergeWithSundayDefaults(res.data?.data || []))
-    } catch {} finally {
+    } catch {
+    } finally {
       setLoading(false)
     }
   }
@@ -96,8 +97,7 @@ const ViewHolidays = () => {
                   className="form-select form-select-sm"
                   value={organizationId}
                   onChange={(e) => setOrganizationId(e.target.value)}
-                  style={{ minWidth: 220 }}
-                >
+                  style={{ minWidth: 220 }}>
                   {organizations.map((org) => (
                     <option key={org.organizationId} value={org.organizationId}>
                       {org.name}
@@ -138,9 +138,7 @@ const ViewHolidays = () => {
                       <td>{i + 1}</td>
                       <td>{h.name || '--'}</td>
                       <td>
-                        <span className={`badge bg-${h.type === 'public' ? 'primary' : 'info'}`}>
-                          {h.type || '--'}
-                        </span>
+                        <span className={`badge bg-${h.type === 'public' ? 'primary' : 'info'}`}>{h.type || '--'}</span>
                       </td>
                       <td>{h.date ? new Date(h.date).toLocaleDateString() : '--'}</td>
                       <td>{h.description || '--'}</td>

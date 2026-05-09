@@ -1,10 +1,11 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllToastify from './AllToastify';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllToastify from './AllToastify'
 const Toastify = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Advanced UI" title="Toastify" />
       <PageMetaData title="Toastify" />
       <Row>
@@ -25,21 +26,29 @@ const Toastify = () => {
           <AllToastify />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#overview',
-          label: 'Overview'
-        }, {
-          link: '#basic',
-          label: 'Basic'
-        }, {
-          link: '#display_position',
-          label: 'Display Position Example'
-        }, {
-          link: '#rater',
-          label: 'Offset, Close Button & Duration'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#overview',
+                label: 'Overview',
+              },
+              {
+                link: '#basic',
+                label: 'Basic',
+              },
+              {
+                link: '#display_position',
+                label: 'Display Position Example',
+              },
+              {
+                link: '#rater',
+                label: 'Offset, Close Button & Duration',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Toastify;
+    </>
+  )
+}
+export default Toastify

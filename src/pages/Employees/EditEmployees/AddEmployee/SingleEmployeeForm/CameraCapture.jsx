@@ -51,8 +51,7 @@ const CameraCapture = ({ onCapture }) => {
     initializedRef.current = true
 
     const faceDetection = new FaceDetection({
-      locateFile: (file) =>
-        `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`,
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`,
     })
 
     faceDetection.setOptions({
@@ -113,13 +112,11 @@ const CameraCapture = ({ onCapture }) => {
     setIsCaptured(true)
     cameraRef.current?.stop()
 
-    const pixels = new Uint8Array(
-      ctx.getImageData(0, 0, canvas.width, canvas.height).data
-    )
+    const pixels = new Uint8Array(ctx.getImageData(0, 0, canvas.width, canvas.height).data)
 
     const hashBuffer = await crypto.subtle.digest('SHA-256', pixels)
     const hash = Array.from(new Uint8Array(hashBuffer))
-      .map(b => b.toString(16).padStart(2, '0'))
+      .map((b) => b.toString(16).padStart(2, '0'))
       .join('')
 
     onCapture?.({ source: 'camera', hash })
@@ -135,10 +132,9 @@ const CameraCapture = ({ onCapture }) => {
     <div
       style={{
         width: '100%',
-        maxWidth: 420,     // 👈 change this to control camera size on laptop
+        maxWidth: 420, // 👈 change this to control camera size on laptop
         margin: '0 auto',
-      }}
-    >
+      }}>
       <div
         style={{
           position: 'relative',
@@ -147,8 +143,7 @@ const CameraCapture = ({ onCapture }) => {
           background: '#000',
           borderRadius: 12,
           overflow: 'hidden',
-        }}
-      >
+        }}>
         <video
           ref={videoRef}
           autoPlay
@@ -188,7 +183,6 @@ const CameraCapture = ({ onCapture }) => {
       )}
     </div>
   )
-
 }
 
 export default CameraCapture

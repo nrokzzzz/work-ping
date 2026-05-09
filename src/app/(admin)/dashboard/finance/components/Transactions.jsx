@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
-import { Card, CardBody, CardFooter, CardHeader, CardTitle, Col, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { currency } from '@/context/constants';
-import { getAllTransactions } from '@/helpers/data';
+import { useEffect, useState } from 'react'
+import { Card, CardBody, CardFooter, CardHeader, CardTitle, Col, Table } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { currency } from '@/context/constants'
+import { getAllTransactions } from '@/helpers/data'
 const Transactions = () => {
-  const [transactionData, setTransactionData] = useState();
+  const [transactionData, setTransactionData] = useState()
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllTransactions();
-      setTransactionData(data);
-    };
-    fetchData();
-  }, []);
-  return <Card>
+      const data = await getAllTransactions()
+      setTransactionData(data)
+    }
+    fetchData()
+  }, [])
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>Transactions</CardTitle>
         <div className="flex-shrink-0">
@@ -41,7 +42,8 @@ const Transactions = () => {
               </tr>
             </thead>
             <tbody>
-              {transactionData?.slice(0, 5).map((item, idx) => <tr key={idx}>
+              {transactionData?.slice(0, 5).map((item, idx) => (
+                <tr key={idx}>
                   <td className="icons-center gap-1 w-100">
                     {item.customer && <img src={item.customer?.image} alt="avatar" className="avatar-xs rounded-circle me-1" />}
                     <span role="button" className="text-reset">
@@ -53,15 +55,14 @@ const Transactions = () => {
                     {currency}
                     {item.amount}
                   </td>
-                  <td>
-                    {new Date(item.date).toDateString()}&nbsp;
-                  </td>
+                  <td>{new Date(item.date).toDateString()}&nbsp;</td>
                   <td>
                     <span className={`badge ${item.status === 'Dr.' ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success'}  p-1`}>
                       {item.status}
                     </span>
                   </td>
-                </tr>)}
+                </tr>
+              ))}
             </tbody>
           </Table>
         </div>
@@ -107,6 +108,7 @@ const Transactions = () => {
           </Col>
         </div>
       </CardFooter>
-    </Card>;
-};
-export default Transactions;
+    </Card>
+  )
+}
+export default Transactions

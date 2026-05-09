@@ -1,51 +1,58 @@
-import { WorldVectorMap } from '@/components/VectorMap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Fragment } from 'react';
-import { Card, CardBody, CardHeader, CardTitle, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, ProgressBar, Row } from 'react-bootstrap';
-import { countries } from '../data';
+import { WorldVectorMap } from '@/components/VectorMap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Fragment } from 'react'
+import { Card, CardBody, CardHeader, CardTitle, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, ProgressBar, Row } from 'react-bootstrap'
+import { countries } from '../data'
 const SessionsByCountry = () => {
   const options = {
     map: 'world',
     zoomOnScroll: true,
     zoomButtons: false,
     markersSelectable: true,
-    markers: [{
-      name: 'Canada',
-      coords: [56.1304, -106.3468]
-    }, {
-      name: 'Brazil',
-      coords: [-14.235, -51.9253]
-    }, {
-      name: 'Russia',
-      coords: [61, 105]
-    }, {
-      name: 'China',
-      coords: [35.8617, 104.1954]
-    }, {
-      name: 'United States',
-      coords: [37.0902, -95.7129]
-    }],
+    markers: [
+      {
+        name: 'Canada',
+        coords: [56.1304, -106.3468],
+      },
+      {
+        name: 'Brazil',
+        coords: [-14.235, -51.9253],
+      },
+      {
+        name: 'Russia',
+        coords: [61, 105],
+      },
+      {
+        name: 'China',
+        coords: [35.8617, 104.1954],
+      },
+      {
+        name: 'United States',
+        coords: [37.0902, -95.7129],
+      },
+    ],
     markerStyle: {
       initial: {
-        fill: '#7f56da'
+        fill: '#7f56da',
       },
       selected: {
-        fill: '#22c55e'
-      }
+        fill: '#22c55e',
+      },
     },
     labels: {
       markers: {
-        render: marker => marker.name
-      }
+        render: (marker) => marker.name,
+      },
     },
     regionStyle: {
       initial: {
         fill: 'rgba(169,183,197, 0.3)',
-        fillOpacity: 1
-      }
-    }
-  };
-  return <Card>
+        fillOpacity: 1,
+      },
+    },
+  }
+  return (
+    <Card>
       <CardHeader className="d-flex  justify-content-between align-items-center border-bottom border-dashed">
         <CardTitle>Sessions by Country</CardTitle>
         <Dropdown>
@@ -70,7 +77,8 @@ const SessionsByCountry = () => {
           </Col>
           <Col lg={5} dir="ltr">
             <div className="p-3">
-              {countries.map((country, idx) => <Fragment key={idx}>
+              {countries.map((country, idx) => (
+                <Fragment key={idx}>
                   <div className="d-flex justify-content-between align-items-center">
                     <p className="mb-1">
                       <IconifyIcon icon={country.icon} className="fs-16 align-middle me-1" /> <span className="align-middle">{country.name}</span>
@@ -84,11 +92,13 @@ const SessionsByCountry = () => {
                       <p className="mb-0 fs-13 fw-semibold">{country.amount}k</p>
                     </Col>
                   </Row>
-                </Fragment>)}
+                </Fragment>
+              ))}
             </div>
           </Col>
         </Row>
       </CardBody>
-    </Card>;
-};
-export default SessionsByCountry;
+    </Card>
+  )
+}
+export default SessionsByCountry

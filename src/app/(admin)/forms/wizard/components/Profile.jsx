@@ -1,14 +1,13 @@
-import avatar1 from '@/assets/images/users/dummy-avatar.jpg';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import TextFormInput from '@/components/form/TextFormInput';
-import { useForm } from 'react-hook-form';
-import SelectFormInput from '@/components/form/SelectFormInput';
-import { Col, Row } from 'react-bootstrap';
+import avatar1 from '@/assets/images/users/dummy-avatar.jpg'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import TextFormInput from '@/components/form/TextFormInput'
+import { useForm } from 'react-hook-form'
+import SelectFormInput from '@/components/form/SelectFormInput'
+import { Col, Row } from 'react-bootstrap'
 const Profile = () => {
-  const {
-    control
-  } = useForm();
-  return <>
+  const { control } = useForm()
+  return (
+    <>
       <h4 className="fs-16 fw-semibold mb-1">Profile Information</h4>
       <p className="text-muted">Setup your profile information</p>
       <Row>
@@ -37,53 +36,75 @@ const Profile = () => {
               <TextFormInput name="number" label="Number" placeholder="Mobile Number" containerClassName="mb-3" control={control} />
             </Col>
             <Col md={6}>
-              <SelectFormInput name="country" label="Country" containerClassName="mb-3" control={control} options={[{
-              value: 'United States',
-              label: 'United States'
-            }, {
-              value: 'Canada',
-              label: 'Canada'
-            }, {
-              value: 'Australia',
-              label: 'Australia'
-            }, {
-              value: 'Germany',
-              label: 'Germany'
-            }, {
-              value: 'Bangladesh',
-              label: 'Bangladesh'
-            }, {
-              value: 'China',
-              label: 'China'
-            }, {
-              value: 'Argentina',
-              label: 'Argentina'
-            }, {
-              value: 'Bharat',
-              label: 'Bharat'
-            }, {
-              value: 'Afghanistan',
-              label: 'Afghanistan'
-            }, {
-              value: 'France',
-              label: 'France'
-            }, {
-              value: 'Brazil',
-              label: 'Brazil'
-            }, {
-              value: 'Belgium',
-              label: 'Belgium'
-            }, {
-              value: 'Colombia',
-              label: 'Colombia'
-            }, {
-              value: 'Albania',
-              label: 'Albania'
-            }]} />
+              <SelectFormInput
+                name="country"
+                label="Country"
+                containerClassName="mb-3"
+                control={control}
+                options={[
+                  {
+                    value: 'United States',
+                    label: 'United States',
+                  },
+                  {
+                    value: 'Canada',
+                    label: 'Canada',
+                  },
+                  {
+                    value: 'Australia',
+                    label: 'Australia',
+                  },
+                  {
+                    value: 'Germany',
+                    label: 'Germany',
+                  },
+                  {
+                    value: 'Bangladesh',
+                    label: 'Bangladesh',
+                  },
+                  {
+                    value: 'China',
+                    label: 'China',
+                  },
+                  {
+                    value: 'Argentina',
+                    label: 'Argentina',
+                  },
+                  {
+                    value: 'Bharat',
+                    label: 'Bharat',
+                  },
+                  {
+                    value: 'Afghanistan',
+                    label: 'Afghanistan',
+                  },
+                  {
+                    value: 'France',
+                    label: 'France',
+                  },
+                  {
+                    value: 'Brazil',
+                    label: 'Brazil',
+                  },
+                  {
+                    value: 'Belgium',
+                    label: 'Belgium',
+                  },
+                  {
+                    value: 'Colombia',
+                    label: 'Colombia',
+                  },
+                  {
+                    value: 'Albania',
+                    label: 'Albania',
+                  },
+                ]}
+              />
             </Col>
           </Row>
         </Col>
       </Row>
-    </>;
-};
-export default Profile;
+    </>
+  )
+}
+export default Profile

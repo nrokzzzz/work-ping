@@ -30,13 +30,14 @@ const MetricCard = ({ title, value, subtitle, iconName, color }) => (
     <CardBody className="d-flex align-items-center gap-3">
       <div
         className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-        style={{ width: 52, height: 52, background: color + '20' }}
-      >
+        style={{ width: 52, height: 52, background: color + '20' }}>
         <Icon icon={iconName} style={{ fontSize: 26, color }} />
       </div>
       <div>
         <p className="mb-0 text-muted text-uppercase small fw-semibold">{title}</p>
-        <h3 className="mb-0 fw-bold" style={{ color }}>{value ?? '--'}</h3>
+        <h3 className="mb-0 fw-bold" style={{ color }}>
+          {value ?? '--'}
+        </h3>
         <p className="mb-0 text-muted small">{subtitle}</p>
       </div>
     </CardBody>
@@ -49,8 +50,12 @@ const HolidaysAnalytics = () => {
   const [loading, setLoading] = useState(false)
   const [holidays, setHolidays] = useState([])
 
-  useEffect(() => { fetchOrgs() }, [])
-  useEffect(() => { if (orgId) fetchHolidays(orgId) }, [orgId])
+  useEffect(() => {
+    fetchOrgs()
+  }, [])
+  useEffect(() => {
+    if (orgId) fetchHolidays(orgId)
+  }, [orgId])
 
   const fetchOrgs = async () => {
     try {
@@ -68,9 +73,7 @@ const HolidaysAnalytics = () => {
         params: { organizationId: selectedOrgId },
         silent: true,
       })
-      setHolidays(
-        (res.data?.data ?? []).map((h) => ({ ...h, date: toYmd(h.date) || h.date }))
-      )
+      setHolidays((res.data?.data ?? []).map((h) => ({ ...h, date: toYmd(h.date) || h.date })))
     } catch {
       setHolidays([])
     } finally {
@@ -131,26 +134,35 @@ const HolidaysAnalytics = () => {
 
       <Row className="g-2 mb-3 align-items-center">
         <Col xs="auto">
-          <select
-            className="form-select form-select-sm"
-            value={orgId}
-            onChange={(e) => setOrgId(e.target.value)}
-            style={{ minWidth: 200 }}
-          >
+          <select className="form-select form-select-sm" value={orgId} onChange={(e) => setOrgId(e.target.value)} style={{ minWidth: 200 }}>
             {organizations.length === 0 && <option value="">No organizations</option>}
             {organizations.map((o) => (
-              <option key={o.organizationId} value={o.organizationId}>{o.name}</option>
+              <option key={o.organizationId} value={o.organizationId}>
+                {o.name}
+              </option>
             ))}
           </select>
         </Col>
         <Col xs="auto" className="ms-auto d-flex align-items-center gap-2">
-          {loading ? <Spinner size="sm" animation="border" /> : <Badge bg="success" pill>Live</Badge>}
+          {loading ? (
+            <Spinner size="sm" animation="border" />
+          ) : (
+            <Badge bg="success" pill>
+              Live
+            </Badge>
+          )}
         </Col>
       </Row>
 
       <Row className="g-3 mb-3">
         <Col md={6} xl={3}>
-          <MetricCard title={`Holidays ${year}`} value={thisYearHolidays.length} subtitle="Custom holidays this year" iconName="mdi:calendar-check-outline" color="#22c55e" />
+          <MetricCard
+            title={`Holidays ${year}`}
+            value={thisYearHolidays.length}
+            subtitle="Custom holidays this year"
+            iconName="mdi:calendar-check-outline"
+            color="#22c55e"
+          />
         </Col>
         <Col md={6} xl={3}>
           <MetricCard title="Public Holidays" value={publicCount} subtitle="National / gazetted" iconName="mdi:bank-outline" color="#0ea5e9" />

@@ -1,18 +1,16 @@
-import { useState } from 'react';
-import { Button, Dropdown, DropdownDivider, DropdownMenu, DropdownToggle, Modal, ModalBody, ModalHeader, ModalTitle } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { useEmailContext } from '@/context/useEmailContext';
-import 'react-quill/dist/quill.snow.css';
+import { useState } from 'react'
+import { Button, Dropdown, DropdownDivider, DropdownMenu, DropdownToggle, Modal, ModalBody, ModalHeader, ModalTitle } from 'react-bootstrap'
+import ReactQuill from 'react-quill'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { useEmailContext } from '@/context/useEmailContext'
+import 'react-quill/dist/quill.snow.css'
 const ComposeEmailModal = () => {
-  const [quillEditorContent, setQuillEditorContent] = useState('');
+  const [quillEditorContent, setQuillEditorContent] = useState('')
   const {
-    composeEmail: {
-      open,
-      toggle
-    }
-  } = useEmailContext();
-  return <Modal show={open} onHide={toggle} size="lg" className="fade compose-mail" tabIndex={-1} aria-labelledby="compose-modalLabel" aria-hidden="true">
+    composeEmail: { open, toggle },
+  } = useEmailContext()
+  return (
+    <Modal show={open} onHide={toggle} size="lg" className="fade compose-mail" tabIndex={-1} aria-labelledby="compose-modalLabel" aria-hidden="true">
       <ModalHeader closeButton closeVariant="white" className="overflow-hidden bg-primary p-2">
         <ModalTitle as="h5" className="text-white">
           New Message
@@ -27,9 +25,13 @@ const ComposeEmailModal = () => {
             <input type="text" className="form-control" placeholder="Subject " />
           </div>
           <div className="mt-2 mb-5">
-            <ReactQuill value={quillEditorContent} onChange={setQuillEditorContent} style={{
-            height: 200
-          }} />
+            <ReactQuill
+              value={quillEditorContent}
+              onChange={setQuillEditorContent}
+              style={{
+                height: 200,
+              }}
+            />
           </div>
           <div className="d-flex float-end">
             <Dropdown className="dropdown me-1">
@@ -64,6 +66,7 @@ const ComposeEmailModal = () => {
           </div>
         </div>
       </ModalBody>
-    </Modal>;
-};
-export default ComposeEmailModal;
+    </Modal>
+  )
+}
+export default ComposeEmailModal

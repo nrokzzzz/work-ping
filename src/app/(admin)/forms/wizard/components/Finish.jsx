@@ -1,7 +1,8 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Col, Row } from 'react-bootstrap';
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Col, Row } from 'react-bootstrap'
 const Finish = () => {
-  return <Row>
+  return (
+    <Row>
       <Col xs={12}>
         <div className="text-center">
           <div className="avatar-md mx-auto mb-3">
@@ -21,6 +22,7 @@ const Finish = () => {
           </div>
         </div>
       </Col>
-    </Row>;
-};
-export default Finish;
+    </Row>
+  )
+}
+export default Finish

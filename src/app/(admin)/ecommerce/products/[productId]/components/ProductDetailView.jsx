@@ -1,33 +1,32 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { currency } from '@/context/constants';
-import { getCalculatedPrice } from '@/helpers/product';
-import { getStockStatus } from '@/utils/other';
-import { Button } from 'react-bootstrap';
-const ProductDetailView = ({
-  product
-}) => {
-  const {
-    seller,
-    review,
-    sale,
-    quantity,
-    price,
-    name
-  } = product;
-  const stockStatus = getStockStatus(quantity);
-  return <div className="ps-xl-3 mt-3 mt-xl-0">
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { currency } from '@/context/constants'
+import { getCalculatedPrice } from '@/helpers/product'
+import { getStockStatus } from '@/utils/other'
+import { Button } from 'react-bootstrap'
+const ProductDetailView = ({ product }) => {
+  const { seller, review, sale, quantity, price, name } = product
+  const stockStatus = getStockStatus(quantity)
+  return (
+    <div className="ps-xl-3 mt-3 mt-xl-0">
       <span className="text-primary mb-2 d-inline-block">{seller?.storeName}</span>
       <h4 className="mb-3">{name}</h4>
       <p className="text-muted gap-1 d-flex float-start me-3">
-        {Array.from(new Array(Math.floor(review.stars))).map((_val, idx) => <IconifyIcon icon="fa6-solid:star" width={14} height={14} key={idx} className="text-base text-warning" />)}
+        {Array.from(new Array(Math.floor(review.stars))).map((_val, idx) => (
+          <IconifyIcon icon="fa6-solid:star" width={14} height={14} key={idx} className="text-base text-warning" />
+        ))}
         {!Number.isInteger(review.stars) && <IconifyIcon icon="fa6-solid:star-half-stroke" width={14} height={14} className="text-warning" />}
-        {review.stars < 5 && Array.from(new Array(5 - Math.ceil(review.stars))).map((_val, idx) => <IconifyIcon icon="fa6-solid:star" key={idx} width={14} height={14} className="text-warning" />)}
+        {review.stars < 5 &&
+          Array.from(new Array(5 - Math.ceil(review.stars))).map((_val, idx) => (
+            <IconifyIcon icon="fa6-solid:star" key={idx} width={14} height={14} className="text-warning" />
+          ))}
       </p>
       <p className="mb-3">
         {' '}
         <span className="text-muted">( {review.count} Customer Reviews )</span>
       </p>
-      {sale && <h6 className="text-danger text-uppercase">{sale.type === 'percent' ? sale.discount + '% off' : 'Flat ' + currency + sale.discount}</h6>}
+      {sale && (
+        <h6 className="text-danger text-uppercase">{sale.type === 'percent' ? sale.discount + '% off' : 'Flat ' + currency + sale.discount}</h6>
+      )}
       <h4 className="mb-3">
         Price :{' '}
         <span className="text-muted me-2">
@@ -116,6 +115,7 @@ const ProductDetailView = ({
           Add to cart
         </Button>
       </div>
-    </div>;
-};
-export default ProductDetailView;
+    </div>
+  )
+}
+export default ProductDetailView

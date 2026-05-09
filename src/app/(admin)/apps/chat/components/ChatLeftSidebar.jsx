@@ -1,27 +1,34 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Card, CardHeader, CardTitle, Offcanvas, OffcanvasHeader, Tab, Tabs } from 'react-bootstrap';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import Chat from './Chat';
-import Contact from './Contact';
-import Group from './Group';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { useChatContext } from '@/context/useChatContext';
-import avatar1 from '@/assets/images/users/avatar-1.jpg';
-import 'swiper/css';
-const ChatLeftSidebar = ({
-  users,
-  onUserSelect,
-  selectedUser
-}) => {
-  const {
-    chatSetting
-  } = useChatContext();
-  const [user, setUser] = useState([...users]);
-  const search = text => {
-    setUser(text ? [...users].filter(u => u.name.toLowerCase().indexOf(text.toLowerCase()) >= 0) : [...users]);
-  };
-  return <Card className="position-relative overflow-hidden">
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import {
+  Accordion,
+  AccordionBody,
+  AccordionHeader,
+  AccordionItem,
+  Card,
+  CardHeader,
+  CardTitle,
+  Offcanvas,
+  OffcanvasHeader,
+  Tab,
+  Tabs,
+} from 'react-bootstrap'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import Chat from './Chat'
+import Contact from './Contact'
+import Group from './Group'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { useChatContext } from '@/context/useChatContext'
+import avatar1 from '@/assets/images/users/avatar-1.jpg'
+import 'swiper/css'
+const ChatLeftSidebar = ({ users, onUserSelect, selectedUser }) => {
+  const { chatSetting } = useChatContext()
+  const [user, setUser] = useState([...users])
+  const search = (text) => {
+    setUser(text ? [...users].filter((u) => u.name.toLowerCase().indexOf(text.toLowerCase()) >= 0) : [...users])
+  }
+  return (
+    <Card className="position-relative overflow-hidden">
       <CardHeader className="border-0 d-flex justify-content-between align-items-center">
         <CardTitle>Chat</CardTitle>
         <span className="fs-18" role="button" onClick={chatSetting.toggle}>
@@ -30,32 +37,42 @@ const ChatLeftSidebar = ({
       </CardHeader>
       <form className="chat-search px-3">
         <div className="chat-search-box">
-          <input className="form-control" type="text" name="search" placeholder="Search ..." onKeyUp={e => search(e.target.value)} />
+          <input className="form-control" type="text" name="search" placeholder="Search ..." onKeyUp={(e) => search(e.target.value)} />
           <button type="button" className="btn btn-sm btn-link search-icon p-0">
             <IconifyIcon icon="bx:bx-search-alt" />
           </button>
         </div>
       </form>
-      <Swiper loop pagination={{
-      el: '.swiper-pagination',
-      clickable: true
-    }} slidesPerView={6} spaceBetween={8} breakpoints={{
-      0: {
-        slidesPerView: 5
-      },
-      1400: {
-        slidesPerView: 6
-      }
-    }} autoHeight className="mySwiper p-1 mx-3" style={{
-      minHeight: 45
-    }}>
-        {users.map(user => <SwiperSlide className="avatar-sm" key={user.id}>
+      <Swiper
+        loop
+        pagination={{
+          el: '.swiper-pagination',
+          clickable: true,
+        }}
+        slidesPerView={6}
+        spaceBetween={8}
+        breakpoints={{
+          0: {
+            slidesPerView: 5,
+          },
+          1400: {
+            slidesPerView: 6,
+          },
+        }}
+        autoHeight
+        className="mySwiper p-1 mx-3"
+        style={{
+          minHeight: 45,
+        }}>
+        {users.map((user) => (
+          <SwiperSlide className="avatar-sm" key={user.id}>
             <div className="chat-user-status-box">
               <span>
                 <img src={user.avatar} alt="avatar-1" className="img-fluid avatar-sm rounded-circle avatar-border" />
               </span>
             </div>
-          </SwiperSlide>)}
+          </SwiperSlide>
+        ))}
       </Swiper>
       <Tabs justify mountOnEnter variant="underline" className="nav-tabs border-top mt-2 card-tabs" defaultActiveKey={'chat-tab'}>
         <Tab title="Chat" eventKey={'chat-tab'}>
@@ -68,7 +85,16 @@ const ChatLeftSidebar = ({
           <Contact />
         </Tab>
       </Tabs>
-      <Offcanvas show={chatSetting.open} placement="start" onHide={chatSetting.toggle} className="offcanvas-start position-absolute shadow" data-bs-scroll="true" data-bs-backdrop="false" tabIndex={-1} id="user-setting" aria-labelledby="user-settingLabel">
+      <Offcanvas
+        show={chatSetting.open}
+        placement="start"
+        onHide={chatSetting.toggle}
+        className="offcanvas-start position-absolute shadow"
+        data-bs-scroll="true"
+        data-bs-backdrop="false"
+        tabIndex={-1}
+        id="user-setting"
+        aria-labelledby="user-settingLabel">
         <OffcanvasHeader closeButton>
           <h5 className="offcanvas-title text-truncate w-50" id="user-settingLabel">
             Profile
@@ -400,6 +426,7 @@ const ChatLeftSidebar = ({
           </div>
         </div>
       </Offcanvas>
-    </Card>;
-};
-export default ChatLeftSidebar;
+    </Card>
+  )
+}
+export default ChatLeftSidebar

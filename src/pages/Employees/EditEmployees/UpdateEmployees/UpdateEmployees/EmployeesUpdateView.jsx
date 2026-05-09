@@ -35,12 +35,8 @@ const ViewEmployees = () => {
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
-        const res = await axiosClient.get(
-          '/api/admin/get-all-employees/get-organization-info',
-          { silent: true }
-        )
+        const res = await axiosClient.get('/api/admin/get-all-employees/get-organization-info', { silent: true })
         setOrgData(res.data?.data || {})
-
       } catch (err) {
         // Error handled by interceptor
       }
@@ -49,18 +45,9 @@ const ViewEmployees = () => {
     fetchOrganizations()
   }, [])
 
-  const organizationList = useMemo(
-    () => Object.keys(orgData),
-    [orgData]
-  )
+  const organizationList = useMemo(() => Object.keys(orgData), [orgData])
 
-  const departmentList = useMemo(
-    () =>
-      organization && orgData[organization]
-        ? orgData[organization].teams || []
-        : [],
-    [organization, orgData]
-  )
+  const departmentList = useMemo(() => (organization && orgData[organization] ? orgData[organization].teams || [] : []), [organization, orgData])
 
   const fetchEmployees = async (page) => {
     setLoading(true)
@@ -71,8 +58,7 @@ const ViewEmployees = () => {
       })
 
       if (appliedOrganization) {
-        const organizationId =
-          orgData[appliedOrganization]?.organizationId
+        const organizationId = orgData[appliedOrganization]?.organizationId
 
         if (organizationId) {
           params.append('organizationId', organizationId)
@@ -87,10 +73,7 @@ const ViewEmployees = () => {
         params.append('search', appliedSearch)
       }
 
-      const result = await axiosClient.get(
-        `/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`,
-        { silent: true }
-      )
+      const result = await axiosClient.get(`/api/admin/get-all-employees/get-all-employees-by-page-number?${params.toString()}`, { silent: true })
 
       setEmployees(result.data?.data?.data || [])
       setTotalPages(result.data?.data?.totalPages || 0)
@@ -120,28 +103,21 @@ const ViewEmployees = () => {
   const deleteEmployees = async () => {
     try {
       require2FA(async () => {
-
         try {
-
-
-          await axiosClient.post('/api/admin/employees/delete-employees', {
-            data: [...selectedIds],
-          }, { silent: true })
+          await axiosClient.post(
+            '/api/admin/employees/delete-employees',
+            {
+              data: [...selectedIds],
+            },
+            { silent: true },
+          )
           toast.success('Employee(s) deleted successfully!')
           setSelectedIds(new Set())
           fetchEmployees(currentPage)
-
-
         } catch (error) {
-
-          throw new Error(
-            error?.response?.data?.message || "Failed to add Employee"
-          )
-
+          throw new Error(error?.response?.data?.message || 'Failed to add Employee')
         }
-
       })
-
     } catch (e) {
       // Error handled by interceptor
     }
@@ -155,20 +131,16 @@ const ViewEmployees = () => {
   }
 
   const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
 
-    if (currentPage <= 2)
-      return [1, 2, 3, '...', totalPages]
+    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
 
-    if (currentPage >= totalPages - 1)
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
 
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
 
-  const start =
-    totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
+  const start = totalRecords === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
   const end = Math.min(currentPage * itemsPerPage, totalRecords)
 
   return (
@@ -177,7 +149,6 @@ const ViewEmployees = () => {
         <Card>
           <CardBody>
             <Row className="g-2 align-items-center">
-
               <Col xs={12} md={4}>
                 <div className="position-relative">
                   <IconifyIcon
@@ -207,8 +178,7 @@ const ViewEmployees = () => {
                   onChange={(e) => {
                     setOrganization(e.target.value)
                     setDepartment('')
-                  }}
-                >
+                  }}>
                   <option value="">Select Organization</option>
                   {organizationList.map((org) => (
                     <option key={org} value={org}>
@@ -219,11 +189,7 @@ const ViewEmployees = () => {
               </Col>
 
               <Col xs={12} md={2}>
-                <select
-                  className="form-select"
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                >
+                <select className="form-select" value={department} onChange={(e) => setDepartment(e.target.value)}>
                   <option value="">Select Department</option>
                   {departmentList.map((team) => (
                     <option key={team._id} value={team._id}>
@@ -235,31 +201,17 @@ const ViewEmployees = () => {
 
               <Col xs={12} md={4}>
                 <div className="d-flex gap-2 justify-content-end">
-
-                  <Button
-                    className="flex-fill"
-                    onClick={handleApply}
-                  >
+                  <Button className="flex-fill" onClick={handleApply}>
                     Apply
                   </Button>
 
-                  <div
-                    className="flex-fill"
-                    style={{ cursor: selectedIds.size === 0 ? "not-allowed" : "pointer" }}
-                  >
-                    <Button
-                      variant="danger"
-                      className="w-100"
-                      disabled={selectedIds.size === 0}
-                      onClick={deleteEmployees}
-                    >
+                  <div className="flex-fill" style={{ cursor: selectedIds.size === 0 ? 'not-allowed' : 'pointer' }}>
+                    <Button variant="danger" className="w-100" disabled={selectedIds.size === 0} onClick={deleteEmployees}>
                       Delete
                     </Button>
                   </div>
-
                 </div>
               </Col>
-
             </Row>
           </CardBody>
 
@@ -304,15 +256,8 @@ const ViewEmployees = () => {
                 ) : (
                   employees.map((emp) => (
                     <tr key={emp._id}>
-
                       <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedIds.has(emp._id)}
-                          onChange={(e) =>
-                            handleSelect(emp._id, e.target.checked)
-                          }
-                        />
+                        <input type="checkbox" checked={selectedIds.has(emp._id)} onChange={(e) => handleSelect(emp._id, e.target.checked)} />
                       </td>
 
                       <td>
@@ -320,10 +265,7 @@ const ViewEmployees = () => {
                           variant="soft-secondary"
                           size="sm"
                           className="me-2"
-                          onClick={() =>
-                            navigate(`/employees/update-employees/${emp._id}`)
-                          }
-                        >
+                          onClick={() => navigate(`/employees/update-employees/${emp._id}`)}>
                           <IconifyIcon icon="bx:edit" />
                         </Button>
                       </td>
@@ -352,21 +294,43 @@ const ViewEmployees = () => {
           </div>
 
           <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
-            <div className="text-muted small">Showing {start} to {end} of {totalRecords} records</div>
+            <div className="text-muted small">
+              Showing {start} to {end} of {totalRecords} records
+            </div>
             <div className="d-flex flex-wrap align-items-center gap-2">
               <ul className="pagination pagination-rounded m-0">
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage > 1) setCurrentPage(currentPage - 1)
+                    }}>
                     <IconifyIcon icon="bx:left-arrow-alt" />
                   </Link>
                 </li>
                 {getPages().map((p, i) => (
                   <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
-                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === 'number') setCurrentPage(p) }}>{p}</Link>
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (typeof p === 'number') setCurrentPage(p)
+                      }}>
+                      {p}
+                    </Link>
                   </li>
                 ))}
                 <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}>
+                  <Link
+                    to="#"
+                    className="page-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+                    }}>
                     <IconifyIcon icon="bx:right-arrow-alt" />
                   </Link>
                 </li>
@@ -374,13 +338,24 @@ const ViewEmployees = () => {
               {totalPages > 1 && (
                 <div className="d-flex align-items-center gap-1">
                   <span className="text-muted small text-nowrap">Go to</span>
-                  <input type="number" min={1} max={totalPages} value={jumpPage} onChange={(e) => setJumpPage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()} className="form-control form-control-sm text-center" style={{ width: 60 }} placeholder={`/${totalPages}`} />
-                  <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
+                  <input
+                    type="number"
+                    min={1}
+                    max={totalPages}
+                    value={jumpPage}
+                    onChange={(e) => setJumpPage(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
+                    className="form-control form-control-sm text-center"
+                    style={{ width: 60 }}
+                    placeholder={`/${totalPages}`}
+                  />
+                  <Button size="sm" variant="primary" onClick={handleJumpGo}>
+                    Go
+                  </Button>
                 </div>
               )}
             </div>
           </div>
-
         </Card>
       </Col>
     </Row>

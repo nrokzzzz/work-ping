@@ -1,20 +1,21 @@
-import clsx from 'clsx';
-import { Button, Card, CardBody, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllOrders } from '@/helpers/data';
-import { useEffect, useState } from 'react';
+import clsx from 'clsx'
+import { Button, Card, CardBody, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllOrders } from '@/helpers/data'
+import { useEffect, useState } from 'react'
 const Orders = () => {
-  const [orders, setOrders] = useState();
+  const [orders, setOrders] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllOrders();
-      setOrders(data);
-    })();
-  }, []);
-  return <>
+    ;(async () => {
+      const data = await getAllOrders()
+      setOrders(data)
+    })()
+  }, [])
+  return (
+    <>
       <PageBreadcrumb subName="Ecommerce" title="Orders List" />
       <PageMetaData title="Orders List" />
 
@@ -66,15 +67,19 @@ const Orders = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders && orders.map((order, idx) => {
-                  return <tr key={idx}>
+                  {orders &&
+                    orders.map((order, idx) => {
+                      return (
+                        <tr key={idx}>
                           <td>
                             <Link to={`/ecommerce/orders/${order.id}`}>{order.id}</Link>
                           </td>
                           <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                          {order.product && <td>
+                          {order.product && (
+                            <td>
                               <img src={order.product?.images[0]} alt="product-1(1)" className="img-fluid avatar-sm" />
-                            </td>}
+                            </td>
+                          )}
                           <td>
                             <Link to="">{order.customer?.name}</Link>
                           </td>
@@ -84,12 +89,19 @@ const Orders = () => {
                           <td>{order.paymentMethod}</td>
                           <td>
                             <div className="icons-center">
-                              <IconifyIcon icon="bxs:circle" className={clsx('me-1', order.status === 'Cancelled' ? 'text-danger' : order.status == 'Processing' ? 'text-primary' : 'text-success')} />
+                              <IconifyIcon
+                                icon="bxs:circle"
+                                className={clsx(
+                                  'me-1',
+                                  order.status === 'Cancelled' ? 'text-danger' : order.status == 'Processing' ? 'text-primary' : 'text-success',
+                                )}
+                              />
                               {order.status}
                             </div>
                           </td>
-                        </tr>;
-                })}
+                        </tr>
+                      )
+                    })}
                 </tbody>
               </table>
             </div>
@@ -134,6 +146,7 @@ const Orders = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default Orders;
+    </>
+  )
+}
+export default Orders

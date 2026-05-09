@@ -1,23 +1,35 @@
-import { useEffect, useState } from 'react';
-import { Button, Card, CardBody, CardTitle, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, DropdownMenu, DropdownToggle, OverlayTrigger, TabPane, Tooltip } from 'react-bootstrap';
-import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { getNewFeedPosts } from '@/helpers/data';
-import PostCard from './PostCard';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import TextAreaFormInput from '@/components/form/TextAreaFormInput';
+import { useEffect, useState } from 'react'
+import {
+  Button,
+  Card,
+  CardBody,
+  CardTitle,
+  Dropdown,
+  DropdownDivider,
+  DropdownHeader,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  OverlayTrigger,
+  TabPane,
+  Tooltip,
+} from 'react-bootstrap'
+import * as yup from 'yup'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { getNewFeedPosts } from '@/helpers/data'
+import PostCard from './PostCard'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import TextAreaFormInput from '@/components/form/TextAreaFormInput'
 const CreatePost = () => {
   const createPostSchema = yup.object({
-    caption: yup.string().required()
-  });
-  const {
-    handleSubmit,
-    control
-  } = useForm({
-    resolver: yupResolver(createPostSchema)
-  });
-  return <Card>
+    caption: yup.string().required(),
+  })
+  const { handleSubmit, control } = useForm({
+    resolver: yupResolver(createPostSchema),
+  })
+  return (
+    <Card>
       <CardBody as="form" onSubmit={handleSubmit(() => {})}>
         <div className="icons-center w-100 mb-3">
           <CardTitle className="me-auto">Create Post</CardTitle>
@@ -142,26 +154,29 @@ const CreatePost = () => {
           </button>
         </div>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const FeedTab = () => {
-  const [feedPosts, setFeedPosts] = useState();
+  const [feedPosts, setFeedPosts] = useState()
   useEffect(() => {
     const fetchFeedPosts = async () => {
-      const posts = await getNewFeedPosts();
-      if (posts) setFeedPosts(posts);
-    };
-    fetchFeedPosts();
-  }, []);
-  return <TabPane eventKey="Feed" className="fade" role="tabpanel" aria-labelledby="social-feed-tab">
+      const posts = await getNewFeedPosts()
+      if (posts) setFeedPosts(posts)
+    }
+    fetchFeedPosts()
+  }, [])
+  return (
+    <TabPane eventKey="Feed" className="fade" role="tabpanel" aria-labelledby="social-feed-tab">
       <CreatePost />
 
-      {feedPosts ? feedPosts.map(post => <PostCard key={post.id} {...post} />) : <h4 className="text-center ">Seems like your friends are lazy</h4>}
+      {feedPosts ? feedPosts.map((post) => <PostCard key={post.id} {...post} />) : <h4 className="text-center ">Seems like your friends are lazy</h4>}
 
       <span className="text-primary d-flex justify-content-center mx-auto mb-3">
         <IconifyIcon icon="bx:loader-circle" className="spin-icon fs-22 align-middle me-1" />
         Loading
       </span>
-    </TabPane>;
-};
-export default FeedTab;
+    </TabPane>
+  )
+}
+export default FeedTab

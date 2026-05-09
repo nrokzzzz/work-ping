@@ -1,12 +1,12 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { currency } from '@/context/constants';
-import ReactApexChart from 'react-apexcharts';
-import { Card, CardBody, CardHeader, CardTitle, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Table } from 'react-bootstrap';
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { currency } from '@/context/constants'
+import ReactApexChart from 'react-apexcharts'
+import { Card, CardBody, CardHeader, CardTitle, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Table } from 'react-bootstrap'
 const RevenueSources = () => {
   const chartOptions = {
     chart: {
       height: 205,
-      type: 'donut'
+      type: 'donut',
     },
     legend: {
       show: false,
@@ -17,15 +17,15 @@ const RevenueSources = () => {
       markers: {
         width: 9,
         height: 9,
-        radius: 6
+        radius: 6,
       },
       itemMargin: {
         horizontal: 10,
-        vertical: 0
-      }
+        vertical: 0,
+      },
     },
     stroke: {
-      width: 0
+      width: 0,
     },
     plotOptions: {
       pie: {
@@ -35,20 +35,21 @@ const RevenueSources = () => {
             show: true,
             total: {
               showAlways: true,
-              show: true
-            }
-          }
-        }
-      }
+              show: true,
+            },
+          },
+        },
+      },
     },
     series: [140, 125, 85],
     labels: ['Online', 'Offline', 'Direct'],
     colors: ['var(--bs-primary)', 'var(--bs-info)', 'var(--bs-light)'],
     dataLabels: {
-      enabled: false
-    }
-  };
-  return <Card>
+      enabled: false,
+    },
+  }
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>Revenue Sources</CardTitle>
         <Dropdown>
@@ -103,6 +104,7 @@ const RevenueSources = () => {
           </Table>
         </div>
       </CardBody>
-    </Card>;
-};
-export default RevenueSources;
+    </Card>
+  )
+}
+export default RevenueSources

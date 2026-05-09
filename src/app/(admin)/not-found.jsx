@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
+import { Link } from 'react-router-dom'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
 const NotFound = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb title="404" subName="Pages" />
       <Row className="justify-content-center">
         <Col xl={5}>
@@ -27,6 +28,7 @@ const NotFound = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default NotFound;
+    </>
+  )
+}
+export default NotFound

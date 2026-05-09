@@ -22,10 +22,7 @@ const AdminViewModal = ({ organization, onClose }) => {
   const fetchAdmins = async () => {
     setLoadingAdmins(true)
     try {
-      const res = await axiosClient.get(
-        `/api/admin/organization/get-org-admins?organizationId=${organization._id}`,
-        { silent: true }
-      )
+      const res = await axiosClient.get(`/api/admin/organization/get-org-admins?organizationId=${organization._id}`, { silent: true })
       setAdmins(res.data?.data || [])
     } catch {
       // handled by interceptor
@@ -40,11 +37,7 @@ const AdminViewModal = ({ organization, onClose }) => {
 
   const handleDelete = async (userId) => {
     try {
-      await axiosClient.post(
-        '/api/admin/organization/remove-admin',
-        { organizationId: organization._id, userId },
-        { silent: true }
-      )
+      await axiosClient.post('/api/admin/organization/remove-admin', { organizationId: organization._id, userId }, { silent: true })
       toast.success('Admin removed successfully')
       setAdmins((prev) => prev.filter((a) => a.userId !== userId))
     } catch {
@@ -60,11 +53,7 @@ const AdminViewModal = ({ organization, onClose }) => {
     setInviteUserId('')
     setInviteName('')
     try {
-      const res = await axiosClient.post(
-        '/api/admin/organization/find-admin-by-email',
-        { email: inviteEmail.trim() },
-        { silent: true }
-      )
+      const res = await axiosClient.post('/api/admin/organization/find-admin-by-email', { email: inviteEmail.trim() }, { silent: true })
       const user = res.data?.data
       setInviteUserId(user?.userId || user?._id || '')
       setInviteName(user?.name || user?.userName || '')
@@ -89,7 +78,7 @@ const AdminViewModal = ({ organization, onClose }) => {
           userId: inviteUserId,
           name: inviteName,
         },
-        { silent: true }
+        { silent: true },
       )
       toast.success('Admin invited successfully')
       setInviteEmail('')
@@ -115,8 +104,7 @@ const AdminViewModal = ({ organization, onClose }) => {
         justifyContent: 'center',
         background: 'rgba(var(--bs-dark-rgb), 0.5)',
       }}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
+      onClick={(e) => e.target === e.currentTarget && onClose()}>
       {/* Window box — uses theme card colors so it works in dark mode */}
       <div
         className="card mb-0"
@@ -127,23 +115,14 @@ const AdminViewModal = ({ organization, onClose }) => {
           overflowY: 'auto',
           borderRadius: 'var(--bs-card-border-radius)',
           boxShadow: '0 10px 40px rgba(var(--bs-dark-rgb), 0.2)',
-        }}
-      >
+        }}>
         {/* Header */}
-        <div
-          className="d-flex justify-content-between align-items-center px-4 py-3"
-          style={{ borderBottom: '1px solid var(--bs-border-color)' }}
-        >
+        <div className="d-flex justify-content-between align-items-center px-4 py-3" style={{ borderBottom: '1px solid var(--bs-border-color)' }}>
           <div>
             <h5 className="mb-0 fw-semibold">Admin View</h5>
             <small className="text-muted">{organization.name}</small>
           </div>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={onClose}
-            aria-label="Close"
-          />
+          <button type="button" className="btn-close" onClick={onClose} aria-label="Close" />
         </div>
 
         <div className="px-4 py-3">
@@ -161,16 +140,22 @@ const AdminViewModal = ({ organization, onClose }) => {
               <tbody>
                 {loadingAdmins ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-3">Loading...</td>
+                    <td colSpan="4" className="text-center py-3">
+                      Loading...
+                    </td>
                   </tr>
                 ) : admins.length === 0 ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-3 text-muted">No admins found</td>
+                    <td colSpan="4" className="text-center py-3 text-muted">
+                      No admins found
+                    </td>
                   </tr>
                 ) : (
                   admins.map((admin) => (
                     <tr key={admin.userId || admin._id}>
-                      <td className="text-muted" style={{ fontSize: 12 }}>{admin.userId || admin._id || '--'}</td>
+                      <td className="text-muted" style={{ fontSize: 12 }}>
+                        {admin.userId || admin._id || '--'}
+                      </td>
                       <td>{admin.name || admin.userName || '--'}</td>
                       <td>{admin.email || '--'}</td>
                       <td>
@@ -179,8 +164,7 @@ const AdminViewModal = ({ organization, onClose }) => {
                           variant="soft-danger"
                           className="p-1"
                           title="Remove admin"
-                          onClick={() => handleDelete(admin.userId || admin._id)}
-                        >
+                          onClick={() => handleDelete(admin.userId || admin._id)}>
                           <IconifyIcon icon="bx:trash" style={{ fontSize: 15 }} />
                         </Button>
                       </td>
@@ -216,37 +200,19 @@ const AdminViewModal = ({ organization, onClose }) => {
                 variant="soft-secondary"
                 style={{ whiteSpace: 'nowrap' }}
                 onClick={handleLookup}
-                disabled={lookingUp || !inviteEmail.trim()}
-              >
+                disabled={lookingUp || !inviteEmail.trim()}>
                 {lookingUp ? 'Searching...' : 'Find User'}
               </Button>
             </div>
 
             {/* Auto-filled User ID & Name */}
             <div className="d-flex gap-2 mb-3">
-              <input
-                type="text"
-                className="form-control form-control-sm"
-                placeholder="User ID"
-                value={inviteUserId}
-                readOnly
-              />
-              <input
-                type="text"
-                className="form-control form-control-sm"
-                placeholder="Name"
-                value={inviteName}
-                readOnly
-              />
+              <input type="text" className="form-control form-control-sm" placeholder="User ID" value={inviteUserId} readOnly />
+              <input type="text" className="form-control form-control-sm" placeholder="Name" value={inviteName} readOnly />
             </div>
 
             <div className="d-flex justify-content-end">
-              <Button
-                size="sm"
-                variant="primary"
-                onClick={handleInvite}
-                disabled={!userFound || inviting}
-              >
+              <Button size="sm" variant="primary" onClick={handleInvite} disabled={!userFound || inviting}>
                 {inviting ? 'Inviting...' : 'Invite'}
               </Button>
             </div>
@@ -286,10 +252,7 @@ const ViewOrganization = () => {
         params.append('search', q.trim())
       }
 
-      const response = await axiosClient.get(
-        `/api/admin/organization/get-organizations?${params.toString()}`,
-        { silent: true }
-      )
+      const response = await axiosClient.get(`/api/admin/organization/get-organizations?${params.toString()}`, { silent: true })
 
       setorganizations(response.data?.data?.organizations || [])
       setTotalPages(response.data?.data?.totalPages || 0)
@@ -301,20 +264,16 @@ const ViewOrganization = () => {
     }
   }
 
-
   useEffect(() => {
     fetchorganizations(currentPage, search)
   }, [currentPage, search])
 
   const getPages = () => {
-    if (totalPages <= 5)
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
 
-    if (currentPage <= 2)
-      return [1, 2, 3, '...', totalPages]
+    if (currentPage <= 2) return [1, 2, 3, '...', totalPages]
 
-    if (currentPage >= totalPages - 1)
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages]
+    if (currentPage >= totalPages - 1) return [1, '...', totalPages - 2, totalPages - 1, totalPages]
 
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages]
   }
@@ -331,17 +290,11 @@ const ViewOrganization = () => {
 
   return (
     <>
-      {adminModalOrg && (
-        <AdminViewModal
-          organization={adminModalOrg}
-          onClose={() => setAdminModalOrg(null)}
-        />
-      )}
+      {adminModalOrg && <AdminViewModal organization={adminModalOrg} onClose={() => setAdminModalOrg(null)} />}
 
       <Row>
         <Col>
           <Card>
-
             <CardBody>
               <div className="d-flex justify-content-between align-items-center gap-2">
                 <div style={{ width: 300 }}>
@@ -371,14 +324,11 @@ const ViewOrganization = () => {
                   onClick={() => {
                     setCurrentPage(1)
                     setSearch(searchInput)
-                  }}
-                >
+                  }}>
                   Apply
                 </Button>
               </div>
-
             </CardBody>
-
 
             <div className="table-responsive table-centered">
               <table className="table text-nowrap mb-0">
@@ -415,11 +365,7 @@ const ViewOrganization = () => {
                         <td>{organization.IPWhitelist?.[0] || '--'}</td>
                         <td>{organization.foundedAt || '--'}</td>
                         <td>
-                          <Button
-                            variant="soft-secondary"
-                            size="sm"
-                            onClick={() => setAdminModalOrg(organization)}
-                          >
+                          <Button variant="soft-secondary" size="sm" onClick={() => setAdminModalOrg(organization)}>
                             <IconifyIcon icon="bx:user-circle" className="me-1" style={{ fontSize: 14 }} />
                             Admin View
                           </Button>
@@ -431,33 +377,69 @@ const ViewOrganization = () => {
               </table>
             </div>
 
-
             <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 border-top">
-              <div className="text-muted small">Showing {start} to {end} of {totalRecords} records</div>
+              <div className="text-muted small">
+                Showing {start} to {end} of {totalRecords} records
+              </div>
               <div className="d-flex flex-wrap align-items-center gap-2">
                 <ul className="pagination pagination-rounded m-0">
                   <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage > 1) setCurrentPage(currentPage - 1) }}><IconifyIcon icon="bx:left-arrow-alt" /></Link>
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (currentPage > 1) setCurrentPage(currentPage - 1)
+                      }}>
+                      <IconifyIcon icon="bx:left-arrow-alt" />
+                    </Link>
                   </li>
                   {getPages().map((p, i) => (
                     <li key={i} className={`page-item ${currentPage === p ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
-                      <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (typeof p === 'number') setCurrentPage(p) }}>{p}</Link>
+                      <Link
+                        to="#"
+                        className="page-link"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          if (typeof p === 'number') setCurrentPage(p)
+                        }}>
+                        {p}
+                      </Link>
                     </li>
                   ))}
                   <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                    <Link to="#" className="page-link" onClick={(e) => { e.preventDefault(); if (currentPage < totalPages) setCurrentPage(currentPage + 1) }}><IconifyIcon icon="bx:right-arrow-alt" /></Link>
+                    <Link
+                      to="#"
+                      className="page-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+                      }}>
+                      <IconifyIcon icon="bx:right-arrow-alt" />
+                    </Link>
                   </li>
                 </ul>
                 {totalPages > 1 && (
                   <div className="d-flex align-items-center gap-1">
                     <span className="text-muted small text-nowrap">Go to</span>
-                    <input type="number" min={1} max={totalPages} value={jumpPage} onChange={(e) => setJumpPage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()} className="form-control form-control-sm text-center" style={{ width: 60 }} placeholder={`/${totalPages}`} />
-                    <Button size="sm" variant="primary" onClick={handleJumpGo}>Go</Button>
+                    <input
+                      type="number"
+                      min={1}
+                      max={totalPages}
+                      value={jumpPage}
+                      onChange={(e) => setJumpPage(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleJumpGo()}
+                      className="form-control form-control-sm text-center"
+                      style={{ width: 60 }}
+                      placeholder={`/${totalPages}`}
+                    />
+                    <Button size="sm" variant="primary" onClick={handleJumpGo}>
+                      Go
+                    </Button>
                   </div>
                 )}
               </div>
             </div>
-
           </Card>
         </Col>
       </Row>

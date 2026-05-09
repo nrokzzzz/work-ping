@@ -1,23 +1,29 @@
-import { Carousel as CarouselBootstrap, CarouselItem, Col, Row } from 'react-bootstrap';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import UIExamplesList from '@/components/UIExamplesList';
-import PageMetaData from '@/components/PageTitle';
-import Img1 from '@/assets/images/small/img-1.jpg';
-import Img10 from '@/assets/images/small/img-10.jpg';
-import Img2 from '@/assets/images/small/img-2.jpg';
-import Img3 from '@/assets/images/small/img-3.jpg';
-import Img4 from '@/assets/images/small/img-4.jpg';
-import Img5 from '@/assets/images/small/img-5.jpg';
-import Img6 from '@/assets/images/small/img-6.jpg';
-import Img7 from '@/assets/images/small/img-7.jpg';
-import Img8 from '@/assets/images/small/img-8.jpg';
-import Img9 from '@/assets/images/small/img-9.jpg';
+import { Carousel as CarouselBootstrap, CarouselItem, Col, Row } from 'react-bootstrap'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import UIExamplesList from '@/components/UIExamplesList'
+import PageMetaData from '@/components/PageTitle'
+import Img1 from '@/assets/images/small/img-1.jpg'
+import Img10 from '@/assets/images/small/img-10.jpg'
+import Img2 from '@/assets/images/small/img-2.jpg'
+import Img3 from '@/assets/images/small/img-3.jpg'
+import Img4 from '@/assets/images/small/img-4.jpg'
+import Img5 from '@/assets/images/small/img-5.jpg'
+import Img6 from '@/assets/images/small/img-6.jpg'
+import Img7 from '@/assets/images/small/img-7.jpg'
+import Img8 from '@/assets/images/small/img-8.jpg'
+import Img9 from '@/assets/images/small/img-9.jpg'
 const SlidesOnly = () => {
-  return <ComponentContainerCard id="slides-only" title="Slides Only" description={<>
+  return (
+    <ComponentContainerCard
+      id="slides-only"
+      title="Slides Only"
+      description={
+        <>
           Here’s a carousel with slides only. Note the presence of the <code>.d-block</code> and <code>.img-fluid</code> on carousel images to prevent
           browser default image alignment.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <div className="mx-auto">
@@ -35,10 +41,12 @@ const SlidesOnly = () => {
           </div>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SlidesWithControls = () => {
-  return <ComponentContainerCard id="with-controls" title="With Controls" description={<>Adding in the previous and next controls:</>}>
+  return (
+    <ComponentContainerCard id="with-controls" title="With Controls" description={<>Adding in the previous and next controls:</>}>
       <Row>
         <Col lg={6}>
           <CarouselBootstrap indicators={false}>
@@ -54,10 +62,15 @@ const SlidesWithControls = () => {
           </CarouselBootstrap>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SlidesWithIndicators = () => {
-  return <ComponentContainerCard id="with-indicators" title="With Indicators" description={<> You can also add the indicators to the carousel, alongside the controls, too.</>}>
+  return (
+    <ComponentContainerCard
+      id="with-indicators"
+      title="With Indicators"
+      description={<> You can also add the indicators to the carousel, alongside the controls, too.</>}>
       <Row>
         <Col lg={6}>
           <div className="mx-auto mb-3">
@@ -75,14 +88,21 @@ const SlidesWithIndicators = () => {
           </div>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const SlidesWithCaptions = () => {
-  return <ComponentContainerCard id="with-captions" title="With Captions" description={<>
+  return (
+    <ComponentContainerCard
+      id="with-captions"
+      title="With Captions"
+      description={
+        <>
           Add captions to your slides easily with the <code>.carousel-caption</code> element within any <code>.carousel-item</code>. They can be
           easily hidden on smaller viewports, as shown below, with optional display utilities. We hide them initially with <code>.d-none</code> and
           bring them back on medium-sized devices with <code>.d-md-block</code>.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <CarouselBootstrap indicators={false}>
@@ -110,15 +130,22 @@ const SlidesWithCaptions = () => {
           </CarouselBootstrap>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const CrossFade = () => {
-  return <ComponentContainerCard id="crossfade" title="Crossfade" description={<>
+  return (
+    <ComponentContainerCard
+      id="crossfade"
+      title="Crossfade"
+      description={
+        <>
           {' '}
           Add <code>.carousel-fade</code> to your carousel to animate slides with a fade transition instead of a slide. Depending on your carousel
           content (e.g., text only slides), you may want to add <code>.bg-body</code> or some custom CSS to the <code>.carousel-item</code>s for
           proper crossfading.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <CarouselBootstrap indicators={false} fade>
@@ -134,13 +161,20 @@ const CrossFade = () => {
           </CarouselBootstrap>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const IndividualInterval = () => {
-  return <ComponentContainerCard id="individual-carousel-item-interval" title="Individual" description={<>
+  return (
+    <ComponentContainerCard
+      id="individual-carousel-item-interval"
+      title="Individual"
+      description={
+        <>
           Add <code>data-bs-interval=&ldquo;</code> to a <code>.carousel-item</code> to change the amount of time to delay between automatically
           cycling to the next item.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <CarouselBootstrap indicators={false}>
@@ -156,13 +190,20 @@ const IndividualInterval = () => {
           </CarouselBootstrap>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DisableTouchCarousel = () => {
-  return <ComponentContainerCard id="disable-touch-swiping" title="Disable touch swiping" description={<>
+  return (
+    <ComponentContainerCard
+      id="disable-touch-swiping"
+      title="Disable touch swiping"
+      description={
+        <>
           Carousels support swiping left/right on touchscreen devices to move between slides. This can be disabled using the{' '}
           <code>data-bs-touch</code> attribute. The example below also does not includethe <code>data-bs-ride</code> attribute so it doesn’t autoplay.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <CarouselBootstrap indicators={false} touch={false}>
@@ -178,14 +219,21 @@ const DisableTouchCarousel = () => {
           </CarouselBootstrap>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DarkVariant = () => {
-  return <ComponentContainerCard id="dark-variant" title="Dark Variant" description={<>
+  return (
+    <ComponentContainerCard
+      id="dark-variant"
+      title="Dark Variant"
+      description={
+        <>
           Add <code>.carousel-dark</code> to the <code>.carousel</code> for darker controls, indicators, and captions. Controls have been inverted
           from their default white fill with the<code>filter</code> CSS property. Captions and controls have additional Sass variables that customize
           the<code>color</code> and <code>background-color</code>.
-        </>}>
+        </>
+      }>
       <Row>
         <Col lg={6}>
           <CarouselBootstrap className="carousel-dark">
@@ -213,10 +261,12 @@ const DarkVariant = () => {
           </CarouselBootstrap>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const Carousel = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Base UI" title="Carousel" />
       <PageMetaData title="Carousel" />
 
@@ -232,33 +282,45 @@ const Carousel = () => {
           <DarkVariant />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          label: 'Slide Only',
-          link: '#slides-only'
-        }, {
-          label: 'With Controls',
-          link: '#with-controls'
-        }, {
-          label: 'With Indicators',
-          link: '#with-indicators'
-        }, {
-          label: 'With Captions',
-          link: '#with-captions'
-        }, {
-          label: 'Crossfade',
-          link: '#crossfade'
-        }, {
-          label: 'Individual .carousel-item interval',
-          link: '#individual-carousel-item-interval'
-        }, {
-          label: 'Disable touch swiping',
-          link: '#disable-touch-swiping'
-        }, {
-          label: 'Dark Variant',
-          link: '#dark-variant'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                label: 'Slide Only',
+                link: '#slides-only',
+              },
+              {
+                label: 'With Controls',
+                link: '#with-controls',
+              },
+              {
+                label: 'With Indicators',
+                link: '#with-indicators',
+              },
+              {
+                label: 'With Captions',
+                link: '#with-captions',
+              },
+              {
+                label: 'Crossfade',
+                link: '#crossfade',
+              },
+              {
+                label: 'Individual .carousel-item interval',
+                link: '#individual-carousel-item-interval',
+              },
+              {
+                label: 'Disable touch swiping',
+                link: '#disable-touch-swiping',
+              },
+              {
+                label: 'Dark Variant',
+                link: '#dark-variant',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Carousel;
+    </>
+  )
+}
+export default Carousel

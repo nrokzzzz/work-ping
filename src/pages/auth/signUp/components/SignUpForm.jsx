@@ -1,14 +1,14 @@
-import PasswordFormInput from '@/components/form/PasswordFormInput';
-import TextFormInput from '@/components/form/TextFormInput';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, FormCheck, Spinner } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import axiosClient from '@/helpers/httpClient';
-import { useAuthContext } from '@/context/useAuthContext';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { useState, useRef, useEffect } from 'react';
+import PasswordFormInput from '@/components/form/PasswordFormInput'
+import TextFormInput from '@/components/form/TextFormInput'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Button, FormCheck, Spinner } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import axiosClient from '@/helpers/httpClient'
+import { useAuthContext } from '@/context/useAuthContext'
+import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
+import { useState, useRef, useEffect } from 'react'
 
 /* ─────────────────────────── OTP Input ─────────────────────────── */
 const OtpInput = ({ length = 6, value, onChange }) => {
@@ -49,14 +49,14 @@ const OtpInput = ({ length = 6, value, onChange }) => {
       {Array.from({ length }).map((_, i) => (
         <input
           key={i}
-          ref={el => (inputs.current[i] = el)}
+          ref={(el) => (inputs.current[i] = el)}
           type="text"
           inputMode="numeric"
           maxLength={1}
           value={digits[i] || ''}
           autoFocus={i === 0}
-          onChange={e => handleChange(i, e)}
-          onKeyDown={e => handleKeyDown(i, e)}
+          onChange={(e) => handleChange(i, e)}
+          onKeyDown={(e) => handleKeyDown(i, e)}
           onPaste={handlePaste}
           className="form-control text-center fw-bold fs-5"
           style={{ width: 48, height: 48 }}
@@ -71,7 +71,7 @@ const SignUpForm = () => {
   const navigate = useNavigate()
   const { signUp } = useAuthContext()
 
-  const [step, setStep] = useState(1)           // 1 = form, 2 = otp
+  const [step, setStep] = useState(1) // 1 = form, 2 = otp
   const [pendingPayload, setPendingPayload] = useState(null)
   const [pendingEmail, setPendingEmail] = useState('')
   const [otp, setOtp] = useState('')
@@ -85,7 +85,7 @@ const SignUpForm = () => {
   useEffect(() => {
     let interval
     if (isTimerActive && otpTimer > 0) {
-      interval = setInterval(() => setOtpTimer(p => p - 1), 1000)
+      interval = setInterval(() => setOtpTimer((p) => p - 1), 1000)
     }
     if (otpTimer === 0) setIsTimerActive(false)
     return () => clearInterval(interval)
@@ -102,10 +102,7 @@ const SignUpForm = () => {
       .matches(/^\d+$/, 'Mobile number must contain only digits')
       .min(10, 'Mobile number must be at least 10 digits')
       .max(15, 'Mobile number must be at most 15 digits'),
-    userEmail: yup
-      .string()
-      .email('Please enter a valid email')
-      .required('Please enter your email'),
+    userEmail: yup.string().email('Please enter a valid email').required('Please enter your email'),
     password: yup
       .string()
       .required('Please enter your password')
@@ -120,7 +117,12 @@ const SignUpForm = () => {
       .required('Please confirm your password'),
   })
 
-  const { control, handleSubmit, reset, formState: { isSubmitting } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm({
     resolver: yupResolver(signUpSchema),
   })
 
@@ -134,11 +136,7 @@ const SignUpForm = () => {
         password: values.password,
       }
 
-      await axiosClient.post(
-        '/api/admin/otp/send-email-otp',
-        { email: values.userEmail },
-        { silent: true }
-      )
+      await axiosClient.post('/api/admin/otp/send-email-otp', { email: values.userEmail }, { silent: true })
 
       setPendingPayload(payload)
       setPendingEmail(values.userEmail)
@@ -164,18 +162,10 @@ const SignUpForm = () => {
 
     try {
       // Verify OTP first
-      await axiosClient.post(
-        '/api/admin/otp/verify-email-otp',
-        { email: pendingEmail, otp },
-        { silent: true }
-      )
+      await axiosClient.post('/api/admin/otp/verify-email-otp', { email: pendingEmail, otp }, { silent: true })
 
       // OTP verified — now register with full payload
-      const res = await axiosClient.post(
-        '/api/admin/auth/register',
-        { ...pendingPayload },
-        { silent: true }
-      )
+      const res = await axiosClient.post('/api/admin/auth/register', { ...pendingPayload }, { silent: true })
 
       await signUp(res.data?.data?.token)
       toast.success('Signup successful!')
@@ -197,11 +187,7 @@ const SignUpForm = () => {
     setIsResending(true)
     setOtpError('')
     try {
-      await axiosClient.post(
-        '/api/admin/auth/send-signup-otp',
-        { email: pendingEmail },
-        { silent: true }
-      )
+      await axiosClient.post('/api/admin/auth/send-signup-otp', { email: pendingEmail }, { silent: true })
       toast.success('OTP resent successfully!')
       setOtp('')
       setOtpTimer(60)
@@ -217,7 +203,6 @@ const SignUpForm = () => {
   if (step === 2) {
     return (
       <div className="authentication-form">
-
         <div className="text-center mb-4">
           <h5 className="mb-1">Verify your email</h5>
           <p className="text-muted small mb-0">
@@ -226,18 +211,18 @@ const SignUpForm = () => {
         </div>
 
         <div className="mb-4">
-          <OtpInput value={otp} onChange={val => { setOtp(val); setOtpError('') }} />
-          {otpError && (
-            <p className="text-danger text-center small mt-2 mb-0">{otpError}</p>
-          )}
+          <OtpInput
+            value={otp}
+            onChange={(val) => {
+              setOtp(val)
+              setOtpError('')
+            }}
+          />
+          {otpError && <p className="text-danger text-center small mt-2 mb-0">{otpError}</p>}
         </div>
 
         <div className="mb-3 text-center d-grid">
-          <Button
-            variant="primary"
-            onClick={handleVerifyOtp}
-            disabled={isVerifying || otp.length !== 6}
-          >
+          <Button variant="primary" onClick={handleVerifyOtp} disabled={isVerifying || otp.length !== 6}>
             {isVerifying ? (
               <>
                 <Spinner as="span" animation="border" size="sm" className="me-2" />
@@ -250,14 +235,12 @@ const SignUpForm = () => {
         </div>
 
         <div className="text-center">
-          <Button
-            variant="link"
-            className="p-0 text-decoration-none small"
-            disabled={otpTimer > 0 || isResending}
-            onClick={handleResend}
-          >
+          <Button variant="link" className="p-0 text-decoration-none small" disabled={otpTimer > 0 || isResending} onClick={handleResend}>
             {isResending ? (
-              <><Spinner as="span" animation="border" size="sm" className="me-1" />Resending...</>
+              <>
+                <Spinner as="span" animation="border" size="sm" className="me-1" />
+                Resending...
+              </>
             ) : otpTimer > 0 ? (
               `Resend OTP in ${otpTimer}s`
             ) : (
@@ -270,12 +253,14 @@ const SignUpForm = () => {
           <Button
             variant="link"
             className="p-0 text-decoration-none small text-muted"
-            onClick={() => { setStep(1); setOtp(''); setOtpError('') }}
-          >
+            onClick={() => {
+              setStep(1)
+              setOtp('')
+              setOtpError('')
+            }}>
             ← Back to form
           </Button>
         </div>
-
       </div>
     )
   }
@@ -283,7 +268,6 @@ const SignUpForm = () => {
   /* ── Form Step ── */
   return (
     <form className="authentication-form" onSubmit={handleSubmit(onSubmit)}>
-
       <TextFormInput
         control={control}
         name="name"
@@ -361,9 +345,8 @@ const SignUpForm = () => {
           )}
         </Button>
       </div>
-
     </form>
   )
 }
 
-export default SignUpForm;
+export default SignUpForm

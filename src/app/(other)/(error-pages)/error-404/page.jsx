@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
-import LogoBox from '@/components/LogoBox';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom'
+import LogoBox from '@/components/LogoBox'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
 const Error404 = () => {
-  return <Card className="auth-card">
+  return (
+    <Card className="auth-card">
       <CardBody className="p-0">
         <Row className="align-items-center g-0">
           <Col lg={6} className="d-none d-lg-inline-block border-end">
@@ -13,12 +14,16 @@ const Error404 = () => {
           <Col lg={6}>
             <div className="p-4">
               <div className="mx-auto mb-4 text-center">
-                <LogoBox containerClassName="mx-auto text-center auth-logo" textLogo={{
-                height: 24,
-                width: 72
-              }} squareLogo={{
-                className: 'me-1'
-              }} />
+                <LogoBox
+                  containerClassName="mx-auto text-center auth-logo"
+                  textLogo={{
+                    height: 24,
+                    width: 72,
+                  }}
+                  squareLogo={{
+                    className: 'me-1',
+                  }}
+                />
                 <h1 className="mt-5 mb-3 fw-bold fs-60">404</h1>
                 <h2 className="fs-22 lh-base">Page Not Found !</h2>
                 <p className="text-muted mt-1 mb-4">
@@ -36,6 +41,7 @@ const Error404 = () => {
           </Col>
         </Row>
       </CardBody>
-    </Card>;
-};
-export default Error404;
+    </Card>
+  )
+}
+export default Error404

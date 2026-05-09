@@ -1,28 +1,41 @@
-import data from '@emoji-mart/data';
-import EmojiPicker from '@emoji-mart/react';
-import clsx from 'clsx';
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Card, CardHeader, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Modal, ModalBody, ModalHeader, Offcanvas, OffcanvasHeader, Row } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { messages } from '@/assets/data/social';
-import TextFormInput from '@/components/form/TextFormInput';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient';
-import { useChatContext } from '@/context/useChatContext';
-import { useLayoutContext } from '@/context/useLayoutContext';
-import { addOrSubtractMinutesFromDate, timeSince } from '@/utils/date';
-import { getFileExtensionIcon } from '@/utils/get-icons';
-import small1 from '@/assets/images/small/img-1.jpg';
-import small2 from '@/assets/images/small/img-2.jpg';
-import small3 from '@/assets/images/small/img-3.jpg';
-import avatar10 from '@/assets/images/users/avatar-10.jpg';
-const MessageDropdown = ({
-  message,
-  toUser
-}) => {
-  return <Dropdown drop={message.from.id === toUser.id ? 'end' : 'start'} className="chat-conversation-actions">
+import data from '@emoji-mart/data'
+import EmojiPicker from '@emoji-mart/react'
+import clsx from 'clsx'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  Button,
+  Card,
+  CardHeader,
+  Col,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Offcanvas,
+  OffcanvasHeader,
+  Row,
+} from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { messages } from '@/assets/data/social'
+import TextFormInput from '@/components/form/TextFormInput'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
+import { useChatContext } from '@/context/useChatContext'
+import { useLayoutContext } from '@/context/useLayoutContext'
+import { addOrSubtractMinutesFromDate, timeSince } from '@/utils/date'
+import { getFileExtensionIcon } from '@/utils/get-icons'
+import small1 from '@/assets/images/small/img-1.jpg'
+import small2 from '@/assets/images/small/img-2.jpg'
+import small3 from '@/assets/images/small/img-3.jpg'
+import avatar10 from '@/assets/images/users/avatar-10.jpg'
+const MessageDropdown = ({ message, toUser }) => {
+  return (
+    <Dropdown drop={message.from.id === toUser.id ? 'end' : 'start'} className="chat-conversation-actions">
       <DropdownToggle as={'a'} role="button" className="ps-1">
         <IconifyIcon icon="bx:dots-vertical-rounded" className="fs-18" />
       </DropdownToggle>
@@ -56,22 +69,28 @@ const MessageDropdown = ({
           Delete
         </DropdownItem>
       </DropdownMenu>
-    </Dropdown>;
-};
-const VideoCall = ({
-  selectedUser
-}) => {
-  const {
-    videoCall
-  } = useChatContext();
-  return <>
+    </Dropdown>
+  )
+}
+const VideoCall = ({ selectedUser }) => {
+  const { videoCall } = useChatContext()
+  return (
+    <>
       <li className="list-inline-item fs-20 dropdown">
         <div role="button" className="text-dark" onClick={videoCall.toggle}>
           <IconifyIcon icon="bx:video" />
         </div>
       </li>
 
-      <Modal show={videoCall.open} onHide={videoCall.toggle} centered size="sm" contentClassName="video-call" className="fade" id="videocall" aria-hidden="true">
+      <Modal
+        show={videoCall.open}
+        onHide={videoCall.toggle}
+        centered
+        size="sm"
+        contentClassName="video-call"
+        className="fade"
+        id="videocall"
+        aria-hidden="true">
         <ModalHeader className="border-0 mb-5 justify-content-end">
           <div className="video-call-head">
             <img src={selectedUser.avatar} className="rounded" alt="avatar-4" />
@@ -99,22 +118,28 @@ const VideoCall = ({
           </div>
         </ModalBody>
       </Modal>
-    </>;
-};
-const VoiceCall = ({
-  selectedUser
-}) => {
-  const {
-    voiceCall
-  } = useChatContext();
-  return <>
+    </>
+  )
+}
+const VoiceCall = ({ selectedUser }) => {
+  const { voiceCall } = useChatContext()
+  return (
+    <>
       <li className="list-inline-item fs-20 dropdown">
         <div role="button" className="text-dark" onClick={voiceCall.toggle}>
           <IconifyIcon icon="bx:phone-call" />
         </div>
       </li>
 
-      <Modal show={voiceCall.open} onHide={voiceCall.toggle} centered size="sm" contentClassName="voice-call" className="fade" id="voicecall" aria-hidden="true">
+      <Modal
+        show={voiceCall.open}
+        onHide={voiceCall.toggle}
+        centered
+        size="sm"
+        contentClassName="voice-call"
+        className="fade"
+        id="voicecall"
+        aria-hidden="true">
         <ModalHeader className="border-0 mt-5 justify-content-center">
           <div className="voice-call-head">
             <img src={selectedUser.avatar} className="rounded-circle" alt="avatar-4" />
@@ -144,22 +169,26 @@ const VoiceCall = ({
           </div>
         </ModalBody>
       </Modal>
-    </>;
-};
-const ProfileDetail = ({
-  selectedUser
-}) => {
-  const {
-    chatProfile
-  } = useChatContext();
-  return <>
+    </>
+  )
+}
+const ProfileDetail = ({ selectedUser }) => {
+  const { chatProfile } = useChatContext()
+  return (
+    <>
       <li className="list-inline-item fs-20 dropdown">
         <div role="button" onClick={chatProfile.toggle}>
           <IconifyIcon icon="bx:user" />
         </div>
       </li>
 
-      <Offcanvas show={chatProfile.open} onHide={chatProfile.toggle} placement="end" className="shadow border-start" data-bs-scroll="true" tabIndex={-1}>
+      <Offcanvas
+        show={chatProfile.open}
+        onHide={chatProfile.toggle}
+        placement="end"
+        className="shadow border-start"
+        data-bs-scroll="true"
+        tabIndex={-1}>
         <OffcanvasHeader closeButton>
           <h5 className="offcanvas-title text-truncate w-50" id="user-profileLabel">
             Profile
@@ -202,7 +231,9 @@ const ProfileDetail = ({
                 </strong>
               </p>
               <p>
-                {selectedUser.languages.map((language, idx) => <Fragment key={idx}>{language}, </Fragment>)}
+                {selectedUser.languages.map((language, idx) => (
+                  <Fragment key={idx}>{language}, </Fragment>
+                ))}
               </p>
               <p className="mt-3 mb-2">
                 <strong className="icons-center">
@@ -245,29 +276,37 @@ const ProfileDetail = ({
           </div>
         </SimplebarReactClient>
       </Offcanvas>
-    </>;
-};
-const UserMessage = ({
-  message,
-  toUser
-}) => {
-  return <li className={clsx('clearfix', {
-    odd: message.from.id === toUser.id
-  })}>
-      <div className={clsx('chat-conversation-text', {
-      'ms-0': message.from.id === toUser.id
-    })}>
-        <div className={clsx('d-flex', {
-        'justify-content-end': message.from.id === toUser.id
+    </>
+  )
+}
+const UserMessage = ({ message, toUser }) => {
+  return (
+    <li
+      className={clsx('clearfix', {
+        odd: message.from.id === toUser.id,
       })}>
+      <div
+        className={clsx('chat-conversation-text', {
+          'ms-0': message.from.id === toUser.id,
+        })}>
+        <div
+          className={clsx('d-flex', {
+            'justify-content-end': message.from.id === toUser.id,
+          })}>
           {message.from.id === toUser.id && <MessageDropdown message={message} toUser={toUser} />}
           <div className="chat-ctext-wrap d-flex">
             {message.message.type === 'text' && typeof message.message.value === 'string' && <p>{message.message.value}</p>}
-            {message.message.type === 'file' && typeof message.message.value === 'object' && message.message.value.map((item, idx) => <Fragment key={idx}>
-                  {item.preview && <div role=" button" key={idx}>
+            {message.message.type === 'file' &&
+              typeof message.message.value === 'object' &&
+              message.message.value.map((item, idx) => (
+                <Fragment key={idx}>
+                  {item.preview && (
+                    <div role=" button" key={idx}>
                       <img src={item.preview} alt="attachment" height={84} className="img-thumbnail me-1" />
-                    </div>}
-                  {item.name && <div className="d-flex align-items-center justify-content-center">
+                    </div>
+                  )}
+                  {item.name && (
+                    <div className="d-flex align-items-center justify-content-center">
                       <div className="flex-shrink-0">
                         <IconifyIcon icon={getFileExtensionIcon(item.name)} className="fs-24 me-1" />
                       </div>
@@ -277,34 +316,33 @@ const UserMessage = ({
                         </span>
                         <p className="mb-0">{item.size} MB</p>
                       </div>
-                    </div>}
-                </Fragment>)}
+                    </div>
+                  )}
+                </Fragment>
+              ))}
           </div>
           {message.from.id != toUser.id && <MessageDropdown message={message} toUser={toUser} />}
         </div>
         <p className="text-muted fs-12 mb-0 mt-1 ms-2">
-          {message.sentOn && <>
+          {message.sentOn && (
+            <>
               {timeSince(new Date(message.sentOn))}{' '}
               {message.from.id === toUser.id && <IconifyIcon icon="bx:check-double" className="ms-1 text-primary" />}
-            </>}
+            </>
+          )}
         </p>
       </div>
-    </li>;
-};
-const ChatArea = ({
-  selectedUser
-}) => {
-  const [userMessages, setUserMessages] = useState([]);
+    </li>
+  )
+}
+const ChatArea = ({ selectedUser }) => {
+  const [userMessages, setUserMessages] = useState([])
   const messageSchema = yup.object({
-    newMessage: yup.string().required('Please enter message')
-  });
-  const {
-    reset,
-    handleSubmit,
-    control
-  } = useForm({
-    resolver: yupResolver(messageSchema)
-  });
+    newMessage: yup.string().required('Please enter message'),
+  })
+  const { reset, handleSubmit, control } = useForm({
+    resolver: yupResolver(messageSchema),
+  })
   const [toUser] = useState({
     id: '112',
     mutualCount: 56,
@@ -316,68 +354,68 @@ const ChatArea = ({
     phone: '456 9595 9594',
     location: 'California, USA',
     languages: ['English', 'German', 'Spanish'],
-    activityStatus: 'typing'
-  });
+    activityStatus: 'typing',
+  })
   const getMessagesForUser = useCallback(() => {
     if (selectedUser) {
-      setUserMessages([...messages].filter(m => m.to.id === toUser.id && m.from.id === selectedUser.id || toUser.id === m.from.id && m.to.id === selectedUser.id));
+      setUserMessages(
+        [...messages].filter(
+          (m) => (m.to.id === toUser.id && m.from.id === selectedUser.id) || (toUser.id === m.from.id && m.to.id === selectedUser.id),
+        ),
+      )
     }
-  }, [selectedUser, toUser]);
+  }, [selectedUser, toUser])
   useEffect(() => {
-    getMessagesForUser();
-  }, [getMessagesForUser]);
+    getMessagesForUser()
+  }, [getMessagesForUser])
 
   /**
    * sends the chat message
    */
-  const sendChatMessage = values => {
-    const newUserMessages = [...userMessages];
+  const sendChatMessage = (values) => {
+    const newUserMessages = [...userMessages]
     newUserMessages.push({
       id: (userMessages.length + 1).toString(),
       from: toUser,
       to: selectedUser,
       message: {
         type: 'text',
-        value: values.newMessage ?? ''
+        value: values.newMessage ?? '',
       },
-      sentOn: addOrSubtractMinutesFromDate(0.1)
-    });
+      sentOn: addOrSubtractMinutesFromDate(0.1),
+    })
     setTimeout(() => {
-      const otherNewMessages = [...newUserMessages];
+      const otherNewMessages = [...newUserMessages]
       otherNewMessages.push({
         id: (userMessages.length + 1).toString(),
         from: selectedUser,
         to: toUser,
         message: {
           type: 'text',
-          value: values.newMessage ?? ''
+          value: values.newMessage ?? '',
         },
-        sentOn: addOrSubtractMinutesFromDate(0.1)
-      });
-      setUserMessages(otherNewMessages);
-    }, 1000);
-    setUserMessages(newUserMessages);
-    reset();
-  };
+        sentOn: addOrSubtractMinutesFromDate(0.1),
+      })
+      setUserMessages(otherNewMessages)
+    }, 1000)
+    setUserMessages(newUserMessages)
+    reset()
+  }
   const AlwaysScrollToBottom = () => {
-    const elementRef = useRef(null);
+    const elementRef = useRef(null)
     useEffect(() => {
       if (elementRef && elementRef.current && elementRef.current.scrollIntoView) {
         elementRef.current.scrollIntoView({
-          behavior: 'smooth'
-        });
+          behavior: 'smooth',
+        })
       }
-    });
-    return <div ref={elementRef} />;
-  };
-  const {
-    chatList,
-    chatProfile
-  } = useChatContext();
-  const {
-    theme
-  } = useLayoutContext();
-  return <Card className="position-relative overflow-hidden">
+    })
+    return <div ref={elementRef} />
+  }
+  const { chatList, chatProfile } = useChatContext()
+  const { theme } = useLayoutContext()
+  return (
+    <Card className="position-relative overflow-hidden">
       <CardHeader className="d-flex align-items-center mh-100">
         <Button variant="light" onClick={chatList.toggle} className="d-xxl-none d-flex align-items-center px-2 me-2" type="button">
           <IconifyIcon icon="bx:menu" className="fs-18" />
@@ -437,7 +475,9 @@ const ChatArea = ({
       </CardHeader>
       <div className="chat-box">
         <SimplebarReactClient className="chat-conversation-list p-3 chatbox-height">
-          {userMessages.map((message, idx) => <UserMessage message={message} toUser={toUser} key={idx} />)}
+          {userMessages.map((message, idx) => (
+            <UserMessage message={message} toUser={toUser} key={idx} />
+          ))}
           <AlwaysScrollToBottom />
         </SimplebarReactClient>
 
@@ -452,10 +492,17 @@ const ChatArea = ({
                     </DropdownToggle>
                     <DropdownMenu className="p-0 rounded-4">
                       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                      <EmojiPicker data={data} theme={theme} onEmojiSelect={e => console.info(e.native)} />
+                      <EmojiPicker data={data} theme={theme} onEmojiSelect={(e) => console.info(e.native)} />
                     </DropdownMenu>
                   </Dropdown>
-                  <TextFormInput noValidate control={control} name="newMessage" containerClassName="w-100" className="border-0" placeholder="Enter your message" />
+                  <TextFormInput
+                    noValidate
+                    control={control}
+                    name="newMessage"
+                    containerClassName="w-100"
+                    className="border-0"
+                    placeholder="Enter your message"
+                  />
                 </div>
               </Col>
               <Col sm="auto">
@@ -477,6 +524,7 @@ const ChatArea = ({
           </form>
         </div>
       </div>
-    </Card>;
-};
-export default ChatArea;
+    </Card>
+  )
+}
+export default ChatArea

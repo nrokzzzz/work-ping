@@ -1,19 +1,11 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Card, CardBody, CardFooter, Col, Row } from 'react-bootstrap';
-import { statisticData } from '../data';
-import { Link } from 'react-router-dom';
-const StatCard = ({
-  stat
-}) => {
-  const {
-    amount,
-    change,
-    changeColor,
-    icon,
-    iconColor,
-    title
-  } = stat;
-  return <Card>
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Card, CardBody, CardFooter, Col, Row } from 'react-bootstrap'
+import { statisticData } from '../data'
+import { Link } from 'react-router-dom'
+const StatCard = ({ stat }) => {
+  const { amount, change, changeColor, icon, iconColor, title } = stat
+  return (
+    <Card>
       <CardBody>
         <Row>
           <Col xs={6}>
@@ -31,7 +23,11 @@ const StatCard = ({
         <div className="d-flex align-items-center justify-content-between">
           <div>
             <span className={`text-${changeColor} icons-center gap-1`}>
-              {changeColor === 'danger' ? <IconifyIcon icon="bxs:down-arrow" className="fs-12" /> : <IconifyIcon icon="bxs:up-arrow" className="fs-12" />}
+              {changeColor === 'danger' ? (
+                <IconifyIcon icon="bxs:down-arrow" className="fs-12" />
+              ) : (
+                <IconifyIcon icon="bxs:up-arrow" className="fs-12" />
+              )}
               {change}%
             </span>
             <span className="text-muted ms-1 fs-12">Last Month</span>
@@ -41,13 +37,18 @@ const StatCard = ({
           </Link>
         </div>
       </CardFooter>
-    </Card>;
-};
+    </Card>
+  )
+}
 const Statistic2 = () => {
-  return <Row>
-      {statisticData.map((stat, idx) => <Col md={6} xl={3} key={idx}>
+  return (
+    <Row>
+      {statisticData.map((stat, idx) => (
+        <Col md={6} xl={3} key={idx}>
           <StatCard stat={stat} />
-        </Col>)}
-    </Row>;
-};
-export default Statistic2;
+        </Col>
+      ))}
+    </Row>
+  )
+}
+export default Statistic2

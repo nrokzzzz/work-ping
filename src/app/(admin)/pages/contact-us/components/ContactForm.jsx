@@ -1,24 +1,22 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Card, CardBody, CardHeader, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormCheck, Row } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import TextAreaFormInput from '@/components/form/TextAreaFormInput';
-import TextFormInput from '@/components/form/TextFormInput';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Button, Card, CardBody, CardHeader, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormCheck, Row } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import TextAreaFormInput from '@/components/form/TextAreaFormInput'
+import TextFormInput from '@/components/form/TextFormInput'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
 const ContactForm = () => {
   const contactFormSchema = yup.object({
     fName: yup.string().required('please enter your first name'),
     lName: yup.string().required('please enter your last name'),
     email: yup.string().email('please enter valid email').required('please enter your last name'),
-    message: yup.string().required('please enter your message')
-  });
-  const {
-    control,
-    handleSubmit
-  } = useForm({
-    resolver: yupResolver(contactFormSchema)
-  });
-  return <Card className="mb-0 shadow-none border-0">
+    message: yup.string().required('please enter your message'),
+  })
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(contactFormSchema),
+  })
+  return (
+    <Card className="mb-0 shadow-none border-0">
       <CardHeader className="bg-light-subtle border-0">
         <h4 className="mb-0">Ask your different questions</h4>
       </CardHeader>
@@ -82,6 +80,7 @@ const ContactForm = () => {
           </div>
         </form>
       </CardBody>
-    </Card>;
-};
-export default ContactForm;
+    </Card>
+  )
+}
+export default ContactForm

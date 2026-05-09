@@ -1,16 +1,10 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap';
-const SellerCard = ({
-  seller
-}) => {
-  const {
-    image,
-    name,
-    productsCount,
-    storeName
-  } = seller;
-  return <Card>
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Link } from 'react-router-dom'
+import { Button, Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap'
+const SellerCard = ({ seller }) => {
+  const { image, name, productsCount, storeName } = seller
+  return (
+    <Card>
       <CardBody>
         <Dropdown className="float-end">
           <DropdownToggle as={'a'} role="button" className="arrow-none text-dark" data-bs-toggle="dropdown" aria-expanded="false">
@@ -50,15 +44,18 @@ const SellerCard = ({
           View All Detail
         </Button>
       </CardBody>
-    </Card>;
-};
-const SellersGrid = ({
-  sellers
-}) => {
-  return <Row className="row-cols-1 row-cols-md-2 row-cols-xl-5 gx-3">
-      {sellers.map((seller, idx) => <div className="col" key={idx}>
+    </Card>
+  )
+}
+const SellersGrid = ({ sellers }) => {
+  return (
+    <Row className="row-cols-1 row-cols-md-2 row-cols-xl-5 gx-3">
+      {sellers.map((seller, idx) => (
+        <div className="col" key={idx}>
           <SellerCard seller={seller} />
-        </div>)}
-    </Row>;
-};
-export default SellersGrid;
+        </div>
+      ))}
+    </Row>
+  )
+}
+export default SellersGrid

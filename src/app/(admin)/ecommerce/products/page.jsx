@@ -1,21 +1,22 @@
-import { useEffect, useState } from 'react';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { getAllEcommerceProducts } from '@/helpers/data';
-import ProductsListTable from './components/ProductsListTable';
+import { useEffect, useState } from 'react'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { getAllEcommerceProducts } from '@/helpers/data'
+import ProductsListTable from './components/ProductsListTable'
 const Products = () => {
-  const [productsList, setProductsList] = useState();
+  const [productsList, setProductsList] = useState()
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllEcommerceProducts();
-      setProductsList(data);
-    };
-    fetchData();
-  }, []);
-  return <>
+      const data = await getAllEcommerceProducts()
+      setProductsList(data)
+    }
+    fetchData()
+  }, [])
+  return (
+    <>
       <PageMetaData title="Products List" />
       <PageBreadcrumb title="Products List" subName="Ecommerce" />
       <Row>
@@ -41,6 +42,7 @@ const Products = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default Products;
+    </>
+  )
+}
+export default Products

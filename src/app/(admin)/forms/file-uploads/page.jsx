@@ -1,10 +1,11 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import DropzoneFormInput from '@/components/form/DropzoneFormInput';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import DropzoneFormInput from '@/components/form/DropzoneFormInput'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
 const FileUploads = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Form" title="File Uploads" />
       <PageMetaData title="File Uploads" />
 
@@ -21,17 +22,28 @@ const FileUploads = () => {
               <p className="text-muted mb-3">Dropzone is a lightweight and powerful datetime picker.</p>
             </CardBody>
           </Card>
-          <ComponentContainerCard id="default" title="Dropzone File Upload" description="DropzoneJS is an open source library that provides drag’n’drop file uploads with image previews.">
-            <DropzoneFormInput iconProps={{
-            icon: 'bx:cloud-upload',
-            height: 36,
-            width: 36
-          }} text="Drop files here or click to upload." helpText={<span className="text-muted fs-13">
+          <ComponentContainerCard
+            id="default"
+            title="Dropzone File Upload"
+            description="DropzoneJS is an open source library that provides drag’n’drop file uploads with image previews.">
+            <DropzoneFormInput
+              iconProps={{
+                icon: 'bx:cloud-upload',
+                height: 36,
+                width: 36,
+              }}
+              text="Drop files here or click to upload."
+              helpText={
+                <span className="text-muted fs-13">
                   (This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)
-                </span>} showPreview />
+                </span>
+              }
+              showPreview
+            />
           </ComponentContainerCard>
         </Col>
       </Row>
-    </>;
-};
-export default FileUploads;
+    </>
+  )
+}
+export default FileUploads

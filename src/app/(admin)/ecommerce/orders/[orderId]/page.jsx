@@ -1,28 +1,28 @@
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import { getOrderById } from '@/helpers/data';
-import { useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
-import BillingInformation from './components/BillingInformation';
-import DeliveryInformation from './components/DeliveryInformation';
-import OrderProducts from './components/OrderProducts';
-import OrderSummery from './components/OrderSummery';
-import ShippingInformation from './components/ShippingInformation';
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import { getOrderById } from '@/helpers/data'
+import { useEffect, useState } from 'react'
+import { Col, Row } from 'react-bootstrap'
+import { useNavigate, useParams } from 'react-router-dom'
+import BillingInformation from './components/BillingInformation'
+import DeliveryInformation from './components/DeliveryInformation'
+import OrderProducts from './components/OrderProducts'
+import OrderSummery from './components/OrderSummery'
+import ShippingInformation from './components/ShippingInformation'
 const OrderDetail = () => {
-  const {
-    orderId
-  } = useParams();
-  const navigate = useNavigate();
-  const [order, setOrder] = useState();
+  const { orderId } = useParams()
+  const navigate = useNavigate()
+  const [order, setOrder] = useState()
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (orderId) {
-        const data = await getOrderById(orderId ?? '');
-        if (data) setOrder(data);else navigate('/pages/error-404-alt');
+        const data = await getOrderById(orderId ?? '')
+        if (data) setOrder(data)
+        else navigate('/pages/error-404-alt')
       }
-    })();
-  }, [orderId]);
-  return <>
+    })()
+  }, [orderId])
+  return (
+    <>
       <PageBreadcrumb subName="Ecommerce" title="Order Details" />
       <Row className="justify-content-center">
         <Col lg={8} xl={7}>
@@ -43,6 +43,7 @@ const OrderDetail = () => {
         <Col lg={4}>{order && <BillingInformation order={order} />}</Col>
         <Col lg={4}>{order && <DeliveryInformation order={order} />}</Col>
       </Row>
-    </>;
-};
-export default OrderDetail;
+    </>
+  )
+}
+export default OrderDetail

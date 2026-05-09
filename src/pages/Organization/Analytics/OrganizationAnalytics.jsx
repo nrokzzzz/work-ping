@@ -11,13 +11,14 @@ const MetricCard = ({ title, value, subtitle, iconName, color }) => (
     <CardBody className="d-flex align-items-center gap-3">
       <div
         className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-        style={{ width: 52, height: 52, background: color + '20' }}
-      >
+        style={{ width: 52, height: 52, background: color + '20' }}>
         <Icon icon={iconName} style={{ fontSize: 26, color }} />
       </div>
       <div>
         <p className="mb-0 text-muted text-uppercase small fw-semibold">{title}</p>
-        <h3 className="mb-0 fw-bold" style={{ color }}>{value ?? '--'}</h3>
+        <h3 className="mb-0 fw-bold" style={{ color }}>
+          {value ?? '--'}
+        </h3>
         <p className="mb-0 text-muted small">{subtitle}</p>
       </div>
     </CardBody>
@@ -29,7 +30,9 @@ const OrganizationAnalytics = () => {
   const [orgList, setOrgList] = useState([])
   const [orgInfo, setOrgInfo] = useState({})
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   const fetchData = async () => {
     setLoading(true)
@@ -48,7 +51,7 @@ const OrganizationAnalytics = () => {
 
   const totalOrgs = orgList.length
   const orgNames = Object.keys(orgInfo)
-  const teamCounts = orgNames.map((n) => (orgInfo[n]?.teams?.length ?? 0))
+  const teamCounts = orgNames.map((n) => orgInfo[n]?.teams?.length ?? 0)
   const totalTeams = teamCounts.reduce((a, b) => a + b, 0)
   const avgTeams = totalOrgs > 0 ? (totalTeams / totalOrgs).toFixed(1) : 0
   const maxTeams = teamCounts.length > 0 ? Math.max(...teamCounts) : 0
@@ -93,7 +96,9 @@ const OrganizationAnalytics = () => {
           {loading ? (
             <Spinner size="sm" animation="border" />
           ) : (
-            <Badge bg="success" pill>Live</Badge>
+            <Badge bg="success" pill>
+              Live
+            </Badge>
           )}
           <button className="btn btn-sm btn-outline-secondary" onClick={fetchData} disabled={loading}>
             Refresh
@@ -103,10 +108,22 @@ const OrganizationAnalytics = () => {
 
       <Row className="g-3 mb-3">
         <Col md={6} xl={3}>
-          <MetricCard title="Total Organizations" value={totalOrgs} subtitle="Registered organizations" iconName="mdi:office-building" color="#0ea5e9" />
+          <MetricCard
+            title="Total Organizations"
+            value={totalOrgs}
+            subtitle="Registered organizations"
+            iconName="mdi:office-building"
+            color="#0ea5e9"
+          />
         </Col>
         <Col md={6} xl={3}>
-          <MetricCard title="Total Teams" value={totalTeams} subtitle="Across all organizations" iconName="mdi:account-group-outline" color="#6366f1" />
+          <MetricCard
+            title="Total Teams"
+            value={totalTeams}
+            subtitle="Across all organizations"
+            iconName="mdi:account-group-outline"
+            color="#6366f1"
+          />
         </Col>
         <Col md={6} xl={3}>
           <MetricCard title="Avg Teams / Org" value={avgTeams} subtitle="Average team count per org" iconName="mdi:chart-bar" color="#14b8a6" />

@@ -1,10 +1,11 @@
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import LogoBox from '@/components/LogoBox';
-import PageMetaData from '@/components/PageTitle';
-import signInImg from '@/assets/images/sign-in.svg';
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import LogoBox from '@/components/LogoBox'
+import PageMetaData from '@/components/PageTitle'
+import signInImg from '@/assets/images/sign-in.svg'
 const Maintenance = () => {
-  return <>
+  return (
+    <>
       <PageMetaData title="Maintenance" />
 
       <Card className="auth-card">
@@ -18,12 +19,15 @@ const Maintenance = () => {
             <Col lg={6}>
               <div className="p-4">
                 <div className="mx-auto mb-4 text-center auth-logo">
-                  <LogoBox textLogo={{
-                  height: 24,
-                  width: 73
-                }} squareLogo={{
-                  className: 'me-1'
-                }} />
+                  <LogoBox
+                    textLogo={{
+                      height: 24,
+                      width: 73,
+                    }}
+                    squareLogo={{
+                      className: 'me-1',
+                    }}
+                  />
                 </div>
                 <h2 className="fw-bold text-center lh-base">We are currently performing maintenance</h2>
                 <p className="text-muted text-center mt-1 mb-4">We&apos;re making the system more awesome. We&apos;ll be back shortly.</p>
@@ -37,6 +41,7 @@ const Maintenance = () => {
           </Row>
         </CardBody>
       </Card>
-    </>;
-};
-export default Maintenance;
+    </>
+  )
+}
+export default Maintenance

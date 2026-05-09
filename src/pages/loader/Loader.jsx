@@ -1,30 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 const Loader = () => {
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
-        const handleShow = () => setIsLoading(true);
-        const handleHide = () => setIsLoading(false);
+  useEffect(() => {
+    const handleShow = () => setIsLoading(true)
+    const handleHide = () => setIsLoading(false)
 
-        window.addEventListener('SHOW_LOADER', handleShow);
-        window.addEventListener('HIDE_LOADER', handleHide);
+    window.addEventListener('SHOW_LOADER', handleShow)
+    window.addEventListener('HIDE_LOADER', handleHide)
 
-        return () => {
-            window.removeEventListener('SHOW_LOADER', handleShow);
-            window.removeEventListener('HIDE_LOADER', handleHide);
-        };
-    }, []);
+    return () => {
+      window.removeEventListener('SHOW_LOADER', handleShow)
+      window.removeEventListener('HIDE_LOADER', handleHide)
+    }
+  }, [])
 
-    if (!isLoading) return null;
+  if (!isLoading) return null
 
-    return (
-        <>
-            <div className="workping-axios-loader" role="status" aria-live="polite" aria-label="Loading data">
-                <div className="workping-axios-loader-bar" />
-                <span className="visually-hidden">Loading...</span>
-            </div>
-            <style>{`
+  return (
+    <>
+      <div className="workping-axios-loader" role="status" aria-live="polite" aria-label="Loading data">
+        <div className="workping-axios-loader-bar" />
+        <span className="visually-hidden">Loading...</span>
+      </div>
+      <style>{`
                 .workping-axios-loader {
                     position: absolute;
                     top: 0;
@@ -55,8 +55,8 @@ const Loader = () => {
                     }
                 }
             `}</style>
-        </>
-    );
-};
+    </>
+  )
+}
 
-export default Loader;
+export default Loader

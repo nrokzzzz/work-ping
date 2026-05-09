@@ -1,15 +1,21 @@
-import { Alert, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import ComponentContainerCard from '@/components/ComponentContainerCard';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
+import { Alert, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import ComponentContainerCard from '@/components/ComponentContainerCard'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
 const BasicAlerts = () => {
-  return <ComponentContainerCard id="overview" title="Basic Example" description={<>
+  return (
+    <ComponentContainerCard
+      id="overview"
+      title="Basic Example"
+      description={
+        <>
           Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages. Alerts are
           available for any length of text, as well as an optional dismiss button.
-        </>}>
+        </>
+      }>
       <Alert variant="primary" role="alert">
         A simple primary alert—check it out!
       </Alert>
@@ -34,14 +40,21 @@ const BasicAlerts = () => {
       <Alert variant="dark" className="mb-0" role="alert">
         A simple dark alert—check it out!
       </Alert>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const DismissibleAlerts = () => {
-  return <ComponentContainerCard id="alert-dismissible" title="Dismissible Alerts Example" description={<>
+  return (
+    <ComponentContainerCard
+      id="alert-dismissible"
+      title="Dismissible Alerts Example"
+      description={
+        <>
           {' '}
           Add a dismiss button and the <code>.alert-dismissible</code> class, which adds extra padding to the right of the alert and positions the{' '}
           <code>.btn-close</code> button.
-        </>}>
+        </>
+      }>
       <Alert variant="primary" dismissible className="fade show" role="alert">
         A simple primary alert—check it out!
       </Alert>
@@ -66,12 +79,19 @@ const DismissibleAlerts = () => {
       <Alert variant="dark" dismissible className="fade show mb-0" role="alert">
         A simple dark alert—check it out!
       </Alert>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const LinkAlerts = () => {
-  return <ComponentContainerCard id="alert-link" title="Alert Link Example" description={<>
+  return (
+    <ComponentContainerCard
+      id="alert-link"
+      title="Alert Link Example"
+      description={
+        <>
           Use the <code>.alert-link</code> utility class to quickly provide matching colored links within any alert.
-        </>}>
+        </>
+      }>
       <Alert variant="primary" role="alert">
         A simple primary alert with
         <Link to="" className="alert-link">
@@ -100,10 +120,15 @@ const LinkAlerts = () => {
         </Link>
         . Give it a click if you like.
       </Alert>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const IconAlerts = () => {
-  return <ComponentContainerCard id="alert-icon" title="Icons Alert Example" description={<>You can also include additional elements like icons, heading, etc along side the actual message.</>}>
+  return (
+    <ComponentContainerCard
+      id="alert-icon"
+      title="Icons Alert Example"
+      description={<>You can also include additional elements like icons, heading, etc along side the actual message.</>}>
       <Alert variant="primary" className="alert-icon" role="alert">
         <div className="d-flex align-items-center">
           <div className="avatar-sm rounded bg-primary d-flex justify-content-center align-items-center fs-18 me-2 flex-shrink-0">
@@ -136,10 +161,15 @@ const IconAlerts = () => {
           <div className="flex-grow-1">A simple danger alert—check it out!</div>
         </div>
       </Alert>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const AdditionalContentAlerts = () => {
-  return <ComponentContainerCard id="alert-additional" title="Additional Content Alert Example" description={<>Alerts can also contain additional HTML elements like headings, paragraphs and dividers.</>}>
+  return (
+    <ComponentContainerCard
+      id="alert-additional"
+      title="Additional Content Alert Example"
+      description={<>Alerts can also contain additional HTML elements like headings, paragraphs and dividers.</>}>
       <Row>
         <Col xl={6}>
           <Alert variant="primary" className="mb-3 p-3 mb-xl-0" role="alert">
@@ -164,10 +194,12 @@ const AdditionalContentAlerts = () => {
           </Alert>
         </Col>
       </Row>
-    </ComponentContainerCard>;
-};
+    </ComponentContainerCard>
+  )
+}
 const Alerts = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Base UI" title="Alerts" />
       <PageMetaData title="Alerts" />
 
@@ -180,24 +212,33 @@ const Alerts = () => {
           <AdditionalContentAlerts />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          label: 'Basic Example',
-          link: '#overview'
-        }, {
-          label: 'Alert Dismissible',
-          link: '#alert-dismissible'
-        }, {
-          label: 'Alert Link',
-          link: '#alert-link'
-        }, {
-          label: 'Icons Alert',
-          link: '#alert-icon'
-        }, {
-          label: 'Additional Content Alert',
-          link: '#alert-additional'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                label: 'Basic Example',
+                link: '#overview',
+              },
+              {
+                label: 'Alert Dismissible',
+                link: '#alert-dismissible',
+              },
+              {
+                label: 'Alert Link',
+                link: '#alert-link',
+              },
+              {
+                label: 'Icons Alert',
+                link: '#alert-icon',
+              },
+              {
+                label: 'Additional Content Alert',
+                link: '#alert-additional',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Alerts;
+    </>
+  )
+}
+export default Alerts

@@ -1,10 +1,11 @@
-import { lazy, Suspense } from 'react';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-const CalendarPage = lazy(() => import('./components/CalendarPage'));
+import { lazy, Suspense } from 'react'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+const CalendarPage = lazy(() => import('./components/CalendarPage'))
 const Schedule = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb title="Schedule" subName="Calendar" />
       <PageMetaData title="Schedule" />
 
@@ -21,6 +22,7 @@ const Schedule = () => {
           </Card>
         </Col>
       </Row>
-    </>;
-};
-export default Schedule;
+    </>
+  )
+}
+export default Schedule

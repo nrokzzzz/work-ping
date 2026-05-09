@@ -1,10 +1,11 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllSwiper from './AllSwiper';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllSwiper from './AllSwiper'
 const Swiper = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Advanced UI" title="Swiper" />
       <PageMetaData title="Swiper" />
       <Row>
@@ -23,42 +24,57 @@ const Swiper = () => {
           <AllSwiper />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#overview',
-          label: 'Overview'
-        }, {
-          link: '#default',
-          label: 'Default Swiper'
-        }, {
-          link: '#navigation',
-          label: 'Navigation & Pagination'
-        }, {
-          link: '#pagination-dynamic',
-          label: 'Pagination Dynamic Swiper'
-        }, {
-          link: '#effect-fade',
-          label: 'Effect Fade Swiper'
-        }, {
-          link: '#effect-creative',
-          label: 'Effect Creative Swiper'
-        }, {
-          link: '#effect-flip',
-          label: 'Effect Flip Swiper'
-        }, {
-          link: '#scrollbar',
-          label: 'Scrollbar Swiper'
-        }, {
-          link: '#vertical',
-          label: 'Vertical Swiper'
-        }, {
-          link: '#mousewheel',
-          label: 'Mousewheel Control Swiper'
-        }, {
-          link: '#responsive',
-          label: 'Responsive Breakpoints Swiper'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#overview',
+                label: 'Overview',
+              },
+              {
+                link: '#default',
+                label: 'Default Swiper',
+              },
+              {
+                link: '#navigation',
+                label: 'Navigation & Pagination',
+              },
+              {
+                link: '#pagination-dynamic',
+                label: 'Pagination Dynamic Swiper',
+              },
+              {
+                link: '#effect-fade',
+                label: 'Effect Fade Swiper',
+              },
+              {
+                link: '#effect-creative',
+                label: 'Effect Creative Swiper',
+              },
+              {
+                link: '#effect-flip',
+                label: 'Effect Flip Swiper',
+              },
+              {
+                link: '#scrollbar',
+                label: 'Scrollbar Swiper',
+              },
+              {
+                link: '#vertical',
+                label: 'Vertical Swiper',
+              },
+              {
+                link: '#mousewheel',
+                label: 'Mousewheel Control Swiper',
+              },
+              {
+                link: '#responsive',
+                label: 'Responsive Breakpoints Swiper',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Swiper;
+    </>
+  )
+}
+export default Swiper

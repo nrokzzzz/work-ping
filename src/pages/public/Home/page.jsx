@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import PageMetaData from '@/components/PageTitle';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { developedBy } from '@/context/constants';
-import axiosClient from '@/helpers/httpClient';
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import PageMetaData from '@/components/PageTitle'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { developedBy } from '@/context/constants'
+import axiosClient from '@/helpers/httpClient'
 
 const highlights = [
   {
@@ -22,93 +22,88 @@ const highlights = [
     title: 'Unified Team Operations',
     description: 'Organizations, teams, projects, and holidays in one tightly integrated platform.',
   },
-];
+]
 
 const useCountUp = (target, duration = 1200, active = true) => {
-  const [display, setDisplay] = useState(0);
-  const rafRef = useRef(null);
+  const [display, setDisplay] = useState(0)
+  const rafRef = useRef(null)
 
   useEffect(() => {
     if (!active || target <= 0) {
-      setDisplay(target);
-      return;
+      setDisplay(target)
+      return
     }
 
-    const startTime = performance.now();
+    const startTime = performance.now()
     const animate = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(eased * target));
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplay(Math.round(eased * target))
 
       if (progress < 1) {
-        rafRef.current = requestAnimationFrame(animate);
+        rafRef.current = requestAnimationFrame(animate)
       }
-    };
+    }
 
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [target, duration, active]);
+    rafRef.current = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [target, duration, active])
 
-  return display;
-};
+  return display
+}
 
 const AnimatedCount = ({ value, loading, className = '' }) => {
-  const count = useCountUp(value, 1200, !loading && value > 0);
-  return <span className={className}>{loading ? '...' : count.toLocaleString()}</span>;
-};
+  const count = useCountUp(value, 1200, !loading && value > 0)
+  return <span className={className}>{loading ? '...' : count.toLocaleString()}</span>
+}
 
 const HomePublic = () => {
-  const [stats, setStats] = useState({ employeeCount: 0, organizationCount: 0 });
-  const [isLoadingStats, setIsLoadingStats] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const [stats, setStats] = useState({ employeeCount: 0, organizationCount: 0 })
+  const [isLoadingStats, setIsLoadingStats] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState(null)
 
   const fetchStats = async ({ silentRefresh = false } = {}) => {
     if (!silentRefresh) {
-      setIsLoadingStats(true);
+      setIsLoadingStats(true)
     }
     try {
-      const res = await axiosClient.get('/api/public/stats', { silent: true });
-      const data = res?.data?.data ?? {};
+      const res = await axiosClient.get('/api/public/stats', { silent: true })
+      const data = res?.data?.data ?? {}
       setStats({
         employeeCount: Number(data.employeeCount ?? 0),
         organizationCount: Number(data.organizationCount ?? 0),
-      });
-      setLastUpdated(new Date());
+      })
+      setLastUpdated(new Date())
     } catch (_) {
       // Keep previous values if API call fails.
     } finally {
       if (!silentRefresh) {
-        setIsLoadingStats(false);
+        setIsLoadingStats(false)
       }
     }
-  };
+  }
 
   useEffect(() => {
-    fetchStats();
+    fetchStats()
     const intervalId = setInterval(() => {
-      fetchStats({ silentRefresh: true });
-    }, 15000);
+      fetchStats({ silentRefresh: true })
+    }, 15000)
 
-    return () => clearInterval(intervalId);
-  }, []);
+    return () => clearInterval(intervalId)
+  }, [])
 
   const metrics = useMemo(() => {
-    const avgTeamSize =
-      stats.organizationCount > 0
-        ? Math.max(1, Math.round(stats.employeeCount / stats.organizationCount))
-        : 0;
+    const avgTeamSize = stats.organizationCount > 0 ? Math.max(1, Math.round(stats.employeeCount / stats.organizationCount)) : 0
 
     return [
       { label: 'Employees', value: stats.employeeCount },
       { label: 'Organizations', value: stats.organizationCount },
       { label: 'Avg Employees / Org', value: avgTeamSize },
-    ];
-  }, [stats.employeeCount, stats.organizationCount]);
+    ]
+  }, [stats.employeeCount, stats.organizationCount])
 
-  const lastUpdatedLabel = lastUpdated
-    ? lastUpdated.toLocaleDateString([], { year: 'numeric', month: 'short', day: '2-digit' })
-    : 'Syncing...';
+  const lastUpdatedLabel = lastUpdated ? lastUpdated.toLocaleDateString([], { year: 'numeric', month: 'short', day: '2-digit' }) : 'Syncing...'
 
   return (
     <>
@@ -123,9 +118,7 @@ const HomePublic = () => {
               <IconifyIcon icon="iconamoon:sparkle-1-duotone" />
               Workforce Command Center
             </span>
-            <h1 className="display-5 fw-bold mb-3 text-white">
-              Run your workforce at speed with {developedBy}
-            </h1>
+            <h1 className="display-5 fw-bold mb-3 text-white">Run your workforce at speed with {developedBy}</h1>
             <p className="home-subtitle mb-4">
               A focused admin experience for organizations, teams, employees, projects, and compliance ready records.
             </p>
@@ -210,8 +203,12 @@ const HomePublic = () => {
             <p className="mb-0 text-muted">From onboarding to project visibility, manage everything from one admin platform.</p>
           </div>
           <div className="d-flex gap-2 flex-wrap">
-            <Link to="/about" className="btn btn-outline-secondary px-4">About Us</Link>
-            <Link to="/auth/sign-in" className="btn btn-primary px-4">Sign In</Link>
+            <Link to="/about" className="btn btn-outline-secondary px-4">
+              About Us
+            </Link>
+            <Link to="/auth/sign-in" className="btn btn-primary px-4">
+              Sign In
+            </Link>
           </div>
         </CardBody>
       </Card>
@@ -325,7 +322,7 @@ const HomePublic = () => {
         }
       `}</style>
     </>
-  );
-};
+  )
+}
 
-export default HomePublic;
+export default HomePublic

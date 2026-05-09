@@ -1,11 +1,10 @@
-import TextFormInput from '@/components/form/TextFormInput';
-import { Col, Row } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import TextFormInput from '@/components/form/TextFormInput'
+import { Col, Row } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
 const SocialLinks = () => {
-  const {
-    control
-  } = useForm();
-  return <>
+  const { control } = useForm()
+  return (
+    <>
       <h4 className="fs-16 fw-semibold mb-1">Social Media Links</h4>
       <p className="text-muted">Fill your social media links</p>
       <Row>
@@ -22,6 +21,7 @@ const SocialLinks = () => {
           <TextFormInput name="skype" label="Skype" control={control} placeholder="Skype Link" containerClassName="mb-3" />
         </Col>
       </Row>
-    </>;
-};
-export default SocialLinks;
+    </>
+  )
+}
+export default SocialLinks

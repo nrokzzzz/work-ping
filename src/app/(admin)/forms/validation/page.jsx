@@ -1,10 +1,11 @@
-import { Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllFormValidation from './components/AllFormValidation';
+import { Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllFormValidation from './components/AllFormValidation'
 const Validation = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Form" title="Validation" />
       <PageMetaData title="Validation" />
 
@@ -13,24 +14,33 @@ const Validation = () => {
           <AllFormValidation />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#browser-defaults',
-          label: 'Browser Defaults'
-        }, {
-          link: '#custom-styles',
-          label: 'Custom Styles'
-        }, {
-          link: '#server-side',
-          label: 'Server side'
-        }, {
-          link: '#supported-elements',
-          label: 'Supported Elements'
-        }, {
-          link: '#tooltips',
-          label: 'Tooltips'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#browser-defaults',
+                label: 'Browser Defaults',
+              },
+              {
+                link: '#custom-styles',
+                label: 'Custom Styles',
+              },
+              {
+                link: '#server-side',
+                label: 'Server side',
+              },
+              {
+                link: '#supported-elements',
+                label: 'Supported Elements',
+              },
+              {
+                link: '#tooltips',
+                label: 'Tooltips',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Validation;
+    </>
+  )
+}
+export default Validation

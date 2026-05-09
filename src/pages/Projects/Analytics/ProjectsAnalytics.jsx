@@ -11,13 +11,14 @@ const MetricCard = ({ title, value, subtitle, iconName, color }) => (
     <CardBody className="d-flex align-items-center gap-3">
       <div
         className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-        style={{ width: 52, height: 52, background: color + '20' }}
-      >
+        style={{ width: 52, height: 52, background: color + '20' }}>
         <Icon icon={iconName} style={{ fontSize: 26, color }} />
       </div>
       <div>
         <p className="mb-0 text-muted text-uppercase small fw-semibold">{title}</p>
-        <h3 className="mb-0 fw-bold" style={{ color }}>{value ?? '--'}</h3>
+        <h3 className="mb-0 fw-bold" style={{ color }}>
+          {value ?? '--'}
+        </h3>
         <p className="mb-0 text-muted small">{subtitle}</p>
       </div>
     </CardBody>
@@ -34,7 +35,9 @@ const ProjectsAnalytics = () => {
 
   const orgNames = useMemo(() => Object.keys(orgData), [orgData])
 
-  useEffect(() => { fetchInit() }, [])
+  useEffect(() => {
+    fetchInit()
+  }, [])
   useEffect(() => {
     if (orgName && orgData[orgName]) fetchOrgProjects(orgData[orgName].organizationId)
   }, [orgName])
@@ -56,10 +59,7 @@ const ProjectsAnalytics = () => {
   const fetchOrgProjects = async (organizationId) => {
     setLoading(true)
     try {
-      const res = await axiosClient.get(
-        `/api/admin/project/get-projects?page=1&limit=50&organizationId=${organizationId}`,
-        { silent: true }
-      )
+      const res = await axiosClient.get(`/api/admin/project/get-projects?page=1&limit=50&organizationId=${organizationId}`, { silent: true })
       const list = res.data?.data?.projects ?? []
       setOrgProjects(list)
       setOrgTotal(res.data?.data?.totalRecords ?? list.length)
@@ -93,9 +93,8 @@ const ProjectsAnalytics = () => {
   }
 
   const donutSeries = [orgTotal, otherProjects].filter((v, i) => i === 0 || v > 0)
-  const donutLabels = orgTotal > 0 && otherProjects > 0
-    ? [orgName || 'Selected Org', 'Other Orgs']
-    : orgTotal > 0 ? [orgName || 'Selected Org'] : ['No Data']
+  const donutLabels =
+    orgTotal > 0 && otherProjects > 0 ? [orgName || 'Selected Org', 'Other Orgs'] : orgTotal > 0 ? [orgName || 'Selected Org'] : ['No Data']
 
   const donutOptions = {
     labels: donutLabels,
@@ -132,32 +131,53 @@ const ProjectsAnalytics = () => {
 
       <Row className="g-2 mb-3 align-items-center">
         <Col xs="auto">
-          <select
-            className="form-select form-select-sm"
-            value={orgName}
-            onChange={(e) => setOrgName(e.target.value)}
-            style={{ minWidth: 200 }}
-          >
+          <select className="form-select form-select-sm" value={orgName} onChange={(e) => setOrgName(e.target.value)} style={{ minWidth: 200 }}>
             {orgNames.length === 0 && <option value="">No organizations</option>}
             {orgNames.map((n) => (
-              <option key={n} value={n}>{n}</option>
+              <option key={n} value={n}>
+                {n}
+              </option>
             ))}
           </select>
         </Col>
         <Col xs="auto" className="ms-auto d-flex align-items-center gap-2">
-          {loading ? <Spinner size="sm" animation="border" /> : <Badge bg="success" pill>Live</Badge>}
+          {loading ? (
+            <Spinner size="sm" animation="border" />
+          ) : (
+            <Badge bg="success" pill>
+              Live
+            </Badge>
+          )}
         </Col>
       </Row>
 
       <Row className="g-3 mb-3">
         <Col md={6} xl={3}>
-          <MetricCard title="Total Projects" value={totalProjects} subtitle="Across all organizations" iconName="mdi:briefcase-variant-outline" color="#f97316" />
+          <MetricCard
+            title="Total Projects"
+            value={totalProjects}
+            subtitle="Across all organizations"
+            iconName="mdi:briefcase-variant-outline"
+            color="#f97316"
+          />
         </Col>
         <Col md={6} xl={3}>
-          <MetricCard title="Org Projects" value={orgTotal} subtitle={orgName || 'Selected organization'} iconName="mdi:office-building" color="#0ea5e9" />
+          <MetricCard
+            title="Org Projects"
+            value={orgTotal}
+            subtitle={orgName || 'Selected organization'}
+            iconName="mdi:office-building"
+            color="#0ea5e9"
+          />
         </Col>
         <Col md={6} xl={3}>
-          <MetricCard title="Other Orgs" value={otherProjects} subtitle="Projects outside this org" iconName="mdi:format-list-bulleted" color="#6366f1" />
+          <MetricCard
+            title="Other Orgs"
+            value={otherProjects}
+            subtitle="Projects outside this org"
+            iconName="mdi:format-list-bulleted"
+            color="#6366f1"
+          />
         </Col>
         <Col md={6} xl={3}>
           <MetricCard title="Org Share" value={`${orgShare}%`} subtitle="Of all projects" iconName="mdi:chart-donut" color="#14b8a6" />
@@ -190,7 +210,9 @@ const ProjectsAnalytics = () => {
             </CardHeader>
             <CardBody className="d-flex flex-column justify-content-center">
               <ReactApexChart options={radialOptions} series={[orgShare]} type="radialBar" height={200} />
-              <div className="text-center small text-muted mt-1">{orgTotal} of {totalProjects} projects</div>
+              <div className="text-center small text-muted mt-1">
+                {orgTotal} of {totalProjects} projects
+              </div>
               <div className="mt-3">
                 <ReactApexChart options={donutOptions} series={donutSeries} type="donut" height={160} />
               </div>

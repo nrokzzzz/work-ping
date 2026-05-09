@@ -1,13 +1,9 @@
-import useCountdown from '@/hooks/useCountdown';
-import { Col, Row } from 'react-bootstrap';
+import useCountdown from '@/hooks/useCountdown'
+import { Col, Row } from 'react-bootstrap'
 const Timer = () => {
-  const {
-    days,
-    hours,
-    minutes,
-    seconds
-  } = useCountdown();
-  return <Row className="my-5">
+  const { days, hours, minutes, seconds } = useCountdown()
+  return (
+    <Row className="my-5">
       <Col>
         <h3 id="days" className="fw-bold fs-60">
           {days}
@@ -32,6 +28,7 @@ const Timer = () => {
         </h3>
         <p className="text-uppercase fw-semibold">Seconds</p>
       </Col>
-    </Row>;
-};
-export default Timer;
+    </Row>
+  )
+}
+export default Timer

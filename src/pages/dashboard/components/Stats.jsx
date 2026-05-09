@@ -1,13 +1,9 @@
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { Card, CardBody, Col, Row } from 'react-bootstrap';
-import { stateData } from '../data';
-const StatCard = ({
-  amount,
-  icon,
-  variant,
-  name
-}) => {
-  return <Card>
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import { Card, CardBody, Col, Row } from 'react-bootstrap'
+import { stateData } from '../data'
+const StatCard = ({ amount, icon, variant, name }) => {
+  return (
+    <Card>
       <CardBody>
         <Row>
           <Col xs={6}>
@@ -21,13 +17,18 @@ const StatCard = ({
           </Col>
         </Row>
       </CardBody>
-    </Card>;
-};
+    </Card>
+  )
+}
 const Stats = () => {
-  return <Row>
-      {stateData.map((stat, idx) => <Col md={6} xxl={12} key={idx}>
+  return (
+    <Row>
+      {stateData.map((stat, idx) => (
+        <Col md={6} xxl={12} key={idx}>
           <StatCard {...stat} />
-        </Col>)}
-    </Row>;
-};
-export default Stats;
+        </Col>
+      ))}
+    </Row>
+  )
+}
+export default Stats

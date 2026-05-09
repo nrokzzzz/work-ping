@@ -1,26 +1,31 @@
-import { Card, CardBody, CardHeader, CardTitle, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient';
-import { getAllFriends } from '@/helpers/data';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Card, CardBody, CardHeader, CardTitle, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'react-bootstrap'
+import IconifyIcon from '@/components/wrappers/IconifyIcon'
+import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
+import { getAllFriends } from '@/helpers/data'
+import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 const FriendsRequest = () => {
-  const [friends, setFriends] = useState();
+  const [friends, setFriends] = useState()
   useEffect(() => {
-    (async () => {
-      const data = await getAllFriends();
-      setFriends(data);
-    })();
-  }, []);
-  return <Card>
+    ;(async () => {
+      const data = await getAllFriends()
+      setFriends(data)
+    })()
+  }, [])
+  return (
+    <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <CardTitle>Friends Request (10)</CardTitle>
       </CardHeader>
       <CardBody className="p-0 pb-3">
-        <SimplebarReactClient className="p-3" style={{
-        maxHeight: 400
-      }}>
-          {friends && friends.map((friend, idx) => <div className={`d-flex align-items-center ${friends.length - 1 === idx ? '' : 'mb-3'}`} key={idx}>
+        <SimplebarReactClient
+          className="p-3"
+          style={{
+            maxHeight: 400,
+          }}>
+          {friends &&
+            friends.map((friend, idx) => (
+              <div className={`d-flex align-items-center ${friends.length - 1 === idx ? '' : 'mb-3'}`} key={idx}>
                 <div className="flex-shrink-0">
                   <img src={friend.avatar} className="img-fluid avatar-sm rounded me-2" alt="avatar-5" />
                 </div>
@@ -53,9 +58,11 @@ const FriendsRequest = () => {
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
-              </div>)}
+              </div>
+            ))}
         </SimplebarReactClient>
       </CardBody>
-    </Card>;
-};
-export default FriendsRequest;
+    </Card>
+  )
+}
+export default FriendsRequest

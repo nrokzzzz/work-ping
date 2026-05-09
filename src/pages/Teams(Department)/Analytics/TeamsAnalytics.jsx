@@ -11,13 +11,14 @@ const MetricCard = ({ title, value, subtitle, iconName, color }) => (
     <CardBody className="d-flex align-items-center gap-3">
       <div
         className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-        style={{ width: 52, height: 52, background: color + '20' }}
-      >
+        style={{ width: 52, height: 52, background: color + '20' }}>
         <Icon icon={iconName} style={{ fontSize: 26, color }} />
       </div>
       <div>
         <p className="mb-0 text-muted text-uppercase small fw-semibold">{title}</p>
-        <h3 className="mb-0 fw-bold" style={{ color }}>{value ?? '--'}</h3>
+        <h3 className="mb-0 fw-bold" style={{ color }}>
+          {value ?? '--'}
+        </h3>
         <p className="mb-0 text-muted small">{subtitle}</p>
       </div>
     </CardBody>
@@ -32,7 +33,9 @@ const TeamsAnalytics = () => {
   const [orgTeams, setOrgTeams] = useState([])
   const [orgTotal, setOrgTotal] = useState(0)
 
-  useEffect(() => { fetchOrgs() }, [])
+  useEffect(() => {
+    fetchOrgs()
+  }, [])
   useEffect(() => {
     if (orgId) fetchOrgTeams(orgId)
   }, [orgId])
@@ -51,10 +54,7 @@ const TeamsAnalytics = () => {
   const fetchOrgTeams = async (selectedOrgId) => {
     setLoading(true)
     try {
-      const res = await axiosClient.get(
-        `api/admin/team/get-teams-filter?page=1&limit=50&organizationId=${selectedOrgId}`,
-        { silent: true }
-      )
+      const res = await axiosClient.get(`api/admin/team/get-teams-filter?page=1&limit=50&organizationId=${selectedOrgId}`, { silent: true })
       const list = res.data?.data?.teamList ?? []
       setOrgTeams(list)
       setOrgTotal(res.data?.data?.totalRecords ?? list.length)
@@ -121,32 +121,53 @@ const TeamsAnalytics = () => {
 
       <Row className="g-2 mb-3 align-items-center">
         <Col xs="auto">
-          <select
-            className="form-select form-select-sm"
-            value={orgId}
-            onChange={(e) => setOrgId(e.target.value)}
-            style={{ minWidth: 200 }}
-          >
+          <select className="form-select form-select-sm" value={orgId} onChange={(e) => setOrgId(e.target.value)} style={{ minWidth: 200 }}>
             {organizations.length === 0 && <option value="">No organizations</option>}
             {organizations.map((o) => (
-              <option key={o.organizationId} value={o.organizationId}>{o.name}</option>
+              <option key={o.organizationId} value={o.organizationId}>
+                {o.name}
+              </option>
             ))}
           </select>
         </Col>
         <Col xs="auto" className="ms-auto d-flex align-items-center gap-2">
-          {loading ? <Spinner size="sm" animation="border" /> : <Badge bg="success" pill>Live</Badge>}
+          {loading ? (
+            <Spinner size="sm" animation="border" />
+          ) : (
+            <Badge bg="success" pill>
+              Live
+            </Badge>
+          )}
         </Col>
       </Row>
 
       <Row className="g-3 mb-3">
         <Col md={6} xl={3}>
-          <MetricCard title="Total Teams" value={totalTeams} subtitle="Across all organizations" iconName="mdi:account-group-outline" color="#0ea5e9" />
+          <MetricCard
+            title="Total Teams"
+            value={totalTeams}
+            subtitle="Across all organizations"
+            iconName="mdi:account-group-outline"
+            color="#0ea5e9"
+          />
         </Col>
         <Col md={6} xl={3}>
-          <MetricCard title="Teams in Org" value={orgTotal} subtitle={selectedOrgName || 'Selected organization'} iconName="mdi:office-building" color="#6366f1" />
+          <MetricCard
+            title="Teams in Org"
+            value={orgTotal}
+            subtitle={selectedOrgName || 'Selected organization'}
+            iconName="mdi:office-building"
+            color="#6366f1"
+          />
         </Col>
         <Col md={6} xl={3}>
-          <MetricCard title="Other Orgs" value={Math.max(0, totalTeams - orgTotal)} subtitle="Teams outside this org" iconName="mdi:format-list-bulleted" color="#14b8a6" />
+          <MetricCard
+            title="Other Orgs"
+            value={Math.max(0, totalTeams - orgTotal)}
+            subtitle="Teams outside this org"
+            iconName="mdi:format-list-bulleted"
+            color="#14b8a6"
+          />
         </Col>
         <Col md={6} xl={3}>
           <MetricCard title="Org Share" value={`${orgShare}%`} subtitle="Share of total teams" iconName="mdi:chart-donut" color="#f97316" />
@@ -179,7 +200,9 @@ const TeamsAnalytics = () => {
             </CardHeader>
             <CardBody className="d-flex flex-column justify-content-center">
               <ReactApexChart options={radialOptions} series={[orgShare]} type="radialBar" height={260} />
-              <div className="text-center small text-muted mt-1">{orgTotal} of {totalTeams} teams</div>
+              <div className="text-center small text-muted mt-1">
+                {orgTotal} of {totalTeams} teams
+              </div>
             </CardBody>
           </Card>
         </Col>

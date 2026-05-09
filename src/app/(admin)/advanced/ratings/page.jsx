@@ -1,10 +1,11 @@
-import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap';
-import PageBreadcrumb from '@/components/layout/PageBreadcrumb';
-import PageMetaData from '@/components/PageTitle';
-import UIExamplesList from '@/components/UIExamplesList';
-import AllRatings from './components/AllRatings';
+import { Card, CardBody, CardTitle, Col, Row } from 'react-bootstrap'
+import PageBreadcrumb from '@/components/layout/PageBreadcrumb'
+import PageMetaData from '@/components/PageTitle'
+import UIExamplesList from '@/components/UIExamplesList'
+import AllRatings from './components/AllRatings'
 const Ratings = () => {
-  return <>
+  return (
+    <>
       <PageBreadcrumb subName="Advanced UI" title="Ratings" />
       <PageMetaData title="Ratings" />
 
@@ -14,7 +15,10 @@ const Ratings = () => {
             <CardBody>
               <CardTitle as={'h5'} className="mb-1 anchor" id="overview">
                 Overview
-                <a className="btn btn-sm btn-outline-success rounded-2 float-end" href="https://www.npmjs.com/package/@smastrom/react-rating" target="_blank">
+                <a
+                  className="btn btn-sm btn-outline-success rounded-2 float-end"
+                  href="https://www.npmjs.com/package/@smastrom/react-rating"
+                  target="_blank">
                   Official Website
                 </a>
               </CardTitle>
@@ -26,27 +30,37 @@ const Ratings = () => {
           <AllRatings />
         </Col>
         <Col xl={3}>
-          <UIExamplesList examples={[{
-          link: '#overview',
-          label: 'Default'
-        }, {
-          link: '#read_only',
-          label: 'Read Only Example'
-        }, {
-          link: '#disable',
-          label: 'Disable Example'
-        }, {
-          link: '#highlight',
-          label: 'Highlight Only'
-        }, {
-          link: '#reset_example',
-          label: 'Reset Rating Example'
-        }, {
-          link: '#rating_style',
-          label: 'Rating Styles'
-        }]} />
+          <UIExamplesList
+            examples={[
+              {
+                link: '#overview',
+                label: 'Default',
+              },
+              {
+                link: '#read_only',
+                label: 'Read Only Example',
+              },
+              {
+                link: '#disable',
+                label: 'Disable Example',
+              },
+              {
+                link: '#highlight',
+                label: 'Highlight Only',
+              },
+              {
+                link: '#reset_example',
+                label: 'Reset Rating Example',
+              },
+              {
+                link: '#rating_style',
+                label: 'Rating Styles',
+              },
+            ]}
+          />
         </Col>
       </Row>
-    </>;
-};
-export default Ratings;
+    </>
+  )
+}
+export default Ratings

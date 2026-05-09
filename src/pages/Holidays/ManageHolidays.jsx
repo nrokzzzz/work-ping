@@ -55,10 +55,7 @@ const schema = yup.object({
     .max(100, 'Name must be at most 100 characters')
     .required('Holiday name is required'),
   date: yup.string().required('Date is required'),
-  type: yup
-    .string()
-    .oneOf(['public', 'organization'], 'Select a valid type')
-    .required('Type is required'),
+  type: yup.string().oneOf(['public', 'organization'], 'Select a valid type').required('Type is required'),
   description: yup.string(),
 })
 
@@ -99,7 +96,7 @@ const ManageHolidays = () => {
       if (orgs.length > 0 && !selectedOrganizationId) {
         setValue('organizationId', orgs[0].organizationId, { shouldValidate: true })
       }
-    } catch { }
+    } catch {}
   }
 
   const fetchHolidays = async (organizationId) => {
@@ -178,9 +175,7 @@ const ManageHolidays = () => {
                             </option>
                           ))}
                         </Form.Select>
-                        <Form.Control.Feedback type="invalid">
-                          {errors.organizationId?.message}
-                        </Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.organizationId?.message}</Form.Control.Feedback>
                       </Form.Group>
                     </Col>
 
@@ -189,14 +184,8 @@ const ManageHolidays = () => {
                         <Form.Label>
                           Holiday Name <span className="text-danger">*</span>
                         </Form.Label>
-                        <Form.Control
-                          {...register('name')}
-                          placeholder="Enter holiday name"
-                          isInvalid={!!errors.name}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.name?.message}
-                        </Form.Control.Feedback>
+                        <Form.Control {...register('name')} placeholder="Enter holiday name" isInvalid={!!errors.name} />
+                        <Form.Control.Feedback type="invalid">{errors.name?.message}</Form.Control.Feedback>
                       </Form.Group>
                     </Col>
 
@@ -206,9 +195,7 @@ const ManageHolidays = () => {
                           Date <span className="text-danger">*</span>
                         </Form.Label>
                         <Form.Control type="date" {...register('date')} isInvalid={!!errors.date} />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.date?.message}
-                        </Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.date?.message}</Form.Control.Feedback>
                       </Form.Group>
                     </Col>
 
@@ -222,9 +209,7 @@ const ManageHolidays = () => {
                           <option value="public">Public</option>
                           <option value="organization">Organization</option>
                         </Form.Select>
-                        <Form.Control.Feedback type="invalid">
-                          {errors.type?.message}
-                        </Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.type?.message}</Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                   </Row>
@@ -293,11 +278,7 @@ const ManageHolidays = () => {
                           <td>{i + 1}</td>
                           <td>{h.name || '--'}</td>
                           <td>
-                            <span
-                              className={`badge bg-${h.type === 'public' ? 'primary' : 'info'}`}
-                            >
-                              {h.type || '--'}
-                            </span>
+                            <span className={`badge bg-${h.type === 'public' ? 'primary' : 'info'}`}>{h.type || '--'}</span>
                           </td>
                           <td>{h.date ? new Date(h.date).toLocaleDateString() : '--'}</td>
                           <td>{h.description || '--'}</td>
@@ -305,12 +286,7 @@ const ManageHolidays = () => {
                             {h.isDefaultSunday ? (
                               <span className="text-muted small">Default</span>
                             ) : (
-                              <Button
-                                variant="outline-danger"
-                                size="sm"
-                                disabled={deletingId === h._id}
-                                onClick={() => handleDelete(h._id)}
-                              >
+                              <Button variant="outline-danger" size="sm" disabled={deletingId === h._id} onClick={() => handleDelete(h._id)}>
                                 {deletingId === h._id ? (
                                   <Spinner as="span" animation="border" size="sm" />
                                 ) : (

@@ -1,9 +1,10 @@
-import { Col, TabContainer } from 'react-bootstrap';
-import ComposeEmailModal from './ComposeEmailModal';
-import EmailNavigationMenu from './EmailNavigationMenu';
-import EmailTabList from './EmailTabList';
+import { Col, TabContainer } from 'react-bootstrap'
+import ComposeEmailModal from './ComposeEmailModal'
+import EmailNavigationMenu from './EmailNavigationMenu'
+import EmailTabList from './EmailTabList'
 const EmailView = () => {
-  return <TabContainer mountOnEnter defaultActiveKey="Inbox">
+  return (
+    <TabContainer mountOnEnter defaultActiveKey="Inbox">
       <Col xxl={2}>
         <EmailNavigationMenu />
       </Col>
@@ -12,6 +13,7 @@ const EmailView = () => {
 
         <ComposeEmailModal />
       </Col>
-    </TabContainer>;
-};
-export default EmailView;
+    </TabContainer>
+  )
+}
+export default EmailView
