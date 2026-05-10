@@ -6,6 +6,7 @@ import PageMetaData from '@/components/PageTitle'
 import avatar1 from '@/assets/images/users/avatar-1.jpg'
 import axiosClient from '@/helpers/httpClient'
 import { useAuthContext } from '@/context/useAuthContext'
+import { use2FA } from '@/context/TwoFAContext'
 
 const StatCard = ({ title, value, hint }) => {
   return (
@@ -22,6 +23,7 @@ const StatCard = ({ title, value, hint }) => {
 const Profile = () => {
   const navigate = useNavigate()
   const { user, login } = useAuthContext()
+  const { require2FA } = use2FA()
   const [profile, setProfile] = useState(user ?? null)
   const [editForm, setEditForm] = useState({
     name: user?.name ?? '',
@@ -122,16 +124,23 @@ const Profile = () => {
   }, [])
 
   const handleCancelPlan = async () => {
-    if (!window.confirm('Cancel your current subscription? You will lose access at the end of the billing period.')) return
-    setCancellingPlan(true)
-    try {
-      await axiosClient.patch('/api/admin/subscriptions/cancel', {}, { silent: true })
-      setActiveSubscription(null)
-      setNotice('Subscription cancelled successfully.')
-    } catch {
-      // error toast handled by interceptor
-    } finally {
-      setCancellingPlan(false)
+    const executeCancel = async () => {
+      setCancellingPlan(true)
+      try {
+        await axiosClient.patch('/api/admin/subscriptions/cancel', {}, { silent: true })
+        setActiveSubscription(null)
+        setNotice('Subscription cancelled successfully.')
+      } catch (error) {
+        throw error
+      } finally {
+        setCancellingPlan(false)
+      }
+    }
+
+    if (profile?.twoFactorEnabled) {
+      require2FA(executeCancel)
+    } else {
+      await executeCancel()
     }
   }
 
