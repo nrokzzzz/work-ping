@@ -21,13 +21,19 @@ const LeaveApproval = () => {
   const [detailModal, setDetailModal] = useState(null)
   const [rejectModal, setRejectModal] = useState(null)
   const [rejectReason, setRejectReason] = useState('')
+  const [counts, setCounts] = useState({ pending: 0, approved: 0, rejected: 0 })
 
   useEffect(() => {
     fetchOrganizations()
   }, [])
+
   useEffect(() => {
     if (orgId) fetchLeaves()
   }, [orgId, statusFilter, page])
+
+  useEffect(() => {
+    if (orgId) fetchCounts()
+  }, [orgId])
 
   const fetchOrganizations = async () => {
     try {
@@ -35,6 +41,22 @@ const LeaveApproval = () => {
       const orgs = res.data?.data ?? []
       setOrganizations(orgs)
       if (orgs.length > 0) setOrgId(orgs[0].organizationId)
+    } catch {}
+  }
+
+  const fetchCounts = async () => {
+    if (!orgId) return
+    try {
+      const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
+        axiosClient.get('/api/admin/leaves/all', { params: { organizationId: orgId, status: 'pending', limit: 1 }, silent: true }),
+        axiosClient.get('/api/admin/leaves/all', { params: { organizationId: orgId, status: 'approved', limit: 1 }, silent: true }),
+        axiosClient.get('/api/admin/leaves/all', { params: { organizationId: orgId, status: 'rejected', limit: 1 }, silent: true })
+      ])
+      setCounts({
+        pending: pendingRes.data?.data?.totalRecords ?? 0,
+        approved: approvedRes.data?.data?.totalRecords ?? 0,
+        rejected: rejectedRes.data?.data?.totalRecords ?? 0
+      })
     } catch {}
   }
 
@@ -66,8 +88,10 @@ const LeaveApproval = () => {
     try {
       await axiosClient.post(`/api/admin/leaves/approve/${leaveId}`, {}, { silent: true })
       toast.success('Leave approved')
-      fetchLeaves()
+      await fetchLeaves()
+      await fetchCounts()
     } catch {
+      toast.error('Failed to approve leave')
     } finally {
       setActionLoading(null)
     }
@@ -79,8 +103,10 @@ const LeaveApproval = () => {
     try {
       await axiosClient.post(`/api/admin/leaves/reject/${rejectModal._id}`, { reason: rejectReason }, { silent: true })
       toast.success('Leave rejected')
-      fetchLeaves()
+      await fetchLeaves()
+      await fetchCounts()
     } catch {
+      toast.error('Failed to reject leave')
     } finally {
       setActionLoading(null)
       setRejectModal(null)
@@ -88,13 +114,9 @@ const LeaveApproval = () => {
     }
   }
 
-  const pendingCount = leaves.filter((l) => l.status === 'pending').length
-  const approvedCount = leaves.filter((l) => l.status === 'approved').length
-  const rejectedCount = leaves.filter((l) => l.status === 'rejected').length
-
   const fmtDates = (dates) => {
     if (!dates?.length) return '--'
-    const sorted = [...dates].sort()
+    const sorted = [...dates].sort((a, b) => new Date(a) - new Date(b))
     if (sorted.length === 1) return new Date(sorted[0]).toLocaleDateString()
     return `${new Date(sorted[0]).toLocaleDateString()} – ${new Date(sorted[sorted.length - 1]).toLocaleDateString()} (${sorted.length}d)`
   }
@@ -106,15 +128,15 @@ const LeaveApproval = () => {
 
       <Row className="g-3 mb-3">
         {[
-          { label: 'Pending', count: pendingCount, color: '#f59e0b', bg: '#fffbeb', icon: 'mdi:clock-outline' },
-          { label: 'Approved', count: approvedCount, color: '#22c55e', bg: '#f0fdf4', icon: 'mdi:check-circle-outline' },
-          { label: 'Rejected', count: rejectedCount, color: '#ef4444', bg: '#fef2f2', icon: 'mdi:close-circle-outline' },
+          { label: 'Pending', count: counts.pending, color: '#f59e0b', bg: '#fffbeb', icon: 'mdi:clock-outline' },
+          { label: 'Approved', count: counts.approved, color: '#22c55e', bg: '#f0fdf4', icon: 'mdi:check-circle-outline' },
+          { label: 'Rejected', count: counts.rejected, color: '#ef4444', bg: '#fef2f2', icon: 'mdi:close-circle-outline' },
         ].map(({ label, count, color, bg, icon }) => (
           <Col md={4} key={label}>
             <Card className="border-0" style={{ boxShadow: '0 4px 14px rgba(15,23,42,0.07)', background: bg }}>
               <CardBody className="d-flex align-items-center justify-content-between">
                 <div>
-                  <p className="mb-0 text-muted small fw-semibold text-uppercase">{label} (this page)</p>
+                  <p className="mb-0 text-muted small fw-semibold text-uppercase">{label}</p>
                   <h2 className="mb-0 fw-bold" style={{ color }}>
                     {count}
                   </h2>
@@ -268,14 +290,20 @@ const LeaveApproval = () => {
                 <Button variant="outline-secondary" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
                   <IconifyIcon icon="mdi:chevron-left" />
                 </Button>
-                {Array.from({ length: Math.min(totalPages, 5) }, (_, idx) => {
-                  const p = idx + 1
-                  return (
+                {(() => {
+                  let startPage = Math.max(1, page - 2);
+                  let endPage = Math.min(totalPages, startPage + 4);
+                  if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4);
+                  }
+                  const pages = [];
+                  for (let i = startPage; i <= endPage; i++) pages.push(i);
+                  return pages.map((p) => (
                     <Button key={p} variant={page === p ? 'primary' : 'outline-secondary'} size="sm" onClick={() => setPage(p)}>
                       {p}
                     </Button>
-                  )
-                })}
+                  ))
+                })()}
                 <Button variant="outline-secondary" size="sm" disabled={page === totalPages} onClick={() => setPage(page + 1)}>
                   <IconifyIcon icon="mdi:chevron-right" />
                 </Button>
