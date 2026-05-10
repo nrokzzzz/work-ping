@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
 import SimplebarReactClient from '@/components/wrappers/SimplebarReactClient'
-import { getNotifications } from '@/helpers/data'
+import { notificationsData } from '@/assets/data/topbar'
 const NotificationItem = ({ from, content, icon }) => {
   return (
     <DropdownItem className="py-3 border-bottom text-wrap">
@@ -25,7 +25,7 @@ const NotificationItem = ({ from, content, icon }) => {
   )
 }
 const Notifications = () => {
-  const notificationList = getNotifications()
+  const notificationList = notificationsData
   return (
     <Dropdown className="topbar-item" align={'end'}>
       <DropdownToggle as="button" className="content-none topbar-button position-relative" aria-haspopup="true">

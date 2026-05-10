@@ -7,7 +7,7 @@ import { appRoutes, authRoutes, publicRoutes } from '@/routes/index'
 import AdminLayout from '@/layouts/AdminLayout'
 import Preloader from '@/components/Preloader'
 
-const Error404 = lazy(() => import('@/app/(other)/(error-pages)/error-404/page'))
+const NotFound = lazy(() => import('@/pages/NotFound'))
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, authLoading } = useAuthContext()
@@ -49,7 +49,7 @@ const AppRouter = (props) => {
         element={
           <AuthLayout {...props}>
             <Suspense fallback={<Preloader />}>
-              <Error404 />
+              <NotFound />
             </Suspense>
           </AuthLayout>
         }

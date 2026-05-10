@@ -1,8 +1,8 @@
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'react-bootstrap'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
-import { getTopbarIntegratedApps } from '@/helpers/data'
+import { appsData } from '@/assets/data/topbar'
 const AppsDropdown = () => {
-  const appsList = getTopbarIntegratedApps()
+  const appsList = appsData
   return (
     <Dropdown className="topbar-item d-none d-lg-flex" align="end">
       <DropdownToggle as="button" className="topbar-button content-none" aria-haspopup="true">
