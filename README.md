@@ -1,7 +1,7 @@
 # WorkPing Admin Dashboard
 
 The administrative web interface for WorkPing — a workforce management platform. Provides HR and admin staff with complete visibility and control over employees, attendance, leaves, shifts, payroll, and subscriptions.
-
+Link: https://www.workping.live/
 ## Tech Stack
 
 - **Framework**: React 18 + Vite 5
